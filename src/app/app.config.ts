@@ -1,4 +1,4 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { APP_INITIALIZER, ApplicationConfig, provideAppInitializer, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import {MatCardModule} from '@angular/material/card';
 import {MatToolbarModule} from '@angular/material/toolbar';
@@ -9,9 +9,12 @@ import {MatInputModule} from '@angular/material/input';
 import { routes } from './app.routes';
 import { AuthGuard } from './app-auth-guard.js';
 import {  MatButtonModule } from '@angular/material/button';
+import { AuthController } from '../shared/controllers/AuthController.js';
+import { remult } from 'remult';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), 
+    { provide: provideAppInitializer, useFactory: initApp, multi: true },
     MatCardModule,
     MatToolbarModule,
     MatFormFieldModule,
@@ -22,3 +25,10 @@ export const appConfig: ApplicationConfig = {
   ]
   
 };
+
+export function initApp() {
+  const loadCurrentUserBeforeAppStarts = async () => {
+    remult.user = await AuthController.currentUser()
+  }
+  return loadCurrentUserBeforeAppStarts
+}

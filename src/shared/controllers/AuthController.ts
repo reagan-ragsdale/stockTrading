@@ -62,4 +62,9 @@ export class AuthController {
         }
     
       }
+
+      @BackendMethod({ allowed: true })
+  static async currentUser() {
+    return getCurrentUser();
+  }
 }
