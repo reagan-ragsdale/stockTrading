@@ -1,9 +1,9 @@
 import { Allow, Entity, Fields, remult, Validators } from "remult"
 
-@Entity("DbUsers", {
+@Entity("Users", {
     allowApiCrud: true
 })
-export class DbUsers {
+export class Users {
 
     @Fields.cuid()
     id? = ''
@@ -29,4 +29,4 @@ export class DbUsers {
     
 
 }
-export const userRepo = remult.repo(DbUsers)
+export const userRepo = remult.repo(Users)

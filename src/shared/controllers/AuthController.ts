@@ -2,9 +2,10 @@ import { BackendMethod, remult } from 'remult'
 import type express from 'express'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type from 'cookie-session' // required to access the session member of the request object
-import { userRepo } from '../tasks/Users'
+
 import type { generate, verify } from 'password-hash'
 import { getCurrentUser, setSessionUser } from '../../server/server-session'
+import { userRepo } from '../tasks/Users'
 
 declare module 'remult' {
     export interface RemultContext {
@@ -39,8 +40,7 @@ export class AuthController {
     }
 
     @BackendMethod({ allowed: true })
-    static async signUp(username: string, password: string, confirmPassword: string) {
-        if(password != confirmPassword) throw Error('Passwords must match')
+    static async signUp(username: string, password: string, apiKey: string) {
         let users = await userRepo.find({ where: { userName: username } })
         if (users.length > 0) {
           throw Error('There is someone already with that username')
