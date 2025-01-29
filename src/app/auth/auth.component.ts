@@ -10,12 +10,13 @@ import { MatCardModule } from '@angular/material/card'
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar'
+import { MatInputModule } from '@angular/material/input';
 
 
 @Component({
   selector: 'app-auth',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule, MatCardModule, MatToolbarModule, MatFormFieldModule, MatSnackBarModule],
+  imports: [CommonModule, FormsModule, HttpClientModule, MatCardModule, MatToolbarModule, MatFormFieldModule, MatSnackBarModule, MatInputModule],
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.css',
 })

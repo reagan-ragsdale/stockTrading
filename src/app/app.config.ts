@@ -4,6 +4,7 @@ import {MatCardModule} from '@angular/material/card';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import {MatInputModule} from '@angular/material/input';
 
 import { routes } from './app.routes';
 
@@ -13,6 +14,7 @@ export const appConfig: ApplicationConfig = {
     MatToolbarModule,
     MatFormFieldModule,
     MatSnackBar,
+    MatInputModule,
   ]
   
 };

@@ -2,6 +2,7 @@ import { Component,NgZone  } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { remult } from "remult"
 import { AuthComponent } from './auth/auth.component';
+import { FormControl } from '@angular/forms';
 
 
 @Component({
