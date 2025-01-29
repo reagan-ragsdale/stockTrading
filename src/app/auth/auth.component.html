@@ -1,34 +1,38 @@
 <ng-container *ngIf="!remult.authenticated()">
-    <div class="form-container">
-        <mat-card class="form-card">
-            <mat-card-header>
-                <mat-toolbar style="border-radius:6px; background-color: #54C964; color:#3C3E3D;" >
-                    <span>{{isLoginMode ? 'Login' : 'Sign Up'}}</span>
-                </mat-toolbar>
-            </mat-card-header>
-            <mat-card-content style="margin-top:1rem;">
-                <form (ngSubmit)="onSubmit()" class="auth-form">
-                    <mat-form-field appearance="outline" class="full-width">
-                        <mat-label style="color: #DBD4D1;">Email</mat-label>
-                        <input matInput [(ngModel)]="signInUsername" name="email" required>
-                    </mat-form-field>
-                    <mat-form-field appearance="outline" class="full-width">
-                        <mat-label style="color: #DBD4D1;">Password</mat-label>
-                        <input matInput type="password" [(ngModel)]="signInPassword" name="password" required>
-                    </mat-form-field>
-                    <mat-form-field *ngIf="!isLoginMode" appearance="outline" class="full-width">
-                        <mat-label style="color: #DBD4D1;">Confirm Password</mat-label>
-                        <input matInput type="password" [(ngModel)]="signInApiKey" name="apiKey" required>
-                    </mat-form-field>
-                    <button mat-raised-button style="background-color: #54C964; color:#3C3E3D;" type="submit" class="full-width">{{isLoginMode ? 'Login' :
-                        'Sign Up'}}</button>
-                    <div class="toggle-link" (click)="toggleMode()">{{isLoginMode ? signUpMessage : loginMessage}}</div>
-                </form>
-            </mat-card-content>
-        </mat-card>
+    <div class="auth-container">
+        <div class="form-container">
+            <mat-card class="form-card">
+                <mat-card-header>
+                    <mat-toolbar style="border-radius:6px; background-color: #54C964; color:#3C3E3D;">
+                        <span>{{isLoginMode ? 'Login' : 'Sign Up'}}</span>
+                    </mat-toolbar>
+                </mat-card-header>
+                <mat-card-content style="margin-top:1rem;">
+                    <form (ngSubmit)="onSubmit()" class="auth-form">
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label style="color: #DBD4D1;">Email</mat-label>
+                            <input matInput [(ngModel)]="signInUsername" name="email" required>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label style="color: #DBD4D1;">Password</mat-label>
+                            <input matInput type="password" [(ngModel)]="signInPassword" name="password" required>
+                        </mat-form-field>
+                        <mat-form-field *ngIf="!isLoginMode" appearance="outline" class="full-width">
+                            <mat-label style="color: #DBD4D1;">Confirm Password</mat-label>
+                            <input matInput type="password" [(ngModel)]="signInApiKey" name="apiKey" required>
+                        </mat-form-field>
+                        <button mat-raised-button style="background-color: #54C964; color:#3C3E3D;" type="submit"
+                            class="full-width">{{isLoginMode ? 'Login' :
+                            'Sign Up'}}</button>
+                        <div class="toggle-link" (click)="toggleMode()">{{isLoginMode ? signUpMessage : loginMessage}}
+                        </div>
+                    </form>
+                </mat-card-content>
+            </mat-card>
+        </div>
     </div>
-  </ng-container>
-  <!-- <ng-container *ngIf="remult.authenticated()">
+</ng-container>
+<!-- <ng-container *ngIf="remult.authenticated()">
     <header>
       Hello {{ remult.user?.name }}
       <button (click)="signOut()">Sign Out</button>
