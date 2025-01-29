@@ -50,8 +50,8 @@ export class AuthController {
             if(password.length < 8) throw Error('Password length must be at least 8 characters')
           const user = await userRepo.insert({
             userName: username,
-            userPass: AuthController.generate(password)
-            //userPass: generate(password)
+            userPass: AuthController.generate(password),
+            IBKRApiKey: AuthController.generate(apiKey)
           })
         
           return setSessionUser({

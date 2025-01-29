@@ -52,7 +52,7 @@ export class AuthComponent implements OnInit {
       }
     }
     if (remult.authenticated()) {
-      this.router.navigate(['/sports'])
+      //this.router.navigate(['/sports'])
     }
 
 

@@ -24,6 +24,7 @@
     "@angular/router": "^19.0.0",
     "cookie-session": "^2.1.0",
     "curl": "^0.1.4",
+    "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "password-hash": "^1.2.2",
     "pg": "^8.13.1",
