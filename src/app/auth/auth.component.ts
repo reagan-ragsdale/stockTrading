@@ -12,11 +12,13 @@ import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar'
 import { MatInputModule } from '@angular/material/input';
 import { RouterOutlet } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+
 
 @Component({
   selector: 'app-auth',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule, MatCardModule, MatToolbarModule, MatFormFieldModule, MatSnackBarModule, MatInputModule],
+  imports: [CommonModule, FormsModule, HttpClientModule, MatCardModule, MatToolbarModule, MatFormFieldModule, MatSnackBarModule, MatInputModule, MatButtonModule],
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.css',
 })

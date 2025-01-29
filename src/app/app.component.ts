@@ -6,11 +6,12 @@ import { AuthComponent } from './auth/auth.component';
 import { FormControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthController } from '../shared/controllers/AuthController.js';
+import { MatButtonModule } from '@angular/material/button';
 
 
 @Component({
   selector: 'app-root',
-  imports: [ CommonModule, RouterOutlet],
+  imports: [ CommonModule, RouterOutlet, MatButtonModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

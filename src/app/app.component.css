@@ -1,0 +1,57 @@
+ 
+
+ html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    box-sizing: border-box;
+  } 
+  .top-button button:hover{
+    cursor: pointer;
+    border:1px solid #54C964 !important;
+}
+*:focus {
+  outline: none;
+}
+.top-button, .top-button-login{
+  justify-content: space-evenly; 
+  display:flex;  
+  height:100%; 
+  width: auto;
+  margin-left: auto;
+  align-items: center;
+  padding-right: 1rem;
+  
+}
+.search-icon:hover{
+  cursor:pointer;
+}
+.logo{
+  color: #DBD4D1; 
+  font-size: 250% !important;
+  font-weight: 500 !important;
+  margin-left: 1rem;
+  text-wrap: nowrap;
+  display:flex;
+  margin-top: auto;
+  margin-bottom:auto;
+
+
+
+}
+.logo:hover{
+  color: #54C964;
+}
+.top-button-login button{
+  background-color: #54C964;
+    color: #3C3E3D;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    height:65%;margin-top:auto; margin-bottom: auto; width:auto
+}
+.top-button-login button:hover{
+  background-color: #54C964;
+}
