@@ -5,7 +5,7 @@ import { createPostgresDataProvider } from "remult/postgres"
 import { Users } from '../shared/tasks/Users.js'
 import { config } from 'dotenv'
 import { generate, verify } from 'password-hash'
-import { initRequest } from './server-session';
+import { initRequest } from './server-session.js';
 
 config()
 AuthController.generate = generate;
