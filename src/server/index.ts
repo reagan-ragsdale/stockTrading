@@ -15,4 +15,5 @@ app.use(express.static(frontendFiles));
 app.get("/*", (_, res) => {
   res.sendFile(frontendFiles + "/index.html");
 });
-app.listen(process.env["PGPORT"] || 3002, () => console.log("Server started"));
+console.log(process.env["PORT"])
+app.listen(process.env["PORT"] || 3002, () => console.log("Server started"));
