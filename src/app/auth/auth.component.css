@@ -52,3 +52,6 @@
   .slide {
     transform: translateX(100%);
   }
+  ::ng-deep input{
+    color:#DBD4D1
+  }
