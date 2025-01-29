@@ -1,5 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
 
+:root{
+    @include mat.form-field-overrides((
+        outlined-input-text-color:#DBD4D1;
+    ))
+}
 body{
     margin:0;
     /* font-family: Roboto, "Helvetica Neue", sans-serif;  */
