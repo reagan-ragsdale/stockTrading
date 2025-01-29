@@ -1,1 +1,19 @@
-<app-auth></app-auth>
+<div
+    style="height: 60px; width: 100%; display: flex; border-bottom: 3px solid #FFFFFF; background-color: #3C3E3D; position: sticky; top: 0; left: 0; z-index: 100;">
+    <div style=" height: 100%;  display:flex;">
+        <a routerLink="/home" style="text-decoration: none; color: #240605; margin-top:auto; margin-bottom: auto;">
+            <h1 class="logo">
+                STL Bet
+            </h1>
+        </a>
+    </div>
+    <div *ngIf="remult.authenticated()" class="top-button">
+        <button mat-button style=" color: #DBD4D1; height:65%;margin: auto 0; width:auto" (click)="logout()">Log
+            Out</button>
+    </div>
+    <div *ngIf="!remult.authenticated()" class="top-button-login" style="margin-right:1rem;">
+        <button routerLink="/login">Login/Sign Up</button>
+    </div>
+
+</div>
+<router-outlet></router-outlet>

@@ -7,6 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import {MatInputModule} from '@angular/material/input';
 
 import { routes } from './app.routes';
+import { AuthGuard } from './app-auth-guard.js';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), 
@@ -15,6 +16,7 @@ export const appConfig: ApplicationConfig = {
     MatFormFieldModule,
     MatSnackBar,
     MatInputModule,
+    AuthGuard
   ]
   
 };
