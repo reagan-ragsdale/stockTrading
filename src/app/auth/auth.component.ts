@@ -11,12 +11,12 @@ import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar'
 import { MatInputModule } from '@angular/material/input';
-
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-auth',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule, MatCardModule, MatToolbarModule, MatFormFieldModule, MatSnackBarModule, MatInputModule],
+  imports: [CommonModule, FormsModule, HttpClientModule, MatCardModule, MatToolbarModule, MatFormFieldModule, MatSnackBarModule, MatInputModule, RouterOutlet],
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.css',
 })
@@ -71,5 +71,6 @@ export class AuthComponent implements OnInit {
 
   ngOnInit() {
     remult.initUser()
+    console.log(remult.user?.name)
   }
 }
