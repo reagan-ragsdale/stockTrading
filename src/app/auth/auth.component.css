@@ -52,6 +52,6 @@
   .slide {
     transform: translateX(100%);
   }
-  ::ng-deep .mdc-text-field__input{
+  ::ng-deep .mat-mdc-text-field-wrapper.mdc-text-field--outlined .mdc-text-field__input{
     color:#DBD4D1
   }
