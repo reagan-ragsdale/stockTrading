@@ -4,8 +4,8 @@ import type express from 'express'
 import type from 'cookie-session' // required to access the session member of the request object
 
 import type { generate, verify } from 'password-hash'
-import { getCurrentUser, setSessionUser } from '../../server/server-session'
-import { userRepo } from '../tasks/Users'
+import { getCurrentUser, setSessionUser } from '../../server/server-session.js'
+import { userRepo } from '../tasks/Users.js'
 
 declare module 'remult' {
     export interface RemultContext {
