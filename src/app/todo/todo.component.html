@@ -1,0 +1,12 @@
+<h1>todos</h1>
+<main>
+    <form (submit)="addTask()">
+        <input placeholder="What needs to be done?" [(ngModel)]="newTaskTitle" name="newTaskTitle" />
+        <button>Add</button>
+    </form>
+    <div *ngFor="let task of tasks">
+        <input type="checkbox" [(ngModel)]="task.completed" (change)="saveTask(task)" />
+        <input [(ngModel)]="task.title" />
+        <button (click)="saveTask(task)">Save</button>
+    </div>
+</main>

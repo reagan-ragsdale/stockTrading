@@ -3,11 +3,14 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
+    "start": "node dist/server/",
+    "build": "ng build && tsc -p tsconfig.server.json",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "dev": "ng serve --proxy-config proxy.conf.json --open",
+    "dev-node": "tsx watch src/server"
   },
+  "type": "module",
   "private": true,
   "dependencies": {
     "@angular/animations": "^19.0.0",
@@ -18,6 +21,11 @@
     "@angular/platform-browser": "^19.0.0",
     "@angular/platform-browser-dynamic": "^19.0.0",
     "@angular/router": "^19.0.0",
+    "cookie-session": "^2.1.0",
+    "curl": "^0.1.4",
+    "express": "^4.21.2",
+    "pg": "^8.13.1",
+    "remult": "^2.7.28",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
@@ -26,6 +34,8 @@
     "@angular-devkit/build-angular": "^19.0.5",
     "@angular/cli": "^19.0.5",
     "@angular/compiler-cli": "^19.0.0",
+    "@types/cookie-session": "^2.0.49",
+    "@types/express": "^5.0.0",
     "@types/jasmine": "~5.1.0",
     "jasmine-core": "~5.4.0",
     "karma": "~6.4.0",
@@ -33,6 +43,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "tsx": "^4.19.2",
     "typescript": "~5.6.2"
   }
 }
