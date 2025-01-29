@@ -71,8 +71,5 @@ export class AuthComponent implements OnInit {
 
   ngOnInit() {
     remult.initUser()
-    if(remult.authenticated()){
-      this.router.navigate(['/home'])
-    }
   }
 }
