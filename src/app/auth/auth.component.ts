@@ -16,7 +16,7 @@ import { RouterOutlet } from '@angular/router';
 @Component({
   selector: 'app-auth',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule, MatCardModule, MatToolbarModule, MatFormFieldModule, MatSnackBarModule, MatInputModule, RouterOutlet],
+  imports: [CommonModule, FormsModule, HttpClientModule, MatCardModule, MatToolbarModule, MatFormFieldModule, MatSnackBarModule, MatInputModule],
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.css',
 })
@@ -53,7 +53,7 @@ export class AuthComponent implements OnInit {
       }
     }
     if (remult.authenticated()) {
-      this.router.navigate(['/home'])
+      this.router.navigate(['home'])
     }
 
 
