@@ -6,6 +6,7 @@ import { Users } from '../shared/tasks/Users.js'
 import { config } from 'dotenv'
 import { generate, verify } from 'password-hash'
 import { initRequest } from './server-session.js';
+import ev from '../../environmentVariables.json'
 
 config()
 AuthController.generate = generate;
@@ -20,11 +21,11 @@ export const api = remultExpress({
     createPostgresDataProvider({
       caseInsensitiveIdentifiers: true,
       connectionString: process.env['DATABASE_URL']
-    }) : undefined/* createPostgresDataProvider({
+    }) :  createPostgresDataProvider({
       caseInsensitiveIdentifiers: true,
       connectionString: ev.dbConnection 
       
-    }) */ ,
+    })  ,
     initRequest
     ,initApi: async () => {
 
