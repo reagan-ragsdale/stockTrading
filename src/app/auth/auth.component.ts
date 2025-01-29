@@ -52,7 +52,7 @@ export class AuthComponent implements OnInit {
       }
     }
     if (remult.authenticated()) {
-      //this.router.navigate(['/sports'])
+      this.router.navigate(['/home'])
     }
 
 
@@ -70,5 +70,8 @@ export class AuthComponent implements OnInit {
 
   ngOnInit() {
     remult.initUser()
+    if(remult.authenticated()){
+      this.router.navigate(['/home'])
+    }
   }
 }
