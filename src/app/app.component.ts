@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { remult } from "remult"
 import { AuthComponent } from './auth/auth.component';
 
+
 @Component({
   selector: 'app-root',
   imports: [ AuthComponent],

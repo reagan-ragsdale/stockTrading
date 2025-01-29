@@ -1,33 +1,71 @@
 import { Component, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { UserInfo, remult } from 'remult'
+import { Router } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http'
 import { FormsModule } from '@angular/forms'
 import { TodoComponent } from '../todo/todo.component'
 import { AuthController } from '../../shared/controllers/AuthController'
+import { MatCardModule } from '@angular/material/card'
+import { MatToolbarModule } from '@angular/material/toolbar'
+import { MatFormFieldModule } from '@angular/material/form-field'
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar'
+
 
 @Component({
   selector: 'app-auth',
   standalone: true,
-  imports: [CommonModule, FormsModule, TodoComponent, HttpClientModule],
+  imports: [CommonModule, FormsModule, HttpClientModule, MatCardModule, MatToolbarModule, MatFormFieldModule, MatSnackBarModule],
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.css',
 })
 export class AuthComponent implements OnInit {
+  constructor(private router: Router, private _snackBar: MatSnackBar) {
+  }
   signInUsername = ''
+  signInPassword = ''
+  signInApiKey = ''
+  isLoginMode: boolean = false;
   remult = remult
 
-  async signIn() {
-    try {
-      remult.user = await AuthController.signIn(this.signInUsername)
-    } catch (error: unknown) {
-      alert((error as { message: string }).message)
+  signUpMessage = `Don't have an account? Sign Up`
+  loginMessage = `Already have an account? Login`
+
+
+
+  async onSubmit() {
+
+    if (this.isLoginMode) {
+      try {
+        remult.user = await AuthController.logIn(this.signInUsername, this.signInPassword)
+      }
+      catch (error: any) {
+        this._snackBar.open(error.message, 'close',{duration: 8000})
+      }
+
     }
+    else {
+      try {
+        remult.user = await AuthController.signUp(this.signInUsername, this.signInPassword, this.signInApiKey)
+      } catch (error: any) {
+        this._snackBar.open(error.message, 'close',{duration: 8000})
+      }
+    }
+    if (remult.authenticated()) {
+      this.router.navigate(['/sports'])
+    }
+
+
+
+
+
+
+
+
   }
 
-  async signOut() {
-    await AuthController.signOut()
-    remult.user = undefined
+  toggleMode() {
+    this.isLoginMode = !this.isLoginMode
   }
 
   ngOnInit() {
