@@ -52,6 +52,6 @@
   .slide {
     transform: translateX(100%);
   }
-  ::ng-deep input{
+  ::ng-deep .mdc-text-field__input{
     color:#DBD4D1
   }
