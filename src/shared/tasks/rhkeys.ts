@@ -1,26 +1,25 @@
 import { Allow, Entity, Fields, remult, Validators } from "remult"
 
-@Entity("Users", {
+@Entity("rhkeys", {
     allowApiCrud: true
 })
-export class Users {
+export class Rhkeys {
 
     @Fields.cuid()
     id? = ''
 
     @Fields.string()
-    userName = ""
-
-    @Fields.string({ includeInApi: false })
-    userPass = ""
-
-    @Fields.string({ includeInApi: false })
     userId = ""
 
-    @Fields.boolean()
-    isAdmin = false
+    @Fields.string({ includeInApi: false })
+    publicKey = ""
 
-    
+    @Fields.string({ includeInApi: false })
+    privateKey = ""
+
+    @Fields.string({ includeInApi: false })
+    apiKey = ""
+
 
     @Fields.createdAt()
     createdAt?: Date
@@ -29,4 +28,4 @@ export class Users {
     
 
 }
-export const userRepo = remult.repo(Users)
+export const rhRepo = remult.repo(Rhkeys)

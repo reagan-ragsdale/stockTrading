@@ -1,0 +1,23 @@
+<div class="key-container">
+    <div class="form-container">
+        <mat-card class="form-card" appearance="outlined">
+            <mat-card-header>
+                <mat-toolbar style="border-radius:6px; background-color: #54C964; color:#3C3E3D;">
+                    <span>Api Key Generation</span>
+                </mat-toolbar>
+            </mat-card-header>
+            <mat-card-content style="margin-top:1rem;">
+                <p>Here is your Public Key: {{keys.publicKey}}</p>
+                <p>Navigate to <a>Robinhood</a> to generate your Api Key using this Public Key</p>
+                <form (ngSubmit)="onSubmit()" class="auth-form">
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label style="color: #DBD4D1;">Api Key</mat-label>
+                        <input matInput [(ngModel)]="insertApiKey" name="apiKey" required>
+                    </mat-form-field>
+                    <button mat-raised-button style="background-color: #54C964; color:#3C3E3D;" type="submit"
+                        class="full-width">Submit</button>
+                </form>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

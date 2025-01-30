@@ -27,8 +27,8 @@ export class AuthComponent implements OnInit {
   }
   signInUsername = ''
   signInPassword = ''
-  signInApiKey = ''
-  isLoginMode: boolean = false;
+  signInConfirmPassword = ''
+  isLoginMode: boolean = true;
   remult = remult
 
   signUpMessage = `Don't have an account? Sign Up`
@@ -40,7 +40,11 @@ export class AuthComponent implements OnInit {
 
     if (this.isLoginMode) {
       try {
+
         remult.user = await AuthController.logIn(this.signInUsername, this.signInPassword)
+        if (remult.authenticated()) {
+          this.router.navigate(['/home'])
+        }
       }
       catch (error: any) {
         this._snackBar.open(error.message, 'close',{duration: 8000})
@@ -49,14 +53,16 @@ export class AuthComponent implements OnInit {
     }
     else {
       try {
-        remult.user = await AuthController.signUp(this.signInUsername, this.signInPassword, this.signInApiKey)
+        remult.user = await AuthController.signUp(this.signInUsername, this.signInPassword, this.signInConfirmPassword)
+        if (remult.authenticated()) {
+          this.router.navigate(['/keys'])
+        }
       } catch (error: any) {
         this._snackBar.open(error.message, 'close',{duration: 8000})
       }
+      
     }
-    if (remult.authenticated()) {
-      this.router.navigate(['home'])
-    }
+    
 
 
 
