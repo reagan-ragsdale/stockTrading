@@ -13,6 +13,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar'
 import { MatInputModule } from '@angular/material/input';
 import { RouterOutlet } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
+import { NewUserService } from '../services/newUserService.js';
 
 
 @Component({
@@ -54,6 +55,7 @@ export class AuthComponent implements OnInit {
     else {
       try {
         remult.user = await AuthController.signUp(this.signInUsername, this.signInPassword, this.signInConfirmPassword)
+        await NewUserService.createNewUserData();
         if (remult.authenticated()) {
           this.router.navigate(['/keys'])
         }

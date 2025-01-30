@@ -8,7 +8,6 @@ import type { generate, verify } from 'password-hash'
 import { getCurrentUser, setSessionUser } from '../../server/server-session.js'
 import { userRepo } from '../tasks/Users.js'
 import { rhRepo } from '../tasks/rhkeys.js';
-import { api } from '../../server/api.js';
 
 declare module 'remult' {
   export interface RemultContext {

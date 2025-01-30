@@ -1,1 +1,9 @@
-<p>home-screen works!</p>
+<div style="display:flex; flex-direction: column;">
+    <div class="top-bar">
+        <h2>Finance Data</h2>
+        <h3>{{userSimFinData?.dollarAmt | currency:'USD':'symbol'}}</h3>
+    </div>
+    <div class="dashboard">
+        <h1>Dashboard data</h1>
+    </div>
+</div>
