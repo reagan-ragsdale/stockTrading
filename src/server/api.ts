@@ -6,6 +6,7 @@ import { Users } from '../shared/tasks/Users.js'
 import { config } from 'dotenv'
 import { generate, verify } from 'password-hash'
 import { initRequest } from './server-session.js';
+import { Rhkeys } from '../shared/tasks/rhkeys.js'
 //import ev from '../../environmentVariables.json'
 
 config()
@@ -14,7 +15,7 @@ AuthController.verify = verify
 
 export const api = remultExpress({
     controllers:[AuthController],
-    entities: [Task,Users],
+    entities: [Task,Users,Rhkeys],
     admin:true,
     getUser: (req) => req.session!['user'],
     dataProvider: process.env['DATABASE_URL'] ?
