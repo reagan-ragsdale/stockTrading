@@ -81,6 +81,22 @@ export class AuthController {
   }
 
   @BackendMethod({ allowed: true })
+  static async checkKeyGeneration(): Promise<boolean> {
+    let currentUser = getCurrentUser()
+    let userInfo = await userRepo.findFirst({id: currentUser.id})
+    let userKeyData = await rhRepo.findFirst({userId: userInfo?.userId})
+    if(userKeyData){
+      return true
+    }
+    else{
+      return false
+    }
+  }
+
+
+  
+
+  @BackendMethod({ allowed: true })
   static async currentUser() {
     return getCurrentUser();
   }
