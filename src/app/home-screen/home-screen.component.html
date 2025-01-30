@@ -1,7 +1,9 @@
 <div style="display:flex; flex-direction: column;">
     <div class="top-bar">
-        <h2>Finance Data</h2>
-        <h3>{{userSimFinData?.dollarAmt | currency:'USD':'symbol'}}</h3>
+        <button mat-icon-button aria-label="Add more funds" (click)="showAddFunds()">
+            <mat-icon>add</mat-icon>
+          </button>
+        <h3 style="padding-right:1rem;">{{userSimFinData?.dollarAmt | currency:'USD':'symbol'}}</h3>
     </div>
     <div class="dashboard">
         <h1>Dashboard data</h1>
