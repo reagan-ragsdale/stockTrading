@@ -43,7 +43,7 @@ export class AuthComponent implements OnInit {
 
         remult.user = await AuthController.logIn(this.signInUsername, this.signInPassword)
         if (remult.authenticated()) {
-          this.router.navigate(['/home'])
+          this.router.navigate(['/keys'])
         }
       }
       catch (error: any) {
