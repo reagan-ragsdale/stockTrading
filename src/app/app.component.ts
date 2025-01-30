@@ -7,11 +7,13 @@ import { FormControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthController } from '../shared/controllers/AuthController.js';
 import { MatButtonModule } from '@angular/material/button';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatIconModule} from '@angular/material/icon';
 
 
 @Component({
   selector: 'app-root',
-  imports: [ CommonModule, RouterOutlet, MatButtonModule],
+  imports: [ CommonModule, RouterOutlet, MatButtonModule, MatMenuModule,MatIconModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

@@ -31,6 +31,12 @@ export class KeyScreenComponent implements OnInit{
   async onSubmit(){
     try{
       await AuthController.insertKeyPairs(this.keys.publicKey, this.keys.privateKey, this.insertApiKey)
+
+      const isKeysGenerated = await AuthController.checkKeyGeneration()
+      if(isKeysGenerated){
+        this.router.navigate(['/home'])
+      }
+      
     }
     catch(error: any){
       this._snackBar.open(error.message, 'close',{duration: 8000})

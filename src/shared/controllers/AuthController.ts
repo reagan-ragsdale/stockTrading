@@ -69,7 +69,7 @@ export class AuthController {
 
   @BackendMethod({ allowed: true })
   static async insertKeyPairs(publicKey: string, privateKey: string, apiKey: string) {
-    let currentUser = getCurrentUser()
+    let currentUser = await this.currentUser()
     let userInfo = await userRepo.findFirst({id: currentUser.id})
       await rhRepo.insert({
         userId: userInfo?.userId,
@@ -82,7 +82,7 @@ export class AuthController {
 
   @BackendMethod({ allowed: true })
   static async checkKeyGeneration(): Promise<boolean> {
-    let currentUser = getCurrentUser()
+    let currentUser = await this.currentUser()
     let userInfo = await userRepo.findFirst({id: currentUser.id})
     let userKeyData = await rhRepo.findFirst({userId: userInfo?.userId})
     if(userKeyData){
@@ -91,6 +91,19 @@ export class AuthController {
     else{
       return false
     }
+  }
+
+  @BackendMethod({ allowed: true })
+  static async changeUserName(username: string){
+    const currentUser = await this.currentUser()
+    const user = await userRepo.findFirst({id: currentUser.id})
+    await userRepo.save({...user, userName: username})
+  }
+  @BackendMethod({ allowed: true })
+  static async changePassword(password: string){
+    const currentUser = await this.currentUser()
+    const user = await userRepo.findFirst({id: currentUser.id})
+    await userRepo.save({...user, userPass: AuthController.generate(password)})
   }
 
 

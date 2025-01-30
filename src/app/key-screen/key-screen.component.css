@@ -13,6 +13,17 @@
     width: 100%;
     max-width: 400px;
   }
+  p{
+    text-align:center;
+    color:#DBD4D1;
+  }
+  a{
+    color:#54C964;
+  }
+  a:hover{
+    cursor: pointer;
+    color: #3a86ff !important;
+  }
   
   .form-card {
     border-radius: 16px;
