@@ -27,12 +27,17 @@ export class HomeScreenComponent implements OnInit{
   canShowAddFunds: boolean = true;
 
   showAddFunds(){
-    this.dialog.open(AddFundsComponent, {
+    const dialogRef = this.dialog.open(AddFundsComponent, {
       width: '300px',
       enterAnimationDuration: 0,
       exitAnimationDuration: 0
     });
+    dialogRef.afterClosed().subscribe(async result => {
+      this.userSimFinData = await SimFinance.getSimFinData()
+    });
   }
+
+  
 
   async ngOnInit(){
     this.userSimFinData = await SimFinance.getSimFinData()

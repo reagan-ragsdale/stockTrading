@@ -1,8 +1,14 @@
-<h2 mat-dialog-title>Delete file</h2>
+<h2 mat-dialog-title>Add Funds</h2>
 <mat-dialog-content>
-  Would you like to delete cat.jpeg?
+    Enter the amount you would like to add
+    <form class="auth-form">
+        <mat-form-field class="example-full-width">
+            <mat-label>Postal Code</mat-label>
+            <input matInput type="number" [(ngModel)]="addAmount" placeholder="0.00">
+        </mat-form-field>
+    </form>
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button mat-button mat-dialog-close>No</button>
-  <button mat-button mat-dialog-close cdkFocusInitial>Ok</button>
+    <button mat-button mat-dialog-close >Cancel</button>
+    <button mat-button mat-dialog-close cdkFocusInitial (click)="OnAddFundsClicked()">Submit</button>
 </mat-dialog-actions>
