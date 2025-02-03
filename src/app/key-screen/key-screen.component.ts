@@ -11,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { AuthController } from '../../shared/controllers/AuthController.js';
 import { Router } from '@angular/router';
+import { CachedData } from '../services/cachedDataService.js';
 
 @Component({
   selector: 'app-key-screen',
@@ -34,8 +35,10 @@ export class KeyScreenComponent implements OnInit{
     )
   }
 
-
+  newId: string = ''
   ngOnInit(){
+    CachedData.currentClientId.subscribe(id => this.newId = id!)
+    console.log(this.newId)
   }
   
 }
