@@ -29,7 +29,7 @@ export class KeyScreenComponent implements OnInit{
   insertApiKey: string = ''
 
   allowOAuth(){
-    this.router.navigateByUrl("https://api.schwabapi.com/v1/oauth/authorize?response_type=code&client_id=1wzwOrhivb2PkR1UCAUVTKYqC4MTNYlj&scope=readonly&redirect_uri=https://stocktrading.up.railway.app/home",)
+    this.router.navigateByUrl("https://api.schwabapi.com/v1/oauth/authorize?response_type=code&client_id=1wzwOrhivb2PkR1UCAUVTKYqC4MTNYlj&scope=readonly&redirect_uri=https://stocktrading.up.railway.app/home")
   }
 
 
