@@ -9,5 +9,5 @@ export const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full'},
     {path: 'home', title: 'home', component: HomeScreenComponent, canActivate: [AuthGuard]},
     {path: 'login', component: AuthComponent},
-    {path: 'keys', component: KeyScreenComponent, canActivate: [AuthGuard, KeyGuard]}
+    {path: 'keys', component: KeyScreenComponent, canActivate: [AuthGuard]}
 ];

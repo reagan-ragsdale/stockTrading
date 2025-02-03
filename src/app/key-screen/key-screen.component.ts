@@ -28,25 +28,15 @@ export class KeyScreenComponent implements OnInit{
   }
   insertApiKey: string = ''
 
-  async onSubmit(){
-    try{
-      await AuthController.insertKeyPairs(this.keys.publicKey, this.keys.privateKey, this.insertApiKey)
-
-      const isKeysGenerated = await AuthController.checkKeyGeneration()
-      if(isKeysGenerated){
-        this.router.navigate(['/home'])
-      }
-      
-    }
-    catch(error: any){
-      this._snackBar.open(error.message, 'close',{duration: 8000})
-    }
-    
+  allowOAuth(){
+    window.open("https://api.schwabapi.com/v1/oauth/authorize?response_type=code&client_id=1wzwOrhivb2PkR1UCAUVTKYqC4MTNYlj&scope=readonly&redirect_uri=https://developer.schwab.com/oauth2-redirect.html",
+      "_blank",
+      "width=600,height=600"
+    )
   }
 
 
   ngOnInit(){
-    this.keys = KeyPairService.generatePublicPrivateKeyPair()
   }
 
 }
