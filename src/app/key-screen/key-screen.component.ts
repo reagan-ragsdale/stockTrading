@@ -37,7 +37,7 @@ export class KeyScreenComponent implements OnInit{
 
   newId: string = ''
   ngOnInit(){
-    CachedData.currentClientId.subscribe(id => this.newId = id!)
+    this.cachedData.currentClientId.subscribe(id => this.newId = id!)
     console.log(this.newId)
   }
   

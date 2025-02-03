@@ -9,11 +9,11 @@ export class CachedData{
     
 
 
-    static currentClientId = new BehaviorSubject<string | null>(null)
+    public currentClientId = new BehaviorSubject<string | null>(null)
 
     constructor(){}
 
-    static changeCurrentClientId(clientId: string){
+    public changeCurrentClientId(clientId: string){
         this.currentClientId.next(clientId)
     }
 
