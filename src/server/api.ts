@@ -9,15 +9,16 @@ import { initRequest } from './server-session.js';
 import { Rhkeys } from '../shared/tasks/rhkeys.js'
 import { SimFinance } from '../shared/controllers/SimFinance.js'
 import { SimFInance } from '../shared/tasks/simFinance.js'
-import { CachedData } from '../app/services/cachedDataService.js'
+import { initialCache } from '../app/services/createInitCache.js'
+import { initApp } from '../app/app.config.js'
 //import ev from '../../environmentVariables.json'
 
 config()
 AuthController.generate = generate;
 AuthController.verify = verify
 
+
 export const api = remultExpress({
-  
     controllers:[AuthController, SimFinance],
     entities: [Task,Users,Rhkeys, SimFInance],
     admin:true,
@@ -33,6 +34,6 @@ export const api = remultExpress({
     })  */ ,
     initRequest
     ,initApi: async () => {
-      CachedData.changeCurrentClientId(process.env['clientId']!)
+      initialCache()
     }
 })

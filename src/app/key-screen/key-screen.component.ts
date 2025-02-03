@@ -21,7 +21,7 @@ import { CachedData } from '../services/cachedDataService.js';
   styleUrl: './key-screen.component.css'
 })
 export class KeyScreenComponent implements OnInit{
-  constructor(private router: Router, private _snackBar: MatSnackBar) {
+  constructor(private router: Router, private _snackBar: MatSnackBar, private cachedData: CachedData) {
     }
   keys: PublicPRivateKeys = {
     publicKey: '',
