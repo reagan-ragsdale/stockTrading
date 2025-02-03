@@ -1,4 +1,4 @@
-import { CachedData } from "./cachedDataService";
+import { CachedData } from "./cachedDataService.js";
 export const initialCache = () => {
     //constructor(private cachedData: CachedData){}
 
