@@ -35,7 +35,5 @@ export class KeyScreenComponent implements OnInit{
 
   ngOnInit(){
   }
-  https://developer.schwab.com/oauth2-redirect.html?
-  // code=C0.b2F1dGgyLmNkYy5zY2h3YWIuY29t.OiEvZF8Y8-nojq_bpANdgOR__t4NPobhUq8mcEOi8tc%40&
-  // session=cd3b8ad4-aa87-4b0e-9931-59f038a107fc
+  
 }
