@@ -29,14 +29,13 @@ export class KeyScreenComponent implements OnInit{
   insertApiKey: string = ''
 
   allowOAuth(){
-    window.open("https://api.schwabapi.com/v1/oauth/authorize?response_type=code&client_id=1wzwOrhivb2PkR1UCAUVTKYqC4MTNYlj&scope=readonly&redirect_uri=https://developer.schwab.com/oauth2-redirect.html",
-      "_blank",
-      "width=600,height=600"
-    )
+    this.router.navigateByUrl("https://api.schwabapi.com/v1/oauth/authorize?response_type=code&client_id=1wzwOrhivb2PkR1UCAUVTKYqC4MTNYlj&scope=readonly&redirect_uri=https://stocktrading.up.railway.app/home",)
   }
 
 
   ngOnInit(){
   }
-
+  https://developer.schwab.com/oauth2-redirect.html?
+  // code=C0.b2F1dGgyLmNkYy5zY2h3YWIuY29t.OiEvZF8Y8-nojq_bpANdgOR__t4NPobhUq8mcEOi8tc%40&
+  // session=cd3b8ad4-aa87-4b0e-9931-59f038a107fc
 }
