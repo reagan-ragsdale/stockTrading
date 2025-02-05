@@ -82,6 +82,7 @@ export class AuthComponent implements OnInit {
   code: string = ''
   url: string = ''
   getUrl(){
+    console.log('here in get url')
     this.code = this.url.slice(this.url.indexOf('code=') + 5, this.url.indexOf('@') + 1)
     this.sharedCache.changeCurrentCode(this.code)
     this.getTokens()
@@ -123,7 +124,9 @@ export class AuthComponent implements OnInit {
 
   async ngOnInit() {
     remult.initUser()
+    console.log('here in init')
     if(remult.authenticated()){
+      console.log('here in authenticated')
       this.url = location.href
       this.getUrl()
     }
