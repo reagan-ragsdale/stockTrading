@@ -1,6 +1,7 @@
 import express from 'express'
 import { api } from "./api.js"
 import session from "cookie-session"
+import cors from 'cors'
 
 const app = express()
 app.use(
@@ -12,6 +13,13 @@ app.use(api)
 
 const frontendFiles = process.cwd() + "/dist/stock-trading/browser";
 app.use(express.static(frontendFiles));
+const corsOptions ={
+  origin:'*', 
+  credentials:true,            //access-control-allow-credentials:true
+  optionSuccessStatus:200,
+}
+
+app.use(cors(corsOptions))
 app.get("/*", (_, res) => {
   res.sendFile(frontendFiles + "/index.html");
 });
