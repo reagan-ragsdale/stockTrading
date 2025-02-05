@@ -27,20 +27,21 @@ export class KeyScreenComponent implements OnInit{
     publicKey: '',
     privateKey: ''
   }
-  insertApiKey: string = ''
   appKey: string = ''
   appSecret: string = ''
 
   allowOAuth(){
-   let newWindow = window.open(`https://api.schwabapi.com/v1/oauth/authorize?response_type=code&client_id=${this.appKey}&scope=readonly&redirect_uri=https://stocktrading.up.railway.app`,
-      "_blank"
-    )!.focus()
+    this.cachedData.changeCurrentAppKey(this.appKey)
+    this.cachedData.changeCurrentAppSecret(this.appSecret)
+   window.open(`https://api.schwabapi.com/v1/oauth/authorize?response_type=code&client_id=${this.appKey}&scope=readonly&redirect_uri=https://stocktrading.up.railway.app`,
+      "_self"
+    )
+    
   }
+
 
   newId: string = ''
   ngOnInit(){
-    this.cachedData.currentClientId.subscribe(id => this.newId = id!)
-    console.log(this.newId)
   }
   
 }

@@ -13,6 +13,7 @@ import {
   MatDialogTitle,
 } from '@angular/material/dialog';
 import { AddFundsComponent } from './add-funds/add-funds.component';
+import { CachedData } from '../services/cachedDataService';
 @Component({
   selector: 'app-home-screen',
   imports: [CommonModule,MatIconModule,MatButtonModule],
@@ -20,9 +21,14 @@ import { AddFundsComponent } from './add-funds/add-funds.component';
   styleUrl: './home-screen.component.css'
 })
 export class HomeScreenComponent implements OnInit{
+  constructor(private sharedCache: CachedData){
+
+  }
   readonly dialog = inject(MatDialog);
+  accountNum: any 
 
   userSimFinData: SimFInance | null = null
+  userData: any = []
 
   canShowAddFunds: boolean = true;
 
@@ -37,9 +43,35 @@ export class HomeScreenComponent implements OnInit{
     });
   }
 
+  async getUserData() {
+    let accessToken = ''
+    this.sharedCache.currentAccessToken.subscribe(token => accessToken = token!)
+    const url = 'https://api.schwabapi.com/trader/v1/accounts/accountNumbers';
+    const options = {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`
+      }
+    };
+
+
+    try{
+      const response = await fetch(url, options);
+      const result = await response.json();
+      this.accountNum = result['accountNumber']
+    }
+    catch(error: any){
+      console.log(error.message)
+    }
+    
+
+
+  }
+
   
 
   async ngOnInit(){
+    await this.getUserData()
     this.userSimFinData = await SimFinance.getSimFinData()
   }
 
