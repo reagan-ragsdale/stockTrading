@@ -85,43 +85,10 @@ export class AuthComponent implements OnInit {
     console.log('here in get url')
     this.code = this.url.slice(this.url.indexOf('code=') + 5, this.url.indexOf('@') + 1)
     this.sharedCache.changeCurrentCode(this.code)
-    this.getTokens()
+    this.router.navigate(['/auth'])
   }
 
-  async getTokens(){
-    let appKey = ''
-    let appSecret = ''
-    this.sharedCache.currentAppKey.subscribe(key => appKey = key!)
-    this.sharedCache.currentAppSecret.subscribe(secret => appSecret = secret!)
-    appKey = btoa(appKey)
-    appSecret = btoa(appSecret)
-    const url = 'https://api.schwabapi.com/v1/oauth/token';
-    const options = {
-      method: 'POST',
-      headers: {
-        'Authorization': `Basic ${appKey}:${appSecret}`,
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      data: {
-        'grant_type': 'authorization_code', 'code': this.code, 'redirect_uri': 'https://stocktrading.up.railway.app/auth'
-      }
-    };
-
-
-    try{
-      const response = await fetch(url, options);
-      const result = await response.json();
-      let refreshToken = result['refresh_token']
-      let accessToken = result['access_token']
-      this.sharedCache.changeAccessToken(accessToken)
-      this.router.navigate(['/home'])
-    }
-    catch(error: any){
-      console.log(error.message)
-    }
-    
-  }
-
+  
   async ngOnInit() {
     let user = await remult.initUser()
     console.log(user)

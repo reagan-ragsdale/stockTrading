@@ -14,17 +14,15 @@ export class AuthScreenComponent implements OnInit {
   code: string = ''
   url: string = ''
 
-  getCode() {
-    this.code = this.url.slice(this.url.indexOf('code=') + 5, this.url.indexOf('@') + 1)
-    this.sharedCache.changeCurrentCode(this.code)
-    this.getTokens()
-  }
+  
 
   async getTokens() {
     let appKey = ''
     let appSecret = ''
+    this.code = ''
     this.sharedCache.currentAppKey.subscribe(key => appKey = key!)
     this.sharedCache.currentAppSecret.subscribe(secret => appSecret = secret!)
+    this.sharedCache.currentCode.subscribe(code => this.code = code!)
     appKey = btoa(appKey)
     appSecret = btoa(appSecret)
     const url = 'https://api.schwabapi.com/v1/oauth/token';
@@ -57,8 +55,7 @@ export class AuthScreenComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.url = location.href
-    this.getCode()
+    this.getTokens()
   }
 
 }
