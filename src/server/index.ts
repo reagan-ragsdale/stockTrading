@@ -13,13 +13,12 @@ app.use(api)
 
 const frontendFiles = process.cwd() + "/dist/stock-trading/browser";
 app.use(express.static(frontendFiles));
-const corsOptions ={
-  origin:'*', 
-  credentials:true,            //access-control-allow-credentials:true
-  optionSuccessStatus:200,
-}
-
-app.use(cors(corsOptions))
+app.use(cors({
+  origin: 'https://stocktrading.up.railway.app', // use your actual domain name (or localhost), using * is not recommended
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Origin', 'X-Requested-With', 'Accept', 'x-client-key', 'x-client-token', 'x-client-secret', 'Authorization'],
+  credentials: true
+}))
 app.get("/*", (_, res) => {
   res.sendFile(frontendFiles + "/index.html");
 });
