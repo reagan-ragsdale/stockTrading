@@ -5,7 +5,7 @@ import cors from 'cors'
 
 const app = express()
 app.use(cors({
-  origin: 'https://stocktrading.up.railway.app', 
+  origin: 'https://stocktrading.up.railway.app/auth', 
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Origin', 'X-Requested-With', 'Accept', 'x-client-key', 'x-client-token', 'x-client-secret', 'Authorization'],
   credentials: true
@@ -24,7 +24,7 @@ app.get("/*", (_, res) => {
   res.sendFile(frontendFiles + "/index.html");
 });
 app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "https://stocktrading.up.railway.app");
+  res.header("Access-Control-Allow-Origin", "https://stocktrading.up.railway.app/auth");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept,Authorization");
   next();
 });
