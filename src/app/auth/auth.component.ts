@@ -123,7 +123,7 @@ export class AuthComponent implements OnInit {
 
   async ngOnInit() {
     if(remult.authenticated()){
-      this.code = location.href
+      this.url = location.href
       this.getUrl()
     }
   }
