@@ -7,7 +7,15 @@
                 </mat-toolbar>
             </mat-card-header>
             <mat-card-content style="margin-top:1rem;">
-                <p>Allow this app to access you Charles Schwab account and it's information</p>
+                <p>Add your Charles Schwab app info below</p>
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label style="color: #DBD4D1;">App Key</mat-label>
+                    <input matInput [(ngModel)]="appKey"  required>
+                </mat-form-field>
+                <!-- <mat-form-field appearance="outline" class="full-width">
+                    <mat-label style="color: #DBD4D1;">Secret</mat-label>
+                    <input matInput type="password" [(ngModel)]="appSecret"  required>
+                </mat-form-field> -->
                 <button mat-raised-button (click)="allowOAuth()">Allow</button>
             </mat-card-content>
         </mat-card>

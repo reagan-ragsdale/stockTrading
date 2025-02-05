@@ -28,11 +28,13 @@ export class KeyScreenComponent implements OnInit{
     privateKey: ''
   }
   insertApiKey: string = ''
+  appKey: string = ''
+  appSecret: string = ''
 
   allowOAuth(){
-    window.open("https://api.schwabapi.com/v1/oauth/authorize?response_type=code&client_id=1wzwOrhivb2PkR1UCAUVTKYqC4MTNYlj&scope=readonly&redirect_uri=https://developer.schwab.com/oauth2-redirect.html",
-      "_self"
-    )
+   let newWindow = window.open(`https://api.schwabapi.com/v1/oauth/authorize?response_type=code&client_id=${this.appKey}&scope=readonly&redirect_uri=https://stocktrading.up.railway.app`,
+      "_blank"
+    )!.focus()
   }
 
   newId: string = ''

@@ -9,8 +9,8 @@ import { initRequest } from './server-session.js';
 import { Rhkeys } from '../shared/tasks/rhkeys.js'
 import { SimFinance } from '../shared/controllers/SimFinance.js'
 import { SimFInance } from '../shared/tasks/simFinance.js'
-import { CachedData } from '../app/services/cachedDataService.js'
 import { initApp } from '../app/app.config.js'
+import { testEnc } from '../shared/tasks/testEnc.js'
 //import ev from '../../environmentVariables.json'
 
 config()
@@ -21,7 +21,7 @@ AuthController.verify = verify
 
 export const api = remultExpress({
     controllers:[AuthController, SimFinance],
-    entities: [Task,Users,Rhkeys, SimFInance],
+    entities: [Task,Users,Rhkeys, SimFInance, testEnc],
     admin:true,
     getUser: (req) => req.session!['user'],
     dataProvider: process.env['DATABASE_URL'] ?
@@ -35,7 +35,5 @@ export const api = remultExpress({
     })  */ ,
     initRequest
     ,initApi: async () => {
-      const myCache = new CachedData()
-      myCache.changeCurrentClientId(process.env['clientId']!)
     }
 })
