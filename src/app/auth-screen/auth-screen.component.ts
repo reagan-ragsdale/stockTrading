@@ -26,7 +26,7 @@ export class AuthScreenComponent implements OnInit {
     //appKey = btoa(appKey)
     //appSecret = btoa(appSecret)
     let credentials: any = `${appKey}:${appSecret}`
-    credentials = Buffer.from(credentials, 'base64')
+    credentials = btoa(credentials)
     const url = 'https://api.schwabapi.com/v1/oauth/token';
     const options = {
       method: 'POST',
