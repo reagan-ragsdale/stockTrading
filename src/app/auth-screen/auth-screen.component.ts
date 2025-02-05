@@ -35,7 +35,7 @@ export class AuthScreenComponent implements OnInit {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
       data: {
-        'grant_type': 'authorization_code', 'code': this.code, 'redirect_uri': 'https://stocktrading.up.railway.app'
+        'grant_type': 'authorization_code', 'code': this.code, 'redirect_uri': 'https://stocktrading.up.railway.app/'
       }
     };
 
