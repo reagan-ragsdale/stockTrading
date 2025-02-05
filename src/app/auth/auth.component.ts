@@ -123,9 +123,9 @@ export class AuthComponent implements OnInit {
   }
 
   async ngOnInit() {
-    remult.initUser()
-    console.log('here in init')
-    if(remult.authenticated()){
+    let user = await remult.initUser()
+    console.log(user)
+    if(user){
       console.log('here in authenticated')
       this.url = location.href
       this.getUrl()
