@@ -25,12 +25,8 @@ app.get("/*", (_, res) => {
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "https://stocktrading.up.railway.app");
   res.header("Access-Control-Allow-Headers", "Origin, Content-Type,Authorization");
+  res.header("Access-Control-Allow-Methods", "POST")
   next();
 });
 console.log(process.env["PORT"])
-app.get('/', function (req, res) {
-
-  res.header("Access-Control-Allow-Origin", "https://stocktrading.up.railway.app");
-  res.send('hello world')
-})
 app.listen(process.env["PORT"] || 3002, () => console.log("Server started"));
