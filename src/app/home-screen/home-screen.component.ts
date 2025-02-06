@@ -58,8 +58,7 @@ export class HomeScreenComponent implements OnInit{
       const response = await fetch(url, options);
       const result = await response.json();
       console.log(result)
-      const body = result[0]
-      this.userPreferenceData = body
+      this.userPreferenceData = result
     }
     catch(error: any){
       console.log(error.message)
@@ -74,8 +73,8 @@ export class HomeScreenComponent implements OnInit{
           "service": "LEVELONE_EQUITIES",
           "requestid": "1",
           "command": "SUBS",
-          "SchwabClientCustomerId": this.userPreferenceData.streamerInfo.schwabClientCustomerId,
-          "SchwabClientCorrelId": this.userPreferenceData.streamerInfo.schwabClientCorrelId,
+          "SchwabClientCustomerId": this.userPreferenceData.streamerInfo[0].schwabClientCustomerId,
+          "SchwabClientCorrelId": this.userPreferenceData.streamerInfo[0].schwabClientCorrelId,
           "parameters": {
            "keys": "AAPL",
            "fields": "0,1,2,3,4,5,6,7,8,9,10"
