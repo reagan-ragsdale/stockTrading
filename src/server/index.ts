@@ -26,5 +26,10 @@ app.get("/*", (_, res) => {
 app.use(cors({
   origin: "https://stocktrading.up.railway.app"
 }))
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  next();
+});
 console.log(process.env["PORT"])
 app.listen(process.env["PORT"] || 3002, () => console.log("Server started"));
