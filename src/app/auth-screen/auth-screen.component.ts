@@ -21,7 +21,7 @@ export class AuthScreenComponent implements OnInit {
   async getTokens() {
     this.code = ''
     this.sharedCache.currentCode.subscribe(code => this.code = code!)
-    let returnCall = OAuthContoller.sendOauthCall(this.code)
+    let returnCall = await OAuthContoller.sendOauthCall(this.code)
     console.log(returnCall)
     
     
