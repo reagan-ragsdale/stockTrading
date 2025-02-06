@@ -1,3 +1,4 @@
+import { Buffer} from 'buffer'
 export const oauthCall = async (appKey: string, appSecret: string, code: string): Promise<string[]> => {
     console.log('here')
     let credentials = Buffer.from(`${appKey}:${appSecret}`).toString('base64')
