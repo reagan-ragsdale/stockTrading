@@ -11,16 +11,19 @@ import { SimFinance } from '../shared/controllers/SimFinance.js'
 import { SimFInance } from '../shared/tasks/simFinance.js'
 import { initApp } from '../app/app.config.js'
 import { testEnc } from '../shared/tasks/testEnc.js'
+import { oauthCall } from './oauth-server.js'
+import { OAuthContoller } from '../shared/controllers/OAuthController.js'
 //import ev from '../../environmentVariables.json'
 
 config()
 AuthController.generate = generate;
 AuthController.verify = verify
+OAuthContoller.sendCall = oauthCall;
 
 
 
 export const api = remultExpress({
-    controllers:[AuthController, SimFinance],
+    controllers:[AuthController, SimFinance, OAuthContoller],
     entities: [Task,Users,Rhkeys, SimFInance, testEnc],
     admin:true,
     getUser: (req) => req.session!['user'],
