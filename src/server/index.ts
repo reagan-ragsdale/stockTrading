@@ -9,7 +9,7 @@ const app = express()
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Origin', 'Authorization']
 })) */
-app.use(cors())
+
 app.use(
     session({
       secret: process.env["SESSION_SECRET"] || "my secret"
@@ -23,5 +23,6 @@ app.use(express.static(frontendFiles));
 app.get("/*", (_, res) => {
   res.sendFile(frontendFiles + "/index.html");
 });
+app.use(cors())
 console.log(process.env["PORT"])
 app.listen(process.env["PORT"] || 3002, () => console.log("Server started"));
