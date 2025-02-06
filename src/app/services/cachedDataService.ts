@@ -13,6 +13,7 @@ export class CachedData{
     public currentAppSecret = new BehaviorSubject<string | null>(null)
     public currentCode = new BehaviorSubject<string | null>(null)
     public currentAccessToken = new BehaviorSubject<string | null>(null)
+    public currentRefreshToken = new BehaviorSubject<string | null>(null)
     
 
     constructor(){}
@@ -28,6 +29,9 @@ export class CachedData{
     }
     public changeAccessToken(accessToken: string){
         this.currentAccessToken.next(accessToken)
+    }
+    public changeRefreshToken(refreshToken: string){
+        this.currentRefreshToken.next(refreshToken)
     }
 
 

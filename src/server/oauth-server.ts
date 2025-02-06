@@ -3,10 +3,7 @@ import { AuthController } from '../shared/controllers/AuthController.js'
 import { URLSearchParams } from 'node:url';
 export const oauthCall = async (code: string): Promise<string[]> => {
     let userKeys = await AuthController.getKeyPairs()
-    console.log('here')
     let credentials = Buffer.from(`${userKeys.appKey}:${userKeys.appSecret}`).toString('base64')
-    console.log(credentials)
-    console.log(code)
     let payload = new URLSearchParams({
         grant_type: 'authorization_code', code: code, redirect_uri: 'https://stocktrading.up.railway.app'
     })
@@ -25,7 +22,6 @@ export const oauthCall = async (code: string): Promise<string[]> => {
     try {
         const response = await fetch(url, options);
         const result = await response.json();
-        console.log(result)
         let refreshToken = result['refresh_token']
         let accessToken = result['access_token']
         return [accessToken, refreshToken]
