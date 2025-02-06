@@ -1,5 +1,5 @@
 export const oauthCall = async (credentials: string, code: string): Promise<string[]> => {
-
+    console.log('here')
     const url = 'https://api.schwabapi.com/v1/oauth/token';
     const options = {
         method: 'POST',
