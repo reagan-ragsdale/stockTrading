@@ -82,7 +82,10 @@ export class HomeScreenComponent implements OnInit{
         }
       ]
     }
-    this.schwabWebsocket.send(JSON.stringify(aaplDataMsg))
+    this.schwabWebsocket.onopen = () => {
+      this.schwabWebsocket.send(JSON.stringify(aaplDataMsg))
+    }
+    
     this.schwabWebsocket.onmessage = (event: any) => {
       console.log(event)
     }
