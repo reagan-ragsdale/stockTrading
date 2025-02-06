@@ -8,7 +8,7 @@ export const oauthCall = async (code: string): Promise<string[]> => {
     const options = {
         method: 'POST',
         body: JSON.stringify({
-            'grant_type': 'authorization_code', 'code': code, 'redirect_uri': 'https://stocktrading.up.railway.app'
+            grant_type: 'authorization_code', code: code, redirect_uri: 'https://stocktrading.up.railway.app'
         }),
         headers: {
             'Authorization': `Basic ${credentials}`,
