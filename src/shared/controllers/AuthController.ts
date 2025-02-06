@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 import type { generate, verify } from 'password-hash'
 import { getCurrentUser, setSessionUser } from '../../server/server-session.js'
 import { userRepo } from '../tasks/Users.js'
-import { rhRepo } from '../tasks/rhkeys.js';
+import { Rhkeys, rhRepo } from '../tasks/rhkeys.js';
 import { testEncRepo } from '../tasks/testEnc.js';
 
 declare module 'remult' {
@@ -68,15 +68,21 @@ export class AuthController {
   }
 
   @BackendMethod({ allowed: true })
-  static async insertKeyPairs(publicKey: string, privateKey: string, apiKey: string) {
+  static async insertKeyPairs(publicKey: string, privateKey: string) {
     let currentUser = getCurrentUser()
     let userInfo = await userRepo.findFirst({id: currentUser.id})
       await rhRepo.insert({
         userId: userInfo?.userId,
-        publicKey: AuthController.generate(publicKey),
-        privateKey: AuthController.generate(privateKey),
-        apiKey: AuthController.generate(apiKey)
+        appKey: publicKey,
+        appSecret: privateKey
       })
+
+  }
+  @BackendMethod({ allowed: true })
+  static async getKeyPairs(): Promise<Rhkeys> {
+    let currentUser = getCurrentUser()
+    let userInfo = await userRepo.findFirst({id: currentUser.id})
+    return await rhRepo.findFirst({userId: userInfo?.userId}) as Rhkeys
 
   }
 

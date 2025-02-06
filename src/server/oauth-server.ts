@@ -1,7 +1,9 @@
 import { Buffer} from 'node:buffer'
-export const oauthCall = async (appKey: string, appSecret: string, code: string): Promise<string[]> => {
+import { AuthController } from '../shared/controllers/AuthController'
+export const oauthCall = async (code: string): Promise<string[]> => {
+    let userKeys = await AuthController.getKeyPairs()
     console.log('here')
-    let credentials = Buffer.from(`${appKey}:${appSecret}`).toString('base64')
+    let credentials = Buffer.from(`${userKeys.appKey}:${userKeys.appSecret}`).toString('base64')
     const url = 'https://api.schwabapi.com/v1/oauth/token';
     const options = {
         method: 'POST',

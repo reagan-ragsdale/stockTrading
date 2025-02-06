@@ -12,13 +12,10 @@ export class Rhkeys {
     userId = ""
 
     @Fields.string({ includeInApi: false })
-    publicKey = ""
+    appKey = ""
 
     @Fields.string({ includeInApi: false })
-    privateKey = ""
-
-    @Fields.string({ includeInApi: false })
-    apiKey = ""
+    appSecret = ""
 
 
     @Fields.createdAt()

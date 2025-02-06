@@ -19,16 +19,9 @@ export class AuthScreenComponent implements OnInit {
   
 
   async getTokens() {
-    let appKey = ''
-    let appSecret = ''
     this.code = ''
-    this.sharedCache.currentAppKey.subscribe(key => appKey = key!)
-    this.sharedCache.currentAppSecret.subscribe(secret => appSecret = secret!)
     this.sharedCache.currentCode.subscribe(code => this.code = code!)
-    console.log(this.code)
-    console.log(appKey)
-    console.log(appSecret)
-    let returnCall = OAuthContoller.sendOauthCall(appKey, appSecret, this.code)
+    let returnCall = OAuthContoller.sendOauthCall(this.code)
     console.log(returnCall)
     
     
