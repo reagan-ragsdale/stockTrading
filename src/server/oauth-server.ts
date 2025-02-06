@@ -1,5 +1,5 @@
 import { Buffer} from 'node:buffer'
-import { AuthController } from '../shared/controllers/AuthController'
+import { AuthController } from '../shared/controllers/AuthController.js'
 export const oauthCall = async (code: string): Promise<string[]> => {
     let userKeys = await AuthController.getKeyPairs()
     console.log('here')
