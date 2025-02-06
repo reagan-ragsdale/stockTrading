@@ -43,15 +43,14 @@ export class HomeScreenComponent implements OnInit{
       this.userSimFinData = await SimFinance.getSimFinData()
     });
   }
-
+  accessToken = ''
   async getUserData() {
-    let accessToken = ''
-    this.sharedCache.currentAccessToken.subscribe(token => accessToken = token!)
+    this.sharedCache.currentAccessToken.subscribe(token => this.accessToken = token!)
     const url = 'https://api.schwabapi.com/trader/v1/userPreference';
     const options = {
       method: 'GET',
       headers: {
-        'Authorization': `Bearer ${accessToken}`
+        'Authorization': `Bearer ${this.accessToken}`
       }
     };
     try{
@@ -76,9 +75,9 @@ export class HomeScreenComponent implements OnInit{
           "SchwabClientCustomerId": this.userPreferenceData.streamerInfo[0].schwabClientCustomerId,
           "SchwabClientCorrelId": this.userPreferenceData.streamerInfo[0].schwabClientCorrelId,
           "parameters": {
-            "Authorization": "PN",
-            "SchwabClientChannel": "IO",
-            "SchwabClientFunctionId": "Tradeticket"
+            "Authorization": this.accessToken,
+            "SchwabClientChannel": this.userPreferenceData.streamerInfo[0].schwabClientChannel,
+            "SchwabClientFunctionId": this.userPreferenceData.streamerInfo[0].schwabClientFunctionId
           }
         }
       ]
