@@ -48,7 +48,7 @@ export class HomeScreenComponent implements OnInit{
     this.sharedCache.currentAccessToken.subscribe(token => accessToken = token!)
     const url = 'https://api.schwabapi.com/trader/v1/accounts/accountNumbers';
     const options = {
-      method: 'POST',
+      method: 'GET',
       headers: {
         'Authorization': `Bearer ${accessToken}`
       }
