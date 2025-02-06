@@ -66,7 +66,7 @@ export class HomeScreenComponent implements OnInit{
   }
   schwabWebsocket: any
   startWebsocket(){
-    this.schwabWebsocket = new WebSocket(this.userPreferenceData.streamerInfo.streamerSocketUrl)
+    this.schwabWebsocket = new WebSocket(this.userPreferenceData.streamerInfo[0].streamerSocketUrl)
     const aaplDataMsg = {
       "requests" : [
         {
