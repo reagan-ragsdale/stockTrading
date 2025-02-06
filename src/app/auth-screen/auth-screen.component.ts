@@ -28,8 +28,6 @@ export class AuthScreenComponent implements OnInit {
     console.log(this.code)
     //appKey = btoa(appKey)
     //appSecret = btoa(appSecret)
-    let credentials: any = Buffer.from(`${appKey}:${appSecret}`).toString('base64')
-    credentials = btoa(credentials)
     let returnCall = OAuthContoller.sendOauthCall(appKey, appSecret, this.code)
     console.log(returnCall)
     
