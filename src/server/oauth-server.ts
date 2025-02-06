@@ -16,6 +16,7 @@ export const oauthCall = async (credentials: string, code: string): Promise<stri
     try {
         const response = await fetch(url, options);
         const result = await response.json();
+        console.log(result)
         let refreshToken = result['refresh_token']
         let accessToken = result['access_token']
         return [accessToken, refreshToken]
