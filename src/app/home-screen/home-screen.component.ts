@@ -26,6 +26,7 @@ export class HomeScreenComponent implements OnInit{
   }
   readonly dialog = inject(MatDialog);
   accountNum: any = 0
+  userPreferenceData: any = {}
 
   userSimFinData: SimFInance | null = null
   userData: any = []
@@ -46,33 +47,54 @@ export class HomeScreenComponent implements OnInit{
   async getUserData() {
     let accessToken = ''
     this.sharedCache.currentAccessToken.subscribe(token => accessToken = token!)
-    const url = 'https://api.schwabapi.com/trader/v1/accounts/accountNumbers';
+    const url = 'https://api.schwabapi.com/trader/v1/userPreference';
     const options = {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${accessToken}`
       }
     };
-
-
     try{
       const response = await fetch(url, options);
       const result = await response.json();
       console.log(result)
-      this.accountNum = result['accountNumber']
+      const body = result[0]
+      this.userPreferenceData = body
     }
     catch(error: any){
       console.log(error.message)
     }
-    
-
-
+  }
+  schwabWebsocket: any
+  startWebsocket(){
+    this.schwabWebsocket = new WebSocket(this.userPreferenceData.streamerInfo.streamerSocketUrl)
+    const aaplDataMsg = {
+      "requests" : [
+        {
+          "service": "LEVELONE_EQUITIES",
+          "requestid": "1",
+          "command": "SUBS",
+          "SchwabClientCustomerId": this.userPreferenceData.streamerInfo.schwabClientCustomerId,
+          "SchwabClientCorrelId": this.userPreferenceData.streamerInfo.schwabClientCorrelId,
+          "parameters": {
+           "keys": "AAPL",
+           "fields": "0,1,2,3,4,5,6,7,8,9,10"
+          }
+        }
+      ]
+    }
+    this.schwabWebsocket.send(JSON.stringify(aaplDataMsg))
+    this.schwabWebsocket.onmessage = (event: any) => {
+      console.log(event)
+    }
+      
   }
 
   
 
   async ngOnInit(){
     await this.getUserData()
+    this.startWebsocket()
     this.userSimFinData = await SimFinance.getSimFinData()
   }
 
