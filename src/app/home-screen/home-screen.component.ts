@@ -25,7 +25,7 @@ export class HomeScreenComponent implements OnInit{
 
   }
   readonly dialog = inject(MatDialog);
-  accountNum: any 
+  accountNum: any = 0
 
   userSimFinData: SimFInance | null = null
   userData: any = []
@@ -58,6 +58,7 @@ export class HomeScreenComponent implements OnInit{
     try{
       const response = await fetch(url, options);
       const result = await response.json();
+      console.log(result)
       this.accountNum = result['accountNumber']
     }
     catch(error: any){
