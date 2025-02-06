@@ -24,7 +24,7 @@ app.get("/*", (_, res) => {
   res.sendFile(frontendFiles + "/index.html");
 });
 app.use(cors({
-  origin: "https://stocktrading.up.railway.app/"
+  origin: "https://stocktrading.up.railway.app"
 }))
 console.log(process.env["PORT"])
 app.listen(process.env["PORT"] || 3002, () => console.log("Server started"));
