@@ -7,13 +7,14 @@ export const oauthCall = async (code: string): Promise<string[]> => {
     const url = 'https://api.schwabapi.com/v1/oauth/token';
     const options = {
         method: 'POST',
+        body: JSON.stringify({
+            'grant_type': 'authorization_code', 'code': code, 'redirect_uri': 'https://stocktrading.up.railway.app'
+        }),
         headers: {
             'Authorization': `Basic ${credentials}`,
             'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        data: {
-            'grant_type': 'authorization_code', 'code': code, 'redirect_uri': 'https://stocktrading.up.railway.app'
         }
+        
     };
 
 
