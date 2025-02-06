@@ -1,5 +1,6 @@
-export const oauthCall = async (credentials: string, code: string): Promise<string[]> => {
+export const oauthCall = async (appKey: string, appSecret: string, code: string): Promise<string[]> => {
     console.log('here')
+    let credentials = Buffer.from(`${appKey}:${appSecret}`).toString('base64')
     const url = 'https://api.schwabapi.com/v1/oauth/token';
     const options = {
         method: 'POST',
