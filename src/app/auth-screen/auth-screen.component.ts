@@ -25,6 +25,7 @@ export class AuthScreenComponent implements OnInit {
     this.sharedCache.currentAppKey.subscribe(key => appKey = key!)
     this.sharedCache.currentAppSecret.subscribe(secret => appSecret = secret!)
     this.sharedCache.currentCode.subscribe(code => this.code = code!)
+    console.log(this.code)
     //appKey = btoa(appKey)
     //appSecret = btoa(appSecret)
     let credentials: any = `${appKey}:${appSecret}`

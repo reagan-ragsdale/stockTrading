@@ -84,6 +84,7 @@ export class AuthComponent implements OnInit {
   getUrl(){
     console.log('here in get url')
     this.code = this.url.slice(this.url.indexOf('code=') + 5, this.url.indexOf('@') + 1)
+    console.log(this.code)
     this.sharedCache.changeCurrentCode(this.code)
     this.router.navigate(['/auth'])
   }
