@@ -24,7 +24,7 @@ export class CachedData{
         this.currentAppSecret.next(appScret)
     }
     public changeCurrentCode(code: string){
-        this.currentAppSecret.next(code)
+        this.currentCode.next(code)
     }
     public changeAccessToken(accessToken: string){
         this.currentAccessToken.next(accessToken)
