@@ -19,8 +19,6 @@ export class AuthScreenComponent implements OnInit {
   
 
   async getTokens() {
-    this.code = ''
-    this.sharedCache.currentCode.subscribe(code => this.code = code!)
     try{
       let returnCall = await OAuthContoller.sendOauthCall(this.code)
       this.sharedCache.changeAccessToken(returnCall[0])
@@ -37,8 +35,16 @@ export class AuthScreenComponent implements OnInit {
 
   }
 
+  async getUrl(){
+    console.log('here in get url')
+    this.code = this.url.slice(this.url.indexOf('code=') + 5, this.url.indexOf('@') + 1)
+    this.sharedCache.changeCurrentCode(this.code)
+    await this.getTokens()
+  }
+
   ngOnInit() {
-    this.getTokens()
+    this.url = location.href
+    this.getUrl()
   }
 
 }
