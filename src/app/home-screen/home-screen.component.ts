@@ -112,7 +112,7 @@ export class HomeScreenComponent implements OnInit {
       
       if (Object.hasOwn(data, 'response')) {
         if(data.response[0].content.code == 0 && this.hasBeenSent == false){
-          //this.schwabWebsocket!.send(JSON.stringify(aaplDataMsg)) 
+          this.schwabWebsocket!.send(JSON.stringify(aaplDataMsg)) 
           console.log('send aapl')
           this.hasBeenSent = true
         }
