@@ -151,8 +151,10 @@ export class HomeScreenComponent implements OnInit {
     let chartInstance = Chart.getChart("stock-chart")
     if (chartInstance != undefined) {
       this.updateChart()
+      console.log('update chart')
     }
     else{
+      console.log('create chart')
       this.stockChart = new Chart("stock-chart", {
         type: 'line', //this denotes tha type of chart
   
