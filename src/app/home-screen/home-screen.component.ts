@@ -15,7 +15,7 @@ import {
 import { AddFundsComponent } from './add-funds/add-funds.component';
 import { CachedData } from '../services/cachedDataService';
 import { remult } from 'remult';
-import { Chart, InteractionModeFunction } from 'chart.js';
+import { Chart, InteractionModeFunction, registerables } from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
 @Component({
   selector: 'app-home-screen',
@@ -116,6 +116,9 @@ export class HomeScreenComponent implements OnInit {
           console.log('send aapl')
           this.hasBeenSent = true
         }
+      }
+      if(Object.hasOwn(data, 'data') && this.hasBeenSent == true){
+        this.refreshData(data.data[0].content[0]['1'])
       }
       /* 
       if (count == 0) {
@@ -221,6 +224,7 @@ export class HomeScreenComponent implements OnInit {
 
   async ngOnInit() {
     Chart.register(annotationPlugin);
+    Chart.register(...registerables)
     let user = await remult.initUser()
     await this.getUserData()
     this.startWebsocket()
