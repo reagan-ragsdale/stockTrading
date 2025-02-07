@@ -67,6 +67,7 @@ export class HomeScreenComponent implements OnInit {
     }
   }
   schwabWebsocket: WebSocket | null = null
+  hasBeenSent: boolean = false
   startWebsocket() {
     this.schwabWebsocket = new WebSocket(this.userPreferenceData.streamerInfo[0].streamerSocketUrl)
     const loginMsg = {
@@ -106,9 +107,15 @@ export class HomeScreenComponent implements OnInit {
     let count = 0
     this.schwabWebsocket.onmessage = (event: any) => {
       console.log(JSON.parse(event.data))
+      
       let data = JSON.parse(event.data)
-      if (Object.hasOwn(data, 'data')) {
-        this.refreshData(event.data)
+      
+      if (Object.hasOwn(data, 'response')) {
+        if(data.response[0].content.code == 0 && this.hasBeenSent == false){
+          //this.schwabWebsocket!.send(JSON.stringify(aaplDataMsg)) 
+          console.log('send aapl')
+          this.hasBeenSent = true
+        }
       }
       /* 
       if (count == 0) {
