@@ -143,6 +143,7 @@ export class HomeScreenComponent implements OnInit {
     this.createOrUpdateChart()
   }
   updateChart() {
+    this.stockChart.data.datasets[0].data = this.chartData.data
     this.stockChart.update()
   }
   public stockChart: any
