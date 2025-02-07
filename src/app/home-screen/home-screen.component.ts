@@ -118,7 +118,7 @@ export class HomeScreenComponent implements OnInit {
         }
       }
       if(Object.hasOwn(data, 'data') && this.hasBeenSent == true){
-        if(Object.hasOwn(data.data[0].content[0], '1')){
+        if(Object.hasOwn(data.data[0].content[0], '2')){
           this.refreshData(data)
         }
         
@@ -138,7 +138,7 @@ export class HomeScreenComponent implements OnInit {
     name: 'AAPL'
   }
   refreshData(data: any) {
-    this.chartData.data.push(data.data[0].content[0]['1'])
+    this.chartData.data.push(data.data[0].content[0]['2'])
     console.log(this.chartData.data)
     this.createOrUpdateChart()
   }
