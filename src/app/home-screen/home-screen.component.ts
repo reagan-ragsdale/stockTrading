@@ -104,6 +104,7 @@ export class HomeScreenComponent implements OnInit {
     }
     let count = 0
     this.schwabWebsocket.onmessage = (event: any) => {
+      console.log(JSON.parse(event))
       let data = JSON.parse(event.data)
       if (Object.hasOwn(data, 'data')) {
         this.refreshData(event.data)
@@ -197,6 +198,10 @@ export class HomeScreenComponent implements OnInit {
     }
     return min - 10
 
+  }
+
+  endStream(){
+    this.schwabWebsocket.close()
   }
 
 
