@@ -4,6 +4,7 @@ import { CachedData } from '../services/cachedDataService';
 import { Router } from '@angular/router';
 import { oauthCall } from '../../server/oauth-server';
 import { OAuthContoller } from '../../shared/controllers/OAuthController';
+import { remult } from 'remult';
 
 @Component({
   selector: 'app-auth-screen',
@@ -15,6 +16,7 @@ export class AuthScreenComponent implements OnInit {
   constructor(private sharedCache: CachedData, private router: Router) { }
   code: string = ''
   url: string = ''
+  remult = remult
 
   
 
@@ -42,7 +44,8 @@ export class AuthScreenComponent implements OnInit {
     await this.getTokens()
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    let user = await remult.initUser()
     this.url = location.href
     this.getUrl()
   }
