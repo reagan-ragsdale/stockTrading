@@ -150,7 +150,7 @@ export class HomeScreenComponent implements OnInit {
   createOrUpdateChart() {
     let chartInstance = Chart.getChart("stock-chart")
     if (chartInstance != undefined) {
-      this.stockChart.update()
+      this.updateChart()
     }
     else{
       this.stockChart = new Chart("stock-chart", {
