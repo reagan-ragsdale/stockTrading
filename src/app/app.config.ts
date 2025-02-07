@@ -14,7 +14,7 @@ import { remult } from 'remult';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), 
-    { provide: provideAppInitializer, useFactory: initApp, multi: true },
+    { provide: provideAppInitializer(initApp()), useFactory: initApp, multi: true },
     MatCardModule,
     MatToolbarModule,
     MatFormFieldModule,
@@ -29,6 +29,7 @@ export const appConfig: ApplicationConfig = {
 export function initApp() {
   const loadCurrentUserBeforeAppStarts = async () => {
     remult.user = await AuthController.currentUser()
+    await remult.initUser()
   }
   return loadCurrentUserBeforeAppStarts
 }

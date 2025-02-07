@@ -66,7 +66,7 @@ export class HomeScreenComponent implements OnInit {
       console.log(error.message)
     }
   }
-  schwabWebsocket: any
+  schwabWebsocket: WebSocket | null = null
   startWebsocket() {
     this.schwabWebsocket = new WebSocket(this.userPreferenceData.streamerInfo[0].streamerSocketUrl)
     const loginMsg = {
@@ -101,11 +101,11 @@ export class HomeScreenComponent implements OnInit {
       ]
     }
     this.schwabWebsocket.onopen = () => {
-      this.schwabWebsocket.send(JSON.stringify(loginMsg))
+      this.schwabWebsocket!.send(JSON.stringify(loginMsg))
     }
     let count = 0
     this.schwabWebsocket.onmessage = (event: any) => {
-      console.log(event)
+      console.log(JSON.parse(event.data))
       let data = JSON.parse(event.data)
       if (Object.hasOwn(data, 'data')) {
         this.refreshData(event.data)
@@ -118,6 +118,7 @@ export class HomeScreenComponent implements OnInit {
     }
 
   }
+
   chartData: any = {
     data: [],
     labels: [],
@@ -205,7 +206,7 @@ export class HomeScreenComponent implements OnInit {
 
   endStream(){
     console.log(this.schwabWebsocket)
-    this.schwabWebsocket.close()
+    this.schwabWebsocket!.close()
     console.log(this.schwabWebsocket)
   }
 
