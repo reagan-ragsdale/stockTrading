@@ -47,6 +47,8 @@ export class AuthScreenComponent implements OnInit {
 
   async ngOnInit() {
     let user = await remult.initUser()
+    console.log('user info below')
+    console.log(user)
     this.url = location.href
     this.getUrl()
   }
