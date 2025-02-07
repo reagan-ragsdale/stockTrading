@@ -68,7 +68,7 @@ export class HomeScreenComponent implements OnInit {
   }
   schwabWebsocket: any
   startWebsocket() {
-    this.schwabWebsocket = new WebSocket(this.userPreferenceData.streamerInfo[0].streamerSocketUrl,)
+    this.schwabWebsocket = new WebSocket(this.userPreferenceData.streamerInfo[0].streamerSocketUrl)
     const loginMsg = {
       "requests": [
         {
@@ -81,17 +81,6 @@ export class HomeScreenComponent implements OnInit {
             "Authorization": this.accessToken,
             "SchwabClientChannel": this.userPreferenceData.streamerInfo[0].schwabClientChannel,
             "SchwabClientFunctionId": this.userPreferenceData.streamerInfo[0].schwabClientFunctionId
-          }
-        },
-        {
-          "service": "LEVELONE_EQUITIES",
-          "requestid": "1",
-          "command": "SUBS",
-          "SchwabClientCustomerId": this.userPreferenceData.streamerInfo[0].schwabClientCustomerId,
-          "SchwabClientCorrelId": this.userPreferenceData.streamerInfo[0].schwabClientCorrelId,
-          "parameters": {
-            "keys": "AAPL",
-            "fields": "0,1,2,3,4,5,6,7,8,9,10"
           }
         }
       ]
@@ -215,6 +204,7 @@ export class HomeScreenComponent implements OnInit {
   }
 
   endStream(){
+    console.log(this.schwabWebsocket)
     this.schwabWebsocket.close()
     console.log(this.schwabWebsocket)
   }
