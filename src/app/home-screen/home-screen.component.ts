@@ -143,7 +143,8 @@ export class HomeScreenComponent implements OnInit {
     this.createOrUpdateChart()
   }
   updateChart() {
-    this.stockChart.data.datasets[0].data = this.chartData.data
+    let dataNew = this.chartData.data.slice()
+    this.stockChart.data.datasets[0].data = dataNew
     this.stockChart.update()
   }
   public stockChart: any
