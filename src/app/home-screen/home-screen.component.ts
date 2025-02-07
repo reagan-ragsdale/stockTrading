@@ -135,65 +135,68 @@ export class HomeScreenComponent implements OnInit {
   chartData: any = {
     data: [],
     labels: [],
-    name: ''
+    name: 'AAPL'
   }
   refreshData(data: any) {
     this.chartData.data.push(data.data[0].content[0]['1'])
     console.log(this.chartData.data)
-    this.updateChart()
+    this.createOrUpdateChart()
   }
   updateChart() {
     this.stockChart.update()
   }
   public stockChart: any
-  createChart() {
+  createOrUpdateChart() {
     let chartInstance = Chart.getChart("stock-chart")
     if (chartInstance != undefined) {
-      this.stockChart.destroy()
+      this.stockChart.update()
     }
-    this.stockChart = new Chart("stock-chart", {
-      type: 'line', //this denotes tha type of chart
-
-      data: {// values on X-Axis
-
-
-
-        datasets: [
-          {
-            label: this.chartData.name,
-            data: this.chartData.data,
-            backgroundColor: '#54C964',
-            hoverBackgroundColor: '#54C964',
-            borderColor: 'hsl(18, 12%, 60%)',
-          }
-        ]
-      },
-      options: {
-
-        aspectRatio: 3.5,
-        color: '#DBD4D1',
-        font: {
-          weight: 'bold'
+    else{
+      this.stockChart = new Chart("stock-chart", {
+        type: 'line', //this denotes tha type of chart
+  
+        data: {// values on X-Axis
+  
+  
+  
+          datasets: [
+            {
+              label: this.chartData.name,
+              data: this.chartData.data,
+              backgroundColor: '#54C964',
+              hoverBackgroundColor: '#54C964',
+              borderColor: 'hsl(18, 12%, 60%)',
+            }
+          ]
         },
-
-        scales: {
-          y: {
-            max: this.getMaxForChart(this.chartData.data),
-            min: this.getMinForChart(this.chartData.data),
-            grid: {
-              color: 'hsl(18, 12%, 60%)'
-            },
+        options: {
+  
+          aspectRatio: 3.5,
+          color: '#DBD4D1',
+          font: {
+            weight: 'bold'
           },
-          x: {
-            grid: {
-              color: 'hsl(18, 12%, 60%)'
+  
+          scales: {
+            y: {
+              max: this.getMaxForChart(this.chartData.data),
+              min: this.getMinForChart(this.chartData.data),
+              grid: {
+                color: 'hsl(18, 12%, 60%)'
+              },
             },
-
+            x: {
+              grid: {
+                color: 'hsl(18, 12%, 60%)'
+              },
+  
+            }
+  
           }
-
         }
-      }
-    })
+      })
+    }
+    
   }
 
   getMaxForChart(arr: number[]): number {
@@ -231,7 +234,6 @@ export class HomeScreenComponent implements OnInit {
     let user = await remult.initUser()
     await this.getUserData()
     this.startWebsocket()
-    this.createChart()
     this.userSimFinData = await SimFinance.getSimFinData()
   }
 
