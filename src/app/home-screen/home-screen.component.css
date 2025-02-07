@@ -9,3 +9,6 @@
     background-color: #3C3E3D;
     height:100%;
 }
+.chart-container{
+    width:100% !important;
+}
