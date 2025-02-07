@@ -102,6 +102,7 @@ export class HomeScreenComponent implements OnInit{
     }
     let count = 0
     this.schwabWebsocket.onmessage = (event: any) => {
+      console.log(event)
       if(count > 0){
         this.schwabWebsocket.send(JSON.stringify(aaplDataMsg))
       }
