@@ -3,7 +3,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CachedData } from '../services/cachedDataService';
 import { Router } from '@angular/router';
 import { oauthCall } from '../../server/oauth-server';
-import { OAuthContoller } from '../../shared/controllers/OAuthController';
+import { OAuthContoller } from '../../shared/controllers/OAuthController.js';
 import { remult } from 'remult';
 
 @Component({
