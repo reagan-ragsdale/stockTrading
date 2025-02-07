@@ -46,6 +46,7 @@ export class HomeScreenComponent implements OnInit{
   accessToken = ''
   async getUserData() {
     this.sharedCache.currentAccessToken.subscribe(token => this.accessToken = token!)
+    console.log(this.accessToken)
     const url = 'https://api.schwabapi.com/trader/v1/userPreference';
     const options = {
       method: 'GET',
