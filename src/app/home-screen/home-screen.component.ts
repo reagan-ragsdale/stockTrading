@@ -120,10 +120,11 @@ export class HomeScreenComponent implements OnInit {
       if (Object.hasOwn(data, 'data')) {
         this.refreshData(event.data)
       }
+      /* 
       if (count == 0) {
         this.schwabWebsocket.send(JSON.stringify(aaplDataMsg))
       }
-      count++
+      count++ */
     }
 
   }
