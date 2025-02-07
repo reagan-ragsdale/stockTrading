@@ -1,4 +1,4 @@
-<div style="display:flex; flex-direction: column;">
+<div style="display:flex; flex-direction: column; height: calc(100vh - 60px);">
     <div class="top-bar">
         <button mat-icon-button aria-label="Add more funds" (click)="showAddFunds()">
             <mat-icon>add</mat-icon>
@@ -6,6 +6,9 @@
         <h3 style="padding-right:1rem;">{{userSimFinData?.dollarAmt | currency:'USD':'symbol'}}</h3>
     </div>
     <div class="dashboard">
-        <h1>{{accountNum}}</h1>
+        <h1>Dashboard</h1>
+        <div class="canvas-container">
+            <canvas id="stock-chart">{{stockChart}}</canvas>
+        </div>
     </div>
 </div>

@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { SimFInance } from '../../shared/tasks/simFinance';
 import { SimFinance } from '../../shared/controllers/SimFinance';
 import { CommonModule } from '@angular/common';
-import {MatIconModule} from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import {
   MatDialog,
@@ -15,14 +15,15 @@ import {
 import { AddFundsComponent } from './add-funds/add-funds.component';
 import { CachedData } from '../services/cachedDataService';
 import { remult } from 'remult';
+import { Chart, InteractionModeFunction } from 'chart.js';
 @Component({
   selector: 'app-home-screen',
-  imports: [CommonModule,MatIconModule,MatButtonModule],
+  imports: [CommonModule, MatIconModule, MatButtonModule],
   templateUrl: './home-screen.component.html',
   styleUrl: './home-screen.component.css'
 })
-export class HomeScreenComponent implements OnInit{
-  constructor(private sharedCache: CachedData){
+export class HomeScreenComponent implements OnInit {
+  constructor(private sharedCache: CachedData) {
 
   }
   remult = remult
@@ -35,7 +36,7 @@ export class HomeScreenComponent implements OnInit{
 
   canShowAddFunds: boolean = true;
 
-  showAddFunds(){
+  showAddFunds() {
     const dialogRef = this.dialog.open(AddFundsComponent, {
       width: '300px',
       enterAnimationDuration: 0,
@@ -55,20 +56,20 @@ export class HomeScreenComponent implements OnInit{
         'Authorization': `Bearer ${this.accessToken}`
       }
     };
-    try{
+    try {
       const response = await fetch(url, options);
       const result = await response.json();
       this.userPreferenceData = result
     }
-    catch(error: any){
+    catch (error: any) {
       console.log(error.message)
     }
   }
   schwabWebsocket: any
-  startWebsocket(){
+  startWebsocket() {
     this.schwabWebsocket = new WebSocket(this.userPreferenceData.streamerInfo[0].streamerSocketUrl,)
     const loginMsg = {
-      "requests" : [
+      "requests": [
         {
           "service": "ADMIN",
           "requestid": "0",
@@ -84,7 +85,7 @@ export class HomeScreenComponent implements OnInit{
       ]
     }
     const aaplDataMsg = {
-      "requests" : [
+      "requests": [
         {
           "service": "LEVELONE_EQUITIES",
           "requestid": "1",
@@ -92,8 +93,8 @@ export class HomeScreenComponent implements OnInit{
           "SchwabClientCustomerId": this.userPreferenceData.streamerInfo[0].schwabClientCustomerId,
           "SchwabClientCorrelId": this.userPreferenceData.streamerInfo[0].schwabClientCorrelId,
           "parameters": {
-           "keys": "AAPL",
-           "fields": "0,1,2,3,4,5,6,7,8,9,10"
+            "keys": "AAPL",
+            "fields": "0,1,2,3,4,5,6,7,8,9,10"
           }
         }
       ]
@@ -104,23 +105,107 @@ export class HomeScreenComponent implements OnInit{
     let count = 0
     this.schwabWebsocket.onmessage = (event: any) => {
       let data = JSON.parse(event.data)
-      if(Object.hasOwn(data, 'data')){
-        console.log(data)
+      if (Object.hasOwn(data, 'data')) {
+        this.refreshData(event.data)
       }
-      if(count == 0){
+      if (count == 0) {
         this.schwabWebsocket.send(JSON.stringify(aaplDataMsg))
       }
       count++
     }
-      
+
+  }
+  chartData: any = {
+    data: [],
+    labels: [],
+    name: ''
+  }
+  refreshData(data: any) {
+    this.chartData.data.push(data.data[0].content[0][1])
+    this.updateChart()
+  }
+  updateChart() {
+    this.stockChart.update()
+  }
+  public stockChart: any
+  createChart() {
+    let chartInstance = Chart.getChart("stock-chart")
+    if (chartInstance != undefined) {
+      this.stockChart.destroy()
+    }
+    this.stockChart = new Chart("stock-chart", {
+      type: 'line', //this denotes tha type of chart
+
+      data: {// values on X-Axis
+
+
+
+        datasets: [
+          {
+            label: this.chartData.name,
+            data: this.chartData.data,
+            backgroundColor: '#54C964',
+            hoverBackgroundColor: '#54C964',
+            borderColor: 'hsl(18, 12%, 60%)',
+          }
+        ]
+      },
+      options: {
+
+        aspectRatio: 3.5,
+        color: '#DBD4D1',
+        font: {
+          weight: 'bold'
+        },
+
+        scales: {
+          y: {
+            max: this.getMaxForChart(this.chartData.data),
+            min: this.getMinForChart(this.chartData.data),
+            grid: {
+              color: 'hsl(18, 12%, 60%)'
+            },
+          },
+          x: {
+            grid: {
+              color: 'hsl(18, 12%, 60%)'
+            },
+
+          }
+
+        }
+      }
+    })
   }
 
-  
+  getMaxForChart(arr: number[]): number {
+    let max = -1000000
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i] > max) {
+        max = arr[i]
+      }
+    }
+    return max + 10
 
-  async ngOnInit(){
+  }
+  getMinForChart(arr: number[]): number {
+    let min = 1000000
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i] < min) {
+        min = arr[i]
+      }
+    }
+    return min - 10
+
+  }
+
+
+
+  async ngOnInit() {
     let user = await remult.initUser()
     await this.getUserData()
     this.startWebsocket()
+    this.createChart()
     this.userSimFinData = await SimFinance.getSimFinData()
   }
 
