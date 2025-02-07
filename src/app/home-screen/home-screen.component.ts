@@ -14,6 +14,7 @@ import {
 } from '@angular/material/dialog';
 import { AddFundsComponent } from './add-funds/add-funds.component';
 import { CachedData } from '../services/cachedDataService';
+import { remult } from 'remult';
 @Component({
   selector: 'app-home-screen',
   imports: [CommonModule,MatIconModule,MatButtonModule],
@@ -24,6 +25,7 @@ export class HomeScreenComponent implements OnInit{
   constructor(private sharedCache: CachedData){
 
   }
+  remult = remult
   readonly dialog = inject(MatDialog);
   accountNum: any = 0
   userPreferenceData: any = {}
@@ -116,6 +118,7 @@ export class HomeScreenComponent implements OnInit{
   
 
   async ngOnInit(){
+    let user = await remult.initUser()
     await this.getUserData()
     this.startWebsocket()
     this.userSimFinData = await SimFinance.getSimFinData()
