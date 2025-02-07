@@ -118,7 +118,10 @@ export class HomeScreenComponent implements OnInit {
         }
       }
       if(Object.hasOwn(data, 'data') && this.hasBeenSent == true){
-        this.refreshData(data)
+        if(Object.hasOwn(data.data[0].content[0], '1')){
+          this.refreshData(data)
+        }
+        
       }
       /* 
       if (count == 0) {
