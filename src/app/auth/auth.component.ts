@@ -79,24 +79,9 @@ export class AuthComponent implements OnInit {
     this.isLoginMode = !this.isLoginMode
   }
 
-  code: string = ''
-  url: string = ''
-  getUrl(){
-    console.log('here in get url')
-    this.code = this.url.slice(this.url.indexOf('code=') + 5, this.url.indexOf('@') + 1)
-    console.log(this.code)
-    this.sharedCache.changeCurrentCode(this.code)
-    this.router.navigate(['/auth'])
-  }
 
   
   async ngOnInit() {
     let user = await remult.initUser()
-    console.log(user)
-    if(user){
-      console.log('here in authenticated')
-      this.url = location.href
-      this.getUrl()
-    }
   }
 }
