@@ -16,6 +16,7 @@ import { AddFundsComponent } from './add-funds/add-funds.component';
 import { CachedData } from '../services/cachedDataService';
 import { remult } from 'remult';
 import { Chart, InteractionModeFunction } from 'chart.js';
+import annotationPlugin from 'chartjs-plugin-annotation';
 @Component({
   selector: 'app-home-screen',
   imports: [CommonModule, MatIconModule, MatButtonModule],
@@ -219,6 +220,7 @@ export class HomeScreenComponent implements OnInit {
 
 
   async ngOnInit() {
+    Chart.register(annotationPlugin);
     let user = await remult.initUser()
     await this.getUserData()
     this.startWebsocket()
