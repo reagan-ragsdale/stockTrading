@@ -13,7 +13,7 @@ export class AuthGuard implements CanActivate{
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Promise<boolean | UrlTree> | boolean | UrlTree {
 
-    if (remult.authenticated()) {
+    if (remult.user) {
       return true; // User is logged in, allow access
     } else {
       // User is not logged in, redirect to login page
