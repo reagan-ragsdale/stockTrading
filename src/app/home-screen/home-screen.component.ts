@@ -46,7 +46,6 @@ export class HomeScreenComponent implements OnInit{
   accessToken = ''
   async getUserData() {
     this.sharedCache.currentAccessToken.subscribe(token => this.accessToken = token!)
-    console.log(this.accessToken)
     const url = 'https://api.schwabapi.com/trader/v1/userPreference';
     const options = {
       method: 'GET',
@@ -57,7 +56,6 @@ export class HomeScreenComponent implements OnInit{
     try{
       const response = await fetch(url, options);
       const result = await response.json();
-      console.log(result)
       this.userPreferenceData = result
     }
     catch(error: any){
@@ -107,7 +105,7 @@ export class HomeScreenComponent implements OnInit{
       if(Object.hasOwn(data, 'data')){
         console.log(data)
       }
-      if(count > 0){
+      if(count == 0){
         this.schwabWebsocket.send(JSON.stringify(aaplDataMsg))
       }
       count++
