@@ -1,6 +1,6 @@
 import { BackendMethod, remult } from 'remult'
 import { stockOrder } from '../../app/Dtos/stockOrder';
-import { dbOrdersRepo } from '../tasks/dbOrders';
+import { DbOrders, dbOrdersRepo } from '../tasks/dbOrders';
 import { getCurrentUser, setSessionUser } from '../../server/server-session.js'
 import { userRepo } from '../tasks/Users';
 
@@ -10,7 +10,7 @@ import { userRepo } from '../tasks/Users';
 export class OrderController {
 
   @BackendMethod({ allowed: true })
-  static async placeOrder(order: stockOrder) {
+  static async placeOrder(order: stockOrder): Promise<boolean> {
     const currentUser = getCurrentUser()
     const userInfo = await userRepo.findFirst({userId: currentUser.id})
     await dbOrdersRepo.insert({
@@ -21,5 +21,14 @@ export class OrderController {
         shareQty: order.shareQty,
         orderTime: order.orderTime
     })
+    return order.orderType == 'Buy' ? true : false
+  }
+
+  @BackendMethod({ allowed: true })
+  static async getLastOrder(): Promise<DbOrders> {
+    const currentUser = getCurrentUser()
+    const userInfo = await userRepo.findFirst({userId: currentUser.id})
+    const orders = await dbOrdersRepo.find({where: {userId: userInfo?.userId}, orderBy: {orderTime: 'desc'}})
+    return orders[0]
   }
 }

@@ -2,7 +2,7 @@ import { buySellDto } from "../Dtos/buySellDto";
 import { StockAnalysisDto } from "../Dtos/stockAnalysisDto";
 
 export class AnalysisService{
-    static checkIsLowBuyIsHighSell(stock: StockAnalysisDto): buySellDto{
+    static checkIsLowBuyIsHighSell(stock: StockAnalysisDto, hasOpenOrder: boolean): buySellDto{
         //the incoming stock will have the name and an array of numbers that are all the datapoints throughout the day
 
         //initialize what were going to return
@@ -34,7 +34,12 @@ export class AnalysisService{
             //figure out where it currently is in the up and down in both the entire day as well as locally
 
             // find the slope of where the most recent point was (y2 - y1)/(x2 - x1)
-            let currentPositionDailyTrend = ((stock.history.length - 1) - 1) / (stock.history[stock.history.length - 1] - stock.history[0])
+            let currentDailyTrend = ((stock.history.length - 1) - 1) / (stock.history[stock.history.length - 1] - stock.history[0])
+
+            //find the local trend arbitrary amount of time
+            let currentLocalTrend = ((stock.history.length - 1) - stock.history.length - 50) / (stock.history[stock.history.length - 1] - stock.history[stock.history.length - 50])
+
+
         }
         else{
             returnSend = {

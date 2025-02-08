@@ -9,6 +9,9 @@
         <div style="width:100%; height: 100%; padding-left: 1rem; padding-right:1rem;">
             <h1>Dashboard</h1>
             <button style="width: max-content;"mat-raised-button color="warn" aria-label="Add more funds" (click)="endStream()">ABORT!</button>
+            <div>
+                <button *ngFor="let mover of moversData" style="width: max-content;"mat-raised-button color="primary" aria-label="Add more funds" >{{mover.symbol}}</button>
+            </div>
             <div class="canvas-container">
                 <canvas id="stock-chart">{{stockChart}}</canvas>
             </div>

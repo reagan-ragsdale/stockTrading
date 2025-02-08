@@ -10,6 +10,12 @@ import { CachedData } from '../services/cachedDataService';
 import { remult } from 'remult';
 import { Chart, InteractionModeFunction, registerables } from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
+import { OrderController } from '../../shared/controllers/orderController';
+import { DbOrders } from '../../shared/tasks/dbOrders';
+import { OrderService } from '../services/orderService';
+import { AnalysisService } from '../services/analysisService';
+import { StockAnalysisDto } from '../Dtos/stockAnalysisDto';
+import { stockOrder } from '../Dtos/stockOrder';
 @Component({
   selector: 'app-home-screen',
   imports: [CommonModule, MatIconModule, MatButtonModule],
@@ -33,6 +39,7 @@ export class HomeScreenComponent implements OnInit {
   hasBeenSent: boolean = false
   stockChart: any
   moversData: any = []
+  openOrder: boolean = false
 
   showAddFunds() {
     const dialogRef = this.dialog.open(AddFundsComponent, {
@@ -130,19 +137,23 @@ export class HomeScreenComponent implements OnInit {
 
   }
 
-  chartData: any = {
-    data: [],
+  chartData: StockAnalysisDto = {
+    history: [],
     labels: [],
     name: 'AAPL'
   }
-  refreshData(data: any) {
-    this.chartData.data.push(data.data[0].content[0]['3'])
+  async refreshData(data: any) {
+    this.chartData.history.push(data.data[0].content[0]['3'])
     this.chartData.labels.push(data.data[0].timestamp)
-    console.log(this.chartData.data)
+    console.log(this.chartData.history)
     this.createOrUpdateChart()
+    let shouldPlaceOrder = AnalysisService.checkIsLowBuyIsHighSell(this.chartData, this.openOrder)
+    if(shouldPlaceOrder.shouldExecuteOrder == true){
+      await this.placeOrder(shouldPlaceOrder.isBuyOrSell!)
+    }
   }
   updateChart() {
-    let dataNew = this.chartData.data.slice()
+    let dataNew = this.chartData.history.slice()
     let labelsNew = this.chartData.labels.slice()
     this.stockChart.data.datasets[0].data = dataNew
     this.stockChart.data.datasets[0].labels = labelsNew
@@ -167,7 +178,7 @@ export class HomeScreenComponent implements OnInit {
           datasets: [
             {
               label: this.chartData.name,
-              data: this.chartData.data,
+              data: this.chartData.history,
               backgroundColor: '#54C964',
               hoverBackgroundColor: '#54C964',
               borderColor: 'hsl(18, 12%, 60%)',
@@ -184,8 +195,8 @@ export class HomeScreenComponent implements OnInit {
   
           scales: {
             y: {
-              max: this.getMaxForChart(this.chartData.data),
-              min: this.getMinForChart(this.chartData.data),
+              max: this.getMaxForChart(this.chartData.history),
+              min: this.getMinForChart(this.chartData.history),
               grid: {
                 color: 'hsl(18, 12%, 60%)'
               },
@@ -244,6 +255,18 @@ export class HomeScreenComponent implements OnInit {
     console.log(this.schwabWebsocket)
   }
 
+  async placeOrder(buyOrSell: string){
+    let order: stockOrder = {
+      orderType: buyOrSell,
+      stockName: this.chartData.name,
+      stockPrice: this.chartData.history[this.chartData.history.length - 1],
+      //figure out how many shares to buy
+      shareQty: 1,
+      orderTime: this.chartData.labels[this.chartData.labels.length - 1]
+    }
+    this.openOrder = await OrderService.executeOrder(order)
+  }
+
   async getMovers(){
     const url = 'https://api.schwabapi.com/marketdata/v1/movers/NYSE?sort=PERCENT_CHANGE_UP&frequency=1';
     const options = {
@@ -271,6 +294,10 @@ export class HomeScreenComponent implements OnInit {
     Chart.register(...registerables)
     let user = await remult.initUser()
     await this.getUserData()
+    let lastOrder: DbOrders = await OrderController.getLastOrder();
+    if(lastOrder.orderType == 'Buy'){
+      this.openOrder = true
+    }
     await this.getMovers()
     //this.startWebsocket()
     this.userSimFinData = await SimFinance.getSimFinData()
