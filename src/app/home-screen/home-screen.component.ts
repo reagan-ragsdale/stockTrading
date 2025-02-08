@@ -4,14 +4,7 @@ import { SimFinance } from '../../shared/controllers/SimFinance';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import {
-  MatDialog,
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogContent,
-  MatDialogRef,
-  MatDialogTitle,
-} from '@angular/material/dialog';
+import {MatDialog,MatDialogActions,MatDialogClose,MatDialogContent,MatDialogRef,MatDialogTitle} from '@angular/material/dialog';
 import { AddFundsComponent } from './add-funds/add-funds.component';
 import { CachedData } from '../services/cachedDataService';
 import { remult } from 'remult';
@@ -24,18 +17,22 @@ import annotationPlugin from 'chartjs-plugin-annotation';
   styleUrl: './home-screen.component.css'
 })
 export class HomeScreenComponent implements OnInit {
-  constructor(private sharedCache: CachedData) {
-
-  }
+  constructor(private sharedCache: CachedData) {}
   remult = remult
   readonly dialog = inject(MatDialog);
+
+
+
   accountNum: any = 0
   userPreferenceData: any = {}
-
   userSimFinData: SimFInance | null = null
   userData: any = []
-
   canShowAddFunds: boolean = true;
+  accessToken = ''
+  schwabWebsocket: WebSocket | null = null
+  hasBeenSent: boolean = false
+  stockChart: any
+  moversData: any = []
 
   showAddFunds() {
     const dialogRef = this.dialog.open(AddFundsComponent, {
@@ -47,7 +44,7 @@ export class HomeScreenComponent implements OnInit {
       this.userSimFinData = await SimFinance.getSimFinData()
     });
   }
-  accessToken = ''
+  
   async getUserData() {
     this.sharedCache.currentAccessToken.subscribe(token => this.accessToken = token!)
     const url = 'https://api.schwabapi.com/trader/v1/userPreference';
@@ -67,8 +64,7 @@ export class HomeScreenComponent implements OnInit {
     }
   }
   
-  schwabWebsocket: WebSocket | null = null
-  hasBeenSent: boolean = false
+  
   startWebsocket() {
     this.schwabWebsocket = new WebSocket(this.userPreferenceData.streamerInfo[0].streamerSocketUrl)
     const loginMsg = {
@@ -152,7 +148,7 @@ export class HomeScreenComponent implements OnInit {
     this.stockChart.data.datasets[0].labels = labelsNew
     this.stockChart.update()
   }
-  public stockChart: any
+  
   createOrUpdateChart() {
     let chartInstance = Chart.getChart("stock-chart")
     if (chartInstance != undefined) {
@@ -248,6 +244,29 @@ export class HomeScreenComponent implements OnInit {
     console.log(this.schwabWebsocket)
   }
 
+  async getMovers(){
+    const url = 'https://api.schwabapi.com/trader/v1/movers/NYSE';
+    let payload = new URLSearchParams({
+            sort: 'PERCENT_CHANGE_UP', frequency: '1'
+        })
+    const options = {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${this.accessToken}`
+      },
+      body: payload
+      
+    };
+    try {
+      const response = await fetch(url, options);
+      const result = await response.json();
+      this.moversData = result
+    }
+    catch (error: any) {
+      console.log(error.message)
+    }
+  }
+
 
 
   async ngOnInit() {
@@ -255,7 +274,8 @@ export class HomeScreenComponent implements OnInit {
     Chart.register(...registerables)
     let user = await remult.initUser()
     await this.getUserData()
-    this.startWebsocket()
+    await this.getMovers()
+    //this.startWebsocket()
     this.userSimFinData = await SimFinance.getSimFinData()
   }
 
