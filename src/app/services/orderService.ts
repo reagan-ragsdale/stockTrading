@@ -1,4 +1,4 @@
-import { OrderController } from "../../shared/controllers/orderController";
+import { OrderController } from "../../shared/controllers/OrderController";
 import { SimFinance } from "../../shared/controllers/SimFinance";
 import { stockOrder } from "../Dtos/stockOrder";
 

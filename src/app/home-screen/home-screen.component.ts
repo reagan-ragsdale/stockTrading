@@ -10,7 +10,7 @@ import { CachedData } from '../services/cachedDataService';
 import { remult } from 'remult';
 import { Chart, InteractionModeFunction, registerables } from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
-import { OrderController } from '../../shared/controllers/orderController';
+import { OrderController } from '../../shared/controllers/OrderController';
 import { DbOrders } from '../../shared/tasks/dbOrders';
 import { OrderService } from '../services/orderService';
 import { AnalysisService } from '../services/analysisService';
