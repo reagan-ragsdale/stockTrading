@@ -13,6 +13,8 @@ import { initApp } from '../app/app.config.js'
 import { testEnc } from '../shared/tasks/testEnc.js'
 import { oauthCall } from './oauth-server.js'
 import { OAuthContoller } from '../shared/controllers/OAuthController.js'
+import { OrderController } from '../shared/controllers/orderController.js'
+import { DbOrders } from '../shared/tasks/dbOrders.js'
 //import ev from '../../environmentVariables.json'
 
 config()
@@ -23,8 +25,8 @@ OAuthContoller.sendCall = oauthCall;
 
 
 export const api = remultExpress({
-    controllers:[AuthController, SimFinance, OAuthContoller],
-    entities: [Task,Users,Rhkeys, SimFInance, testEnc],
+    controllers:[AuthController, SimFinance, OAuthContoller, OrderController],
+    entities: [Task,Users,Rhkeys, SimFInance, testEnc, DbOrders],
     admin:true,
     getUser: (req) => req.session!['user'],
     dataProvider: process.env['DATABASE_URL'] ?
