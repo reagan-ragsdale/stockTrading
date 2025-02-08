@@ -245,7 +245,7 @@ export class HomeScreenComponent implements OnInit {
   }
 
   async getMovers(){
-    const url = 'https://api.schwabapi.com/trader/v1/movers/NYSE';
+    const url = 'https://api.schwabapi.com/marketdata/v1/movers/NYSE';
     let payload = new URLSearchParams({
             sort: 'PERCENT_CHANGE_UP', frequency: '1'
         })
@@ -261,6 +261,7 @@ export class HomeScreenComponent implements OnInit {
       const response = await fetch(url, options);
       const result = await response.json();
       this.moversData = result
+      console.log(this.moversData)
     }
     catch (error: any) {
       console.log(error.message)
