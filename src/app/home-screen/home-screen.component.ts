@@ -66,6 +66,18 @@ export class HomeScreenComponent implements OnInit {
       console.log(error.message)
     }
   }
+  logoutMsg = {
+    "requests": [
+      {
+        "service": "ADMIN",
+        "requestid": "10",
+        "command": "LOGOUT",
+        "SchwabClientCustomerId": this.userPreferenceData.streamerInfo[0].schwabClientCustomerId,
+        "SchwabClientCorrelId": this.userPreferenceData.streamerInfo[0].schwabClientCorrelId,
+        "parameters": ''
+      }
+    ]
+  }
   schwabWebsocket: WebSocket | null = null
   hasBeenSent: boolean = false
   startWebsocket() {
@@ -101,6 +113,7 @@ export class HomeScreenComponent implements OnInit {
         }
       ]
     }
+    
     this.schwabWebsocket.onopen = () => {
       this.schwabWebsocket!.send(JSON.stringify(loginMsg))
     }
@@ -228,6 +241,7 @@ export class HomeScreenComponent implements OnInit {
   }
 
   endStream(){
+    this.schwabWebsocket!.send(JSON.stringify(this.logoutMsg))
     console.log(this.schwabWebsocket)
     this.schwabWebsocket!.close()
     console.log(this.schwabWebsocket)
