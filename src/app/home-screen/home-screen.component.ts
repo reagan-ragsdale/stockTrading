@@ -245,16 +245,12 @@ export class HomeScreenComponent implements OnInit {
   }
 
   async getMovers(){
-    const url = 'https://api.schwabapi.com/marketdata/v1/movers/NYSE';
-    let payload = new URLSearchParams({
-            sort: 'PERCENT_CHANGE_UP', frequency: '1'
-        })
+    const url = 'https://api.schwabapi.com/marketdata/v1/movers/NYSE?sort=PERCENT_CHANGE_UP&frequency=1';
     const options = {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${this.accessToken}`
-      },
-      body: payload
+      }
       
     };
     try {
