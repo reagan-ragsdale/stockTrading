@@ -139,12 +139,15 @@ export class HomeScreenComponent implements OnInit {
   }
   refreshData(data: any) {
     this.chartData.data.push(data.data[0].content[0]['3'])
+    this.chartData.labels.push(data.data[0].timestamp)
     console.log(this.chartData.data)
     this.createOrUpdateChart()
   }
   updateChart() {
     let dataNew = this.chartData.data.slice()
+    let labelsNew = this.chartData.labels.slice()
     this.stockChart.data.datasets[0].data = dataNew
+    this.stockChart.data.datasets[0].labels = labelsNew
     this.stockChart.update()
   }
   public stockChart: any
@@ -161,7 +164,7 @@ export class HomeScreenComponent implements OnInit {
   
         data: {// values on X-Axis
   
-  
+          labels: this.chartData.labels,
   
           datasets: [
             {
