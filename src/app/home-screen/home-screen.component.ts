@@ -299,7 +299,7 @@ export class HomeScreenComponent implements OnInit {
     let user = await remult.initUser()
     await this.getUserData()
     this.lastOrder = await OrderController.getLastOrder();
-    if(this.lastOrder.orderType == 'Buy'){
+    if(this.lastOrder?.orderType == 'Buy'){
       this.openOrder = true
     }
     //await this.getMovers()
