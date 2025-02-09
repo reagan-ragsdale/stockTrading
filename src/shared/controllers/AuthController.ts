@@ -74,7 +74,9 @@ export class AuthController {
       await rhRepo.insert({
         userId: userInfo?.userId,
         appKey: publicKey,
-        appSecret: privateKey
+        appSecret: privateKey,
+        accessToken: '',
+        refreshToken: ''
       })
 
   }
@@ -97,6 +99,15 @@ export class AuthController {
     else{
       return false
     }
+  }
+
+  @BackendMethod({ allowed: true })
+  static async updateTokens(tokens: string[]) {
+    let currentUser = getCurrentUser()
+    let userInfo = await userRepo.findFirst({id: currentUser.id})
+    let keys = await rhRepo.findFirst({userId: userInfo?.userId})
+    await rhRepo.save({...keys, accessToken: tokens[0], refreshToken: tokens[1]})
+
   }
 
   @BackendMethod({ allowed: true })

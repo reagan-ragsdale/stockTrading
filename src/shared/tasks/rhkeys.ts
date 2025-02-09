@@ -17,6 +17,11 @@ export class Rhkeys {
     @Fields.string({ includeInApi: false })
     appSecret = ""
 
+    @Fields.string({ includeInApi: false })
+    accessToken = ""
+
+    @Fields.string({ includeInApi: false })
+    refreshToken = ""
 
     @Fields.createdAt()
     createdAt?: Date

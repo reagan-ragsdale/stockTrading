@@ -3,8 +3,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CachedData } from '../services/cachedDataService';
 import { Router } from '@angular/router';
 import { oauthCall } from '../../server/oauth-server';
-import { OAuthContoller } from '../../shared/controllers/OAuthController.js';
+import { AuthController } from '../../shared/controllers/AuthController.js';
 import { remult } from 'remult';
+import { OAuthContoller } from '../../shared/controllers/OAuthController.js';
 
 @Component({
   selector: 'app-auth-screen',
@@ -25,6 +26,7 @@ export class AuthScreenComponent implements OnInit {
       let returnCall = await OAuthContoller.sendOauthCall(this.code)
       this.sharedCache.changeAccessToken(returnCall[0])
       this.sharedCache.changeRefreshToken(returnCall[1])
+      await AuthController.updateTokens(returnCall)
       window.close();
     }
     catch(error: any){
