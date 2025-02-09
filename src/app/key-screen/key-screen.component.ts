@@ -33,8 +33,8 @@ export class KeyScreenComponent implements OnInit{
   async allowOAuth(){
   await AuthController.insertKeyPairs(this.appKey, this.appSecret)
    window.open(`https://api.schwabapi.com/v1/oauth/authorize?response_type=code&client_id=${this.appKey}&scope=readonly&redirect_uri=https://stocktrading.up.railway.app/auth`,
-      "_self"
-    )
+      "_blank"
+    )?.focus()
     
   }
 
@@ -46,8 +46,8 @@ export class KeyScreenComponent implements OnInit{
     if(this.isKeysGenerated){
       let userKeys = await AuthController.getKeyPairs()
       window.open(`https://api.schwabapi.com/v1/oauth/authorize?response_type=code&client_id=${userKeys.appKey}&scope=readonly&redirect_uri=https://stocktrading.up.railway.app/auth`,
-        "_self"
-      )
+        "_blank"
+      )?.focus()
     }
   }
   
