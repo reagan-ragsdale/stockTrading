@@ -40,6 +40,7 @@ export class HomeScreenComponent implements OnInit {
   stockChart: any
   moversData: any = []
   openOrder: boolean = false
+  lastOrder: DbOrders | null = null
 
   showAddFunds() {
     const dialogRef = this.dialog.open(AddFundsComponent, {
@@ -294,12 +295,12 @@ export class HomeScreenComponent implements OnInit {
     Chart.register(...registerables)
     let user = await remult.initUser()
     await this.getUserData()
-    let lastOrder: DbOrders = await OrderController.getLastOrder();
-    if(lastOrder.orderType == 'Buy'){
+    this.lastOrder = await OrderController.getLastOrder();
+    if(this.lastOrder.orderType == 'Buy'){
       this.openOrder = true
     }
-    await this.getMovers()
-    //this.startWebsocket()
+    //await this.getMovers()
+    this.startWebsocket()
     this.userSimFinData = await SimFinance.getSimFinData()
   }
 

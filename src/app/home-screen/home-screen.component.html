@@ -9,11 +9,25 @@
         <div style="width:100%; height: 100%; padding-left: 1rem; padding-right:1rem;">
             <h1>Dashboard</h1>
             <button style="width: max-content;"mat-raised-button color="warn" aria-label="Add more funds" (click)="endStream()">ABORT!</button>
-            <div>
+            <!-- <div>
                 <button *ngFor="let mover of moversData" style="width: max-content;"mat-raised-button color="primary" aria-label="Add more funds" >{{mover.symbol}}</button>
-            </div>
+            </div> -->
             <div class="canvas-container">
                 <canvas id="stock-chart">{{stockChart}}</canvas>
+            </div>
+            <div>
+                <div>
+                    <h2>Active Trades</h2>
+                    <div *ngIf="lastOrder && lastOrder.orderType == 'Buy'" style="display:flex;">
+                        <h3>{{lastOrder.stockName}}</h3>
+                        <h3>{{lastOrder.shareQty}}</h3>
+                        <h3>{{lastOrder.stockPrice}}</h3>
+                    </div>
+                    <div *ngIf="!lastOrder || lastOrder.orderType == 'Sell'" style="display:flex;">
+                        <h3>No Active Trades</h3>
+                    </div>
+
+                </div>
             </div>
         </div>
         
