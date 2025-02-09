@@ -25,7 +25,7 @@ export class AuthScreenComponent implements OnInit {
       let returnCall = await OAuthContoller.sendOauthCall(this.code)
       this.sharedCache.changeAccessToken(returnCall[0])
       this.sharedCache.changeRefreshToken(returnCall[1])
-      this.router.navigate(['/home'])
+      window.close();
     }
     catch(error: any){
       

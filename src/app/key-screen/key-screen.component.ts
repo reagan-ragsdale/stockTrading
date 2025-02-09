@@ -35,7 +35,25 @@ export class KeyScreenComponent implements OnInit{
    window.open(`https://api.schwabapi.com/v1/oauth/authorize?response_type=code&client_id=${this.appKey}&scope=readonly&redirect_uri=https://stocktrading.up.railway.app/auth`,
       "_blank"
     )?.focus()
+    this.waitForKeyPairs()
     
+  }
+
+  isToken: boolean = false
+  waitForKeyPairs(){
+    let interval = setInterval(this.checkToken,1000)
+    if(this.isToken == true){
+      clearInterval(interval)
+      this.router.navigate(['/home'])
+    }
+  }
+
+  checkToken(){
+    let token = null
+    this.cachedData.currentAccessToken.subscribe(accessToken => token = accessToken)
+    if(token != null){
+      this.isToken = true
+    }
   }
 
 
@@ -48,6 +66,7 @@ export class KeyScreenComponent implements OnInit{
       window.open(`https://api.schwabapi.com/v1/oauth/authorize?response_type=code&client_id=${userKeys.appKey}&scope=readonly&redirect_uri=https://stocktrading.up.railway.app/auth`,
         "_blank"
       )?.focus()
+      this.waitForKeyPairs()
     }
   }
   
