@@ -50,7 +50,7 @@ export class KeyScreenComponent implements OnInit{
 
   checkToken(){
     let token = null
-    this.cachedData.currentAccessToken.subscribe(accessToken => token = accessToken)
+    this.cachedData.currentAccessToken.subscribe(accessToken => console.log(accessToken))
     if(token != null){
       this.isToken = true
     }
