@@ -150,10 +150,13 @@ export class HomeScreenComponent implements OnInit {
     this.chartData.labels.push(data.data[0].timestamp)
     console.log(this.chartData.history)
     this.createOrUpdateChart()
-    let shouldPlaceOrder = AnalysisService.checkIsLowBuyIsHighSell(this.chartData, this.openOrder)
-    if(shouldPlaceOrder.shouldExecuteOrder == true){
-      await this.placeOrder(shouldPlaceOrder.isBuyOrSell!)
+    if(this.isUserOrBot == 'Bot'){
+      let shouldPlaceOrder = AnalysisService.checkIsLowBuyIsHighSell(this.chartData, this.openOrder)
+      if(shouldPlaceOrder.shouldExecuteOrder == true){
+        await this.placeOrder(shouldPlaceOrder.isBuyOrSell!)
+      }
     }
+    
   }
   updateChart() {
     let dataNew = this.chartData.history.slice()
@@ -296,8 +299,7 @@ export class HomeScreenComponent implements OnInit {
   }
 
   userBotChange(event: any){
-    console.log(event)
-    this.isUserOrBot = event
+    this.isUserOrBot = event.value
   }
 
   async ngOnInit() {

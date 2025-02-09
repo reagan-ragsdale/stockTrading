@@ -1,12 +1,12 @@
 <div style="display:flex; flex-direction: column; height: calc(100vh - 63px);">
     <div class="top-bar">
         <div style="margin-left: 1rem;margin-top: auto;margin-bottom: auto;">
-            <mat-button-toggle-group name="fontStyle" aria-label="Font Style" (change)="userBotChange($event)">
-                <mat-button-toggle [checked]="true" value="bold">User</mat-button-toggle>
-                <mat-button-toggle value="italic">Bot</mat-button-toggle>
+            <mat-button-toggle-group name="fontStyle" aria-label="Font Style" (change)="userBotChange($event)" [hideSingleSelectionIndicator]="true">
+                <mat-button-toggle [checked]="true" value="User">User</mat-button-toggle>
+                <mat-button-toggle value="Bot">Bot</mat-button-toggle>
             </mat-button-toggle-group>
         </div>
-        <button style="margin-left:auto;" mat-icon-button aria-label="Add more funds" (click)="showAddFunds()">
+        <button style="margin-left:auto; margin-top:auto; margin-bottom:auto;" mat-icon-button aria-label="Add more funds" (click)="showAddFunds()">
             <mat-icon>add</mat-icon>
           </button>
         <h3 style="padding-right:1rem;">{{userSimFinData?.dollarAmt | currency:'USD':'symbol'}}</h3>
