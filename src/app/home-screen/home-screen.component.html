@@ -16,7 +16,7 @@
                 <div class="canvas-container">
                     <canvas id="stock-chart">{{stockChart}}</canvas>
                 </div>
-                <div style="width:100%">
+                <div style="flex-grow: 1;">
                     <div style="padding: 1rem; display: flex;flex-direction: column;">
                         <h2>Active Trades</h2>
                         <div *ngIf="lastOrder && lastOrder.orderType == 'Buy'" style="display:flex; justify-content: center;">
