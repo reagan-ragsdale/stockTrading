@@ -266,6 +266,7 @@ export class HomeScreenComponent implements OnInit {
       orderTime: this.chartData.labels[this.chartData.labels.length - 1]
     }
     this.openOrder = await OrderService.executeOrder(order)
+    await this.getUserFinanceData()
   }
 
   async getMovers(){
@@ -288,7 +289,9 @@ export class HomeScreenComponent implements OnInit {
     }
   }
 
-
+  async getUserFinanceData(){
+    this.userSimFinData = await SimFinance.getSimFinData()
+  }
 
   async ngOnInit() {
     Chart.register(annotationPlugin);
@@ -301,7 +304,8 @@ export class HomeScreenComponent implements OnInit {
     }
     //await this.getMovers()
     this.startWebsocket()
-    this.userSimFinData = await SimFinance.getSimFinData()
+    await this.getUserFinanceData()
+    
   }
 
 }
