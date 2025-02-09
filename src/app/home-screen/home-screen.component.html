@@ -1,5 +1,11 @@
 <div style="display:flex; flex-direction: column; height: calc(100vh - 63px);">
     <div class="top-bar">
+        <div>
+            <mat-button-toggle-group name="fontStyle" aria-label="Font Style" (change)="userBotChange($event)">
+                <mat-button-toggle [checked]="true" value="bold">User</mat-button-toggle>
+                <mat-button-toggle value="italic">Bot</mat-button-toggle>
+            </mat-button-toggle-group>
+        </div>
         <button mat-icon-button aria-label="Add more funds" (click)="showAddFunds()">
             <mat-icon>add</mat-icon>
           </button>
@@ -18,7 +24,7 @@
                 </div>
                 <div style="flex-grow: 1;">
                     <div style="padding: 1rem; display: flex;flex-direction: column;">
-                        <h2>Active Trades</h2>
+                        <h2 style="text-align:center;">Active Trades</h2>
                         <div *ngIf="lastOrder && lastOrder.orderType == 'Buy'" style="display:flex; justify-content: center;">
                             <h3>{{lastOrder.stockName}}</h3>
                             <h3>{{lastOrder.shareQty}}</h3>

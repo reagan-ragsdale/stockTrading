@@ -16,9 +16,10 @@ import { OrderService } from '../services/orderService';
 import { AnalysisService } from '../services/analysisService';
 import { StockAnalysisDto } from '../Dtos/stockAnalysisDto';
 import { stockOrder } from '../Dtos/stockOrder';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
 @Component({
   selector: 'app-home-screen',
-  imports: [CommonModule, MatIconModule, MatButtonModule],
+  imports: [CommonModule, MatIconModule, MatButtonModule,MatButtonToggleModule],
   templateUrl: './home-screen.component.html',
   styleUrl: './home-screen.component.css'
 })
@@ -41,6 +42,7 @@ export class HomeScreenComponent implements OnInit {
   moversData: any = []
   openOrder: boolean = false
   lastOrder: DbOrders | null = null
+  isUserOrBot: string = 'User'
 
   showAddFunds() {
     const dialogRef = this.dialog.open(AddFundsComponent, {
@@ -291,6 +293,11 @@ export class HomeScreenComponent implements OnInit {
 
   async getUserFinanceData(){
     this.userSimFinData = await SimFinance.getSimFinData()
+  }
+
+  userBotChange(event: any){
+    console.log(event)
+    this.isUserOrBot = event
   }
 
   async ngOnInit() {
