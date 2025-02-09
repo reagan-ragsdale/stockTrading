@@ -1,24 +1,24 @@
 <div style="display:flex; flex-direction: column; height: calc(100vh - 63px);">
     <div class="top-bar">
-        <div>
+        <div style="margin-left: 1rem;margin-top: auto;margin-bottom: auto;">
             <mat-button-toggle-group name="fontStyle" aria-label="Font Style" (change)="userBotChange($event)">
                 <mat-button-toggle [checked]="true" value="bold">User</mat-button-toggle>
                 <mat-button-toggle value="italic">Bot</mat-button-toggle>
             </mat-button-toggle-group>
         </div>
-        <button mat-icon-button aria-label="Add more funds" (click)="showAddFunds()">
+        <button style="margin-left:auto;" mat-icon-button aria-label="Add more funds" (click)="showAddFunds()">
             <mat-icon>add</mat-icon>
           </button>
         <h3 style="padding-right:1rem;">{{userSimFinData?.dollarAmt | currency:'USD':'symbol'}}</h3>
     </div>
     <div class="dashboard">
-        <div style=" height: 100%; padding-left: 1rem; padding-right:1rem;">
+        <div style="padding-left: 1rem; padding-right:1rem;">
             <h1>Dashboard</h1>
             <button style="width: max-content;"mat-raised-button color="warn" aria-label="Add more funds" (click)="endStream()">ABORT!</button>
             <!-- <div>
                 <button *ngFor="let mover of moversData" style="width: max-content;"mat-raised-button color="primary" aria-label="Add more funds" >{{mover.symbol}}</button>
             </div> -->
-            <div style="width: 100%; height:100%; display:flex;">
+            <div style="width: 100%;display:flex;">
                 <div class="canvas-container">
                     <canvas id="stock-chart">{{stockChart}}</canvas>
                 </div>
