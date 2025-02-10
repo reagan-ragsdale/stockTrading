@@ -201,8 +201,12 @@ export class HomeScreenComponent implements OnInit {
             weight: 'bold'
           },
           elements:{
+            line:{
+              backgroundColor: '#54C964'
+            },
             point:{
-              radius:1
+              radius:1,
+              hitRadius: 3
             }
           },
   
@@ -211,7 +215,6 @@ export class HomeScreenComponent implements OnInit {
               max: this.getMaxForChart(this.chartData.history),
               min: this.getMinForChart(this.chartData.history),
               grid: {
-                display:false,
                 color: 'hsl(18, 12%, 60%)'
               },
             },
