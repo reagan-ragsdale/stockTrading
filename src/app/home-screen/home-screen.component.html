@@ -36,8 +36,8 @@
                         <h2 style="text-align:center;">Active Trades</h2>
                         <div *ngIf="lastOrder && lastOrder.orderType == 'Buy'" style="display:flex; justify-content: center;">
                             <h3>{{lastOrder.stockName}}</h3>
-                            <h3>{{lastOrder.shareQty}}</h3>
-                            <h3>{{lastOrder.stockPrice}}</h3>
+                            <h3>{{lastOrder.shareQty | number:'1.2-3'}}</h3>
+                            <h3>{{lastOrder.stockPrice | currency:'USD':'symbol'}}</h3>
                         </div>
                         <div *ngIf="!lastOrder || lastOrder.orderType == 'Sell'" style="display:flex; justify-content: center;">
                             <h3>No Active Trades</h3>

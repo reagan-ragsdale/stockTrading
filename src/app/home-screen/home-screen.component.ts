@@ -73,6 +73,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     });
     this.tradeDialogRef.afterClosed().subscribe(async (result: any) => {
       this.userSimFinData = await SimFinance.getSimFinData()
+      console.log(this.userSimFinData)
       this.lastOrder = await OrderController.getLastOrder();
     });
   }

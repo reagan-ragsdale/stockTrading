@@ -12,7 +12,7 @@ export class OrderController {
   @BackendMethod({ allowed: true })
   static async placeOrder(order: stockOrder): Promise<boolean> {
     const currentUser = getCurrentUser()
-    const userInfo = await userRepo.findFirst({userId: currentUser.id})
+    const userInfo = await userRepo.findFirst({id: currentUser.id})
     await dbOrdersRepo.insert({
         userId: userInfo?.userId,
         stockName: order.stockName,
@@ -27,7 +27,7 @@ export class OrderController {
   @BackendMethod({ allowed: true })
   static async getLastOrder(): Promise<DbOrders> {
     const currentUser = getCurrentUser()
-    const userInfo = await userRepo.findFirst({userId: currentUser.id})
+    const userInfo = await userRepo.findFirst({id: currentUser.id})
     const orders = await dbOrdersRepo.find({where: {userId: userInfo?.userId}, orderBy: {orderTime: 'desc'}})
     return orders[0]
   }
