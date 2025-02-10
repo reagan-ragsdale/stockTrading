@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { SimFInance } from '../../shared/tasks/simFinance';
 import { SimFinance } from '../../shared/controllers/SimFinance';
 import { CommonModule } from '@angular/common';
@@ -20,9 +20,10 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { Rhkeys, rhRepo } from '../../shared/tasks/rhkeys';
 import { AuthController } from '../../shared/controllers/AuthController';
 import { TradeComponent } from './trade/trade.component';
+import { DialogRef } from '@angular/cdk/dialog';
 @Component({
   selector: 'app-home-screen',
-  imports: [CommonModule, MatIconModule, MatButtonModule, MatButtonToggleModule],
+  imports: [CommonModule, MatIconModule, MatButtonModule, MatButtonToggleModule, TradeComponent],
   templateUrl: './home-screen.component.html',
   styleUrl: './home-screen.component.css'
 })
@@ -30,6 +31,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   constructor(private sharedCache: CachedData) { }
   remult = remult
   readonly dialog = inject(MatDialog);
+  @ViewChild('modalTemplate', { static: true }) modalTemplate!: TemplateRef<any>;
 
 
 
@@ -62,14 +64,14 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     });
   }
 
+  tradeDialogRef: any
   openTradePopup() {
-    const dialogRef = this.dialog.open(TradeComponent, {
-      data: {stockName: this.chartData.name, stockPrice: this.selectedStockCurrent, ownedShares: 0, availableFunds: this.userSimFinData?.dollarAmt, stockTime: this.chartData.labels[this.chartData.labels.length - 1]},
+    this.tradeDialogRef = this.dialog.open(this.modalTemplate, {
       width: '400px',
       enterAnimationDuration: 0,
       exitAnimationDuration: 0
     });
-    dialogRef.afterClosed().subscribe(async result => {
+    this.tradeDialogRef.afterClosed().subscribe(async (result: any) => {
       this.userSimFinData = await SimFinance.getSimFinData()
       this.lastOrder = await OrderController.getLastOrder();
     });
@@ -299,7 +301,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
 
   tradeBuyOrSell = 'Buy'
   placeTrade(){
-    
+
   }
 
   async placeOrder(buyOrSell: string) {
