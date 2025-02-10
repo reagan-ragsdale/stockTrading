@@ -1,6 +1,6 @@
 import { Allow, Entity, Fields, Filter, remult, Validators } from "remult"
-import { getCurrentUser } from "../../server/server-session"
-import { userRepo } from "./Users"
+import { getCurrentUser } from "../../server/server-session.js"
+import { userRepo } from "./Users.js"
 
 @Entity("rhkeys", {
     allowApiCrud: true
