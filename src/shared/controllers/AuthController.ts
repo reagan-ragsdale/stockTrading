@@ -111,6 +111,16 @@ export class AuthController {
   }
 
   @BackendMethod({ allowed: true })
+  static async updateAccessToken(token: string) {
+    let currentUser = getCurrentUser()
+    let userInfo = await userRepo.findFirst({id: currentUser.id})
+    let keys = await rhRepo.findFirst({userId: userInfo?.userId})
+    await rhRepo.save({...keys, accessToken: token})
+
+  }
+
+  
+  @BackendMethod({ allowed: true })
   static async changeUserName(username: string){
     const currentUser = getCurrentUser()
     const user = await userRepo.findFirst({id: currentUser.id})

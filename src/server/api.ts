@@ -15,12 +15,15 @@ import { oauthCall } from './oauth-server.js'
 import { OAuthContoller } from '../shared/controllers/OAuthController.js'
 import { OrderController } from '../shared/controllers/OrderController.js'
 import { DbOrders } from '../shared/tasks/dbOrders.js'
+import cron from 'node-cron'
+import { loadNewToken } from '../app/apiCalls/loadNewAccessToken.js'
 //import ev from '../../environmentVariables.json'
 
 config()
 AuthController.generate = generate;
 AuthController.verify = verify
 OAuthContoller.sendCall = oauthCall;
+
 
 
 
@@ -40,5 +43,6 @@ export const api = remultExpress({
     })  */ ,
     initRequest
     ,initApi: async () => {
+      cron.schedule('*/25 * * * *', () => loadNewToken())
     }
 })

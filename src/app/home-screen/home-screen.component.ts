@@ -1,10 +1,10 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { SimFInance } from '../../shared/tasks/simFinance';
 import { SimFinance } from '../../shared/controllers/SimFinance';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import {MatDialog,MatDialogActions,MatDialogClose,MatDialogContent,MatDialogRef,MatDialogTitle} from '@angular/material/dialog';
+import { MatDialog, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
 import { AddFundsComponent } from './add-funds/add-funds.component';
 import { CachedData } from '../services/cachedDataService';
 import { remult } from 'remult';
@@ -16,17 +16,17 @@ import { OrderService } from '../services/orderService';
 import { AnalysisService } from '../services/analysisService';
 import { StockAnalysisDto } from '../Dtos/stockAnalysisDto';
 import { stockOrder } from '../Dtos/stockOrder';
-import {MatButtonToggleModule} from '@angular/material/button-toggle';
-import { rhRepo } from '../../shared/tasks/rhkeys';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { Rhkeys, rhRepo } from '../../shared/tasks/rhkeys';
 import { AuthController } from '../../shared/controllers/AuthController';
 @Component({
   selector: 'app-home-screen',
-  imports: [CommonModule, MatIconModule, MatButtonModule,MatButtonToggleModule],
+  imports: [CommonModule, MatIconModule, MatButtonModule, MatButtonToggleModule],
   templateUrl: './home-screen.component.html',
   styleUrl: './home-screen.component.css'
 })
-export class HomeScreenComponent implements OnInit {
-  constructor(private sharedCache: CachedData) {}
+export class HomeScreenComponent implements OnInit, OnDestroy {
+  constructor(private sharedCache: CachedData) { }
   remult = remult
   readonly dialog = inject(MatDialog);
 
@@ -45,6 +45,7 @@ export class HomeScreenComponent implements OnInit {
   openOrder: boolean = false
   lastOrder: DbOrders | null = null
   isUserOrBot: string = 'User'
+  unsubscribe = () => { }
 
   showAddFunds() {
     const dialogRef = this.dialog.open(AddFundsComponent, {
@@ -56,7 +57,7 @@ export class HomeScreenComponent implements OnInit {
       this.userSimFinData = await SimFinance.getSimFinData()
     });
   }
-  
+
   async getUserData() {
     this.sharedCache.currentAccessToken.subscribe(token => this.accessToken = token!)
     const url = 'https://api.schwabapi.com/trader/v1/userPreference';
@@ -75,8 +76,8 @@ export class HomeScreenComponent implements OnInit {
       console.log(error.message)
     }
   }
-  
-  
+
+
   startWebsocket() {
     this.schwabWebsocket = new WebSocket(this.userPreferenceData.streamerInfo[0].streamerSocketUrl)
     const loginMsg = {
@@ -110,28 +111,28 @@ export class HomeScreenComponent implements OnInit {
         }
       ]
     }
-    
+
     this.schwabWebsocket.onopen = () => {
       this.schwabWebsocket!.send(JSON.stringify(loginMsg))
     }
     let count = 0
     this.schwabWebsocket.onmessage = (event: any) => {
       console.log(JSON.parse(event.data))
-      
+
       let data = JSON.parse(event.data)
-      
+
       if (Object.hasOwn(data, 'response')) {
-        if(data.response[0].content.code == 0 && this.hasBeenSent == false){
-          this.schwabWebsocket!.send(JSON.stringify(aaplDataMsg)) 
+        if (data.response[0].content.code == 0 && this.hasBeenSent == false) {
+          this.schwabWebsocket!.send(JSON.stringify(aaplDataMsg))
           console.log('send aapl')
           this.hasBeenSent = true
         }
       }
-      if(Object.hasOwn(data, 'data') && this.hasBeenSent == true){
-        if(Object.hasOwn(data.data[0].content[0], '3')){
+      if (Object.hasOwn(data, 'data') && this.hasBeenSent == true) {
+        if (Object.hasOwn(data.data[0].content[0], '3')) {
           this.refreshData(data)
         }
-        
+
       }
       /* 
       if (count == 0) {
@@ -152,13 +153,13 @@ export class HomeScreenComponent implements OnInit {
     this.chartData.labels.push(data.data[0].timestamp)
     console.log(this.chartData.history)
     this.createOrUpdateChart()
-    if(this.isUserOrBot == 'Bot'){
+    if (this.isUserOrBot == 'Bot') {
       let shouldPlaceOrder = AnalysisService.checkIsLowBuyIsHighSell(this.chartData, this.openOrder)
-      if(shouldPlaceOrder.shouldExecuteOrder == true){
+      if (shouldPlaceOrder.shouldExecuteOrder == true) {
         await this.placeOrder(shouldPlaceOrder.isBuyOrSell!)
       }
     }
-    
+
   }
   updateChart() {
     let dataNew = this.chartData.history.slice()
@@ -167,22 +168,22 @@ export class HomeScreenComponent implements OnInit {
     this.stockChart.data.datasets[0].labels = labelsNew
     this.stockChart.update()
   }
-  
+
   createOrUpdateChart() {
     let chartInstance = Chart.getChart("stock-chart")
     if (chartInstance != undefined) {
       this.updateChart()
       console.log('update chart')
     }
-    else{
+    else {
       console.log('create chart')
       this.stockChart = new Chart("stock-chart", {
         type: 'line', //this denotes tha type of chart
-  
+
         data: {// values on X-Axis
-  
+
           labels: this.chartData.labels,
-  
+
           datasets: [
             {
               label: this.chartData.name,
@@ -196,23 +197,23 @@ export class HomeScreenComponent implements OnInit {
           ]
         },
         options: {
-  
+
           aspectRatio: 2,
           color: '#DBD4D1',
           font: {
             weight: 'bold'
           },
-          elements:{
-            line:{
+          elements: {
+            line: {
               backgroundColor: '#54C964',
               borderColor: '#54C964'
             },
-            point:{
-              radius:1,
+            point: {
+              radius: 1,
               hitRadius: 3
             }
           },
-  
+
           scales: {
             y: {
               max: this.getMaxForChart(this.chartData.history),
@@ -223,17 +224,17 @@ export class HomeScreenComponent implements OnInit {
             },
             x: {
               grid: {
-                display:false,
+                display: false,
                 color: 'hsl(18, 12%, 60%)'
               },
-  
+
             }
-  
+
           }
         }
       })
     }
-    
+
   }
 
   getMaxForChart(arr: number[]): number {
@@ -257,8 +258,8 @@ export class HomeScreenComponent implements OnInit {
 
   }
 
-  endStream(){
-   let logoutMsg = {
+  endStream() {
+    let logoutMsg = {
       "requests": [
         {
           "service": "ADMIN",
@@ -276,7 +277,7 @@ export class HomeScreenComponent implements OnInit {
     console.log(this.schwabWebsocket)
   }
 
-  async placeOrder(buyOrSell: string){
+  async placeOrder(buyOrSell: string) {
     let order: stockOrder = {
       orderType: buyOrSell,
       stockName: this.chartData.name,
@@ -289,14 +290,14 @@ export class HomeScreenComponent implements OnInit {
     await this.getUserFinanceData()
   }
 
-  async getMovers(){
+  async getMovers() {
     const url = 'https://api.schwabapi.com/marketdata/v1/movers/NYSE?sort=PERCENT_CHANGE_UP&frequency=1';
     const options = {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${this.accessToken}`
       }
-      
+
     };
     try {
       const response = await fetch(url, options);
@@ -309,12 +310,20 @@ export class HomeScreenComponent implements OnInit {
     }
   }
 
-  async getUserFinanceData(){
+  async getUserFinanceData() {
     this.userSimFinData = await SimFinance.getSimFinData()
   }
 
-  userBotChange(event: any){
+  userBotChange(event: any) {
     this.isUserOrBot = event.value
+  }
+
+  incomingTokensFromDB: any = []
+  checkData(changes: any){
+    console.log(this.accessToken)
+    this.sharedCache.changeAccessToken(changes[0].accessToken)
+    this.sharedCache.currentAccessToken.subscribe(token => this.accessToken = token!)
+    console.log(this.accessToken)
   }
 
   async ngOnInit() {
@@ -323,13 +332,22 @@ export class HomeScreenComponent implements OnInit {
     let user = await remult.initUser()
     await this.getUserData()
     this.lastOrder = await OrderController.getLastOrder();
-    if(this.lastOrder?.orderType == 'Buy'){
+    if (this.lastOrder?.orderType == 'Buy') {
       this.openOrder = true
     }
     //await this.getMovers()
     this.startWebsocket()
     await this.getUserFinanceData()
-    
+    this.unsubscribe = rhRepo
+      .liveQuery({
+        where: Rhkeys.getTokenUpdates({})
+      })
+      .subscribe(info => this.checkData(info.items))
+
+  }
+
+  ngOnDestroy(){
+    this.unsubscribe()
   }
 
 }
