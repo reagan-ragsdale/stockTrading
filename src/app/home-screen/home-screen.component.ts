@@ -64,6 +64,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
 
   openTradePopup() {
     const dialogRef = this.dialog.open(TradeComponent, {
+      data: {stockName: this.chartData.name, stockPrice: this.selectedStockCurrent, ownedShares: 0, availableFunds: this.userSimFinData?.dollarAmt, stockTime: this.chartData.labels[this.chartData.labels.length - 1]},
       width: '400px',
       enterAnimationDuration: 0,
       exitAnimationDuration: 0

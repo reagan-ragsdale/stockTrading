@@ -1,5 +1,6 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import {
+  MAT_DIALOG_DATA,
   MatDialog,
   MatDialogActions,
   MatDialogClose,
@@ -23,12 +24,13 @@ import { stockOrder } from '../../Dtos/stockOrder';
 })
 export class TradeComponent {
   readonly dialogRef = inject(MatDialogRef<TradeComponent>);
+  readonly data = inject<any>(MAT_DIALOG_DATA);
 
-  @Input() stockName: string = ''
+ /*  @Input() stockName: string = ''
   @Input() stockPrice: number = 0
   @Input() ownedShares: number = 0
   @Input() availableFunds: number = 0
-  @Input() stockTime: number = 0
+  @Input() stockTime: number = 0 */
 
   buyOrSell: string = 'Buy'
 
@@ -37,10 +39,10 @@ export class TradeComponent {
   async onPlaceTradeClicked(){
     let order: stockOrder = {
       orderType: this.buyOrSell,
-      stockName: this.stockName,
-      stockPrice: this.stockPrice,
-      shareQty: this.amountToBuyOrSell/this.stockPrice,
-      orderTime: this.stockTime
+      stockName: this.data.stockName,
+      stockPrice: this.data.stockPrice,
+      shareQty: this.amountToBuyOrSell/this.data.stockPrice,
+      orderTime: this.data.stockTime
 
     }
     let orderOpen = await OrderService.executeOrder(order)
