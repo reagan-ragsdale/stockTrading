@@ -299,7 +299,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
 
   tradeBuyOrSell = 'Buy'
   placeTrade(){
-
+    
   }
 
   async placeOrder(buyOrSell: string) {
