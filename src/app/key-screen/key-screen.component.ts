@@ -52,6 +52,7 @@ export class KeyScreenComponent implements OnInit, OnDestroy{
     this.incomingTokensFromDb.push(change[0].accessToken)
     if(this.incomingTokensFromDb.length == 2){
       if(this.incomingTokensFromDb[0] != this.incomingTokensFromDb[1]){
+        this.cachedData.changeAccessToken(this.incomingTokensFromDb[1])
         this.router.navigate(['/home'])
       }
     }

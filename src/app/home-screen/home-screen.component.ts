@@ -17,6 +17,8 @@ import { AnalysisService } from '../services/analysisService';
 import { StockAnalysisDto } from '../Dtos/stockAnalysisDto';
 import { stockOrder } from '../Dtos/stockOrder';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import { rhRepo } from '../../shared/tasks/rhkeys';
+import { AuthController } from '../../shared/controllers/AuthController';
 @Component({
   selector: 'app-home-screen',
   imports: [CommonModule, MatIconModule, MatButtonModule,MatButtonToggleModule],
