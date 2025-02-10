@@ -24,7 +24,7 @@ import { DialogRef } from '@angular/cdk/dialog';
 import { StockController } from '../../shared/controllers/StockController';
 import { UsersStocks } from '../../shared/tasks/usersStocks';
 import { stockOwnedData } from '../Dtos/stockOwnedData';
-import { reusedFunctions } from '../services/reusedFunctions';
+import { reusedFunctions } from '../services/reusedFunctions.js';
 @Component({
   selector: 'app-home-screen',
   imports: [CommonModule, MatIconModule, MatButtonModule, MatButtonToggleModule, TradeComponent],
