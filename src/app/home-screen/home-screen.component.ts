@@ -1,6 +1,6 @@
 import { Component, inject, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { SimFInance } from '../../shared/tasks/simFinance';
-import { SimFinance } from '../../shared/controllers/SimFinance';
+import { SimFinance } from '../../shared/controllers/SimFinance.js';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -37,7 +37,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
 
   accountNum: any = 0
   userPreferenceData: any = {}
-  userSimFinData: SimFInance | null = null
+  userSimFinData: SimFInance[] = []
   userData: any = []
   canShowAddFunds: boolean = true;
   accessToken = ''

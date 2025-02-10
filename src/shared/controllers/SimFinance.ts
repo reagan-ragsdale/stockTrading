@@ -36,10 +36,10 @@ export class SimFinance {
     }
 
     @BackendMethod({ allowed: true })
-    static async getSimFinData(): Promise<SimFInance> {
+    static async getSimFinData(): Promise<SimFInance[]> {
         const userInfo = getCurrentUser()
         const user = await userRepo.findFirst({ id: userInfo.id })
-        return await simFinRepo.findFirst({userId: user?.userId}) as SimFInance
+        return await simFinRepo.find({where: {userId: user?.userId}})
     }
 
     @BackendMethod({ allowed: true })

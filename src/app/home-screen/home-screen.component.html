@@ -9,7 +9,7 @@
         <button style="margin-left:auto; margin-top:auto; margin-bottom:auto;" mat-icon-button aria-label="Add more funds" (click)="showAddFunds()">
             <mat-icon>add</mat-icon>
           </button>
-        <h3 style="padding-right:1rem;">{{userSimFinData?.dollarAmt | currency:'USD':'symbol'}}</h3>
+        <h3 style="padding-right:1rem;">{{userSimFinData[0].dollarAmt | currency:'USD':'symbol'}}</h3>
     </div>
     <div class="dashboard">
         <div style="padding-left: 1rem; padding-right:1rem; display:flex; flex-direction: column;">
@@ -54,6 +54,6 @@
 <ng-template #modalTemplate>
     <app-trade [stockName]="chartData.name" [stockPrice]="selectedStockCurrent" 
      [stockTime]="chartData.labels[chartData.labels.length - 1]"[ownedShares]="0"
-     [availableFunds]="userSimFinData!.dollarAmt">
+     [availableFunds]="userSimFinData[0]!.dollarAmt">
     </app-trade>
 </ng-template>
