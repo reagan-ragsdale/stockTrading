@@ -3,7 +3,7 @@ import { stockOrder } from '../../app/Dtos/stockOrder';
 import { DbOrders, dbOrdersRepo } from '../tasks/dbOrders.js';
 import { getCurrentUser, setSessionUser } from '../../server/server-session.js'
 import { userRepo } from '../tasks/Users.js';
-import { UsersStocks, usersStocksRepo } from '../tasks/usersStocks';
+import { UsersStocks, usersStocksRepo } from '../tasks/usersStocks.js';
 
 
 
