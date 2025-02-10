@@ -1,4 +1,6 @@
-import { Allow, Entity, Fields, remult, Validators } from "remult"
+import { Allow, Entity, Fields, Filter, remult, Validators } from "remult"
+import { getCurrentUser } from "../../server/server-session"
+import { userRepo } from "./Users"
 
 @Entity("rhkeys", {
     allowApiCrud: true
@@ -25,6 +27,15 @@ export class Rhkeys {
 
     @Fields.createdAt()
     createdAt?: Date
+
+
+    static getTokenUpdates = Filter.createCustom<Rhkeys, {  }>(async () => {
+        let currentUser = getCurrentUser()
+        let userInfo = await userRepo.findFirst({id: currentUser.id})
+        return {
+          userId: userInfo?.userId 
+        }
+      });
 
 
     

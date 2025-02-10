@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { KeyPairService } from '../services/keyPairService.js';
 import { PublicPRivateKeys } from '../Dtos/publicPrivateKeys.js';
 import { CommonModule } from '@angular/common';
@@ -12,6 +12,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { AuthController } from '../../shared/controllers/AuthController.js';
 import { Router } from '@angular/router';
 import { CachedData } from '../services/cachedDataService.js';
+import { remult } from 'remult';
+import { Rhkeys, rhRepo } from '../../shared/tasks/rhkeys.js';
 
 @Component({
   selector: 'app-key-screen',
@@ -20,42 +22,36 @@ import { CachedData } from '../services/cachedDataService.js';
   templateUrl: './key-screen.component.html',
   styleUrl: './key-screen.component.css'
 })
-export class KeyScreenComponent implements OnInit{
+export class KeyScreenComponent implements OnInit, OnDestroy{
   constructor(private router: Router, private _snackBar: MatSnackBar, private cachedData: CachedData) {
     }
+  remult = remult
   keys: PublicPRivateKeys = {
     publicKey: '',
     privateKey: ''
   }
   appKey: string = ''
   appSecret: string = ''
+  unsubscribe = () => { }
 
   async allowOAuth(){
   await AuthController.insertKeyPairs(this.appKey, this.appSecret)
    window.open(`https://api.schwabapi.com/v1/oauth/authorize?response_type=code&client_id=${this.appKey}&scope=readonly&redirect_uri=https://stocktrading.up.railway.app/auth`,
       "_blank"
     )?.focus()
-   // this.waitForKeyPairs()
    //add livequery to look for the new update to the token table
+    this.unsubscribe = rhRepo
+      .liveQuery({
+        where: Rhkeys.getTokenUpdates({  })
+      })
+      .subscribe(info => this.checkData(info.items))
     
   }
-
-  isToken: boolean = false
-  waitForKeyPairs(){
-    let interval = setInterval(this.checkToken,1000)
-    if(this.isToken == true){
-      clearInterval(interval)
-      this.router.navigate(['/home'])
-    }
+  checkData(change: any){
+    console.log(change)
   }
 
-  checkToken(){
-    let token = null
-    this.cachedData.currentAccessToken.subscribe(accessToken => console.log(accessToken))
-    if(token != null){
-      this.isToken = true
-    }
-  }
+
 
 
   newId: string = ''
@@ -67,8 +63,15 @@ export class KeyScreenComponent implements OnInit{
       window.open(`https://api.schwabapi.com/v1/oauth/authorize?response_type=code&client_id=${userKeys.appKey}&scope=readonly&redirect_uri=https://stocktrading.up.railway.app/auth`,
         "_blank"
       )?.focus()
-      this.waitForKeyPairs()
+      this.unsubscribe = rhRepo
+      .liveQuery({
+        where: Rhkeys.getTokenUpdates({  })
+      })
+      .subscribe(info => this.checkData(info.items))
     }
+  }
+  ngOnDestroy() {
+    this.unsubscribe()
   }
   
 }
