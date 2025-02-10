@@ -189,9 +189,9 @@ export class HomeScreenComponent implements OnInit {
               data: this.chartData.history,
               backgroundColor: '#54C964',
               hoverBackgroundColor: '#54C964',
-              borderColor: 'hsl(18, 12%, 60%)',
+              borderColor: '#54C964',
               pointBackgroundColor: '#54C964',
-              pointBorderColor: '#54C964'
+              pointBorderColor: '#54C964',
             }
           ]
         },
