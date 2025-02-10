@@ -202,7 +202,8 @@ export class HomeScreenComponent implements OnInit {
           },
           elements:{
             line:{
-              backgroundColor: '#54C964'
+              backgroundColor: '#54C964',
+              borderColor: '#54C964'
             },
             point:{
               radius:1,
