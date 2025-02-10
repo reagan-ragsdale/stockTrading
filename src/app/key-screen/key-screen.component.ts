@@ -33,6 +33,7 @@ export class KeyScreenComponent implements OnInit, OnDestroy{
   appKey: string = ''
   appSecret: string = ''
   unsubscribe = () => { }
+  incomingTokensFromDb: any = []
 
   async allowOAuth(){
   await AuthController.insertKeyPairs(this.appKey, this.appSecret)
@@ -48,7 +49,12 @@ export class KeyScreenComponent implements OnInit, OnDestroy{
     
   }
   checkData(change: any){
-    console.log(change)
+    this.incomingTokensFromDb.push(change[0].accessToken)
+    if(this.incomingTokensFromDb.length == 2){
+      if(this.incomingTokensFromDb[0] != this.incomingTokensFromDb[1]){
+        this.router.navigate(['/home'])
+      }
+    }
   }
 
 
