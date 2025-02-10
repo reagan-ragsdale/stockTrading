@@ -82,7 +82,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     });
     this.tradeDialogRef.afterClosed().subscribe(async (result: any) => {
       this.userSimFinData = await SimFinance.getSimFinData()
-      console.log(this.userSimFinData)
+      console.log(result)
       //this.lastOrder = await OrderController.getLastOrder();
       await this.getStockData()
       
@@ -255,6 +255,9 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
               radius: 1,
               hitRadius: 3
             }
+          },
+          animation:{
+            duration: 0
           },
 
           scales: {
