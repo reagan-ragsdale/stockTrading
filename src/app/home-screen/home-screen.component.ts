@@ -195,7 +195,7 @@ export class HomeScreenComponent implements OnInit {
         },
         options: {
   
-          aspectRatio: 3.5,
+          aspectRatio: 2,
           color: '#DBD4D1',
           font: {
             weight: 'bold'
