@@ -21,6 +21,9 @@ import { Rhkeys, rhRepo } from '../../shared/tasks/rhkeys';
 import { AuthController } from '../../shared/controllers/AuthController';
 import { TradeComponent } from './trade/trade.component';
 import { DialogRef } from '@angular/cdk/dialog';
+import { StockController } from '../../shared/controllers/StockController';
+import { UsersStocks } from '../../shared/tasks/usersStocks';
+import { stockOwnedData } from '../Dtos/stockOwnedData';
 @Component({
   selector: 'app-home-screen',
   imports: [CommonModule, MatIconModule, MatButtonModule, MatButtonToggleModule, TradeComponent],
@@ -52,6 +55,12 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   selectedStockHigh: number = 0
   selectedStockLow: number = 0
   selectedStockCurrent: number = 0
+  stockData: UsersStocks[] = []
+  selectedStockName: string = ''
+  selectedStockData: stockOwnedData = {
+    shareQty: 0,
+    stockName: ''
+  }
 
   showAddFunds() {
     const dialogRef = this.dialog.open(AddFundsComponent, {
@@ -74,8 +83,19 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.tradeDialogRef.afterClosed().subscribe(async (result: any) => {
       this.userSimFinData = await SimFinance.getSimFinData()
       console.log(this.userSimFinData)
-      this.lastOrder = await OrderController.getLastOrder();
+      //this.lastOrder = await OrderController.getLastOrder();
+      await this.getStockData()
+      
     });
+  }
+  async getStockData(){
+    this.stockData = await StockController.getAllStocks()
+    let selectedStock = this.stockData.filter(e => e.stockName == this.selectedStockName)
+    this.selectedStockData = {
+      stockName: selectedStock[0].stockName,
+      shareQty: selectedStock[0].shareQty
+    }
+
   }
 
   async getUserData() {
@@ -357,6 +377,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     Chart.register(annotationPlugin);
     Chart.register(...registerables)
+    this.selectedStockName = 'AAPL'
     let user = await remult.initUser()
     await this.getUserData()
     this.lastOrder = await OrderController.getLastOrder();
@@ -366,6 +387,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     //await this.getMovers()
     this.startWebsocket()
     await this.getUserFinanceData()
+    await this.getStockData()
     this.unsubscribe = rhRepo
       .liveQuery({
         where: Rhkeys.getTokenUpdates({})

@@ -32,15 +32,14 @@
                 </div>
                 <div style="flex-grow: 1;">
                     <div style="padding: 1rem; display: flex;flex-direction: column;">
-                        <button style="width: max-content; margin-top:auto; margin-bottom:auto;"mat-raised-button color="warn" aria-label="Add more funds" (click)="openTradePopup()">Trade</button>
-                        <h2 style="text-align:center;">Active Trades</h2>
-                        <div *ngIf="lastOrder && lastOrder.orderType == 'Buy'" style="display:flex; justify-content: center;  gap: 1rem;">
-                            <h3>{{lastOrder.stockName}}</h3>
-                            <h3>{{lastOrder.shareQty | number:'1.2-3'}}</h3>
-                            <h3>{{lastOrder.stockPrice | currency:'USD':'symbol'}}</h3>
+                        <button style="width: max-content; margin: auto;"mat-raised-button color="warn" aria-label="Add more funds" (click)="openTradePopup()">Trade</button>
+                        <h2 style="text-align:center;">Active Positions</h2>
+                        <div *ngIf="selectedStockData.shareQty > 0" style="display:flex; justify-content: center;  gap: 1rem;">
+                            <h3>{{selectedStockData.stockName}}</h3>
+                            <h3>{{selectedStockData.shareQty | number:'1.2-3'}}</h3>
                         </div>
-                        <div *ngIf="!lastOrder || lastOrder.orderType == 'Sell'" style="display:flex; justify-content: center;">
-                            <h3>No Active Trades</h3>
+                        <div *ngIf="selectedStockData.shareQty == 0" style="display:flex; justify-content: center;">
+                            <h3>No Active Positions</h3>
                         </div>
     
                     </div>

@@ -17,6 +17,8 @@ import { OrderController } from '../shared/controllers/OrderController.js'
 import { DbOrders } from '../shared/tasks/dbOrders.js'
 import cron from 'node-cron'
 import { loadNewToken } from '../app/apiCalls/loadNewAccessToken.js'
+import { UsersStocks } from '../shared/tasks/usersStocks.js'
+import { StockController } from '../shared/controllers/StockController.js'
 //import ev from '../../environmentVariables.json'
 
 config()
@@ -28,8 +30,8 @@ OAuthContoller.sendCall = oauthCall;
 
 
 export const api = remultExpress({
-    controllers:[AuthController, SimFinance, OAuthContoller, OrderController],
-    entities: [Task,Users,Rhkeys, SimFInance, testEnc, DbOrders],
+    controllers:[AuthController, SimFinance, OAuthContoller, OrderController,StockController],
+    entities: [Task,Users,Rhkeys, SimFInance, testEnc, DbOrders, UsersStocks],
     admin:true,
     getUser: (req) => req.session!['user'],
     dataProvider: process.env['DATABASE_URL'] ?
