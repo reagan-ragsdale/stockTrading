@@ -200,17 +200,24 @@ export class HomeScreenComponent implements OnInit {
           font: {
             weight: 'bold'
           },
+          elements:{
+            point:{
+              radius:1
+            }
+          },
   
           scales: {
             y: {
               max: this.getMaxForChart(this.chartData.history),
               min: this.getMinForChart(this.chartData.history),
               grid: {
+                display:false,
                 color: 'hsl(18, 12%, 60%)'
               },
             },
             x: {
               grid: {
+                display:false,
                 color: 'hsl(18, 12%, 60%)'
               },
   
