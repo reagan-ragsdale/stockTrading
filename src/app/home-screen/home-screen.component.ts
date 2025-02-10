@@ -190,6 +190,8 @@ export class HomeScreenComponent implements OnInit {
               backgroundColor: '#54C964',
               hoverBackgroundColor: '#54C964',
               borderColor: 'hsl(18, 12%, 60%)',
+              pointBackgroundColor: '#54C964',
+              pointBorderColor: '#54C964'
             }
           ]
         },
