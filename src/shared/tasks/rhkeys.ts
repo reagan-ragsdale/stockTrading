@@ -19,17 +19,17 @@ export class Rhkeys {
     @Fields.string({ includeInApi: false })
     appSecret = ""
 
-    @Fields.string({ includeInApi: false })
+    @Fields.string({ includeInApi: true })
     accessToken = ""
 
-    @Fields.string({ includeInApi: false })
+    @Fields.string({ includeInApi: true })
     refreshToken = ""
 
     @Fields.createdAt()
     createdAt?: Date
 
 
-    static getTokenUpdates = Filter.createCustom<Rhkeys[], {  }>(async () => {
+    static getTokenUpdates = Filter.createCustom<Rhkeys, {  }>(async () => {
         let currentUser = getCurrentUser()
         let userInfo = await userRepo.findFirst({id: currentUser.id})
         return {
