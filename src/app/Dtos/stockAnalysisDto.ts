@@ -1,5 +1,6 @@
 export type StockAnalysisDto = {
     name: string;
     history: number[];
-    labels: number[];
+    labels: string[];
+    time: number[];
 }

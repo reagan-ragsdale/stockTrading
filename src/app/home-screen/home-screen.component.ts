@@ -24,6 +24,7 @@ import { DialogRef } from '@angular/cdk/dialog';
 import { StockController } from '../../shared/controllers/StockController';
 import { UsersStocks } from '../../shared/tasks/usersStocks';
 import { stockOwnedData } from '../Dtos/stockOwnedData';
+import { reusedFunctions } from '../services/reusedFunctions';
 @Component({
   selector: 'app-home-screen',
   imports: [CommonModule, MatIconModule, MatButtonModule, MatButtonToggleModule, TradeComponent],
@@ -186,11 +187,13 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   chartData: StockAnalysisDto = {
     history: [],
     labels: [],
-    name: 'AAPL'
+    name: 'AAPL',
+    time: []
   }
   async refreshData(data: any) {
     this.chartData.history.push(data.data[0].content[0]['3'])
-    this.chartData.labels.push(data.data[0].timestamp)
+    this.chartData.labels.push(reusedFunctions.epochToLocalTime(data.data[0].timestamp))
+    this.chartData.time.push(data.data[0].timestamp)
     console.log(this.chartData.history)
     this.selectedStockCurrent = this.chartData.history[this.chartData.history.length - 1]
     this.selectedStockHigh = Math.max(...this.chartData.history)
@@ -335,7 +338,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       stockPrice: this.chartData.history[this.chartData.history.length - 1],
       //figure out how many shares to buy
       shareQty: 1,
-      orderTime: this.chartData.labels[this.chartData.labels.length - 1]
+      orderTime: this.chartData.time[this.chartData.time.length - 1]
     }
     this.openOrder = await OrderService.executeOrder(order)
     await this.getUserFinanceData()
