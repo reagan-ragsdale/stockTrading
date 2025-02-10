@@ -46,6 +46,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   lastOrder: DbOrders | null = null
   isUserOrBot: string = 'User'
   unsubscribe = () => { }
+  selectedStockHigh: number = 0
+  selectedStockLow: number = 0
 
   showAddFunds() {
     const dialogRef = this.dialog.open(AddFundsComponent, {
@@ -152,6 +154,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.chartData.history.push(data.data[0].content[0]['3'])
     this.chartData.labels.push(data.data[0].timestamp)
     console.log(this.chartData.history)
+    this.selectedStockHigh = Math.max(...this.chartData.history)
+    this.selectedStockLow = Math.min(...this.chartData.history)
     this.createOrUpdateChart()
     if (this.isUserOrBot == 'Bot') {
       let shouldPlaceOrder = AnalysisService.checkIsLowBuyIsHighSell(this.chartData, this.openOrder)
