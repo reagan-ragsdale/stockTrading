@@ -290,7 +290,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         max = arr[i]
       }
     }
-    return max + 10
+    return max + 5
 
   }
   getMinForChart(arr: number[]): number {
@@ -300,7 +300,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         min = arr[i]
       }
     }
-    return min - 10
+    return min - 5
 
   }
 
