@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import {
   MatDialog,
   MatDialogActions,
@@ -23,6 +23,7 @@ export class AddFundsComponent {
   addAmount: number = 0;
 
   readonly dialogRef = inject(MatDialogRef<AddFundsComponent>);
+  
 
   async OnAddFundsClicked(){
     if(this.addAmount > 0){

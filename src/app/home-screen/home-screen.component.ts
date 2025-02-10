@@ -19,6 +19,7 @@ import { stockOrder } from '../Dtos/stockOrder';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { Rhkeys, rhRepo } from '../../shared/tasks/rhkeys';
 import { AuthController } from '../../shared/controllers/AuthController';
+import { TradeComponent } from './trade/trade.component';
 @Component({
   selector: 'app-home-screen',
   imports: [CommonModule, MatIconModule, MatButtonModule, MatButtonToggleModule],
@@ -58,6 +59,18 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe(async result => {
       this.userSimFinData = await SimFinance.getSimFinData()
+    });
+  }
+
+  openTradePopup() {
+    const dialogRef = this.dialog.open(TradeComponent, {
+      width: '400px',
+      enterAnimationDuration: 0,
+      exitAnimationDuration: 0
+    });
+    dialogRef.afterClosed().subscribe(async result => {
+      this.userSimFinData = await SimFinance.getSimFinData()
+      this.lastOrder = await OrderController.getLastOrder();
     });
   }
 
@@ -281,6 +294,11 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     console.log(this.schwabWebsocket)
     this.schwabWebsocket!.close()
     console.log(this.schwabWebsocket)
+  }
+
+  tradeBuyOrSell = 'Buy'
+  placeTrade(){
+
   }
 
   async placeOrder(buyOrSell: string) {
