@@ -14,11 +14,12 @@ import { Router } from '@angular/router';
 import { CachedData } from '../services/cachedDataService.js';
 import { remult } from 'remult';
 import { Rhkeys, rhRepo } from '../../shared/tasks/rhkeys.js';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-key-screen',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatCardModule, MatToolbarModule, MatFormFieldModule, MatSnackBarModule, MatInputModule, MatButtonModule],
+  imports: [CommonModule,MatProgressSpinnerModule, FormsModule, MatCardModule, MatToolbarModule, MatFormFieldModule, MatSnackBarModule, MatInputModule, MatButtonModule],
   templateUrl: './key-screen.component.html',
   styleUrl: './key-screen.component.css'
 })
@@ -34,12 +35,14 @@ export class KeyScreenComponent implements OnInit, OnDestroy{
   appSecret: string = ''
   unsubscribe = () => { }
   incomingTokensFromDb: any = []
+  isLoadingTokens: boolean = false;
 
   async allowOAuth(){
   await AuthController.insertKeyPairs(this.appKey, this.appSecret)
    window.open(`https://api.schwabapi.com/v1/oauth/authorize?response_type=code&client_id=${this.appKey}&scope=readonly&redirect_uri=https://stocktrading.up.railway.app/auth`,
       "_blank"
     )?.focus()
+    this.isLoadingTokens = true;
    //add livequery to look for the new update to the token table
     this.unsubscribe = rhRepo
       .liveQuery({
@@ -70,6 +73,7 @@ export class KeyScreenComponent implements OnInit, OnDestroy{
       window.open(`https://api.schwabapi.com/v1/oauth/authorize?response_type=code&client_id=${userKeys.appKey}&scope=readonly&redirect_uri=https://stocktrading.up.railway.app/auth`,
         "_blank"
       )?.focus()
+      this.isLoadingTokens = true;
       this.unsubscribe = rhRepo
       .liveQuery({
         where: Rhkeys.getTokenUpdates({  })

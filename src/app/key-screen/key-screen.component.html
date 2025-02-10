@@ -21,3 +21,6 @@
         </mat-card>
     </div>
 </div>
+<div *ngIf="isLoadingTokens" style="height: calc(100vh - 60px); width: 100%; background-color: #1F1E1F; display: flex; align-items: center;">
+    <mat-spinner [mode]="'indeterminate'" style="margin:auto; color:white"></mat-spinner>
+</div>

@@ -12,10 +12,12 @@
         <h3 style="padding-right:1rem;">{{userSimFinData?.dollarAmt | currency:'USD':'symbol'}}</h3>
     </div>
     <div class="dashboard">
-        <div style="padding-left: 1rem; padding-right:1rem;">
-            <h1>Dashboard</h1>
-            <button style="width: max-content;"mat-raised-button color="warn" aria-label="Add more funds" (click)="endStream()">ABORT!</button>
-            <!-- <div>
+        <div style="padding-left: 1rem; padding-right:1rem; display:flex; flex-direction: column;">
+            <div style="display: flex; gap:2rem;">
+                <h1>Dashboard</h1>
+                <button style="width: max-content;"mat-raised-button color="warn" aria-label="Add more funds" (click)="endStream()">ABORT!</button>    
+            </div>
+              <!-- <div>
                 <button *ngFor="let mover of moversData" style="width: max-content;"mat-raised-button color="primary" aria-label="Add more funds" >{{mover.symbol}}</button>
             </div> -->
             <div style="width: 100%;display:flex;">
