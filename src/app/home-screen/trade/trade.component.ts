@@ -33,19 +33,47 @@ export class TradeComponent {
   @Input() stockTime: number = 0 
 
   buyOrSell: string = 'Buy'
+  sharedOrDollars: string = 'Dollars'
 
   amountToBuyOrSell: number = 0;
 
   async onPlaceTradeClicked(){
-    let order: stockOrder = {
-      orderType: this.buyOrSell,
-      stockName: this.stockName,
-      stockPrice: this.stockPrice,
-      shareQty: this.amountToBuyOrSell/this.stockPrice,
-      orderTime: this.stockTime
-
+    if(this.amountToBuyOrSell > 0){
+      let order: stockOrder = {
+        orderType: this.buyOrSell,
+        stockName: this.stockName,
+        stockPrice: this.stockPrice,
+        shareQty: this.amountToBuyOrSell/this.stockPrice,
+        orderTime: this.stockTime
+  
+      }
+      let orderOpen = await OrderService.executeOrder(order)
     }
-    let orderOpen = await OrderService.executeOrder(order)
+    
+  }
+
+  getMaxToBuyOrSell(): number{
+    let returnVal: number = 0
+    if(this.buyOrSell == 'Buy'){
+      if(this.sharedOrDollars == 'Shares'){
+        returnVal = this.availableFunds / this.stockPrice
+      }
+      else{
+        returnVal = this.availableFunds
+      }
+    }
+    else{
+      if(this.sharedOrDollars == 'Shares'){
+        returnVal = this.ownedShares
+      }
+      else{
+        returnVal = this.ownedShares * this.stockPrice
+      }
+    }
+    return returnVal
+  }
+  changeSharesDollars(event: any){
+    this.sharedOrDollars = event.value
   }
 
   changeBuyOrSell(event: any){

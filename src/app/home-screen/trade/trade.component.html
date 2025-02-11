@@ -1,12 +1,21 @@
-<h2 mat-dialog-title>Trade {{stockName}}</h2>
-<mat-dialog-content>
-    {{stockPrice}}
-    <form class="auth-form">
-        <mat-form-field class="example-full-width">
-            <mat-label>Order Amount</mat-label>
-            <input matInput type="number" [(ngModel)]="amountToBuyOrSell" placeholder="0.00">
-        </mat-form-field>
-    </form>
+<div mat-dialog-title style="display: flex; justify-content: space-between;">
+    <h2 mat-dialog-title>Trade {{stockName}}</h2>
+    <h2>{{stockPrice}}</h2>
+</div>
+<mat-dialog-content style="display: flex;flex-direction: column;align-items: flex-end;">
+    <div>
+        <mat-button-toggle-group name="orderType" aria-label="orderType" (change)="changeSharesDollars($event)" [hideSingleSelectionIndicator]="true" style="display:flex; flex-direction:column;">
+            <mat-button-toggle  value="Shares">Shares</mat-button-toggle>
+            <mat-button-toggle [checked]="true" value="Dollars">Dollars</mat-button-toggle>
+        </mat-button-toggle-group>
+        <form class="auth-form">
+            <mat-form-field class="example-full-width">
+                <mat-label>Order Amount</mat-label>
+                <input matInput type="number" [(ngModel)]="amountToBuyOrSell" placeholder="0.00" [max]="getMaxToBuyOrSell()">
+            </mat-form-field>
+        </form>
+    </div>
+    
     <mat-button-toggle-group name="fontStyle" aria-label="Font Style" (change)="changeBuyOrSell($event)" [hideSingleSelectionIndicator]="true">
         <mat-button-toggle  value="Sell">Sell</mat-button-toggle>
         <mat-button-toggle [checked]="true" value="Buy">Buy</mat-button-toggle>
@@ -14,7 +23,7 @@
 
 
 </mat-dialog-content>
-<mat-dialog-actions>
+<mat-dialog-actions align="end">
     <button mat-button mat-dialog-close >Cancel</button>
-    <button mat-button mat-dialog-close cdkFocusInitial (click)="onPlaceTradeClicked()">Submit</button>
+    <button mat-button [mat-dialog-close]="true" cdkFocusInitial (click)="onPlaceTradeClicked()">Submit</button>
 </mat-dialog-actions>
