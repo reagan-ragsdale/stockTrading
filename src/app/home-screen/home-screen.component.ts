@@ -389,16 +389,16 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
 
   isLoading: boolean = true;
   async ngOnInit() {
-    this.isLoading = true;
+    //this.isLoading = true;
     Chart.register(annotationPlugin);
     Chart.register(...registerables)
     this.selectedStockName = 'AAPL'
     let user = await remult.initUser()
     await this.getUserData()
-    this.lastOrder = await OrderController.getLastOrder();
-    if (this.lastOrder?.orderType == 'Buy') {
+    //this.lastOrder = await OrderController.getLastOrder();
+    /* if (this.lastOrder && this.lastOrder.orderType == 'Buy') {
       this.openOrder = true
-    }
+    } */
     //await this.getMovers()
     this.startWebsocket()
     await this.getUserFinanceData()
@@ -408,7 +408,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         where: Rhkeys.getTokenUpdates({})
       })
       .subscribe(info => this.checkData(info.items)) */
-      this.isLoading = false;
+      //this.isLoading = false;
 
   }
 

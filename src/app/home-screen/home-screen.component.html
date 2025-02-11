@@ -1,7 +1,7 @@
-<div *ngIf="isLoading" style="height: calc(100vh - 63px); width: 100%; background-color: #1F1E1F; display: flex; align-items: center;">
+<div *ngIf="false" style="height: calc(100vh - 63px); width: 100%; background-color: #1F1E1F; display: flex; align-items: center;">
     <mat-spinner [mode]="'indeterminate'" style="margin:auto; color:white"></mat-spinner>
 </div>
-<div *ngIf="!isLoading" style="display:flex; flex-direction: column; height: calc(100vh - 63px);">
+<div *ngIf="true" style="display:flex; flex-direction: column; height: calc(100vh - 63px);">
     <div class="top-bar">
         <div style="margin-left: 1rem;margin-top: auto;margin-bottom: auto;">
             <mat-button-toggle-group name="fontStyle" aria-label="Font Style" (change)="userBotChange($event)" [hideSingleSelectionIndicator]="true">
