@@ -39,11 +39,14 @@ export class TradeComponent {
 
   async onPlaceTradeClicked(){
     if(this.amountToBuyOrSell > 0){
+      if(this.sharedOrDollars == 'Dollars'){
+        this.amountToBuyOrSell = this.amountToBuyOrSell / this.stockPrice
+      }
       let order: stockOrder = {
         orderType: this.buyOrSell,
         stockName: this.stockName,
         stockPrice: this.stockPrice,
-        shareQty: this.amountToBuyOrSell/this.stockPrice,
+        shareQty: this.amountToBuyOrSell,
         orderTime: this.stockTime
   
       }
