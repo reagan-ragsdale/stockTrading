@@ -195,7 +195,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   }
   async refreshData(data: any) {
     this.chartData.history.push(data.data[0].content[0]['3'])
-    this.chartData.labels.push(reusedFunctions.epochToLocalTime(data.data[0].timestamp))
+    this.chartData.labels.push(data.data[0].timestamp)
     this.chartData.time.push(data.data[0].timestamp)
     
     console.log(this.chartData.history)
