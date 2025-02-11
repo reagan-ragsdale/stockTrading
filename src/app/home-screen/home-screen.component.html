@@ -46,7 +46,7 @@
                             <h3>No Active Positions</h3>
                         </div>
                         <h2 style="text-align:center;">Trade History</h2>
-                        <div *ngIf="selectedStockHistoryData.length > 0" style="display:flex; justify-content: center; flex-direction: column; height: 300px;overflow-y: scroll;scrollbar-width: none;">
+                        <div *ngIf="selectedStockHistoryData.length > 0" style="display:flex; justify-content: center; flex-direction: column;overflow-y: scroll;scrollbar-width: none;">
                             <div *ngFor="let trade of selectedStockHistoryData" style="display: flex;justify-content: space-evenly; ">
                                 <h3>{{trade.orderType}}</h3>
                                 <h3>{{trade.stockName}}</h3>
