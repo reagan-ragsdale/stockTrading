@@ -23,9 +23,10 @@ import { StockController } from '../../shared/controllers/StockController';
 import { UsersStocks } from '../../shared/tasks/usersStocks';
 import { stockOwnedData } from '../Dtos/stockOwnedData';
 import { reusedFunctions } from '../services/reusedFunctions.js';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 @Component({
   selector: 'app-home-screen',
-  imports: [CommonModule, MatIconModule, MatButtonModule, MatButtonToggleModule, TradeComponent],
+  imports: [CommonModule, MatIconModule,MatProgressSpinnerModule, MatButtonModule, MatButtonToggleModule, TradeComponent],
   templateUrl: './home-screen.component.html',
   styleUrl: './home-screen.component.css'
 })
@@ -384,7 +385,9 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     console.log(this.accessToken)
   }
 
+  isLoading: boolean = true;
   async ngOnInit() {
+    this.isLoading = true;
     Chart.register(annotationPlugin);
     Chart.register(...registerables)
     this.selectedStockName = 'AAPL'
@@ -398,11 +401,12 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.startWebsocket()
     await this.getUserFinanceData()
     await this.getStockData()
-    this.unsubscribe = rhRepo
+   /*  this.unsubscribe = rhRepo
       .liveQuery({
         where: Rhkeys.getTokenUpdates({})
       })
-      .subscribe(info => this.checkData(info.items))
+      .subscribe(info => this.checkData(info.items)) */
+      this.isLoading = false;
 
   }
 

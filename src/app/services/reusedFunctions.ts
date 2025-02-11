@@ -1,8 +1,14 @@
 export class reusedFunctions{
     static epochToLocalTime(epoch: number): string {
-        const date = new Date(epoch * 1000); // Convert epoch seconds to milliseconds
-        const hours = String(date.getHours()).padStart(2, '0');
-        const minutes = String(date.getMinutes()).padStart(2, '0');
-        return `${hours}:${minutes}`;
+        let date = new Date(epoch * 1000);
+
+    // Get hours and minutes
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+
+    // Format to always have two digits
+    let formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+
+    return formattedTime;
     }
 }
