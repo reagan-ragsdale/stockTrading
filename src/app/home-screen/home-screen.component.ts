@@ -196,9 +196,6 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   async refreshData(data: any) {
     this.chartData.history.push(data.data[0].content[0]['3'])
     this.chartData.labels.push(data.data[0].timestamp)
-    this.chartData.time.push(data.data[0].timestamp)
-    
-    console.log(this.chartData.history)
     this.selectedStockCurrent = this.chartData.history[this.chartData.history.length - 1]
     this.selectedStockHigh = Math.max(...this.chartData.history)
     this.selectedStockLow = Math.min(...this.chartData.history)
@@ -208,27 +205,20 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         await this.placeOrder(shouldPlaceOrder.isBuyOrSell!)
       }
     }
-    this.createOrUpdateChart()
+    this.updateChart()
     
 
   }
   updateChart() {
-    let dataNew = this.chartData.history.slice()
-    let labelsNew = this.chartData.labels.slice()
-    this.stockChart.data.datasets[0].data = dataNew
-    this.stockChart.data.datasets[0].labels = labelsNew
+    this.stockChart.data.datasets[0].data = this.chartData.history
+    this.stockChart.data.datasets[0].labels = this.chartData.labels
     this.stockChart.options.scales.y.max = this.getMaxForChart(this.chartData.history)
     this.stockChart.options.scales.y.min = this.getMinForChart(this.chartData.history)
     this.stockChart.update()
   }
 
   createOrUpdateChart() {
-    let chartInstance = Chart.getChart("stock-chart")
-    if (chartInstance != undefined) {
-      this.updateChart()
-      console.log('update chart')
-    }
-    else {
+    
       console.log('create chart')
       this.stockChart = new Chart("stock-chart", {
         type: 'line', //this denotes tha type of chart
@@ -289,7 +279,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
           }
         }
       })
-    }
+    
 
   }
 
@@ -400,6 +390,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       this.openOrder = true
     } */
     //await this.getMovers()
+    this.createOrUpdateChart()
     this.startWebsocket()
     await this.getUserFinanceData()
     await this.getStockData()
