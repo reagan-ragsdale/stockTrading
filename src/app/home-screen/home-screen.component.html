@@ -40,6 +40,7 @@
                         <div *ngIf="selectedStockData.shareQty > 0" style="display:flex; justify-content: center;  gap: 1rem;">
                             <h3>{{selectedStockData.stockName}}</h3>
                             <h3>{{selectedStockData.shareQty | number:'1.2-5'}}</h3>
+                            <h3>{{(selectedStockData.shareQty * selectedStockCurrent) | number:'1.2-5'}}</h3>
                         </div>
                         <div *ngIf="selectedStockData.shareQty == 0" style="display:flex; justify-content: center;">
                             <h3>No Active Positions</h3>
