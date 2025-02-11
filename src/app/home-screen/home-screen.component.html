@@ -36,16 +36,16 @@
                         <h2 style="text-align:center;">Active Positions</h2>
                         <div *ngIf="selectedStockData.shareQty > 0" style="display:flex; justify-content: center;  gap: 1rem;">
                             <h3>{{selectedStockData.stockName}}</h3>
-                            <h3>{{selectedStockData.shareQty | number:'1.2-3'}}</h3>
+                            <h3>{{selectedStockData.shareQty | number:'1.2-5'}}</h3>
                         </div>
                         <div *ngIf="selectedStockData.shareQty == 0" style="display:flex; justify-content: center;">
                             <h3>No Active Positions</h3>
                         </div>
                         <h2 style="text-align:center;">Trade History</h2>
-                        <div *ngIf="selectedStockHistoryData.length > 0" style="display:flex; justify-content: center;  gap: 1rem;">
-                            <div *ngFor="let trade of selectedStockHistoryData">
+                        <div *ngIf="selectedStockHistoryData.length > 0" style="display:flex; justify-content: center;  gap: 1rem; flex-direction: column;">
+                            <div *ngFor="let trade of selectedStockHistoryData" style="display: flex;justify-content: space-evenly;">
                                 <h3>{{trade.stockName}}</h3>
-                                <h3>{{trade.shareQty | number:'1.2-3'}}</h3>
+                                <h3>{{trade.shareQty | number:'1.2-5'}}</h3>
                                 <h3>{{trade.stockPrice | number:'1.2-3'}}</h3>
                             </div>
                         </div>
