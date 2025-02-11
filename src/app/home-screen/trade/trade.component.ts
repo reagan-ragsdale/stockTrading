@@ -15,10 +15,11 @@ import { FormsModule } from '@angular/forms'
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { OrderService } from '../../services/orderService.js';
 import { stockOrder } from '../../Dtos/stockOrder';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-trade',
-  imports: [MatDialogContent,MatButtonToggleModule,MatDialogActions,MatDialogClose,MatDialogTitle,MatButtonModule,MatFormFieldModule,MatInputModule,FormsModule],
+  imports: [MatDialogContent,MatCheckboxModule,MatButtonToggleModule,MatDialogActions,MatDialogClose,MatDialogTitle,MatButtonModule,MatFormFieldModule,MatInputModule,FormsModule],
   templateUrl: './trade.component.html',
   styleUrl: './trade.component.css'
 })
@@ -36,6 +37,7 @@ export class TradeComponent {
   sharedOrDollars: string = 'Dollars'
 
   amountToBuyOrSell: number = 0;
+  isAllSharesChecked: boolean = false;
 
   async onPlaceTradeClicked(){
     if(this.amountToBuyOrSell > 0){
@@ -75,6 +77,10 @@ export class TradeComponent {
       }
     }
     return returnVal
+  }
+
+  sellAllSharesChecked(){
+    this.amountToBuyOrSell = this.ownedShares
   }
   changeSharesDollars(event: any){
     this.sharedOrDollars = event.value
