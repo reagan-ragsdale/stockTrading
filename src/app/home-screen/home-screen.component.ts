@@ -18,9 +18,7 @@ import { StockAnalysisDto } from '../Dtos/stockAnalysisDto';
 import { stockOrder } from '../Dtos/stockOrder';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { Rhkeys, rhRepo } from '../../shared/tasks/rhkeys';
-import { AuthController } from '../../shared/controllers/AuthController';
 import { TradeComponent } from './trade/trade.component';
-import { DialogRef } from '@angular/cdk/dialog';
 import { StockController } from '../../shared/controllers/StockController';
 import { UsersStocks } from '../../shared/tasks/usersStocks';
 import { stockOwnedData } from '../Dtos/stockOwnedData';
@@ -62,6 +60,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     shareQty: 0,
     stockName: ''
   }
+  stockHistoryData: DbOrders[] = []
+  selectedStockHistoryData: DbOrders[] = []
 
   showAddFunds() {
     const dialogRef = this.dialog.open(AddFundsComponent, {
@@ -96,6 +96,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       stockName: selectedStock[0].stockName,
       shareQty: selectedStock[0].shareQty
     }
+    this.stockHistoryData = await OrderController.getAllOrders()
+    this.selectedStockHistoryData = this.stockHistoryData.filter(e => e.stockName == this.selectedStockName)
 
   }
 
@@ -212,6 +214,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     let labelsNew = this.chartData.labels.slice()
     this.stockChart.data.datasets[0].data = dataNew
     this.stockChart.data.datasets[0].labels = labelsNew
+    this.stockChart.options.scales.y.max = this.getMaxForChart(this.chartData.history)
+    this.stockChart.options.scales.y.min = this.getMinForChart(this.chartData.history)
     this.stockChart.update()
   }
 

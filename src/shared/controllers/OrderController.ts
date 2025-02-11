@@ -31,4 +31,12 @@ export class OrderController {
     const orders = await dbOrdersRepo.find({where: {userId: userInfo?.userId}, orderBy: {orderTime: 'desc'}})
     return orders[0]
   }
+
+  @BackendMethod({ allowed: true })
+  static async getAllOrders(): Promise<DbOrders[]> {
+    const currentUser = getCurrentUser()
+    const userInfo = await userRepo.findFirst({id: currentUser.id})
+    return await dbOrdersRepo.find({where: {userId: userInfo?.userId}, orderBy: {orderTime: 'desc'}})
+    
+  }
 }
