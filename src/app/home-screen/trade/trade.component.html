@@ -9,7 +9,7 @@
             <mat-button-toggle [checked]="true" value="Dollars">Dollars</mat-button-toggle>
         </mat-button-toggle-group>
         <div style="display:flex;">
-            <mat-checkbox [labelPosition]="'before'" *ngIf="ownedShares > 0 && buyOrSell == 'Sell' && sharedOrDollars == 'Shares'" class="example-margin" [(ngModel)]="isAllSharesChecked" (ngModelChange)="sellAllSharesChecked()">Sell all shares?</mat-checkbox>
+            <mat-checkbox [labelPosition]="'before'" *ngIf="buyOrSell == 'Sell' && sharedOrDollars == 'Shares'" class="example-margin" [(ngModel)]="isAllSharesChecked" (ngModelChange)="sellAllSharesChecked()">Sell all shares?</mat-checkbox>
             <form class="auth-form">
                 <mat-form-field class="example-full-width">
                     <mat-label>Order Amount</mat-label>
