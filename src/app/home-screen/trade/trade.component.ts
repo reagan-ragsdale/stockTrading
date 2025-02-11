@@ -16,10 +16,11 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { OrderService } from '../../services/orderService.js';
 import { stockOrder } from '../../Dtos/stockOrder';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-trade',
-  imports: [MatDialogContent,MatCheckboxModule,MatButtonToggleModule,MatDialogActions,MatDialogClose,MatDialogTitle,MatButtonModule,MatFormFieldModule,MatInputModule,FormsModule],
+  imports: [CommonModule,MatDialogContent,MatCheckboxModule,MatButtonToggleModule,MatDialogActions,MatDialogClose,MatDialogTitle,MatButtonModule,MatFormFieldModule,MatInputModule,FormsModule],
   templateUrl: './trade.component.html',
   styleUrl: './trade.component.css'
 })
