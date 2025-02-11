@@ -2,7 +2,7 @@ import { buySellDto } from "../Dtos/buySellDto";
 import { StockAnalysisDto } from "../Dtos/stockAnalysisDto";
 
 export class AnalysisService{
-    static checkIsLowBuyIsHighSell(stock: StockAnalysisDto, hasOpenOrder: boolean): buySellDto{
+    static checkIsLowBuyIsHighSell(stock: StockAnalysisDto, hasOpenOrder: boolean, high: number, low: number): buySellDto{
         //the incoming stock will have the name and an array of numbers that are all the datapoints throughout the day
 
         //initialize what were going to return

@@ -197,17 +197,19 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.chartData.history.push(data.data[0].content[0]['3'])
     this.chartData.labels.push(reusedFunctions.epochToLocalTime(data.data[0].timestamp))
     this.chartData.time.push(data.data[0].timestamp)
+    
     console.log(this.chartData.history)
     this.selectedStockCurrent = this.chartData.history[this.chartData.history.length - 1]
     this.selectedStockHigh = Math.max(...this.chartData.history)
     this.selectedStockLow = Math.min(...this.chartData.history)
-    this.createOrUpdateChart()
     if (this.isUserOrBot == 'Bot') {
-      let shouldPlaceOrder = AnalysisService.checkIsLowBuyIsHighSell(this.chartData, this.openOrder)
+      let shouldPlaceOrder = AnalysisService.checkIsLowBuyIsHighSell(this.chartData, this.openOrder, this.selectedStockHigh, this.selectedStockLow)
       if (shouldPlaceOrder.shouldExecuteOrder == true) {
         await this.placeOrder(shouldPlaceOrder.isBuyOrSell!)
       }
     }
+    this.createOrUpdateChart()
+    
 
   }
   updateChart() {

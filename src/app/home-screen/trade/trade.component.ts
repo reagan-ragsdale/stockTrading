@@ -48,6 +48,7 @@ export class TradeComponent {
   
       }
       let orderOpen = await OrderService.executeOrder(order)
+      this.dialogRef.close()
     }
     
   }
