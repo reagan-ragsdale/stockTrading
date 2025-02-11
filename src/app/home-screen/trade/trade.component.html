@@ -3,15 +3,15 @@
     <h2>{{stockPrice}}</h2>
 </div>
 <mat-dialog-content style="display: flex;flex-direction: column;align-items: flex-end;">
-    <div>
-        <mat-button-toggle-group name="orderType" aria-label="orderType" (change)="changeSharesDollars($event)" [hideSingleSelectionIndicator]="true" style="display:flex; flex-direction:column;">
+    <div style="display:flex; flex-direction: column;">
+        <mat-button-toggle-group name="orderType" aria-label="orderType" (change)="changeSharesDollars($event)" [hideSingleSelectionIndicator]="true" style="height: 30px;margin-left: auto;align-items: center;">
             <mat-button-toggle  value="Shares">Shares</mat-button-toggle>
             <mat-button-toggle [checked]="true" value="Dollars">Dollars</mat-button-toggle>
         </mat-button-toggle-group>
         <form class="auth-form">
             <mat-form-field class="example-full-width">
                 <mat-label>Order Amount</mat-label>
-                <input matInput type="number" [(ngModel)]="amountToBuyOrSell" placeholder="0.00" [max]="getMaxToBuyOrSell()">
+                <input matInput type="number" [(ngModel)]="amountToBuyOrSell" placeholder="0.00" [max]="getMaxToBuyOrSell()" [min]="0">
             </mat-form-field>
         </form>
     </div>
