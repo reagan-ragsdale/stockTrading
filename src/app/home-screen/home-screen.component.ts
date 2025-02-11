@@ -389,6 +389,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
 
   isLoading: boolean = true;
   async ngOnInit() {
+    await SimFinance.insertOrUpdateAmount(100)
     //this.isLoading = true;
     Chart.register(annotationPlugin);
     Chart.register(...registerables)
