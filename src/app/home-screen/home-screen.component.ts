@@ -99,6 +99,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     }
     this.stockHistoryData = await OrderController.getAllOrders()
     this.selectedStockHistoryData = this.stockHistoryData.filter(e => e.stockName == this.selectedStockName)
+    console.log(this.selectedStockHistoryData)
 
   }
 
@@ -342,6 +343,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     }
     await OrderService.executeOrder(order)
     await this.getUserFinanceData()
+    await this.getStockData()
   }
 
   async getMovers() {
