@@ -413,10 +413,11 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       this.openOrder = true
     } */
     //await this.getMovers()
-    this.createOrUpdateChart()
-    this.startWebsocket()
     await this.getUserFinanceData()
     await this.getStockData()
+    this.createOrUpdateChart()
+    this.startWebsocket()
+    
    /*  this.unsubscribe = rhRepo
       .liveQuery({
         where: Rhkeys.getTokenUpdates({})
