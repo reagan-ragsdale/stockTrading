@@ -293,6 +293,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
                 orderLine: {
                   type: 'line',
                   yMin: this.selectedStockHistoryData[0]?.stockPrice,
+                  yMax: this.selectedStockHistoryData[0]?.stockPrice,
                   borderColor: '#7874ff',
                   borderWidth: 2
                 }
