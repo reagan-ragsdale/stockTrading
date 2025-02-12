@@ -8,17 +8,19 @@ export class AnalysisService {
 
         //find out if we're buying or selling based off previous orders or if none at all
         let nextOrderType = 'Buy'
+        let lastOrderPrice = 0
         if (orderHistory.length > 0) {
+            lastOrderPrice = orderHistory[0].stockPrice
             if (orderHistory[0].orderType == 'Buy') {
                 nextOrderType = 'Sell'
             }
         }
+        
 
         //grab the newest data that we'll be looking at
         let incomingPrice = stock.history[stock.history.length - 1]
         //arbitrarily get the last 400 points of data to set our bounds
         let lastGroup = stock.history.slice(-401, -2)
-
 
 
         //sometimes in the data there might be one second spikes that may fluctuate the stock quite a bit.
@@ -65,15 +67,12 @@ export class AnalysisService {
         // so if it gets to 233.5 then buy and if it gets to 234.6 then sell
 
         //how to establish a gutter
-        
-
-        //find gutter
         //for now picked arbitrary .3 off the difference between the average and the high and low
         let gutter = 0
 
         if (nextOrderType == 'Buy') {
             gutter = Math.abs(newAverage - recentLow) * .3
-            if (incomingPrice < (recentLow + gutter)) {
+            if ((incomingPrice < (recentLow + gutter)) && incomingPrice < lastOrderPrice) {
                 return {
                     shouldExecuteOrder: true,
                     isBuyOrSell: 'Buy'
@@ -87,7 +86,7 @@ export class AnalysisService {
         }
         else {
             gutter = Math.abs(newAverage - recentHigh) * .3
-            if (incomingPrice > (recentHigh - gutter)) {
+            if ((incomingPrice > (recentHigh - gutter)) && incomingPrice > lastOrderPrice) {
                 return {
                     shouldExecuteOrder: true,
                     isBuyOrSell: 'Sell'

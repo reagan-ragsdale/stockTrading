@@ -201,6 +201,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.selectedStockLow = Math.min(...this.chartData.history)
     if (this.isUserOrBot == 'Bot') {
       let shouldPlaceOrder = AnalysisService.checkIsLowBuyIsHighSell(this.chartData, this.selectedStockHistoryData)
+      //add check to see when the last order was placed. Don't want to be placing order every 3 seconds
+      //maybe wait 30 seconds
       if (shouldPlaceOrder.shouldExecuteOrder == true) {
         await this.placeOrder(shouldPlaceOrder.isBuyOrSell!)
       }
@@ -331,8 +333,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   async placeOrder(buyOrSell: string) {
     let order: stockOrder = {
       orderType: buyOrSell,
-      stockName: this.chartData.name,
-      stockPrice: this.chartData.history[this.chartData.history.length - 1],
+      stockName: this.selectedStockName,
+      stockPrice: this.selectedStockCurrent,
       //figure out how many shares to buy
       shareQty: 1,
       orderTime: this.chartData.time[this.chartData.time.length - 1]
