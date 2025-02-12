@@ -73,7 +73,7 @@ export class AnalysisService {
         let gutter = 0
 
         if (nextOrderType == 'Buy') {
-            gutter = Math.abs(newAverage - recentLow) * .25
+            gutter = Math.abs(newAverage - recentLow) * .35
             console.log('Less than: ' + (recentLow + gutter))
             if ((incomingPrice < (recentLow + gutter))) {
                 return {
@@ -89,7 +89,7 @@ export class AnalysisService {
             }
         }
         else {
-            gutter = Math.abs(newAverage - recentHigh) * .25
+            gutter = Math.abs(newAverage - recentHigh) * .35
             console.log('greater than: ' + (recentHigh - gutter))
             if ((incomingPrice > (recentHigh - gutter)) && incomingPrice > lastOrderPrice) {
                 return {

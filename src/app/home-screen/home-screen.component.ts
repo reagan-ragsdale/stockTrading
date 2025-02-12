@@ -231,8 +231,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   updateChart() {
     this.stockChart.data.datasets[0].data = this.chartData.history
     this.stockChart.data.datasets[0].labels = this.chartData.labels
-    this.stockChart.options.scales.y.max = this.selectedStockHigh + 5
-    this.stockChart.options.scales.y.min = this.selectedStockLow - 5
+    this.stockChart.options.scales.y.max = this.selectedStockHigh + 2
+    this.stockChart.options.scales.y.min = this.selectedStockLow - 2
     this.stockChart.update()
   }
 
@@ -330,7 +330,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         max = arr[i]
       }
     }
-    return max + 5
+    return max + 2
 
   }
   getMinForChart(arr: number[]): number {
@@ -340,7 +340,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         min = arr[i]
       }
     }
-    return min - 5
+    return min - 2
 
   }
 
