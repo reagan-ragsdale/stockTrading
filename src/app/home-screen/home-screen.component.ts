@@ -292,7 +292,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
               annotations: {
                 orderLine: {
                   type: 'line',
-                  yMin: this.selectedStockHistoryData[0].stockPrice,
+                  yMin: this.selectedStockHistoryData[0]?.stockPrice,
                   borderColor: '#7874ff',
                   borderWidth: 2
                 }
