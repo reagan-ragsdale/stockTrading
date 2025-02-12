@@ -5,9 +5,9 @@ import { stockOrder } from "../Dtos/stockOrder";
 
 export class OrderService {
 
-    static async executeOrder(order: stockOrder): Promise<boolean> {
+    static async executeOrder(order: stockOrder) {
 
-        let openOrder = await OrderController.placeOrder(order)
+        await OrderController.placeOrder(order)
         if (order.orderType == 'Buy') {
             await SimFinance.insertOrUpdateAmount((order.shareQty * order.stockPrice) * -1)
         }
@@ -16,7 +16,6 @@ export class OrderService {
             
         }
         await StockController.insertOrUpdateStock(order)
-        return openOrder;
 
     }
 }

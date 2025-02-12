@@ -200,7 +200,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.selectedStockHigh = Math.max(...this.chartData.history)
     this.selectedStockLow = Math.min(...this.chartData.history)
     if (this.isUserOrBot == 'Bot') {
-      let shouldPlaceOrder = AnalysisService.checkIsLowBuyIsHighSell(this.chartData, this.openOrder, this.selectedStockHigh, this.selectedStockLow)
+      let shouldPlaceOrder = AnalysisService.checkIsLowBuyIsHighSell(this.chartData, this.selectedStockHistoryData)
       if (shouldPlaceOrder.shouldExecuteOrder == true) {
         await this.placeOrder(shouldPlaceOrder.isBuyOrSell!)
       }
@@ -337,7 +337,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       shareQty: 1,
       orderTime: this.chartData.time[this.chartData.time.length - 1]
     }
-    this.openOrder = await OrderService.executeOrder(order)
+    await OrderService.executeOrder(order)
     await this.getUserFinanceData()
   }
 

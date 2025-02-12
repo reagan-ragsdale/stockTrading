@@ -10,7 +10,7 @@ import { userRepo } from '../tasks/Users.js';
 export class OrderController {
 
   @BackendMethod({ allowed: true })
-  static async placeOrder(order: stockOrder): Promise<boolean> {
+  static async placeOrder(order: stockOrder) {
     const currentUser = getCurrentUser()
     const userInfo = await userRepo.findFirst({id: currentUser.id})
     await dbOrdersRepo.insert({
@@ -21,7 +21,6 @@ export class OrderController {
         shareQty: order.shareQty,
         orderTime: order.orderTime
     })
-    return order.orderType == 'Buy' ? true : false
   }
 
   @BackendMethod({ allowed: true })
