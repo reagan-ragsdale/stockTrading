@@ -75,7 +75,7 @@ export class AnalysisService {
         if (nextOrderType == 'Buy') {
             gutter = Math.abs(newAverage - recentLow) * .25
             console.log('Less than: ' + (recentLow + gutter))
-            if ((incomingPrice < (recentLow + gutter)) && incomingPrice < lastOrderPrice) {
+            if ((incomingPrice < (recentLow + gutter))) {
                 return {
                     shouldExecuteOrder: true,
                     isBuyOrSell: 'Buy'
