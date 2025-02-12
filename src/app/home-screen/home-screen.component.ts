@@ -63,6 +63,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   }
   stockHistoryData: DbOrders[] = []
   selectedStockHistoryData: DbOrders[] = []
+  targetPrice: number = 0
 
   showAddFunds() {
     const dialogRef = this.dialog.open(AddFundsComponent, {
@@ -209,10 +210,14 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.selectedStockLow = Math.min(...this.chartData.history)
     if (this.isUserOrBot == 'Bot' && this.chartData.history.length >= 400) {
       let shouldPlaceOrder = AnalysisService.checkIsLowBuyIsHighSell(this.chartData, this.selectedStockHistoryData)
+      
       //add check to see when the last order was placed. Don't want to be placing order every 3 seconds
       //maybe wait 30 seconds
       if (shouldPlaceOrder.shouldExecuteOrder == true && this.canPlaceOrder(shouldPlaceOrder.isBuyOrSell!)) {
         await this.placeOrder(shouldPlaceOrder.isBuyOrSell!)
+      }
+      if(shouldPlaceOrder.targetPrice){
+        this.targetPrice = shouldPlaceOrder.targetPrice
       }
     }
     this.updateChart()
@@ -296,8 +301,16 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
                   yMax: this.selectedStockHistoryData[0]?.stockPrice,
                   borderColor: '#7874ff',
                   borderWidth: 2
+                },
+                targetLine: {
+                  type: 'line',
+                  yMin: this.targetPrice,
+                  yMax: this.targetPrice,
+                  borderColor: '#ff8f50',
+                  borderWidth: 2
                 }
               }
+              
             }
           }
         }

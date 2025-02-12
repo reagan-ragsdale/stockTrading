@@ -83,7 +83,8 @@ export class AnalysisService {
             }
             else {
                 return {
-                    shouldExecuteOrder: false
+                    shouldExecuteOrder: false,
+                    targetPrice: gutter
                 }
             }
         }
@@ -98,7 +99,8 @@ export class AnalysisService {
             }
             else {
                 return {
-                    shouldExecuteOrder: false
+                    shouldExecuteOrder: false,
+                    targetPrice: gutter
                 }
             }
         }

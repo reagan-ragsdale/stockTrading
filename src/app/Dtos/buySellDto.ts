@@ -1,4 +1,5 @@
 export type buySellDto = {
     shouldExecuteOrder: boolean;
-    isBuyOrSell?: string
+    isBuyOrSell?: string;
+    targetPrice?: number;
 }
