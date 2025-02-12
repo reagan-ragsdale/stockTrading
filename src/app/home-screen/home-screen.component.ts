@@ -187,6 +187,12 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     }
 
   }
+  canPlaceOrder(buySell: string){
+    if((buySell == 'Buy' && this.userSimFinData[0].dollarAmt < this.selectedStockCurrent) || (buySell == 'Sell' && this.selectedStockData.shareQty < 1)){
+      return false
+    }
+    return true
+  }
 
   chartData: StockAnalysisDto = {
     history: [],
@@ -201,11 +207,11 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.selectedStockCurrent = this.chartData.history[this.chartData.history.length - 1]
     this.selectedStockHigh = Math.max(...this.chartData.history)
     this.selectedStockLow = Math.min(...this.chartData.history)
-    if (this.isUserOrBot == 'Bot') {
+    if (this.isUserOrBot == 'Bot' && this.chartData.history.length >= 400) {
       let shouldPlaceOrder = AnalysisService.checkIsLowBuyIsHighSell(this.chartData, this.selectedStockHistoryData)
       //add check to see when the last order was placed. Don't want to be placing order every 3 seconds
       //maybe wait 30 seconds
-      if (shouldPlaceOrder.shouldExecuteOrder == true) {
+      if (shouldPlaceOrder.shouldExecuteOrder == true && this.canPlaceOrder(shouldPlaceOrder.isBuyOrSell!)) {
         await this.placeOrder(shouldPlaceOrder.isBuyOrSell!)
       }
     }

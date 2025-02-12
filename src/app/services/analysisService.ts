@@ -51,6 +51,8 @@ export class AnalysisService {
             }
         }
 
+        //add if the current price is an outlier return false
+
         //get high and low and new avg
         let recentHigh = Math.max(...filteredGroup)
         let recentLow = Math.min(...filteredGroup)
@@ -71,7 +73,8 @@ export class AnalysisService {
         let gutter = 0
 
         if (nextOrderType == 'Buy') {
-            gutter = Math.abs(newAverage - recentLow) * .3
+            gutter = Math.abs(newAverage - recentLow) * .25
+            console.log('Less than: ' + (recentLow + gutter))
             if ((incomingPrice < (recentLow + gutter)) && incomingPrice < lastOrderPrice) {
                 return {
                     shouldExecuteOrder: true,
@@ -85,7 +88,8 @@ export class AnalysisService {
             }
         }
         else {
-            gutter = Math.abs(newAverage - recentHigh) * .3
+            gutter = Math.abs(newAverage - recentHigh) * .25
+            console.log('greater than: ' + (recentHigh - gutter))
             if ((incomingPrice > (recentHigh - gutter)) && incomingPrice > lastOrderPrice) {
                 return {
                     shouldExecuteOrder: true,
