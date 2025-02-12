@@ -215,6 +215,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       //maybe wait 30 seconds
       if (shouldPlaceOrder.shouldExecuteOrder == true && this.canPlaceOrder(shouldPlaceOrder.isBuyOrSell!)) {
         await this.placeOrder(shouldPlaceOrder.isBuyOrSell!)
+        this.stockChart.options.plugins.annotation.annotations.orderLine.yMin = this.selectedStockHistoryData[0]?.stockPrice
+        this.stockChart.options.plugins.annotation.annotations.orderLine.yMax = this.selectedStockHistoryData[0]?.stockPrice
       }
       if(shouldPlaceOrder.targetPrice){
         this.targetPrice = shouldPlaceOrder.targetPrice
@@ -229,6 +231,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.stockChart.data.datasets[0].labels = this.chartData.labels
     this.stockChart.options.scales.y.max = this.selectedStockHigh + 5
     this.stockChart.options.scales.y.min = this.selectedStockLow - 5
+    this.stockChart.options.plugins.annotation.annotations.targetLine.yMin = this.targetPrice
+    this.stockChart.options.plugins.annotation.annotations.targetLine.yMax = this.targetPrice
     this.stockChart.update()
   }
 
