@@ -220,6 +220,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       }
       if(shouldPlaceOrder.targetPrice){
         this.targetPrice = shouldPlaceOrder.targetPrice
+        this.stockChart.options.plugins.annotation.annotations.targetLine.yMin = this.targetPrice
+        this.stockChart.options.plugins.annotation.annotations.targetLine.yMax = this.targetPrice
       }
     }
     this.updateChart()
@@ -231,8 +233,6 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.stockChart.data.datasets[0].labels = this.chartData.labels
     this.stockChart.options.scales.y.max = this.selectedStockHigh + 5
     this.stockChart.options.scales.y.min = this.selectedStockLow - 5
-    this.stockChart.options.plugins.annotation.annotations.targetLine.yMin = this.targetPrice
-    this.stockChart.options.plugins.annotation.annotations.targetLine.yMax = this.targetPrice
     this.stockChart.update()
   }
 

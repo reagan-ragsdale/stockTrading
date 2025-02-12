@@ -84,7 +84,7 @@ export class AnalysisService {
             else {
                 return {
                     shouldExecuteOrder: false,
-                    targetPrice: gutter
+                    targetPrice: (recentLow + gutter)
                 }
             }
         }
@@ -100,7 +100,7 @@ export class AnalysisService {
             else {
                 return {
                     shouldExecuteOrder: false,
-                    targetPrice: gutter
+                    targetPrice: (recentHigh - gutter)
                 }
             }
         }
