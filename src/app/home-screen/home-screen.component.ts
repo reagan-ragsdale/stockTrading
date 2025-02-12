@@ -286,6 +286,18 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
 
             }
 
+          },
+          plugins: {
+            annotation: {
+              annotations: {
+                orderLine: {
+                  type: 'line',
+                  yMin: this.selectedStockHistoryData[0].stockPrice,
+                  borderColor: '#7874ff',
+                  borderWidth: 2
+                }
+              }
+            }
           }
         }
       })
