@@ -458,7 +458,6 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.isChangesToBot = false;
   }
   resetAlgo(){
-    this.tempSelectedAlgo = this.selectedAlgo
     this.tempTrendAlgoStartingPoint = this.trendAlgoStartingPoint
   }
 
