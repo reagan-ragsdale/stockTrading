@@ -459,6 +459,10 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   }
   resetAlgo(){
     this.tempTrendAlgoStartingPoint = this.trendAlgoStartingPoint
+    this.stockChart.options.plugins.annotation.annotations.trendIndex.xMin = this.tempTrendAlgoStartingPoint
+    this.stockChart.options.plugins.annotation.annotations.trendIndex.xMax = this.tempTrendAlgoStartingPoint
+    this.stockChart.update()
+    this.isChangesToBot = false;
   }
 
   isLoading: boolean = true;
