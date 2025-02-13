@@ -42,6 +42,16 @@ export class AnalysisService {
         }
         let standardDeviation = Math.sqrt((totalOfSqaredDeviations / (lastGroup.length - 1)))
 
+
+        //if the current price is an outlier return false
+        if(Math.abs(((incomingPrice - average) / standardDeviation)) > 3){
+            return {
+                shouldExecuteOrder: false
+            }
+            
+        }
+
+
         //filter out anything with a zscore outside Math.abs(-3)
         let filteredGroup: number[] = []
         for(let i = 0; i < lastGroup.length; i++){
@@ -51,7 +61,7 @@ export class AnalysisService {
             }
         }
 
-        //add if the current price is an outlier return false
+        
 
         //get high and low and new avg
         let recentHigh = Math.max(...filteredGroup)
@@ -110,7 +120,7 @@ export class AnalysisService {
     }
 
 
-    static otherHighLow() {
+    static trendTrading() {
         //find the trend line
         /* let dataPointTotal = 0
         let xAxisTotal = 0

@@ -24,9 +24,12 @@ import { UsersStocks } from '../../shared/tasks/usersStocks';
 import { stockOwnedData } from '../Dtos/stockOwnedData';
 import { reusedFunctions } from '../services/reusedFunctions.js';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import {MatRadioModule} from '@angular/material/radio';
+import { FormsModule } from '@angular/forms'
+import { MatFormFieldModule } from '@angular/material/form-field'
 @Component({
   selector: 'app-home-screen',
-  imports: [CommonModule, MatIconModule,MatProgressSpinnerModule, MatButtonModule, MatButtonToggleModule, TradeComponent],
+  imports: [CommonModule,FormsModule,MatFormFieldModule, MatIconModule,MatRadioModule,MatProgressSpinnerModule, MatButtonModule, MatButtonToggleModule, TradeComponent],
   templateUrl: './home-screen.component.html',
   styleUrl: './home-screen.component.css'
 })
@@ -65,6 +68,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   selectedStockHistoryData: DbOrders[] = []
   targetPrice: number = 0
   isOrderPending: boolean = false;
+  selectedAlgo: string = ''
+  trendAlgoStartingPoint: number = 0
 
   showAddFunds() {
     const dialogRef = this.dialog.open(AddFundsComponent, {
@@ -412,6 +417,9 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
 
   userBotChange(event: any) {
     this.isUserOrBot = event.value
+  }
+  onAlgoChanged(event: any){
+    this.selectedAlgo = event.value
   }
 
   incomingTokensFromDB: any = []

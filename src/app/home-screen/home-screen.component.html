@@ -8,6 +8,21 @@
                 <mat-button-toggle [checked]="true" value="User">User</mat-button-toggle>
                 <mat-button-toggle value="Bot">Bot</mat-button-toggle>
             </mat-button-toggle-group>
+            <div *ngIf="isUserOrBot == 'Bot'">
+                <mat-radio-group (change)="onAlgoChanged($event)">
+                    <mat-radio-button value="highLow">HighLow</mat-radio-button>
+                    <mat-radio-button value="trend">Trend</mat-radio-button>
+                </mat-radio-group>
+                <div *ngIf="selectedAlgo == 'trend'">
+                    <span>Trend Start</span>
+                    <form class="auth-form">
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Starting index</mat-label>
+                            <input matInput type="number" [(ngModel)]="trendAlgoStartingPoint" placeholder="0.00" [max]="chartData.history.length - 1" [min]="0">
+                        </mat-form-field>
+                    </form>
+                </div>
+            </div>
         </div>
         <button style="margin-left:auto; margin-top:auto; margin-bottom:auto;" mat-icon-button aria-label="Add more funds" (click)="showAddFunds()">
             <mat-icon>add</mat-icon>
