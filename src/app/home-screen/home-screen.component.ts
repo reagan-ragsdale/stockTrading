@@ -27,9 +27,10 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {MatRadioModule} from '@angular/material/radio';
 import { FormsModule } from '@angular/forms'
 import { MatFormFieldModule } from '@angular/material/form-field'
+import { MatInputModule } from '@angular/material/input';
 @Component({
   selector: 'app-home-screen',
-  imports: [CommonModule,FormsModule,MatFormFieldModule, MatIconModule,MatRadioModule,MatProgressSpinnerModule, MatButtonModule, MatButtonToggleModule, TradeComponent],
+  imports: [CommonModule,FormsModule,MatInputModule,MatFormFieldModule, MatIconModule,MatRadioModule,MatProgressSpinnerModule, MatButtonModule, MatButtonToggleModule, TradeComponent],
   templateUrl: './home-screen.component.html',
   styleUrl: './home-screen.component.css'
 })
