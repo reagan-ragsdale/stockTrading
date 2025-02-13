@@ -431,6 +431,9 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.isUserOrBot = event.value
     if(this.isUserOrBot == 'User'){
       this.isBotAuthorized = false;
+      this.trendAlgoStartingPoint = 0;
+      this.tempTrendAlgoStartingPoint = 0;
+      this.updateTrendIndexLine()
     }
   }
   onAlgoChanged(event: any){
@@ -446,9 +449,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     console.log(this.accessToken)
   }
   trendAlgoStartingPointChanged(){
-    this.stockChart.options.plugins.annotation.annotations.trendIndex.xMin = this.tempTrendAlgoStartingPoint
-    this.stockChart.options.plugins.annotation.annotations.trendIndex.xMax = this.tempTrendAlgoStartingPoint
-    this.stockChart.update()
+    this.updateTrendIndexLine()
     this.isChangesToBot = true;
   }
   confirmAlgo(){
@@ -459,10 +460,14 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   }
   resetAlgo(){
     this.tempTrendAlgoStartingPoint = this.trendAlgoStartingPoint
+    this.updateTrendIndexLine()
+    this.isChangesToBot = false;
+  }
+
+  updateTrendIndexLine(){
     this.stockChart.options.plugins.annotation.annotations.trendIndex.xMin = this.tempTrendAlgoStartingPoint
     this.stockChart.options.plugins.annotation.annotations.trendIndex.xMax = this.tempTrendAlgoStartingPoint
     this.stockChart.update()
-    this.isChangesToBot = false;
   }
 
   isLoading: boolean = true;
