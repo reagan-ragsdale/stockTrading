@@ -72,8 +72,11 @@ export class AnalysisService {
         //for now picked arbitrary .3 off the difference between the average and the high and low
         let gutter = 0
 
+        //possibly also add a trend indicator and adjust the multiplyFactor based on if its going up and were trying to sell or going up and trying to buy etc
+        let multiplyFactor = 0.35
+
         if (nextOrderType == 'Buy') {
-            gutter = Math.abs(newAverage - recentLow) * .35
+            gutter = Math.abs(newAverage - recentLow) * multiplyFactor
             console.log('Less than: ' + (recentLow + gutter))
             if ((incomingPrice < (recentLow + gutter))) {
                 return {
@@ -89,7 +92,7 @@ export class AnalysisService {
             }
         }
         else {
-            gutter = Math.abs(newAverage - recentHigh) * .35
+            gutter = Math.abs(newAverage - recentHigh) * multiplyFactor
             console.log('greater than: ' + (recentHigh - gutter))
             if ((incomingPrice > (recentHigh - gutter)) && incomingPrice > lastOrderPrice) {
                 return {

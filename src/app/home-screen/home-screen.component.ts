@@ -64,6 +64,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   stockHistoryData: DbOrders[] = []
   selectedStockHistoryData: DbOrders[] = []
   targetPrice: number = 0
+  isOrderPending: boolean = false;
 
   showAddFunds() {
     const dialogRef = this.dialog.open(AddFundsComponent, {
@@ -213,7 +214,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       
       //add check to see when the last order was placed. Don't want to be placing order every 3 seconds
       //maybe wait 30 seconds
-      if (shouldPlaceOrder.shouldExecuteOrder == true && this.canPlaceOrder(shouldPlaceOrder.isBuyOrSell!)) {
+      if (shouldPlaceOrder.shouldExecuteOrder == true && this.canPlaceOrder(shouldPlaceOrder.isBuyOrSell!) && !this.isOrderPending) {
         await this.placeOrder(shouldPlaceOrder.isBuyOrSell!)
         this.stockChart.options.plugins.annotation.annotations.orderLine.yMin = this.selectedStockHistoryData[0]?.stockPrice
         this.stockChart.options.plugins.annotation.annotations.orderLine.yMax = this.selectedStockHistoryData[0]?.stockPrice
@@ -255,6 +256,9 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
               borderColor: '#54C964',
               pointBackgroundColor: '#54C964',
               pointBorderColor: '#54C964',
+              pointRadius: 0,
+              spanGaps: true
+
             }
           ]
         },
@@ -275,9 +279,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
               hitRadius: 3
             }
           },
-          animation:{
-            duration: 0
-          },
+          animation: false,
 
           scales: {
             y: {
@@ -369,6 +371,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   }
 
   async placeOrder(buyOrSell: string) {
+    this.isOrderPending = true;
     let order: stockOrder = {
       orderType: buyOrSell,
       stockName: this.selectedStockName,
@@ -380,6 +383,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     await OrderService.executeOrder(order)
     await this.getUserFinanceData()
     await this.getStockData()
+    this.isOrderPending = false
   }
 
   async getMovers() {
