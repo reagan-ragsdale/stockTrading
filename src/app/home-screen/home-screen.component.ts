@@ -69,8 +69,12 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   selectedStockHistoryData: DbOrders[] = []
   targetPrice: number = 0
   isOrderPending: boolean = false;
+  tempSelectedAlgo: string = ''
   selectedAlgo: string = ''
+  tempTrendAlgoStartingPoint: number = 0
   trendAlgoStartingPoint: number = 0
+  isBotAuthorized: boolean = false;
+  isChangesToBot: boolean = false;
 
   showAddFunds() {
     const dialogRef = this.dialog.open(AddFundsComponent, {
@@ -215,7 +219,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.selectedStockCurrent = this.chartData.history[this.chartData.history.length - 1]
     this.selectedStockHigh = Math.max(...this.chartData.history)
     this.selectedStockLow = Math.min(...this.chartData.history)
-    if (this.isUserOrBot == 'Bot' && this.chartData.history.length >= 400) {
+    if (this.isUserOrBot == 'Bot' && this.isBotAuthorized == true && this.chartData.history.length >= 400) {
       let shouldPlaceOrder = AnalysisService.checkIsLowBuyIsHighSell(this.chartData, this.selectedStockHistoryData)
       
       //add check to see when the last order was placed. Don't want to be placing order every 3 seconds
@@ -425,9 +429,13 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
 
   userBotChange(event: any) {
     this.isUserOrBot = event.value
+    if(this.isUserOrBot == 'User'){
+      this.isBotAuthorized = false;
+    }
   }
   onAlgoChanged(event: any){
-    this.selectedAlgo = event.value
+    this.tempSelectedAlgo = event.value
+    this.isChangesToBot = true;
   }
 
   incomingTokensFromDB: any = []
@@ -438,9 +446,20 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     console.log(this.accessToken)
   }
   trendAlgoStartingPointChanged(){
-    this.stockChart.options.plugins.annotation.annotations.trendIndex.xMin = this.trendAlgoStartingPoint
-    this.stockChart.options.plugins.annotation.annotations.trendIndex.xMax = this.trendAlgoStartingPoint
+    this.stockChart.options.plugins.annotation.annotations.trendIndex.xMin = this.tempTrendAlgoStartingPoint
+    this.stockChart.options.plugins.annotation.annotations.trendIndex.xMax = this.tempTrendAlgoStartingPoint
     this.stockChart.update()
+    this.isChangesToBot = true;
+  }
+  confirmAlgo(){
+    this.isBotAuthorized = true;
+    this.selectedAlgo = this.tempSelectedAlgo
+    this.trendAlgoStartingPoint = this.tempTrendAlgoStartingPoint
+    this.isChangesToBot = false;
+  }
+  resetAlgo(){
+    this.tempSelectedAlgo = this.selectedAlgo
+    this.tempTrendAlgoStartingPoint = this.trendAlgoStartingPoint
   }
 
   isLoading: boolean = true;

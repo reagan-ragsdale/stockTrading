@@ -13,7 +13,7 @@
                     <mat-radio-button value="highLow">HighLow</mat-radio-button>
                     <mat-radio-button value="trend">Trend</mat-radio-button>
                 </mat-radio-group>
-                <div *ngIf="selectedAlgo == 'trend'">
+                <div *ngIf="selectedAlgo == 'trend'" style="margin-left:1rem;">
                     <form class="auth-form">
                         <mat-form-field class="example-full-width">
                             <mat-label>Starting index</mat-label>
@@ -21,6 +21,8 @@
                         </mat-form-field>
                     </form>
                 </div>
+                <button style="width: max-content; margin-top:auto; margin-bottom:auto;" mat-raised-button color="primary" aria-label="Confirm Algorithm" [disabled]="!isChangesToBot" (click)="confirmAlgo()">Save</button> 
+                <button style="width: max-content; margin-top:auto; margin-bottom:auto;" mat-raised-button color="primary" aria-label="Confirm Algorithm" [disabled]="!isChangesToBot" (click)="resetAlgo()">Reset</button>   
             </div>
         </div>
         <button style="margin-left:auto; margin-top:auto; margin-bottom:auto;" mat-icon-button aria-label="Add more funds" (click)="showAddFunds()">
@@ -33,6 +35,7 @@
             <div style="display: flex; gap:2rem;">
                 <h1>Dashboard</h1>
                 <button style="width: max-content; margin-top:auto; margin-bottom:auto;"mat-raised-button color="warn" aria-label="Add more funds" (click)="endStream()">ABORT!</button>    
+                <h3>Bot: {{isBotAuthorized ? 'On' : 'Off'}}</h3>
             </div>
               <!-- <div>
                 <button *ngFor="let mover of moversData" style="width: max-content;"mat-raised-button color="primary" aria-label="Add more funds" >{{mover.symbol}}</button>
