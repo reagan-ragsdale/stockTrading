@@ -320,6 +320,13 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
                   yMax: this.targetPrice,
                   borderColor: '#ff8f50',
                   borderWidth: 2
+                },
+                trendIndex: {
+                  type: 'line',
+                  xMin: this.trendAlgoStartingPoint,
+                  xMax: this.trendAlgoStartingPoint,
+                  borderColor: '#ff82e3',
+                  borderWidth: 2
                 }
               }
               
@@ -429,6 +436,11 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.sharedCache.changeAccessToken(changes[0].accessToken)
     this.sharedCache.currentAccessToken.subscribe(token => this.accessToken = token!)
     console.log(this.accessToken)
+  }
+  trendAlgoStartingPointChanged(){
+    this.stockChart.options.plugins.annotation.annotations.trendIndex.xMin = this.trendAlgoStartingPoint
+    this.stockChart.options.plugins.annotation.annotations.trendIndex.xMax = this.trendAlgoStartingPoint
+    this.stockChart.update()
   }
 
   isLoading: boolean = true;
