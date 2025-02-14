@@ -580,6 +580,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     await this.getUserFinanceData()
     await this.getStockData()
     this.createOrUpdateChart()
+    this.createVolumeChart()
     this.startWebsocket()
     
    /*  this.unsubscribe = rhRepo
