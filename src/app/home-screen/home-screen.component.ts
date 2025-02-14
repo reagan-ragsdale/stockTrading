@@ -273,8 +273,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   }
   updateVolumeChart(){
     this.volumeChart.data.datasets[0].data = this.chartData.volume
-    this.stockChart.options.scales.y.max = this.selectedStockVolumeHigh + 10000
-    this.stockChart.options.scales.y.min = this.selectedStockVolumeLow - 10000
+    this.volumeChart.options.scales.y.max = this.selectedStockVolumeHigh + 10000
+    this.volumeChart.options.scales.y.min = this.selectedStockVolumeLow - 10000
     this.volumeChart.update()
   }
 
@@ -384,7 +384,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         datasets: [
           {
             label: this.chartData.name,
-            data: this.chartData.history,
+            data: this.chartData.volume,
             backgroundColor: '#54C964',
             hoverBackgroundColor: '#54C964',
             borderColor: '#54C964',
