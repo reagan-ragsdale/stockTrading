@@ -24,14 +24,14 @@ import { UsersStocks } from '../../shared/tasks/usersStocks';
 import { stockOwnedData } from '../Dtos/stockOwnedData';
 import { reusedFunctions } from '../services/reusedFunctions.js';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import {MatRadioModule} from '@angular/material/radio';
+import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input';
 import { buySellDto } from '../Dtos/buySellDto';
 @Component({
   selector: 'app-home-screen',
-  imports: [CommonModule,FormsModule,MatInputModule,MatFormFieldModule, MatIconModule,MatRadioModule,MatProgressSpinnerModule, MatButtonModule, MatButtonToggleModule, TradeComponent],
+  imports: [CommonModule, FormsModule, MatInputModule, MatFormFieldModule, MatIconModule, MatRadioModule, MatProgressSpinnerModule, MatButtonModule, MatButtonToggleModule, TradeComponent],
   templateUrl: './home-screen.component.html',
   styleUrl: './home-screen.component.css'
 })
@@ -45,7 +45,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
 
   accountNum: any = 0
   userPreferenceData: any = {}
-  userSimFinData: SimFInance[] = [{dollarAmt: 0, userId: ''}]
+  userSimFinData: SimFInance[] = [{ dollarAmt: 0, userId: '' }]
   userData: any = []
   canShowAddFunds: boolean = true;
   accessToken = ''
@@ -104,10 +104,10 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       console.log(result)
       //this.lastOrder = await OrderController.getLastOrder();
       await this.getStockData()
-      
+
     });
   }
-  async getStockData(){
+  async getStockData() {
     this.stockData = await StockController.getAllStocks()
     let selectedStock = this.stockData.filter(e => e.stockName == this.selectedStockName)
     this.selectedStockData = {
@@ -194,7 +194,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         if (Object.hasOwn(data.data[0].content[0], '3')) {
           this.refreshData(data)
         }
-        if(Object.hasOwn(data.data[0].content[0], '8')){
+        if (Object.hasOwn(data.data[0].content[0], '8')) {
           this.refreshVolumeData(data)
         }
 
@@ -207,8 +207,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     }
 
   }
-  canPlaceOrder(buySell: string){
-    if((buySell == 'Buy' && this.userSimFinData[0].dollarAmt < this.selectedStockCurrent) || (buySell == 'Sell' && this.selectedStockData.shareQty < 1)){
+  canPlaceOrder(buySell: string) {
+    if ((buySell == 'Buy' && this.userSimFinData[0].dollarAmt < this.selectedStockCurrent) || (buySell == 'Sell' && this.selectedStockData.shareQty < 1)) {
       return false
     }
     return true
@@ -219,10 +219,12 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     labels: [],
     name: 'AAPL',
     time: [],
-    volume: []
+    volume: [],
+    volumeTime: []
   }
-  refreshVolumeData(data:any){
+  refreshVolumeData(data: any) {
     this.chartData.volume.push(data.data[0].content[0]['8'])
+    this.chartData.volumeTime.push(Number(data.data[0].timestamp))
     this.selectedStockVolumeCurrent = this.chartData.volume[this.chartData.volume.length - 1]
     this.selectedStockVolumeHigh = Math.max(...this.chartData.volume)
     this.selectedStockVolumeLow = Math.min(...this.chartData.volume)
@@ -239,14 +241,14 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       let shouldPlaceOrder: buySellDto = {
         shouldExecuteOrder: false
       }
-      if(this.selectedAlgo == 'highLow'){
+      if (this.selectedAlgo == 'highLow') {
         shouldPlaceOrder = AnalysisService.checkIsLowBuyIsHighSell(this.chartData.history.slice(-401), this.selectedStockHistoryData)
       }
-      else{
+      else {
         shouldPlaceOrder = AnalysisService.trendTrading(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1), this.selectedStockHistoryData)
       }
-      
-      
+
+
       //add check to see when the last order was placed. Don't want to be placing order every 3 seconds
       //maybe wait 30 seconds
       if (shouldPlaceOrder.shouldExecuteOrder == true && this.canPlaceOrder(shouldPlaceOrder.isBuyOrSell!) && !this.isOrderPending) {
@@ -254,14 +256,14 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         this.stockChart.options.plugins.annotation.annotations.orderLine.yMin = this.selectedStockHistoryData[0]?.stockPrice
         this.stockChart.options.plugins.annotation.annotations.orderLine.yMax = this.selectedStockHistoryData[0]?.stockPrice
       }
-      if(shouldPlaceOrder.targetPrice){
+      if (shouldPlaceOrder.targetPrice) {
         this.targetPrice = shouldPlaceOrder.targetPrice
         this.stockChart.options.plugins.annotation.annotations.targetLine.yMin = this.targetPrice
         this.stockChart.options.plugins.annotation.annotations.targetLine.yMax = this.targetPrice
       }
     }
     this.updateChart()
-    
+
 
   }
   updateChart() {
@@ -271,109 +273,120 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.stockChart.options.scales.y.min = this.selectedStockLow - 2
     this.stockChart.update()
   }
-  updateVolumeChart(){
-    this.volumeChart.data.datasets[0].data = this.chartData.volume
+  updateVolumeChart() {
+   
+
     this.volumeChart.options.scales.y.max = this.selectedStockVolumeHigh + 10000
     this.volumeChart.options.scales.y.min = this.selectedStockVolumeLow - 10000
+    const rates = [];
+    for (let i = 1; i < this.chartData.volumeTime.length; i++) {
+      let rate = (this.chartData.volume[i] - this.chartData.volume[i - 1]) / (this.chartData.volumeTime[i] - this.chartData.volumeTime[i - 1]);
+      rates.push(rate);
+    }
+
+    // Adjust time array to match the rates
+    const rateTime = this.chartData.volumeTime.slice(1);
+    this.volumeChart.data.datasets[0].data = rates
+    this.volumeChart.data.datasets[0].labels = rateTime
     this.volumeChart.update()
   }
 
   createOrUpdateChart() {
-    
-      console.log('create chart')
-      this.stockChart = new Chart("stock-chart", {
-        type: 'line', //this denotes tha type of chart
 
-        data: {// values on X-Axis
+    console.log('create chart')
+    this.stockChart = new Chart("stock-chart", {
+      type: 'line', //this denotes tha type of chart
 
-          labels: this.chartData.labels,
+      data: {// values on X-Axis
 
-          datasets: [
-            {
-              label: this.chartData.name,
-              data: this.chartData.history,
-              backgroundColor: '#54C964',
-              hoverBackgroundColor: '#54C964',
-              borderColor: '#54C964',
-              pointBackgroundColor: '#54C964',
-              pointBorderColor: '#54C964',
-              pointRadius: 0,
-              spanGaps: true
+        labels: this.chartData.labels,
 
-            }
-          ]
+        datasets: [
+          {
+            label: this.chartData.name,
+            data: this.chartData.history,
+            backgroundColor: '#54C964',
+            hoverBackgroundColor: '#54C964',
+            borderColor: '#54C964',
+            pointBackgroundColor: '#54C964',
+            pointBorderColor: '#54C964',
+            pointRadius: 0,
+            spanGaps: true
+
+          }
+        ]
+      },
+      options: {
+
+        aspectRatio: 2,
+        color: '#DBD4D1',
+        font: {
+          weight: 'bold'
         },
-        options: {
-
-          aspectRatio: 2,
-          color: '#DBD4D1',
-          font: {
-            weight: 'bold'
+        elements: {
+          line: {
+            backgroundColor: '#54C964',
+            borderColor: '#54C964'
           },
-          elements: {
-            line: {
-              backgroundColor: '#54C964',
-              borderColor: '#54C964'
+          point: {
+            radius: 1,
+            hitRadius: 3
+          }
+        },
+        animation: false,
+
+        scales: {
+          y: {
+            max: this.getMaxForChart(this.chartData.volume),
+            min: this.getMinForChart(this.chartData.volume),
+            grid: {
+              color: 'hsl(18, 12%, 60%)'
             },
-            point: {
-              radius: 1,
-              hitRadius: 3
-            }
           },
-          animation: false,
-
-          scales: {
-            y: {
-              max: this.getMaxForChart(this.chartData.volume),
-              min: this.getMinForChart(this.chartData.volume),
-              grid: {
-                color: 'hsl(18, 12%, 60%)'
-              },
+          x: {
+            grid: {
+              display: false,
+              color: 'hsl(18, 12%, 60%)'
             },
-            x: {
-              grid: {
-                display: false,
-                color: 'hsl(18, 12%, 60%)'
+
+          }
+
+        },
+        plugins: {
+          annotation: {
+            annotations: {
+              orderLine: {
+                type: 'line',
+                yMin: this.selectedStockHistoryData[0]?.stockPrice,
+                yMax: this.selectedStockHistoryData[0]?.stockPrice,
+                borderColor: '#7874ff',
+                borderWidth: 2
               },
-
-            }
-
-          },
-          plugins: {
-            annotation: {
-              annotations: {
-                orderLine: {
-                  type: 'line',
-                  yMin: this.selectedStockHistoryData[0]?.stockPrice,
-                  yMax: this.selectedStockHistoryData[0]?.stockPrice,
-                  borderColor: '#7874ff',
-                  borderWidth: 2
-                },
-                targetLine: {
-                  type: 'line',
-                  yMin: this.targetPrice,
-                  yMax: this.targetPrice,
-                  borderColor: '#ff8f50',
-                  borderWidth: 2
-                },
-                trendIndex: {
-                  type: 'line',
-                  xMin: this.trendAlgoStartingPoint,
-                  xMax: this.trendAlgoStartingPoint,
-                  borderColor: '#ff82e3',
-                  borderWidth: 2
-                }
+              targetLine: {
+                type: 'line',
+                yMin: this.targetPrice,
+                yMax: this.targetPrice,
+                borderColor: '#ff8f50',
+                borderWidth: 2
+              },
+              trendIndex: {
+                type: 'line',
+                xMin: this.trendAlgoStartingPoint,
+                xMax: this.trendAlgoStartingPoint,
+                borderColor: '#ff82e3',
+                borderWidth: 2
               }
-              
             }
+
           }
         }
-      })
-    
+      }
+    })
+
 
   }
 
-  createVolumeChart(){
+  createVolumeChart() {
     this.volumeChart = new Chart("volume-chart", {
       type: 'line', //this denotes tha type of chart
 
@@ -477,7 +490,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   }
 
   tradeBuyOrSell = 'Buy'
-  placeTrade(){
+  placeTrade() {
 
   }
 
@@ -523,42 +536,42 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
 
   userBotChange(event: any) {
     this.isUserOrBot = event.value
-    if(this.isUserOrBot == 'User'){
+    if (this.isUserOrBot == 'User') {
       this.isBotAuthorized = false;
       this.trendAlgoStartingPoint = 0;
       this.tempTrendAlgoStartingPoint = 0;
       this.updateTrendIndexLine()
     }
   }
-  onAlgoChanged(event: any){
+  onAlgoChanged(event: any) {
     this.tempSelectedAlgo = event.value
     this.isChangesToBot = true;
   }
 
   incomingTokensFromDB: any = []
-  checkData(changes: any){
+  checkData(changes: any) {
     console.log(this.accessToken)
     this.sharedCache.changeAccessToken(changes[0].accessToken)
     this.sharedCache.currentAccessToken.subscribe(token => this.accessToken = token!)
     console.log(this.accessToken)
   }
-  trendAlgoStartingPointChanged(){
+  trendAlgoStartingPointChanged() {
     this.updateTrendIndexLine()
     this.isChangesToBot = true;
   }
-  confirmAlgo(){
+  confirmAlgo() {
     this.isBotAuthorized = true;
     this.selectedAlgo = this.tempSelectedAlgo
     this.trendAlgoStartingPoint = this.tempTrendAlgoStartingPoint
     this.isChangesToBot = false;
   }
-  resetAlgo(){
+  resetAlgo() {
     this.tempTrendAlgoStartingPoint = this.trendAlgoStartingPoint
     this.updateTrendIndexLine()
     this.isChangesToBot = false;
   }
 
-  updateTrendIndexLine(){
+  updateTrendIndexLine() {
     this.stockChart.options.plugins.annotation.annotations.trendIndex.xMin = this.tempTrendAlgoStartingPoint
     this.stockChart.options.plugins.annotation.annotations.trendIndex.xMax = this.tempTrendAlgoStartingPoint
     this.stockChart.update()
@@ -582,17 +595,17 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.createOrUpdateChart()
     this.createVolumeChart()
     this.startWebsocket()
-    
-   /*  this.unsubscribe = rhRepo
-      .liveQuery({
-        where: Rhkeys.getTokenUpdates({})
-      })
-      .subscribe(info => this.checkData(info.items)) */
-      //this.isLoading = false;
+
+    /*  this.unsubscribe = rhRepo
+       .liveQuery({
+         where: Rhkeys.getTokenUpdates({})
+       })
+       .subscribe(info => this.checkData(info.items)) */
+    //this.isLoading = false;
 
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.unsubscribe()
   }
 
