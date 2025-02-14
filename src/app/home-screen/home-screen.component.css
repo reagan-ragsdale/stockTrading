@@ -9,6 +9,8 @@
 }
 .canvas-container{
     width:75% !important;
+    display:flex; 
+    flex-direction: column;
 }
 h1, h2, h3,h4{
     color: #DBD4D1 !important;

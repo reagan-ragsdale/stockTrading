@@ -83,7 +83,7 @@ export class AnalysisService {
         let gutter = 0
 
         //possibly also add a trend indicator and adjust the multiplyFactor based on if its going up and were trying to sell or going up and trying to buy etc
-        let multiplyFactor = 0.35
+        let multiplyFactor = 0.4
 
         if (nextOrderType == 'Buy') {
             gutter = Math.abs(newAverage - recentLow) * multiplyFactor
@@ -161,6 +161,9 @@ export class AnalysisService {
             //then compare the last 200 and 50 data points to see wheter they're still within those bounds
             //if so then return no trade, else return trade
 
+
+            //edit 1: need to tweak it for when it just recently bought an uptrend and then it breaks trend quickly but the past 100 have not show that break yet
+            // somehow need to compare the past 25, 50,100 etc so get a better picture of how it trending
 
             //lolcal 100 trend
             let local100 = stock.slice(-100)
@@ -260,7 +263,9 @@ export class AnalysisService {
                     }
                 }
             }
-            // if this trend is within a certain tolerance of the overall trend then execute the trade
-            //or just have it not trade yet and hold on
+            //note: what to do if it was a down trend and it broke so the bot bought 
+            //might need a function to automatically switch between algorithms. Once the above scenario happens then 
+            //switch to an algo that just tries to get the sell to a certain point
+            //or if theres an up trend just follow it up until it breaks
     }
 }

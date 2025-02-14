@@ -52,6 +52,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   schwabWebsocket: WebSocket | null = null
   hasBeenSent: boolean = false
   stockChart: any
+  volumeChart: any
   moversData: any = []
   openOrder: boolean = false
   lastOrder: DbOrders | null = null
@@ -60,6 +61,9 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   selectedStockHigh: number = 0
   selectedStockLow: number = 0
   selectedStockCurrent: number = 0
+  selectedStockVolumeHigh: number = 0
+  selectedStockVolumeLow: number = 0
+  selectedStockVolumeCurrent: number = 0
   stockData: UsersStocks[] = []
   selectedStockName: string = ''
   selectedStockData: stockOwnedData = {
@@ -190,6 +194,9 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         if (Object.hasOwn(data.data[0].content[0], '3')) {
           this.refreshData(data)
         }
+        if(Object.hasOwn(data.data[0].content[0], '8')){
+          this.refreshVolumeData(data)
+        }
 
       }
       /* 
@@ -211,11 +218,19 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     history: [],
     labels: [],
     name: 'AAPL',
-    time: []
+    time: [],
+    volume: []
+  }
+  refreshVolumeData(data:any){
+    this.chartData.volume.push(data.data[0].content[0]['8'])
+    this.selectedStockVolumeCurrent = this.chartData.volume[this.chartData.volume.length - 1]
+    this.selectedStockVolumeHigh = Math.max(...this.chartData.volume)
+    this.selectedStockVolumeLow = Math.min(...this.chartData.volume)
+    this.updateVolumeChart()
   }
   async refreshData(data: any) {
     this.chartData.history.push(data.data[0].content[0]['3'])
-    this.chartData.labels.push(data.data[0].timestamp)
+    this.chartData.labels.push(reusedFunctions.epochToLocalTime(data.data[0].timestamp))
     this.chartData.time.push(Number(data.data[0].timestamp))
     this.selectedStockCurrent = this.chartData.history[this.chartData.history.length - 1]
     this.selectedStockHigh = Math.max(...this.chartData.history)
@@ -255,6 +270,12 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.stockChart.options.scales.y.max = this.selectedStockHigh + 2
     this.stockChart.options.scales.y.min = this.selectedStockLow - 2
     this.stockChart.update()
+  }
+  updateVolumeChart(){
+    this.volumeChart.data.datasets[0].data = this.chartData.volume
+    this.stockChart.options.scales.y.max = this.selectedStockVolumeHigh + 10000
+    this.stockChart.options.scales.y.min = this.selectedStockVolumeLow - 10000
+    this.volumeChart.update()
   }
 
   createOrUpdateChart() {
@@ -303,8 +324,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
 
           scales: {
             y: {
-              max: this.getMaxForChart(this.chartData.history),
-              min: this.getMinForChart(this.chartData.history),
+              max: this.getMaxForChart(this.chartData.volume),
+              min: this.getMinForChart(this.chartData.volume),
               grid: {
                 color: 'hsl(18, 12%, 60%)'
               },
@@ -352,8 +373,71 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
 
   }
 
+  createVolumeChart(){
+    this.volumeChart = new Chart("volume-chart", {
+      type: 'line', //this denotes tha type of chart
+
+      data: {// values on X-Axis
+
+        labels: this.chartData.labels,
+
+        datasets: [
+          {
+            label: this.chartData.name,
+            data: this.chartData.history,
+            backgroundColor: '#54C964',
+            hoverBackgroundColor: '#54C964',
+            borderColor: '#54C964',
+            pointBackgroundColor: '#54C964',
+            pointBorderColor: '#54C964',
+            pointRadius: 0,
+            spanGaps: true
+
+          }
+        ]
+      },
+      options: {
+
+        aspectRatio: 9,
+        color: '#DBD4D1',
+        font: {
+          weight: 'bold'
+        },
+        elements: {
+          line: {
+            backgroundColor: '#54C964',
+            borderColor: '#54C964'
+          },
+          point: {
+            radius: 1,
+            hitRadius: 3
+          }
+        },
+        animation: false,
+
+        scales: {
+          y: {
+            max: this.getMaxForChart(this.chartData.history),
+            min: this.getMinForChart(this.chartData.history),
+            grid: {
+              color: 'hsl(18, 12%, 60%)'
+            },
+          },
+          x: {
+            grid: {
+              display: false,
+              color: 'hsl(18, 12%, 60%)'
+            },
+
+          }
+
+        }
+      }
+    })
+  }
+
   getMaxForChart(arr: number[]): number {
-    let max = -1000000
+    let max = -1000000000
     for (let i = 0; i < arr.length; i++) {
       if (arr[i] > max) {
         max = arr[i]
@@ -363,7 +447,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
 
   }
   getMinForChart(arr: number[]): number {
-    let min = 1000000
+    let min = 1000000000
     for (let i = 0; i < arr.length; i++) {
       if (arr[i] < min) {
         min = arr[i]
