@@ -28,6 +28,7 @@ import {MatRadioModule} from '@angular/material/radio';
 import { FormsModule } from '@angular/forms'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input';
+import { buySellDto } from '../Dtos/buySellDto';
 @Component({
   selector: 'app-home-screen',
   imports: [CommonModule,FormsModule,MatInputModule,MatFormFieldModule, MatIconModule,MatRadioModule,MatProgressSpinnerModule, MatButtonModule, MatButtonToggleModule, TradeComponent],
@@ -220,7 +221,16 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.selectedStockHigh = Math.max(...this.chartData.history)
     this.selectedStockLow = Math.min(...this.chartData.history)
     if (this.isUserOrBot == 'Bot' && this.isBotAuthorized == true && this.chartData.history.length >= 400) {
-      let shouldPlaceOrder = AnalysisService.checkIsLowBuyIsHighSell(this.chartData, this.selectedStockHistoryData)
+      let shouldPlaceOrder: buySellDto = {
+        shouldExecuteOrder: false
+      }
+      if(this.selectedAlgo == 'highLow'){
+        shouldPlaceOrder = AnalysisService.checkIsLowBuyIsHighSell(this.chartData.history.slice(-401), this.selectedStockHistoryData)
+      }
+      else{
+        shouldPlaceOrder = AnalysisService.trendTrading(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1), this.selectedStockHistoryData)
+      }
+      
       
       //add check to see when the last order was placed. Don't want to be placing order every 3 seconds
       //maybe wait 30 seconds
