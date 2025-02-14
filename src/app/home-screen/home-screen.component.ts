@@ -118,10 +118,11 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.stockHistoryData = await OrderController.getAllOrders()
     this.selectedStockHistoryData = this.stockHistoryData.filter(e => e.stockName == this.selectedStockName)
 
+    //below is most likely not the best wat to find the net but it'll work for now
     for(let i = 0; i < this.selectedStockHistoryData.length - 1; i++){
       //need to find each pair of buy and sells
       if(this.selectedStockHistoryData[i].orderType == 'Sell' && this.selectedStockHistoryData[i + 1].orderType == 'Buy'){
-        this.selectedStockTotalNet += ((this.selectedStockHistoryData[i + 1].shareQty * this.selectedStockHistoryData[i + 1].stockPrice) - (this.selectedStockHistoryData[i].shareQty * this.selectedStockHistoryData[i].stockPrice))
+        this.selectedStockTotalNet += ((this.selectedStockHistoryData[i].shareQty * this.selectedStockHistoryData[i].stockPrice) - (this.selectedStockHistoryData[i + 1].shareQty * this.selectedStockHistoryData[i + 1].stockPrice))
       }
     }
     console.log(this.selectedStockHistoryData)
