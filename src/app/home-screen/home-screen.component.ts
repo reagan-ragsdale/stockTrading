@@ -70,6 +70,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     shareQty: 0,
     stockName: ''
   }
+  selectedStockTotalNet: number = 0
   stockHistoryData: DbOrders[] = []
   selectedStockHistoryData: DbOrders[] = []
   targetPrice: number = 0
@@ -116,6 +117,13 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     }
     this.stockHistoryData = await OrderController.getAllOrders()
     this.selectedStockHistoryData = this.stockHistoryData.filter(e => e.stockName == this.selectedStockName)
+
+    for(let i = 0; i < this.selectedStockHistoryData.length - 1; i++){
+      //need to find each pair of buy and sells
+      if(this.selectedStockHistoryData[i].orderType == 'Sell' && this.selectedStockHistoryData[i + 1].orderType == 'Buy'){
+        this.selectedStockTotalNet += ((this.selectedStockHistoryData[i + 1].shareQty * this.selectedStockHistoryData[i + 1].stockPrice) - (this.selectedStockHistoryData[i].shareQty * this.selectedStockHistoryData[i].stockPrice))
+      }
+    }
     console.log(this.selectedStockHistoryData)
 
   }
