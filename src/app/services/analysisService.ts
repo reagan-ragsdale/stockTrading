@@ -4,7 +4,7 @@ import { StockAnalysisDto } from "../Dtos/stockAnalysisDto";
 import { stockOrder } from "../Dtos/stockOrder";
 
 export class AnalysisService {
-    static checkIsLowBuyIsHighSell(stock: number[], orderHistory: stockOrder[]): buySellDto {
+    static checkIsLowBuyIsHighSell(stock: number[], orderHistory: stockOrder[], currentStopLoss: number, initialAverage: number, currentTradeHigh: number): buySellDto {
 
         //find out if we're buying or selling based off previous orders or if none at all
         let nextOrderType = 'Buy'
@@ -85,13 +85,44 @@ export class AnalysisService {
         //possibly also add a trend indicator and adjust the multiplyFactor based on if its going up and were trying to sell or going up and trying to buy etc
         let multiplyFactor = 0.4
 
+        //need to also add a stop loss to set as a saftey net for if a price dips below a certain proint
+        //Almost always when you see someone day trading, they'll set a target price which is above where they bought
+        //and a stop loss at some point slightly below where they bought to provide an automatic sell safety net
+        //I want to also add this to the algo along side of the target price
+        //one thing I think could be an improvement to this is that when they set their target price, it initially gets set
+        //below where they initially bought and then never touched again for the rest of the trade
+        //so if they bought at 100 and set a target at 110 and stop loss at 98
+        //then the price could go up to 108 and come all the way back down to 98 and sell for a loss
+        //my plan is to have the stop loss be adjusted by the bot to be able to rise above the initial mark
+        //so that in the scenario above, it could have risen up at a certain paddin of the price 
+        //so when the price reached its peak of 108, the stop loss couldve moved up to 106
+        //and sold when it finally dipped to 106 instead of 98
+
+        //set initial stop loss after a buy
+        //stop loss should be what the previous low was
+        // most likely the overall low of the dataset but overall algo will need to change because only looks at 400
+        
+        //stop loss only changes when the price has gone above the initaial buy price by a certain point.
+        //the price might initially jump above then dip back down a bit then go up to target
+        //so having it go to right above the buy price as soon as it jumps above might not work
+        //instead we want to add a padding to trail the price by. 
+        //price has to initially get to a certain point above buy price
+        //initial arbitrary price of the average of the dataset when the trade was placed
+        //once the price breaks over the average, then set initially arbitraily stop loss to sligtly above the initial buy
+        // and follow one for one and only change when the price reaches a new high
+        //once the stop loss is set above the buy then it cant go back down it can only go up
+
+
         if (nextOrderType == 'Buy') {
             gutter = Math.abs(newAverage - recentLow) * multiplyFactor
             console.log('Less than: ' + (recentLow + gutter))
             if ((incomingPrice < (recentLow + gutter))) {
                 return {
                     shouldExecuteOrder: true,
-                    isBuyOrSell: 'Buy'
+                    isBuyOrSell: 'Buy',
+                    stopLossPrice: recentLow,
+                    initialAverage: newAverage,
+                    tradeHigh: incomingPrice
                 }
             }
             else {
@@ -104,16 +135,46 @@ export class AnalysisService {
         else {
             gutter = Math.abs(newAverage - recentHigh) * multiplyFactor
             console.log('greater than: ' + (recentHigh - gutter))
-            if ((incomingPrice > (recentHigh - gutter)) && incomingPrice > lastOrderPrice) {
+            if (((incomingPrice > (recentHigh - gutter)) && (incomingPrice > lastOrderPrice)) || incomingPrice <= currentStopLoss) {
                 return {
                     shouldExecuteOrder: true,
                     isBuyOrSell: 'Sell'
                 }
             }
             else {
+                let newStopLoss = 0
+                let newHigh = 0
+                //if the price has not gotten to the average yet
+                if(currentStopLoss < orderHistory[0].stockPrice){
+                    //check to see if price is at average
+                    if(incomingPrice >= initialAverage){
+                        //set new stop loss
+                        newStopLoss = ((initialAverage - orderHistory[0].stockPrice) * .3) + orderHistory[0].stockPrice
+                    }
+                    else{
+                        //keep stop loss
+                        newStopLoss = currentStopLoss
+                    }
+                    if(incomingPrice > currentTradeHigh){
+                        newHigh = incomingPrice
+                    }
+                }
+                //if there is a new stop loss
+                else{
+                    if(incomingPrice > currentTradeHigh){
+                        newStopLoss += (incomingPrice - currentTradeHigh)
+                        newHigh = incomingPrice
+                    }
+                    else{
+                        newStopLoss = currentStopLoss
+                        newHigh = currentTradeHigh
+                    }
+                }
                 return {
                     shouldExecuteOrder: false,
-                    targetPrice: (recentHigh - gutter)
+                    targetPrice: (recentHigh - gutter),
+                    stopLossPrice: newStopLoss,
+                    tradeHigh: newHigh
                 }
             }
         }

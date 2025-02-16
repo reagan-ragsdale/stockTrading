@@ -74,6 +74,9 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   stockHistoryData: DbOrders[] = []
   selectedStockHistoryData: DbOrders[] = []
   targetPrice: number = 0
+  stopLossPrice: number = 0
+  tradeInitialAverage: number = 0
+  tradeCurrentHigh:number = 0
   isOrderPending: boolean = false;
   tempSelectedAlgo: string = ''
   selectedAlgo: string = ''
@@ -168,6 +171,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       ]
     }
     const aaplDataMsg = {
+      //add the level 2 data to this
       "requests": [
         {
           "service": "LEVELONE_EQUITIES",
@@ -251,7 +255,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         shouldExecuteOrder: false
       }
       if (this.selectedAlgo == 'highLow') {
-        shouldPlaceOrder = AnalysisService.checkIsLowBuyIsHighSell(this.chartData.history.slice(-401), this.selectedStockHistoryData)
+        shouldPlaceOrder = AnalysisService.checkIsLowBuyIsHighSell(this.chartData.history.slice(-401), this.selectedStockHistoryData, this.stopLossPrice, this.tradeInitialAverage, this.tradeCurrentHigh)
       }
       else {
         shouldPlaceOrder = AnalysisService.trendTrading(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1), this.selectedStockHistoryData)
@@ -265,7 +269,15 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         this.stockChart.options.plugins.annotation.annotations.orderLine.yMin = this.selectedStockHistoryData[0]?.stockPrice
         this.stockChart.options.plugins.annotation.annotations.orderLine.yMax = this.selectedStockHistoryData[0]?.stockPrice
       }
-      if (shouldPlaceOrder.targetPrice) {
+      else{
+        if(shouldPlaceOrder.stopLossPrice !== undefined){
+          this.stopLossPrice = shouldPlaceOrder.stopLossPrice
+        }
+        if(shouldPlaceOrder.tradeHigh !== undefined){
+          this.tradeCurrentHigh = shouldPlaceOrder.tradeHigh
+        }
+      }
+      if (shouldPlaceOrder.targetPrice !== undefined) {
         this.targetPrice = shouldPlaceOrder.targetPrice
         this.stockChart.options.plugins.annotation.annotations.targetLine.yMin = this.targetPrice
         this.stockChart.options.plugins.annotation.annotations.targetLine.yMax = this.targetPrice
@@ -376,6 +388,13 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
                 yMin: this.targetPrice,
                 yMax: this.targetPrice,
                 borderColor: '#ff8f50',
+                borderWidth: 2
+              },
+              stopLossLine: {
+                type: 'line',
+                yMin: this.stopLossPrice,
+                yMax: this.stopLossPrice,
+                borderColor: '#ea4c4c',
                 borderWidth: 2
               },
               trendIndex: {
