@@ -89,6 +89,6 @@
 <ng-template #modalTemplate>
     <app-trade [stockName]="chartData.name" [stockPrice]="selectedStockCurrent" 
      [stockTime]="chartData.time[chartData.time.length - 1]"[ownedShares]="selectedStockData.shareQty"
-     [availableFunds]="userSimFinData[0]!.spending">
+     [availableFunds]="userSimFinData[0]!.spending" [orderHistory]="selectedStockHistoryData[0]">
     </app-trade>
 </ng-template>

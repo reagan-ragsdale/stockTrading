@@ -17,6 +17,7 @@ import { OrderService } from '../../services/orderService.js';
 import { stockOrder } from '../../Dtos/stockOrder';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { CommonModule } from '@angular/common';
+import { DbOrders } from '../../../shared/tasks/dbOrders.js';
 
 @Component({
   selector: 'app-trade',
@@ -33,6 +34,14 @@ export class TradeComponent {
   @Input() ownedShares: number = 0
   @Input() availableFunds: number = 0
   @Input() stockTime: number = 0 
+  @Input() orderHistory: DbOrders = {
+    userId: '',
+    stockPrice: 0,
+    shareQty: 0,
+    stockName: '',
+    orderTime: 0,
+    orderType: ''
+  }
 
   buyOrSell: string = 'Buy'
   sharedOrDollars: string = 'Dollars'
@@ -53,7 +62,7 @@ export class TradeComponent {
         orderTime: this.stockTime
   
       }
-      let orderOpen = await OrderService.executeOrder(order)
+      await OrderService.executeOrder(order, this.orderHistory)
       this.dialogRef.close()
     }
     
