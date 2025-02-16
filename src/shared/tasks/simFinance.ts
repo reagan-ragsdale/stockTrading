@@ -12,7 +12,10 @@ export class SimFInance {
     userId = ""
 
     @Fields.number()
-    dollarAmt = 0
+    spending = 0
+
+    @Fields.number()
+    savings = 0
 
 
     @Fields.createdAt()

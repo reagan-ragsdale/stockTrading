@@ -45,7 +45,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
 
   accountNum: any = 0
   userPreferenceData: any = {}
-  userSimFinData: SimFInance[] = [{ dollarAmt: 0, userId: '' }]
+  userSimFinData: SimFInance[] = [{ savings: 0, spending: 0, userId: '' }]
   userData: any = []
   canShowAddFunds: boolean = true;
   accessToken = ''
@@ -220,12 +220,6 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     }
 
   }
-  canPlaceOrder(buySell: string) {
-    if ((buySell == 'Buy' && this.userSimFinData[0].dollarAmt < this.selectedStockCurrent) || (buySell == 'Sell' && this.selectedStockData.shareQty < 1)) {
-      return false
-    }
-    return true
-  }
 
   chartData: StockAnalysisDto = {
     history: [],
@@ -264,7 +258,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
 
       //add check to see when the last order was placed. Don't want to be placing order every 3 seconds
       //maybe wait 30 seconds
-      if (shouldPlaceOrder.shouldExecuteOrder == true && this.canPlaceOrder(shouldPlaceOrder.isBuyOrSell!) && !this.isOrderPending) {
+      if (shouldPlaceOrder.shouldExecuteOrder == true && !this.isOrderPending) {
         await this.placeOrder(shouldPlaceOrder.isBuyOrSell!)
         this.stockChart.options.plugins.annotation.annotations.orderLine.yMin = this.selectedStockHistoryData[0]?.stockPrice
         this.stockChart.options.plugins.annotation.annotations.orderLine.yMax = this.selectedStockHistoryData[0]?.stockPrice
@@ -528,11 +522,10 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       orderType: buyOrSell,
       stockName: this.selectedStockName,
       stockPrice: this.selectedStockCurrent,
-      //figure out how many shares to buy
-      shareQty: 1,
+      shareQty: this.userSimFinData[0].spending * this.selectedStockCurrent,
       orderTime: this.chartData.time[this.chartData.time.length - 1]
     }
-    await OrderService.executeOrder(order)
+    await OrderService.executeOrder(order, this.selectedStockHistoryData[0])
     await this.getUserFinanceData()
     await this.getStockData()
     this.isOrderPending = false

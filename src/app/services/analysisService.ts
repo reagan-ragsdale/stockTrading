@@ -5,6 +5,8 @@ import { stockOrder } from "../Dtos/stockOrder";
 
 export class AnalysisService {
     static checkIsLowBuyIsHighSell(stock: number[], orderHistory: stockOrder[], currentStopLoss: number, initialAverage: number, currentTradeHigh: number): buySellDto {
+        //currently only taking in the past 400 ticks, would like to find a way to have the entire days ticks to be searched through
+
 
         //find out if we're buying or selling based off previous orders or if none at all
         let nextOrderType = 'Buy'
