@@ -28,14 +28,16 @@ import { TestTradeComponent } from './test-trade/test-trade.component';
 import { RegressionStockController } from '../../shared/controllers/RegressionStockController';
 import { RegressionOrderController } from '../../shared/controllers/RegressionOrderController';
 import { RegressionOrderService } from '../services/regressionOrderService';
+import {MatMenuModule} from '@angular/material/menu';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-test-screen',
-  imports: [CommonModule, FormsModule,TestTradeComponent, MatInputModule, MatFormFieldModule, MatIconModule, MatRadioModule, MatProgressSpinnerModule, MatButtonModule, MatButtonToggleModule],
+  imports: [CommonModule, FormsModule,TestTradeComponent,MatMenuModule, MatInputModule, MatFormFieldModule, MatIconModule, MatRadioModule, MatProgressSpinnerModule, MatButtonModule, MatButtonToggleModule],
   templateUrl: './test-screen.component.html',
   styleUrl: './test-screen.component.css'
 })
 export class TestScreenComponent implements OnInit, OnDestroy {
-  constructor(private sharedCache: CachedData) { }
+  constructor(private sharedCache: CachedData, private router: Router) { }
   remult = remult
   readonly dialog = inject(MatDialog);
   @ViewChild('modalTemplate', { static: true }) modalTemplate!: TemplateRef<any>;
@@ -598,6 +600,9 @@ export class TestScreenComponent implements OnInit, OnDestroy {
   }
   onStartWebSocket(){
     this.startWebsocket()
+  }
+  navToLiveEnv(){
+    this.router.navigate(['/home'])
   }
 
   isLoading: boolean = true;

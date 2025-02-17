@@ -4,7 +4,14 @@
 <div *ngIf="true" style="display:flex; flex-direction: column; height: calc(100vh - 63px);">
     <div class="top-bar">
         <div style="margin-left: 1rem;margin-top: auto;margin-bottom: auto; display: flex;align-items: center;">
-            <h3>Testing</h3>
+            <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Change info">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="navToLiveEnv()">
+                  <span>Go to Live ENv</span>
+                </button>
+              </mat-menu>
             <mat-button-toggle-group name="fontStyle" aria-label="Font Style" (change)="userBotChange($event)" [hideSingleSelectionIndicator]="true">
                 <mat-button-toggle [checked]="true" value="User">User</mat-button-toggle>
                 <mat-button-toggle value="Bot">Bot</mat-button-toggle>

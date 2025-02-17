@@ -29,14 +29,16 @@ import { FormsModule } from '@angular/forms'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input';
 import { buySellDto } from '../Dtos/buySellDto';
+import {MatMenuModule} from '@angular/material/menu';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-home-screen',
-  imports: [CommonModule, FormsModule, MatInputModule, MatFormFieldModule, MatIconModule, MatRadioModule, MatProgressSpinnerModule, MatButtonModule, MatButtonToggleModule, TradeComponent],
+  imports: [CommonModule, FormsModule, MatInputModule,MatMenuModule, MatFormFieldModule, MatIconModule, MatRadioModule, MatProgressSpinnerModule, MatButtonModule, MatButtonToggleModule, TradeComponent],
   templateUrl: './home-screen.component.html',
   styleUrl: './home-screen.component.css'
 })
 export class HomeScreenComponent implements OnInit, OnDestroy {
-  constructor(private sharedCache: CachedData) { }
+  constructor(private sharedCache: CachedData,private router: Router) { }
   remult = remult
   readonly dialog = inject(MatDialog);
   @ViewChild('modalTemplate', { static: true }) modalTemplate!: TemplateRef<any>;
@@ -610,6 +612,9 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   }
   onStartWebSocket(){
     this.startWebsocket()
+  }
+  navToTestEnv(){
+    this.router.navigate(['/testEnv'])
   }
 
   isLoading: boolean = true;
