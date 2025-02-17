@@ -597,25 +597,23 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.stockChart.options.plugins.annotation.annotations.trendIndex.xMax = this.tempTrendAlgoStartingPoint
     this.stockChart.update()
   }
+  onStartWebSocket(){
+    this.startWebsocket()
+  }
 
   isLoading: boolean = true;
   async ngOnInit() {
-    //this.isLoading = true;
     Chart.register(annotationPlugin);
     Chart.register(...registerables)
     this.selectedStockName = 'AAPL'
     let user = await remult.initUser()
     await this.getUserData()
-    //this.lastOrder = await OrderController.getLastOrder();
-    /* if (this.lastOrder && this.lastOrder.orderType == 'Buy') {
-      this.openOrder = true
-    } */
     //await this.getMovers()
     await this.getUserFinanceData()
     await this.getStockData()
     this.createOrUpdateChart()
     this.createVolumeChart()
-    this.startWebsocket()
+    
 
     /*  this.unsubscribe = rhRepo
        .liveQuery({

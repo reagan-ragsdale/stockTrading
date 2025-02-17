@@ -34,7 +34,7 @@
     <div class="dashboard">
         <div style="padding-left: 1rem; padding-right:1rem; display:flex; flex-direction: column;">
             <div style="display: flex; gap:2rem;">
-                <h1>Dashboard</h1>
+                <button style="width: max-content; margin-top:auto; margin-bottom:auto;"mat-raised-button color="primary" (click)="onStartWebSocket()">Start</button> 
                 <button style="width: max-content; margin-top:auto; margin-bottom:auto;"mat-raised-button color="warn" aria-label="Add more funds" (click)="endStream()">ABORT!</button>    
                 <h3>Bot: {{isBotAuthorized ? 'On' : 'Off'}}</h3>
             </div>
