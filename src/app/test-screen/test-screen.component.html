@@ -33,6 +33,9 @@
                 <button *ngIf="tempSelectedAlgo == 'trend' && tempTrendAlgoStartingPoint > 0" style="width: max-content; margin-top:auto; margin-bottom:auto;" mat-raised-button color="primary" aria-label="Confirm Algorithm" [disabled]="!isChangesToBot" (click)="resetAlgo()">Reset</button>   
             </div>
         </div>
+        <button style="margin-left:auto; margin-top:auto; margin-bottom:auto;" mat-icon-button aria-label="Add more funds" (click)="showAddFunds()">
+            <mat-icon>add</mat-icon>
+          </button>
         <h3 style="padding-right:1rem;">{{userSimFinData[0].spending | currency:'USD':'symbol'}}</h3>
         <h3 style="padding-right:1rem;">{{userSimFinData[0].savings | currency:'USD':'symbol'}}</h3>
     </div>
