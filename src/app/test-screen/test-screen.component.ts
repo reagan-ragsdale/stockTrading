@@ -248,11 +248,11 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     this.chartInfo = data.slice()
     this.chartData.history = this.chartInfo.map(e => e.stockPrice)
     console.log(this.chartData.history)
-    this.chartData.labels.push(reusedFunctions.epochToLocalTime(data.data[0].timestamp))
-    this.chartData.time.push(Number(data.data[0].timestamp))
-    this.selectedStockCurrent = this.chartInfo.map(e => e.stockPrice)[this.chartInfo.length - 1]
-    this.selectedStockHigh = Math.max(...this.chartInfo.map(e => e.stockPrice))
-    this.selectedStockLow = Math.min(...this.chartInfo.map(e => e.stockPrice))
+    this.chartData.labels = this.chartInfo.map(e => e.time.toString())
+    this.chartData.time = this.chartInfo.map(e => e.time)
+    this.selectedStockCurrent = this.chartData.history[this.chartData.history.length - 1]
+    this.selectedStockHigh = Math.max(...this.chartData.history)
+    this.selectedStockLow = Math.min(...this.chartData.history)
     if (this.isUserOrBot == 'Bot' && this.isBotAuthorized == true && this.chartData.history.length >= 400) {
       let shouldPlaceOrder: buySellDto = {
         shouldExecuteOrder: false
@@ -291,8 +291,8 @@ export class TestScreenComponent implements OnInit, OnDestroy {
 
   }
   updateChart() {
-    this.stockChart.data.datasets[0].data = this.chartInfo.map(e => e.stockPrice)
-    this.stockChart.data.datasets[0].labels = this.chartInfo.map(e => e.time)
+    this.stockChart.data.datasets[0].data = this.chartData.history
+    this.stockChart.data.datasets[0].labels = this.chartData.labels
     this.stockChart.options.scales.y.max = this.selectedStockHigh + 2
     this.stockChart.options.scales.y.min = this.selectedStockLow - 2
     this.stockChart.update()
@@ -323,12 +323,12 @@ export class TestScreenComponent implements OnInit, OnDestroy {
 
       data: {// values on X-Axis
 
-        labels: this.chartInfo.map(e => e.time),
+        labels: this.chartData.labels,
 
         datasets: [
           {
-            label: this.chartInfo[0].stockName,
-            data: this.chartInfo.map(e => e.stockPrice),
+            label: 'AAPL',
+            data: this.chartData.history,
             backgroundColor: '#54C964',
             hoverBackgroundColor: '#54C964',
             borderColor: '#54C964',
