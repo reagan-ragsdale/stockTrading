@@ -30,6 +30,7 @@ import { RegressionOrderController } from '../../shared/controllers/RegressionOr
 import { RegressionOrderService } from '../services/regressionOrderService';
 import {MatMenuModule} from '@angular/material/menu';
 import { Router } from '@angular/router';
+import { DbCurrentDayStockData, dbCurrentDayStockDataRepo } from '../../shared/tasks/dbCurrentDayStockData';
 @Component({
   selector: 'app-test-screen',
   imports: [CommonModule, FormsModule,TestTradeComponent,MatMenuModule, MatInputModule, MatFormFieldModule, MatIconModule, MatRadioModule, MatProgressSpinnerModule, MatButtonModule, MatButtonToggleModule],
@@ -238,13 +239,15 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     this.selectedStockVolumeLow = Math.min(...this.chartData.volume)
     this.updateVolumeChart()
   }
+  chartInfo: DbCurrentDayStockData[] = []
   async refreshData(data: any) {
-    this.chartData.history.push(data.data[0].content[0]['3'])
-    this.chartData.labels.push(reusedFunctions.epochToLocalTime(data.data[0].timestamp))
-    this.chartData.time.push(Number(data.data[0].timestamp))
-    this.selectedStockCurrent = this.chartData.history[this.chartData.history.length - 1]
-    this.selectedStockHigh = Math.max(...this.chartData.history)
-    this.selectedStockLow = Math.min(...this.chartData.history)
+    this.chartInfo = data
+    
+    //this.chartData.labels.push(reusedFunctions.epochToLocalTime(data.data[0].timestamp))
+    //this.chartData.time.push(Number(data.data[0].timestamp))
+    this.selectedStockCurrent = this.chartInfo.map(e => e.stockPrice)[this.chartInfo.length - 1]
+    this.selectedStockHigh = Math.max(...this.chartInfo.map(e => e.stockPrice))
+    this.selectedStockLow = Math.min(...this.chartInfo.map(e => e.stockPrice))
     if (this.isUserOrBot == 'Bot' && this.isBotAuthorized == true && this.chartData.history.length >= 400) {
       let shouldPlaceOrder: buySellDto = {
         shouldExecuteOrder: false
@@ -283,8 +286,8 @@ export class TestScreenComponent implements OnInit, OnDestroy {
 
   }
   updateChart() {
-    this.stockChart.data.datasets[0].data = this.chartData.history
-    this.stockChart.data.datasets[0].labels = this.chartData.labels
+    this.stockChart.data.datasets[0].data = this.chartInfo.map(e => e.stockPrice)
+    this.stockChart.data.datasets[0].labels = this.chartInfo.map(e => e.time)
     this.stockChart.options.scales.y.max = this.selectedStockHigh + 2
     this.stockChart.options.scales.y.min = this.selectedStockLow - 2
     this.stockChart.update()
@@ -605,6 +608,13 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     this.router.navigate(['/home'])
   }
 
+  startTestThing(){
+    this.unsubscribe = dbCurrentDayStockDataRepo
+       .liveQuery({
+         where: DbCurrentDayStockData.getCurrentStockDataByName({stockName: 'AAPL'}),orderBy: {time: 'asc'}
+       })
+       .subscribe(info => this.refreshData(info.items)) 
+  }
   isLoading: boolean = true;
   async ngOnInit() {
     Chart.register(annotationPlugin);
@@ -618,7 +628,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     this.createOrUpdateChart()
     this.createVolumeChart()
     
-
+    this.startTestThing()
     /*  this.unsubscribe = rhRepo
        .liveQuery({
          where: Rhkeys.getTokenUpdates({})

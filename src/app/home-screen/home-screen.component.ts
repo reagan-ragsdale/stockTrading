@@ -617,16 +617,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   navToTestEnv(){
     this.router.navigate(['/testEnv'])
   }
-  startTestThing(){
-    this.unsubscribe = dbCurrentDayStockDataRepo
-       .liveQuery({
-         where: DbCurrentDayStockData.getCurrentStockDataByName({stockName: 'AAPL'}),orderBy: {time: 'asc'}
-       })
-       .subscribe(info => this.checkNewData(info.items)) 
-  }
-  checkNewData(items: DbCurrentDayStockData[]){
-    console.log(items)
-  }
+  
 
   isLoading: boolean = true;
   async ngOnInit() {
@@ -641,7 +632,6 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.createOrUpdateChart()
     this.createVolumeChart()
     
-    this.startTestThing()
 
     /*  this.unsubscribe = rhRepo
        .liveQuery({
