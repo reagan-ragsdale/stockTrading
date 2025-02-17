@@ -26,6 +26,10 @@ import { DbRegressionOrders } from '../shared/tasks/dbRegressionOrders.js'
 import { RegressionStockController } from '../shared/controllers/RegressionStockController.js'
 import { dbRegressionUserStocks } from '../shared/tasks/dbRegressionUserStocks.js'
 import { DbTOkens } from '../shared/tasks/dbTokens.js'
+import { insertCall } from './insertStockData.js'
+import { StockHistoryController } from '../shared/controllers/StockHistoryController.js'
+import { DbStockHistoryData } from '../shared/tasks/dbStockHistoryData.js'
+import { DbCurrentDayStockData } from '../shared/tasks/dbCurrentDayStockData.js'
 //import ev from '../../environmentVariables.json'
 
 config()
@@ -37,8 +41,8 @@ OAuthContoller.sendCall = oauthCall;
 
 
 export const api = remultExpress({
-    controllers:[AuthController, SimFinance, OAuthContoller, OrderController,StockController, RegFinanceController, RegressionOrderController, RegressionStockController],
-    entities: [Task,Users,Rhkeys, SimFInance, testEnc, DbOrders, UsersStocks,RegressionFinance, DbRegressionOrders, dbRegressionUserStocks, DbTOkens],
+    controllers:[AuthController, SimFinance, OAuthContoller, OrderController,StockController, RegFinanceController, RegressionOrderController, RegressionStockController, StockHistoryController],
+    entities: [Task,Users,Rhkeys, SimFInance, testEnc, DbOrders, UsersStocks,RegressionFinance, DbRegressionOrders, dbRegressionUserStocks, DbTOkens, DbStockHistoryData, DbCurrentDayStockData],
     admin:true,
     getUser: (req) => req.session!['user'],
     dataProvider: process.env['DATABASE_URL'] ?
@@ -52,6 +56,7 @@ export const api = remultExpress({
     })  */ ,
     initRequest
     ,initApi: async () => {
+      insertCall(),
       cron.schedule('*/25 * * * *', () => loadNewToken())
     }
 })

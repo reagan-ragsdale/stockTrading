@@ -616,6 +616,9 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   navToTestEnv(){
     this.router.navigate(['/testEnv'])
   }
+  startTestThing(){
+    
+  }
 
   isLoading: boolean = true;
   async ngOnInit() {
@@ -630,6 +633,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.createOrUpdateChart()
     this.createVolumeChart()
     
+    this.startTestThing()
 
     /*  this.unsubscribe = rhRepo
        .liveQuery({
