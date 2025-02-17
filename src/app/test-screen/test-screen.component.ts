@@ -335,7 +335,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
             borderColor: '#54C964',
             pointBackgroundColor: '#54C964',
             pointBorderColor: '#54C964',
-            pointRadius: 0,
+            pointRadius: 1,
             spanGaps: true
 
           }
