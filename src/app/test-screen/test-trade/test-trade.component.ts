@@ -13,11 +13,11 @@ import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms'
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { OrderService } from '../../services/orderService.js';
 import { stockOrder } from '../../Dtos/stockOrder';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { CommonModule } from '@angular/common';
 import { DbOrders } from '../../../shared/tasks/dbOrders.js';
+import { RegressionOrderService } from '../../services/regressionOrderService.js';
 
 @Component({
   selector: 'app-test-trade',
@@ -62,7 +62,7 @@ export class TestTradeComponent {
         orderTime: this.stockTime
   
       }
-      await OrderService.executeOrder(order, this.orderHistory)
+      await RegressionOrderService.executeOrder(order, this.orderHistory)
       this.dialogRef.close()
     }
     

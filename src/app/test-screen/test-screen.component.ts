@@ -1,6 +1,5 @@
 import { Component, inject, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { SimFInance } from '../../shared/tasks/simFinance';
-import { SimFinance } from '../../shared/controllers/SimFinance.js';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,7 +9,6 @@ import { remult } from 'remult';
 import { Chart, InteractionModeFunction, registerables } from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
 import { DbOrders } from '../../shared/tasks/dbOrders';
-import { OrderService } from '../services/orderService';
 import { AnalysisService } from '../services/analysisService';
 import { StockAnalysisDto } from '../Dtos/stockAnalysisDto';
 import { stockOrder } from '../Dtos/stockOrder';
