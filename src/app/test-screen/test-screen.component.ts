@@ -292,6 +292,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
   }
   updateChart() {
     this.stockChart.data.datasets[0].data = this.chartData.history
+    console.log(this.stockChart.data.datasets[0].data)
     this.stockChart.data.datasets[0].labels = this.chartData.labels
     this.stockChart.options.scales.y.max = this.selectedStockHigh + 2
     this.stockChart.options.scales.y.min = this.selectedStockLow - 2
