@@ -2,6 +2,7 @@ import { Buffer} from 'node:buffer'
 import { AuthController } from '../shared/controllers/AuthController.js'
 import { URLSearchParams } from 'node:url';
 export const refreshCall = async (): Promise<string> => {
+    console.log('here in before fetch')
     let userKeys = await AuthController.getKeyPairs()
     let credentials = Buffer.from(`${userKeys.appKey}:${userKeys.appSecret}`).toString('base64')
     let payload = new URLSearchParams({

@@ -21,6 +21,7 @@ export class OAuthContoller {
   }
   @BackendMethod({ allowed: true })
   static async sendRefreshCall(): Promise<string> {
+    console.log('here in oauth controller call')
     return OAuthContoller.sendRefresh()
   }
 
