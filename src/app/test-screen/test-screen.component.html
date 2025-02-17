@@ -4,7 +4,7 @@
 <div *ngIf="true" style="display:flex; flex-direction: column; height: calc(100vh - 63px);">
     <div class="top-bar">
         <div style="margin-left: 1rem;margin-top: auto;margin-bottom: auto; display: flex;align-items: center;">
-            <h3>Live</h3>
+            <h3>Testing</h3>
             <mat-button-toggle-group name="fontStyle" aria-label="Font Style" (change)="userBotChange($event)" [hideSingleSelectionIndicator]="true">
                 <mat-button-toggle [checked]="true" value="User">User</mat-button-toggle>
                 <mat-button-toggle value="Bot">Bot</mat-button-toggle>
@@ -26,9 +26,6 @@
                 <button *ngIf="tempSelectedAlgo == 'trend' && tempTrendAlgoStartingPoint > 0" style="width: max-content; margin-top:auto; margin-bottom:auto;" mat-raised-button color="primary" aria-label="Confirm Algorithm" [disabled]="!isChangesToBot" (click)="resetAlgo()">Reset</button>   
             </div>
         </div>
-        <button style="margin-left:auto; margin-top:auto; margin-bottom:auto;" mat-icon-button aria-label="Add more funds" (click)="showAddFunds()">
-            <mat-icon>add</mat-icon>
-          </button>
         <h3 style="padding-right:1rem;">{{userSimFinData[0].spending | currency:'USD':'symbol'}}</h3>
         <h3 style="padding-right:1rem;">{{userSimFinData[0].savings | currency:'USD':'symbol'}}</h3>
     </div>
@@ -87,9 +84,3 @@
         
     </div>
 </div>
-<ng-template #modalTemplate>
-    <app-trade [stockName]="chartData.name" [stockPrice]="selectedStockCurrent" 
-     [stockTime]="chartData.time[chartData.time.length - 1]"[ownedShares]="selectedStockData.shareQty"
-     [availableFunds]="userSimFinData[0]!.spending" [orderHistory]="selectedStockHistoryData[0]">
-    </app-trade>
-</ng-template>
