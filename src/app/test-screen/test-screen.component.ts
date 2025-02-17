@@ -617,7 +617,6 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     await this.getStockData()
     this.createOrUpdateChart()
     this.createVolumeChart()
-    await RegFinanceController.insertOrUpdateAmountReg(250)
     
 
     /*  this.unsubscribe = rhRepo
