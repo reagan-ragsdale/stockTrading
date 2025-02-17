@@ -1,4 +1,4 @@
-import { StockHistoryController } from "../shared/controllers/StockHistoryController"
+import { StockHistoryController } from "../shared/controllers/StockHistoryController.js"
 
 export const insertCall = async (): Promise<void> => {
     let i = 1
