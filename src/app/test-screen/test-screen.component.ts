@@ -246,9 +246,10 @@ export class TestScreenComponent implements OnInit, OnDestroy {
   }]
   async refreshData(data: any) {
     this.chartInfo = data.slice()
-    
-    //this.chartData.labels.push(reusedFunctions.epochToLocalTime(data.data[0].timestamp))
-    //this.chartData.time.push(Number(data.data[0].timestamp))
+    this.chartData.history = this.chartInfo.map(e => e.stockPrice)
+    console.log(this.chartData.history)
+    this.chartData.labels.push(reusedFunctions.epochToLocalTime(data.data[0].timestamp))
+    this.chartData.time.push(Number(data.data[0].timestamp))
     this.selectedStockCurrent = this.chartInfo.map(e => e.stockPrice)[this.chartInfo.length - 1]
     this.selectedStockHigh = Math.max(...this.chartInfo.map(e => e.stockPrice))
     this.selectedStockLow = Math.min(...this.chartInfo.map(e => e.stockPrice))
