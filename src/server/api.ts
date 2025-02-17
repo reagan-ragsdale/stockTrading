@@ -51,6 +51,6 @@ export const api = remultExpress({
     })  */ ,
     initRequest
     ,initApi: async () => {
-      //cron.schedule('*/25 * * * *', () => loadNewToken())
+      cron.schedule('*/25 * * * *', () => loadNewToken())
     }
 })
