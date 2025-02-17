@@ -31,6 +31,7 @@ import { MatInputModule } from '@angular/material/input';
 import { buySellDto } from '../Dtos/buySellDto';
 import {MatMenuModule} from '@angular/material/menu';
 import { Router } from '@angular/router';
+import { DbCurrentDayStockData, dbCurrentDayStockDataRepo } from '../../shared/tasks/dbCurrentDayStockData';
 @Component({
   selector: 'app-home-screen',
   imports: [CommonModule, FormsModule, MatInputModule,MatMenuModule, MatFormFieldModule, MatIconModule, MatRadioModule, MatProgressSpinnerModule, MatButtonModule, MatButtonToggleModule, TradeComponent],
@@ -617,7 +618,14 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.router.navigate(['/testEnv'])
   }
   startTestThing(){
-    
+    this.unsubscribe = dbCurrentDayStockDataRepo
+       .liveQuery({
+         where: DbCurrentDayStockData.getCurrentStockDataByName({stockName: 'AAPL'}),orderBy: {time: 'asc'}
+       })
+       .subscribe(info => this.checkNewData(info.items)) 
+  }
+  checkNewData(items: DbCurrentDayStockData[]){
+    console.log(items)
   }
 
   isLoading: boolean = true;
