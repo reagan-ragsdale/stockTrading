@@ -1,0 +1,17 @@
+.top-bar{
+    width:100%;
+    background-color: #3C3E3D;
+    display: flex;
+}
+.dashboard{
+    width:100%;
+    background-color: #3C3E3D;
+}
+.canvas-container{
+    width:75% !important;
+    display:flex; 
+    flex-direction: column;
+}
+h1, h2, h3,h4{
+    color: #DBD4D1 !important;
+}
