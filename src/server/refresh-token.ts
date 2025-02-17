@@ -6,7 +6,6 @@ export const refreshCall = async (): Promise<string> => {
     console.log('here in before fetch')
     try {
         let userKeys = await dbTokenRepo.findFirst({id: { "!=":''}})
-        console.log(userKeys)
         let credentials = Buffer.from(`${userKeys!.appKey}:${userKeys!.appSecret}`).toString('base64')
         let payload = new URLSearchParams({
             grant_type: 'refresh_token', refresh_token: userKeys!.refreshToken
@@ -26,7 +25,6 @@ export const refreshCall = async (): Promise<string> => {
 
         const response = await fetch(url, options);
         const result = await response.json();
-        console.log(result)
         let accessToken = result['access_token']
         return accessToken
     }

@@ -8,6 +8,7 @@ import type { generate, verify } from 'password-hash'
 import { getCurrentUser, setSessionUser } from '../../server/server-session.js'
 import { userRepo } from '../tasks/Users.js'
 import { Rhkeys, rhRepo } from '../tasks/rhkeys.js';
+import { dbTokenRepo } from '../tasks/dbTokens.js';
 
 declare module 'remult' {
   export interface RemultContext {
@@ -106,6 +107,8 @@ export class AuthController {
     let userInfo = await userRepo.findFirst({id: currentUser.id})
     let keys = await rhRepo.findFirst({userId: userInfo?.userId})
     await rhRepo.save({...keys, accessToken: tokens[0], refreshToken: tokens[1]})
+    let tokenRepo = await dbTokenRepo.findFirst({id: {'!=': ''}})
+    await dbTokenRepo.save({...tokenRepo, accessToken: tokens[0], refreshToken: tokens[1]})
 
   }
 
@@ -130,6 +133,11 @@ export class AuthController {
     const currentUser = await this.currentUser()
     const user = await userRepo.findFirst({id: currentUser.id})
     await userRepo.save({...user, userPass: AuthController.generate(password)})
+  }
+  @BackendMethod({ allowed: true })
+  static async updateGlobalAccessToken(accessToken: string){
+    let tokenObj = dbTokenRepo.findFirst({id: {"!=" : ''}})
+    await dbTokenRepo.save({...tokenObj, accessToken: accessToken})
   }
 
 

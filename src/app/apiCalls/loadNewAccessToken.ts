@@ -7,7 +7,7 @@ export const loadNewToken = async () => {
     //let token = await OAuthContoller.sendRefreshCall()
     let token = await refreshCall()
     if(token != ''){
-        await AuthController.updateAccessToken(token)
+        await AuthController.updateGlobalAccessToken(token)
         console.log('updated token')
     }
     
