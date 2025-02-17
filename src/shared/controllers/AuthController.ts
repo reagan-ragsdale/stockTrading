@@ -8,7 +8,6 @@ import type { generate, verify } from 'password-hash'
 import { getCurrentUser, setSessionUser } from '../../server/server-session.js'
 import { userRepo } from '../tasks/Users.js'
 import { Rhkeys, rhRepo } from '../tasks/rhkeys.js';
-import { testEncRepo } from '../tasks/testEnc.js';
 
 declare module 'remult' {
   export interface RemultContext {
@@ -132,6 +131,7 @@ export class AuthController {
     const user = await userRepo.findFirst({id: currentUser.id})
     await userRepo.save({...user, userPass: AuthController.generate(password)})
   }
+
 
  
 

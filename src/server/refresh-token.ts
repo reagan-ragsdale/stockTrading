@@ -1,14 +1,15 @@
 import { Buffer } from 'node:buffer'
 import { AuthController } from '../shared/controllers/AuthController.js'
 import { URLSearchParams } from 'node:url';
+import { dbTokenRepo } from '../shared/tasks/dbTokens.js';
 export const refreshCall = async (): Promise<string> => {
     console.log('here in before fetch')
     try {
-        let userKeys = await AuthController.getKeyPairs()
+        let userKeys = await dbTokenRepo.findFirst({id: { "!=":''}})
         console.log(userKeys)
-        let credentials = Buffer.from(`${userKeys.appKey}:${userKeys.appSecret}`).toString('base64')
+        let credentials = Buffer.from(`${userKeys!.appKey}:${userKeys!.appSecret}`).toString('base64')
         let payload = new URLSearchParams({
-            grant_type: 'refresh_token', refresh_token: userKeys.refreshToken
+            grant_type: 'refresh_token', refresh_token: userKeys!.refreshToken
         })
         const url = 'https://api.schwabapi.com/v1/oauth/token';
         const options = {

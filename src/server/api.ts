@@ -25,6 +25,7 @@ import { RegressionOrderController } from '../shared/controllers/RegressionOrder
 import { DbRegressionOrders } from '../shared/tasks/dbRegressionOrders.js'
 import { RegressionStockController } from '../shared/controllers/RegressionStockController.js'
 import { dbRegressionUserStocks } from '../shared/tasks/dbRegressionUserStocks.js'
+import { DbTOkens } from '../shared/tasks/dbTokens.js'
 //import ev from '../../environmentVariables.json'
 
 config()
@@ -37,7 +38,7 @@ OAuthContoller.sendCall = oauthCall;
 
 export const api = remultExpress({
     controllers:[AuthController, SimFinance, OAuthContoller, OrderController,StockController, RegFinanceController, RegressionOrderController, RegressionStockController],
-    entities: [Task,Users,Rhkeys, SimFInance, testEnc, DbOrders, UsersStocks,RegressionFinance, DbRegressionOrders, dbRegressionUserStocks],
+    entities: [Task,Users,Rhkeys, SimFInance, testEnc, DbOrders, UsersStocks,RegressionFinance, DbRegressionOrders, dbRegressionUserStocks, DbTOkens],
     admin:true,
     getUser: (req) => req.session!['user'],
     dataProvider: process.env['DATABASE_URL'] ?
