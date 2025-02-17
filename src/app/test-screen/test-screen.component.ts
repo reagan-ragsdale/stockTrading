@@ -239,7 +239,11 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     this.selectedStockVolumeLow = Math.min(...this.chartData.volume)
     this.updateVolumeChart()
   }
-  chartInfo: DbCurrentDayStockData[] = []
+  chartInfo: DbCurrentDayStockData[] = [{
+    stockName: '',
+    stockPrice: 0,
+    time: 0
+  }]
   async refreshData(data: any) {
     this.chartInfo = data
     
@@ -626,7 +630,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     await this.getUserFinanceData()
     await this.getStockData()
     this.createOrUpdateChart()
-    this.createVolumeChart()
+    //this.createVolumeChart()
     
     this.startTestThing()
     /*  this.unsubscribe = rhRepo
