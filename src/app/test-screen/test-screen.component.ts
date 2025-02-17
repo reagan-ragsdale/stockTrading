@@ -245,7 +245,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     time: 0
   }]
   async refreshData(data: any) {
-    this.chartInfo = data
+    this.chartInfo = data.slice()
     
     //this.chartData.labels.push(reusedFunctions.epochToLocalTime(data.data[0].timestamp))
     //this.chartData.time.push(Number(data.data[0].timestamp))
