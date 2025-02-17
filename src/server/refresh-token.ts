@@ -22,6 +22,7 @@ export const refreshCall = async (): Promise<string> => {
     try {
         const response = await fetch(url, options);
         const result = await response.json();
+        console.log(result)
         let accessToken = result['access_token']
         return accessToken
     }
