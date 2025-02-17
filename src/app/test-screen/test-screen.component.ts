@@ -318,12 +318,12 @@ export class TestScreenComponent implements OnInit, OnDestroy {
 
       data: {// values on X-Axis
 
-        labels: this.chartData.labels,
+        labels: this.chartInfo.map(e => e.time),
 
         datasets: [
           {
-            label: this.chartData.name,
-            data: this.chartData.history,
+            label: this.chartInfo[0].stockName,
+            data: this.chartInfo.map(e => e.stockPrice),
             backgroundColor: '#54C964',
             hoverBackgroundColor: '#54C964',
             borderColor: '#54C964',
