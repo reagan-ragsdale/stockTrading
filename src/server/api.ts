@@ -21,6 +21,10 @@ import { UsersStocks } from '../shared/tasks/usersStocks.js'
 import { StockController } from '../shared/controllers/StockController.js'
 import { RegressionFinance } from '../shared/tasks/regressionFinance.js'
 import { RegFinanceController } from '../shared/controllers/regressionFInanceController.js'
+import { RegressionOrderController } from '../shared/controllers/RegressionOrderController.js'
+import { DbRegressionOrders } from '../shared/tasks/dbRegressionOrders.js'
+import { RegressionStockController } from '../shared/controllers/RegressionStockController.js'
+import { dbRegressionUserStocks } from '../shared/tasks/dbRegressionUserStocks.js'
 //import ev from '../../environmentVariables.json'
 
 config()
@@ -32,8 +36,8 @@ OAuthContoller.sendCall = oauthCall;
 
 
 export const api = remultExpress({
-    controllers:[AuthController, SimFinance, OAuthContoller, OrderController,StockController, RegFinanceController],
-    entities: [Task,Users,Rhkeys, SimFInance, testEnc, DbOrders, UsersStocks,RegressionFinance],
+    controllers:[AuthController, SimFinance, OAuthContoller, OrderController,StockController, RegFinanceController, RegressionOrderController, RegressionStockController],
+    entities: [Task,Users,Rhkeys, SimFInance, testEnc, DbOrders, UsersStocks,RegressionFinance, DbRegressionOrders, dbRegressionUserStocks],
     admin:true,
     getUser: (req) => req.session!['user'],
     dataProvider: process.env['DATABASE_URL'] ?

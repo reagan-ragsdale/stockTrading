@@ -1,0 +1,35 @@
+<div mat-dialog-title style="display: flex; justify-content: space-between;">
+    <h2 mat-dialog-title>Trade {{stockName}}</h2>
+    <h3>{{stockPrice}}</h3>
+</div>
+<mat-dialog-content style="display: flex;flex-direction: column;align-items: flex-end;">
+    <div style="display:flex; flex-direction: column;">
+        <mat-button-toggle-group name="orderType" aria-label="orderType" (change)="changeSharesDollars($event)" [hideSingleSelectionIndicator]="true" style="height: 30px;margin-left: auto;align-items: center;">
+            <mat-button-toggle  value="Shares">Shares</mat-button-toggle>
+            <mat-button-toggle [checked]="true" value="Dollars">Dollars</mat-button-toggle>
+        </mat-button-toggle-group>
+        <div style="display:flex;">
+            <div *ngIf="ownedShares > 0 && buyOrSell == 'Sell' && sharedOrDollars == 'Shares'">
+                <mat-checkbox [labelPosition]="'before'"  class="example-margin" [(ngModel)]="isAllSharesChecked" (ngModelChange)="sellAllSharesChecked()">Sell all shares?</mat-checkbox>
+            </div>
+             <form class="auth-form">
+                <mat-form-field class="example-full-width">
+                    <mat-label>Order Amount</mat-label>
+                    <input matInput type="number" [(ngModel)]="amountToBuyOrSell" placeholder="0.00" [max]="getMaxToBuyOrSell()" [min]="0">
+                </mat-form-field>
+            </form>
+        </div>
+        
+    </div>
+    
+    <mat-button-toggle-group name="fontStyle" aria-label="Font Style" (change)="changeBuyOrSell($event)" [hideSingleSelectionIndicator]="true">
+        <mat-button-toggle  value="Sell">Sell</mat-button-toggle>
+        <mat-button-toggle [checked]="true" value="Buy">Buy</mat-button-toggle>
+    </mat-button-toggle-group>
+
+
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close >Cancel</button>
+    <button mat-button cdkFocusInitial (click)="onPlaceTradeClicked()">Submit</button>
+</mat-dialog-actions>

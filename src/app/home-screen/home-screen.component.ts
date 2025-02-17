@@ -183,6 +183,17 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
             "keys": "AAPL",
             "fields": "0,1,2,3,4,5,6,7,8,9,10,33"
           }
+        },
+        {
+          "service": "NYSE_BOOK",
+          "requestid": "23",
+          "command": "SUBS",
+          "SchwabClientCustomerId": this.userPreferenceData.streamerInfo[0].schwabClientCustomerId,
+          "SchwabClientCorrelId": this.userPreferenceData.streamerInfo[0].schwabClientCorrelId,
+          "parameters": {
+            "keys": "AAPL",
+            "fields": "0,1,2,3"
+          }
         }
       ]
     }

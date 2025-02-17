@@ -9,15 +9,12 @@ import { CachedData } from '../services/cachedDataService';
 import { remult } from 'remult';
 import { Chart, InteractionModeFunction, registerables } from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
-import { OrderController } from '../../shared/controllers/OrderController';
 import { DbOrders } from '../../shared/tasks/dbOrders';
 import { OrderService } from '../services/orderService';
 import { AnalysisService } from '../services/analysisService';
 import { StockAnalysisDto } from '../Dtos/stockAnalysisDto';
 import { stockOrder } from '../Dtos/stockOrder';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { Rhkeys, rhRepo } from '../../shared/tasks/rhkeys';
-import { StockController } from '../../shared/controllers/StockController';
 import { UsersStocks } from '../../shared/tasks/usersStocks';
 import { stockOwnedData } from '../Dtos/stockOwnedData';
 import { reusedFunctions } from '../services/reusedFunctions.js';
@@ -27,13 +24,19 @@ import { FormsModule } from '@angular/forms'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input';
 import { buySellDto } from '../Dtos/buySellDto';
+import { TestAddFundsComponent } from './test-add-funds/test-add-funds.component';
+import { RegFinanceController } from '../../shared/controllers/regressionFInanceController';
+import { TestTradeComponent } from './test-trade/test-trade.component';
+import { RegressionStockController } from '../../shared/controllers/RegressionStockController';
+import { RegressionOrderController } from '../../shared/controllers/RegressionOrderController';
+import { RegressionOrderService } from '../services/regressionOrderService';
 @Component({
   selector: 'app-test-screen',
-  imports: [CommonModule, FormsModule, MatInputModule, MatFormFieldModule, MatIconModule, MatRadioModule, MatProgressSpinnerModule, MatButtonModule, MatButtonToggleModule],
+  imports: [CommonModule, FormsModule,TestTradeComponent, MatInputModule, MatFormFieldModule, MatIconModule, MatRadioModule, MatProgressSpinnerModule, MatButtonModule, MatButtonToggleModule],
   templateUrl: './test-screen.component.html',
   styleUrl: './test-screen.component.css'
 })
-export class HomeScreenComponent implements OnInit, OnDestroy {
+export class TestScreenComponent implements OnInit, OnDestroy {
   constructor(private sharedCache: CachedData) { }
   remult = remult
   readonly dialog = inject(MatDialog);
@@ -84,7 +87,16 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   isChangesToBot: boolean = false;
 
  
-
+  showAddFunds() {
+    const dialogRef = this.dialog.open(TestAddFundsComponent, {
+      width: '300px',
+      enterAnimationDuration: 0,
+      exitAnimationDuration: 0
+    });
+    dialogRef.afterClosed().subscribe(async result => {
+      this.userSimFinData = await RegFinanceController.getRegSimFinData()
+    });
+  }
   tradeDialogRef: any
   openTradePopup() {
     this.tradeDialogRef = this.dialog.open(this.modalTemplate, {
@@ -93,7 +105,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       exitAnimationDuration: 0
     });
     this.tradeDialogRef.afterClosed().subscribe(async (result: any) => {
-      this.userSimFinData = await SimFinance.getSimFinData()
+      this.userSimFinData = await RegFinanceController.getRegSimFinData()
       console.log(result)
       //this.lastOrder = await OrderController.getLastOrder();
       await this.getStockData()
@@ -101,13 +113,13 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     });
   }
   async getStockData() {
-    this.stockData = await StockController.getAllStocks()
+    this.stockData = await RegressionStockController.getAllStocks()
     let selectedStock = this.stockData.filter(e => e.stockName == this.selectedStockName)
     this.selectedStockData = {
       stockName: selectedStock[0].stockName,
       shareQty: selectedStock[0].shareQty
     }
-    this.stockHistoryData = await OrderController.getAllOrders()
+    this.stockHistoryData = await RegressionOrderController.getAllOrders()
     this.selectedStockHistoryData = this.stockHistoryData.filter(e => e.stockName == this.selectedStockName)
 
     //below is most likely not the best wat to find the net but it'll work for now
@@ -514,7 +526,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       shareQty: this.userSimFinData[0].spending * this.selectedStockCurrent,
       orderTime: this.chartData.time[this.chartData.time.length - 1]
     }
-    await OrderService.executeOrder(order, this.selectedStockHistoryData[0])
+    await RegressionOrderService.executeOrder(order, this.selectedStockHistoryData[0])
     await this.getUserFinanceData()
     await this.getStockData()
     this.isOrderPending = false
@@ -541,7 +553,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   }
 
   async getUserFinanceData() {
-    this.userSimFinData = await SimFinance.getSimFinData()
+    this.userSimFinData = await RegFinanceController.getRegSimFinData()
   }
 
   userBotChange(event: any) {
