@@ -248,8 +248,6 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.chartData.volume.push(data.data[0].content[0]['8'])
     this.chartData.volumeTime.push(Number(data.data[0].timestamp))
     this.selectedStockVolumeCurrent = this.chartData.volume[this.chartData.volume.length - 1]
-    this.selectedStockVolumeHigh = Math.max(...this.chartData.volume)
-    this.selectedStockVolumeLow = Math.min(...this.chartData.volume)
     this.updateVolumeChart()
   }
   async refreshData(data: any) {
@@ -311,8 +309,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   updateVolumeChart() {
    
 
-    this.volumeChart.options.scales.y.max = this.selectedStockVolumeHigh + 10000
-    this.volumeChart.options.scales.y.min = this.selectedStockVolumeLow - 10000
+    
     const rates = [];
     for (let i = 1; i < this.chartData.volumeTime.length; i++) {
       let rate = (this.chartData.volume[i] - this.chartData.volume[i - 1]) / (this.chartData.volumeTime[i] - this.chartData.volumeTime[i - 1]);
@@ -321,6 +318,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
 
     // Adjust time array to match the rates
     const rateTime = this.chartData.volumeTime.slice(1);
+    this.volumeChart.options.scales.y.max = Math.max(...rates) + 10000
+    this.volumeChart.options.scales.y.min = Math.min(...rates) - 10000
     this.volumeChart.data.datasets[0].data = rates.slice()
     this.volumeChart.data.datasets[0].labels = rateTime.slice()
     this.volumeChart.update()
