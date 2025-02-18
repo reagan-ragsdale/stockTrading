@@ -639,11 +639,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     Chart.register(...registerables)
     this.selectedStockName = 'AAPL'
     let user = await remult.initUser()
-    await this.getUserData()
-    let tokens = await dbTokenRepo.findFirst({id: {'!=': ''}})
-    await dbTokenRepo.save({...tokens, streamerSocketUrl: this.userPreferenceData.streamerInfo[0].streamerSocketUrl, schwabClientChannel: this.userPreferenceData.streamerInfo[0].schwabClientChannel,
-       schwabClientCorrelId: this.userPreferenceData.streamerInfo[0].schwabClientCorrelId, schwabClientCustomerId: this.userPreferenceData.streamerInfo[0].schwabClientCustomerId, 
-       schwabClientFunctionId: this.userPreferenceData.streamerInfo[0].schwabClientFunctionId})
+    //await this.getUserData()
     //await this.getMovers()
     await this.getUserFinanceData()
     await this.getStockData()
