@@ -206,7 +206,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       this.schwabWebsocket!.send(JSON.stringify(loginMsg))
     }
     let count = 0
-    this.schwabWebsocket.onmessage = (event: any) => {
+    this.schwabWebsocket.onmessage = async (event: any) => {
       console.log(JSON.parse(event.data))
 
       let data = JSON.parse(event.data)
@@ -220,7 +220,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       }
       if (Object.hasOwn(data, 'data') && this.hasBeenSent == true) {
         if (Object.hasOwn(data.data[0].content[0], '3')) {
-          this.refreshData(data)
+          await this.refreshData(data)
         }
         if (Object.hasOwn(data.data[0].content[0], '8')) {
           this.refreshVolumeData(data)
