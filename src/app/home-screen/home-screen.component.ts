@@ -269,7 +269,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         shouldPlaceOrder = AnalysisService.trendTrading(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1), this.selectedStockHistoryData)
       }
 
-
+      console.log(shouldPlaceOrder)
       //add check to see when the last order was placed. Don't want to be placing order every 3 seconds
       //maybe wait 30 seconds
       if (shouldPlaceOrder.shouldExecuteOrder == true && !this.isOrderPending) {
@@ -315,8 +315,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
 
     // Adjust time array to match the rates
     const rateTime = this.chartData.volumeTime.slice(1);
-    this.volumeChart.data.datasets[0].data = rates
-    this.volumeChart.data.datasets[0].labels = rateTime
+    this.volumeChart.data.datasets[0].data = rates.slice()
+    this.volumeChart.data.datasets[0].labels = rateTime.slice()
     this.volumeChart.update()
   }
 
