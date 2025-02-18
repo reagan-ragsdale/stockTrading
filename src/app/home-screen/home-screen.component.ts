@@ -395,21 +395,30 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
                 yMin: this.selectedStockHistoryData[0]?.stockPrice,
                 yMax: this.selectedStockHistoryData[0]?.stockPrice,
                 borderColor: '#7874ff',
-                borderWidth: 2
+                borderWidth: 2,
+                label: {
+                  content: 'Previous Order'
+                }
               },
               targetLine: {
                 type: 'line',
                 yMin: this.targetPrice,
                 yMax: this.targetPrice,
                 borderColor: '#ff8f50',
-                borderWidth: 2
+                borderWidth: 2,
+                label: {
+                  content: 'Target'
+                }
               },
               stopLossLine: {
                 type: 'line',
                 yMin: this.stopLossPrice,
                 yMax: this.stopLossPrice,
                 borderColor: '#ea4c4c',
-                borderWidth: 2
+                borderWidth: 2,
+                label: {
+                  content: 'Stop Loss'
+                }
               },
               trendIndex: {
                 type: 'line',

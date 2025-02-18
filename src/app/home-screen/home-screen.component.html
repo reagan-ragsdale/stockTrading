@@ -61,6 +61,8 @@
                     <h4>H:{{selectedStockHigh}}</h4>
                     <h4>L:{{selectedStockLow}}</h4>
                     <h4 *ngIf="isUserOrBot == 'Bot' && targetPrice != 0" style="color: #ff8f50 !important;">T:{{targetPrice | number:'1.2-5'}}</h4>
+                    <h4 *ngIf="isUserOrBot == 'Bot' && stopLossPrice != 0" style="color: #ff8f50 !important;">T:{{stopLossPrice | number:'1.2-5'}}</h4>
+                    <h4 *ngIf="isUserOrBot == 'Bot' && tradeCurrentHigh != 0" style="color: #ff8f50 !important;">T:{{tradeCurrentHigh | number:'1.2-5'}}</h4>
                 </div>
                 <div style="flex-grow: 1;">
                     <div style="padding: 1rem; display: flex;flex-direction: column;">
