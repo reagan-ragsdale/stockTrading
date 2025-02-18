@@ -136,7 +136,7 @@ export class AuthController {
   }
   @BackendMethod({ allowed: true })
   static async updateGlobalAccessToken(accessToken: string){
-    let tokenObj = dbTokenRepo.findFirst({id: {"!=" : ''}})
+    let tokenObj = await dbTokenRepo.findFirst({id: {"!=" : ''}})
     await dbTokenRepo.save({...tokenObj, accessToken: accessToken})
   }
 
