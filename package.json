@@ -53,6 +53,7 @@
     "@types/jasmine": "~5.1.0",
     "@types/node-cron": "^3.0.11",
     "@types/password-hash": "^1.2.24",
+    "@types/websocket": "^1.0.10",
     "jasmine-core": "~5.4.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
