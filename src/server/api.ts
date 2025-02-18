@@ -56,7 +56,7 @@ export const api = remultExpress({
     })  */ ,
     initRequest
     ,initApi: async () => {
-      insertCall(),
+      //insertCall(),
       cron.schedule('*/25 * * * *', () => loadNewToken())
     }
 })
