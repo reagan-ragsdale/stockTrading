@@ -2,6 +2,7 @@ import { AuthController } from "../shared/controllers/AuthController.js"
 import { StockHistoryController } from "../shared/controllers/StockHistoryController.js"
 import { dbCurrentDayStockDataRepo } from "../shared/tasks/dbCurrentDayStockData.js"
 import { dbTokenRepo, DbTOkens } from "../shared/tasks/dbTokens.js"
+import WebSocket from 'ws';
 
 export const insertCall = async (): Promise<void> => {
 
@@ -54,11 +55,11 @@ export const insertCall = async (): Promise<void> => {
         ]
       }
 
-      schwabWebsocket.onopen = () => {
+      schwabWebsocket.on('open', function open() {
         schwabWebsocket.send(JSON.stringify(loginMsg))
-      }
+      })
 
-      schwabWebsocket.onmessage = async (event: any) => {
+      schwabWebsocket.on('message', async function message(event: any) {
   
         let data = JSON.parse(event.data)
        
@@ -81,7 +82,7 @@ export const insertCall = async (): Promise<void> => {
           this.schwabWebsocket.send(JSON.stringify(aaplDataMsg))
         }
         count++ */
-      }
+      })
 
 }
 

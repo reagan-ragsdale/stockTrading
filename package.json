@@ -40,6 +40,8 @@
     "tslib": "^2.3.0",
     "tweetnacl": "^1.0.3",
     "uuid": "^11.0.5",
+    "websocket": "^1.0.35",
+    "ws": "^8.18.0",
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
