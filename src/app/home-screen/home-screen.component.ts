@@ -115,6 +115,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     });
   }
   async getStockData() {
+    this.selectedStockTotalNet = 0
     this.stockData = await StockController.getAllStocks()
     let selectedStock = this.stockData.filter(e => e.stockName == this.selectedStockName)
     this.selectedStockData = {
@@ -283,6 +284,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       else{
         if(shouldPlaceOrder.stopLossPrice !== undefined){
           this.stopLossPrice = shouldPlaceOrder.stopLossPrice
+          this.stockChart.options.plugins.annotation.annotations.stopLossLine.yMin = this.targetPrice
+          this.stockChart.options.plugins.annotation.annotations.stopLossLine.yMax = this.targetPrice
         }
         if(shouldPlaceOrder.tradeHigh !== undefined){
           this.tradeCurrentHigh = shouldPlaceOrder.tradeHigh
