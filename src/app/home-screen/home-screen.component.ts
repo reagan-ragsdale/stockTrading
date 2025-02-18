@@ -284,8 +284,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       else{
         if(shouldPlaceOrder.stopLossPrice !== undefined){
           this.stopLossPrice = shouldPlaceOrder.stopLossPrice
-          this.stockChart.options.plugins.annotation.annotations.stopLossLine.yMin = this.targetPrice
-          this.stockChart.options.plugins.annotation.annotations.stopLossLine.yMax = this.targetPrice
+          this.stockChart.options.plugins.annotation.annotations.stopLossLine.yMin = this.stopLossPrice
+          this.stockChart.options.plugins.annotation.annotations.stopLossLine.yMax = this.stopLossPrice
         }
         if(shouldPlaceOrder.tradeHigh !== undefined){
           this.tradeCurrentHigh = shouldPlaceOrder.tradeHigh
