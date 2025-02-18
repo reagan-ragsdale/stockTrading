@@ -7,10 +7,10 @@ export class DbTOkens {
 
     @Fields.cuid()
     id? = ''
-    @Fields.string({ includeInApi: false })
+    @Fields.string({ includeInApi: true })
     appKey = ""
 
-    @Fields.string({ includeInApi: false })
+    @Fields.string({ includeInApi: true })
     appSecret = ""
 
     @Fields.string({ includeInApi: true })
@@ -19,9 +19,23 @@ export class DbTOkens {
     @Fields.string({ includeInApi: true })
     refreshToken = ""
 
+    @Fields.string({ includeInApi: true })
+    streamerSocketUrl = ""
+
+    @Fields.string({ includeInApi: true })
+    schwabClientCustomerId = ""
+
+    @Fields.string({ includeInApi: true })
+    schwabClientCorrelId = ""
+
+    @Fields.string({ includeInApi: true })
+    schwabClientChannel = ""
+
+    @Fields.string({ includeInApi: true })
+    schwabClientFunctionId = ""
+
     @Fields.createdAt()
     createdAt?: Date
     
-
 }
 export const dbTokenRepo = remult.repo(DbTOkens)

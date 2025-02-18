@@ -140,6 +140,14 @@ export class AuthController {
     await dbTokenRepo.save({...tokenObj, accessToken: accessToken})
   }
 
+  /* @BackendMethod({ allowed: true })
+  static async getUserPreference(){
+    let tokenObj = dbTokenRepo.findFirst({id: {"!=" : ''}})
+    await dbTokenRepo.save({...tokenObj, accessToken: accessToken})
+  } */
+
+  
+
 
  
 

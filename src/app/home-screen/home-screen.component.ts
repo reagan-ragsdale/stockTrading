@@ -32,6 +32,7 @@ import { buySellDto } from '../Dtos/buySellDto';
 import {MatMenuModule} from '@angular/material/menu';
 import { Router } from '@angular/router';
 import { DbCurrentDayStockData, dbCurrentDayStockDataRepo } from '../../shared/tasks/dbCurrentDayStockData';
+import { dbTokenRepo } from '../../shared/tasks/dbTokens';
 @Component({
   selector: 'app-home-screen',
   imports: [CommonModule, FormsModule, MatInputModule,MatMenuModule, MatFormFieldModule, MatIconModule, MatRadioModule, MatProgressSpinnerModule, MatButtonModule, MatButtonToggleModule, TradeComponent],
@@ -639,6 +640,10 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.selectedStockName = 'AAPL'
     let user = await remult.initUser()
     await this.getUserData()
+    let tokens = await dbTokenRepo.findFirst({id: {'!=': ''}})
+    await dbTokenRepo.save({...tokens, streamerSocketUrl: this.userPreferenceData.streamerInfo[0].streamerSocketUrl, schwabClientChannel: this.userPreferenceData.streamerInfo[0].schwabClientChannel,
+       schwabClientCorrelId: this.userPreferenceData.streamerInfo[0].schwabClientCorrelId, schwabClientCustomerId: this.userPreferenceData.streamerInfo[0].schwabClientCustomerId, 
+       schwabClientFunctionId: this.userPreferenceData.streamerInfo[0].schwabClientFunctionId})
     //await this.getMovers()
     await this.getUserFinanceData()
     await this.getStockData()
