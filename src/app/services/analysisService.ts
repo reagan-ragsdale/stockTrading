@@ -122,7 +122,7 @@ export class AnalysisService {
                 return {
                     shouldExecuteOrder: true,
                     isBuyOrSell: 'Buy',
-                    stopLossPrice: recentLow,
+                    stopLossPrice: recentLow - gutter,
                     initialAverage: newAverage,
                     tradeHigh: incomingPrice
                 }
