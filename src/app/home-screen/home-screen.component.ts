@@ -536,7 +536,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       orderType: buyOrSell,
       stockName: this.selectedStockName,
       stockPrice: this.selectedStockCurrent,
-      shareQty: this.userSimFinData[0].spending * this.selectedStockCurrent,
+      shareQty: this.userSimFinData[0].spending / this.selectedStockCurrent,
       orderTime: this.chartData.time[this.chartData.time.length - 1]
     }
     await OrderService.executeOrder(order, this.selectedStockHistoryData[0])

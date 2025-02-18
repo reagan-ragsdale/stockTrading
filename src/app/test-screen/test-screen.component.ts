@@ -244,7 +244,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     stockPrice: 0,
     time: 0
   }]
-  async refreshData(data: any) {
+  async refreshData(data: DbCurrentDayStockData[]) {
     this.chartInfo = data.slice()
     this.chartData.history = this.chartInfo.map(e => e.stockPrice)
     console.log(this.chartData.history)
@@ -294,6 +294,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     this.stockChart.data.datasets[0].data = this.chartData.history
     console.log(this.stockChart.data.datasets[0].data)
     this.stockChart.data.datasets[0].labels = this.chartData.labels
+    console.log(this.stockChart.data.datasets[0].labels)
     this.stockChart.options.scales.y.max = this.selectedStockHigh + 2
     this.stockChart.options.scales.y.min = this.selectedStockLow - 2
     this.stockChart.update()
@@ -376,7 +377,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
 
           }
 
-        },
+        },/* 
         plugins: {
           annotation: {
             annotations: {
@@ -411,7 +412,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
             }
 
           }
-        }
+        } */
       }
     })
 
