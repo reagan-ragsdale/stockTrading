@@ -59,23 +59,21 @@ export const insertCall = async (): Promise<void> => {
     })
     schwabWebsocket.on('message', async (event) => {
         let newEvent = JSON.parse(event.toString())
-        console.log(newEvent.response[0].requestid)
-        let data = newEvent.data
-        console.log(data)
+        console.log(newEvent)
 
-        /* if (Object.hasOwn(data, 'response')) {
-            if (data.response[0].content.code == 0 && hasBeenSent == false) {
+        if (Object.hasOwn(newEvent, 'response')) {
+            if (newEvent.response[0].requestid == 0 && hasBeenSent == false) {
                 schwabWebsocket.send(JSON.stringify(aaplDataMsg))
                 console.log('send aapl')
                 hasBeenSent = true
             }
         }
-        if (Object.hasOwn(data, 'data') && hasBeenSent == true) {
-            if (Object.hasOwn(data.data[0].content[0], '3')) {
-                await dbCurrentDayStockDataRepo.insert({ stockName: data.data[0].content[0].key, stockPrice: data.data[0].content[0]['3'], time: Number(data.data[0].timestamp) })
+        if (Object.hasOwn(newEvent, 'data') && hasBeenSent == true) {
+            if (Object.hasOwn(newEvent.data[0].content[0], '3')) {
+                await dbCurrentDayStockDataRepo.insert({ stockName: newEvent.data[0].content[0].key, stockPrice: newEvent.data[0].content[0]['3'], time: Number(newEvent.data[0].timestamp) })
             }
 
-        } */
+        }
     });
 
       
