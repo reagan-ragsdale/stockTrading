@@ -61,6 +61,7 @@ export const insertCall = async (): Promise<void> => {
 
       schwabWebsocket.on('message', async function message(event: any) {
   
+        console.log(event)
         let data = JSON.parse(event.data)
        
   
