@@ -318,8 +318,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
 
     // Adjust time array to match the rates
     const rateTime = this.chartData.volumeTime.slice(1);
-    this.volumeChart.options.scales.y.max = Math.max(...rates) + 10000
-    this.volumeChart.options.scales.y.min = Math.min(...rates) - 10000
+    this.volumeChart.options.scales.y.max = Math.max(...rates) + 2
     this.volumeChart.data.datasets[0].data = rates.slice()
     this.volumeChart.data.datasets[0].labels = rateTime.slice()
     this.volumeChart.update()
@@ -480,8 +479,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
 
         scales: {
           y: {
-            max: this.getMaxForChart(this.chartData.history),
-            min: this.getMinForChart(this.chartData.history),
+            max: 10,
+            min: 0,
             grid: {
               color: 'hsl(18, 12%, 60%)'
             },
