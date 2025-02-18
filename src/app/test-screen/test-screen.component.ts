@@ -246,9 +246,9 @@ export class TestScreenComponent implements OnInit, OnDestroy {
   }]
   async refreshData(data: DbCurrentDayStockData[]) {
     this.chartInfo = data.slice()
-    this.chartData.history = this.chartInfo.map(e => e.stockPrice)
+    this.chartData.history.push(this.chartInfo[this.chartInfo.length - 1].stockPrice)
     console.log(this.chartData.history)
-    this.chartData.labels = this.chartInfo.map(e => e.time.toString())
+    this.chartData.labels.push(this.chartInfo[this.chartInfo.length - 1].time.toString())
     this.chartData.time = this.chartInfo.map(e => e.time)
     this.selectedStockCurrent = this.chartData.history[this.chartData.history.length - 1]
     this.selectedStockHigh = Math.max(...this.chartData.history)
@@ -291,9 +291,9 @@ export class TestScreenComponent implements OnInit, OnDestroy {
 
   }
   updateChart() {
-    this.stockChart.data.datasets[0].data = this.chartData.history.slice()
+    this.stockChart.data.datasets[0].data = this.chartData.history
     console.log(this.stockChart.data.datasets[0].data)
-    this.stockChart.data.datasets[0].labels = this.chartData.labels.slice()
+    this.stockChart.data.datasets[0].labels = this.chartData.labels
     console.log(this.stockChart.data.datasets[0].labels)
     this.stockChart.options.scales.y.max = this.selectedStockHigh + 2
     this.stockChart.options.scales.y.min = this.selectedStockLow - 2
@@ -363,8 +363,8 @@ export class TestScreenComponent implements OnInit, OnDestroy {
 
         scales: {
           y: {
-            max: this.getMaxForChart(this.chartData.volume),
-            min: this.getMinForChart(this.chartData.volume),
+            max: this.getMaxForChart(this.chartData.history),
+            min: this.getMinForChart(this.chartData.history),
             grid: {
               color: 'hsl(18, 12%, 60%)'
             },
