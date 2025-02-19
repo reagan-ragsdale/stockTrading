@@ -12,10 +12,13 @@ export class DbStockHistoryData {
     stockName = ''
 
     @Fields.number()
-    stockPrice = ''
+    stockPrice = 0
 
     @Fields.number()
     time = 0
+
+    @Fields.string()
+    date = ''
 
     @Fields.createdAt()
     createdAt?: Date

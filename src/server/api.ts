@@ -30,6 +30,7 @@ import { insertCall } from './insertStockData.js'
 import { StockHistoryController } from '../shared/controllers/StockHistoryController.js'
 import { DbStockHistoryData } from '../shared/tasks/dbStockHistoryData.js'
 import { DbCurrentDayStockData } from '../shared/tasks/dbCurrentDayStockData.js'
+import { loadDailyDataIntoHistory } from '../app/apiCalls/loadDailyDataIntoHistory.js'
 //import ev from '../../environmentVariables.json'
 
 config()
@@ -57,6 +58,7 @@ export const api = remultExpress({
     initRequest
     ,initApi: async () => {
       insertCall(),
-      cron.schedule('*/25 * * * *', () => loadNewToken())
+      cron.schedule('*/25 * * * *', () => loadNewToken()),
+      cron.schedule('0 22 * * * ', () => loadDailyDataIntoHistory())
     }
 })
