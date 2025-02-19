@@ -163,9 +163,9 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   }]
   async refreshData(data: DbCurrentDayStockData[]) {
     this.chartInfo = data.slice()
-    this.chartData.history = this.chartInfo.map(e => e.stockPrice)
-    this.chartData.labels = this.chartInfo.map(e => e.time.toString())
-    this.chartData.time = this.chartInfo.map(e => e.time)
+    this.chartData.history = [...this.chartInfo.map(e => e.stockPrice)]
+    this.chartData.labels = [...this.chartInfo.map(e => e.time.toString())]
+    this.chartData.time = [...this.chartInfo.map(e => e.time)]
     this.selectedStockCurrent = this.chartData.history[this.chartData.history.length - 1]
     this.selectedStockHigh = Math.max(...this.chartData.history)
     this.selectedStockLow = Math.min(...this.chartData.history)
