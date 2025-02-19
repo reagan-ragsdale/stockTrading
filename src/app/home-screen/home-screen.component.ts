@@ -162,10 +162,9 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     time: 0
   }]
   async refreshData(data: DbCurrentDayStockData[]) {
-    this.chartInfo = structuredClone(data)
-    this.chartData.history = this.chartInfo.map(e => e.stockPrice)
-    this.chartData.labels = this.chartInfo.map(e => e.time.toString())
-    this.chartData.time = this.chartInfo.map(e => e.time)
+    this.chartData.history = data.map(e => e.stockPrice)
+    this.chartData.labels = data.map(e => e.time.toString())
+    this.chartData.time = data.map(e => e.time)
     this.selectedStockCurrent = this.chartData.history[this.chartData.history.length - 1]
     this.selectedStockHigh = Math.max(...this.chartData.history)
     this.selectedStockLow = Math.min(...this.chartData.history)
@@ -212,8 +211,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
 
   }
   updateChart() {
-    this.stockChart.data.datasets[0].data = [...this.chartData.history]
-    this.stockChart.data.datasets[0].labels = [...this.chartData.labels]
+    this.stockChart.data.datasets[0].data = this.chartData.history
+    this.stockChart.data.datasets[0].labels = this.chartData.labels
     this.stockChart.options.scales.y.max = this.selectedStockHigh + 2
     this.stockChart.options.scales.y.min = this.selectedStockLow - 2
     this.stockChart.update()
