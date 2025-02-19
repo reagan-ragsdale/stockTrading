@@ -561,6 +561,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.createOrUpdateChart()
     this.createVolumeChart()
     this.distinctAvailableStocks = (await dbCurrentDayStockDataRepo.groupBy({group: ['stockName'], orderBy: {stockName: 'desc'}})).map(e => e.stockName)
+    console.log(this.distinctAvailableStocks)
     this.selectedStockName = this.distinctAvailableStocks[0]
     this.onStartWebSocket()
 
