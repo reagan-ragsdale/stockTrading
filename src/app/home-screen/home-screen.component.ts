@@ -162,7 +162,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     time: 0
   }]
   async refreshData(data: DbCurrentDayStockData[]) {
-    this.chartInfo = JSON.parse(JSON.stringify(data))
+    this.chartInfo = structuredClone(data)
     this.chartData.history = this.chartInfo.map(e => e.stockPrice)
     this.chartData.labels = this.chartInfo.map(e => e.time.toString())
     this.chartData.time = this.chartInfo.map(e => e.time)
