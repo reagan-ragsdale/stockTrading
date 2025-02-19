@@ -31,6 +31,7 @@ import {MatMenuModule} from '@angular/material/menu';
 import { Router } from '@angular/router';
 import { DbCurrentDayStockData, dbCurrentDayStockDataRepo } from '../../shared/tasks/dbCurrentDayStockData';
 import {MatSelectModule} from '@angular/material/select';
+import { reusedFunctions } from '../services/reusedFunctions';
 @Component({
   selector: 'app-home-screen',
   imports: [CommonModule, FormsModule,MatSelectModule, MatInputModule,MatMenuModule, MatFormFieldModule, MatIconModule, MatRadioModule, MatProgressSpinnerModule, MatButtonModule, MatButtonToggleModule, TradeComponent],
@@ -163,7 +164,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   }]
   async refreshData(data: DbCurrentDayStockData[]) {
     this.chartData.history = data.map(e => e.stockPrice)
-    this.chartData.labels = data.map(e => e.time.toString())
+    this.chartData.labels = data.map(e => reusedFunctions.epochToLocalTime(e.time))
     this.chartData.time = data.map(e => e.time)
     this.selectedStockCurrent = this.chartData.history[this.chartData.history.length - 1]
     this.selectedStockHigh = Math.max(...this.chartData.history)

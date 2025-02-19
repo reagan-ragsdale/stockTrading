@@ -45,7 +45,7 @@
             <div style="display: flex; gap:2rem;">
                 <mat-form-field>
                     <mat-label>Select a Stock</mat-label>
-                    <mat-select disableRipple>
+                    <mat-select disableRipple [(value)]="selectedStockName">
                       <mat-option *ngFor="let stock of distinctAvailableStocks" value="{{stock}}" (onSelectionChange)="onSelectedStockChange($event)">{{stock}}</mat-option>
                     </mat-select>
                   </mat-form-field>
