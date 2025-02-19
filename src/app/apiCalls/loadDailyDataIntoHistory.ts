@@ -1,7 +1,7 @@
-import { StockHistoryController } from "../../shared/controllers/StockHistoryController"
-import { dbCurrentDayStockDataRepo } from "../../shared/tasks/dbCurrentDayStockData"
-import { DbStockHistoryData } from "../../shared/tasks/dbStockHistoryData"
-import { reusedFunctions } from "../services/reusedFunctions"
+import { StockHistoryController } from "../../shared/controllers/StockHistoryController.js"
+import { dbCurrentDayStockDataRepo } from "../../shared/tasks/dbCurrentDayStockData.js"
+import { DbStockHistoryData } from "../../shared/tasks/dbStockHistoryData.js"
+import { reusedFunctions } from "../services/reusedFunctions.js"
 
 
 export const loadDailyDataIntoHistory = async () => {
