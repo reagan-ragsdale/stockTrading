@@ -59,7 +59,7 @@ export const insertCall = async (): Promise<void> => {
     })
     schwabWebsocket.on('message', async (event) => {
         let newEvent = JSON.parse(event.toString())
-        console.log(newEvent.response[0].content)
+        //console.log(newEvent.response[0].content)
 
         if (Object.hasOwn(newEvent, 'response')) {
             if (newEvent.response[0].requestid == 0 && hasBeenSent == false) {
