@@ -246,6 +246,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
   }]
   async refreshData(data: DbCurrentDayStockData[]) {
     this.chartInfo = data.slice()
+    this.chartData.history = this.chartInfo.map(e => e.stockPrice)
     this.chartData.history.push(this.chartInfo[this.chartInfo.length - 1].stockPrice)
     this.chartData.labels.push(this.chartInfo[this.chartInfo.length - 1].time.toString())
     this.selectedStockCurrent = this.chartData.history[this.chartData.history.length - 1]
@@ -289,8 +290,8 @@ export class TestScreenComponent implements OnInit, OnDestroy {
 
   }
   updateChart() {
-    this.stockChart.data.datasets[0].data = this.chartData.history
-    this.stockChart.data.datasets[0].labels = this.chartData.labels
+    this.stockChart.data.datasets[0].data = [...this.chartData.history]
+    this.stockChart.data.datasets[0].labels = [...this.chartData.labels]
     this.stockChart.options.scales.y.max = this.selectedStockHigh + 2
     this.stockChart.options.scales.y.min = this.selectedStockLow - 2
     this.stockChart.update()

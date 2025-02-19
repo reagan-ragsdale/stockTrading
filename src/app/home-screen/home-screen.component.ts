@@ -4,11 +4,11 @@ import { SimFinance } from '../../shared/controllers/SimFinance.js';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialog, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { AddFundsComponent } from './add-funds/add-funds.component';
 import { CachedData } from '../services/cachedDataService';
 import { remult } from 'remult';
-import { Chart, InteractionModeFunction, registerables } from 'chart.js';
+import { Chart, registerables } from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
 import { OrderController } from '../../shared/controllers/OrderController';
 import { DbOrders } from '../../shared/tasks/dbOrders';
@@ -17,12 +17,10 @@ import { AnalysisService } from '../services/analysisService';
 import { StockAnalysisDto } from '../Dtos/stockAnalysisDto';
 import { stockOrder } from '../Dtos/stockOrder';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { Rhkeys, rhRepo } from '../../shared/tasks/rhkeys';
 import { TradeComponent } from './trade/trade.component';
 import { StockController } from '../../shared/controllers/StockController';
 import { UsersStocks } from '../../shared/tasks/usersStocks';
 import { stockOwnedData } from '../Dtos/stockOwnedData';
-import { reusedFunctions } from '../services/reusedFunctions.js';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms'
@@ -32,10 +30,10 @@ import { buySellDto } from '../Dtos/buySellDto';
 import {MatMenuModule} from '@angular/material/menu';
 import { Router } from '@angular/router';
 import { DbCurrentDayStockData, dbCurrentDayStockDataRepo } from '../../shared/tasks/dbCurrentDayStockData';
-import { dbTokenRepo } from '../../shared/tasks/dbTokens';
+import {MatSelectModule} from '@angular/material/select';
 @Component({
   selector: 'app-home-screen',
-  imports: [CommonModule, FormsModule, MatInputModule,MatMenuModule, MatFormFieldModule, MatIconModule, MatRadioModule, MatProgressSpinnerModule, MatButtonModule, MatButtonToggleModule, TradeComponent],
+  imports: [CommonModule, FormsModule,MatSelectModule, MatInputModule,MatMenuModule, MatFormFieldModule, MatIconModule, MatRadioModule, MatProgressSpinnerModule, MatButtonModule, MatButtonToggleModule, TradeComponent],
   templateUrl: './home-screen.component.html',
   styleUrl: './home-screen.component.css'
 })
@@ -88,6 +86,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   trendAlgoStartingPoint: number = 0
   isBotAuthorized: boolean = false;
   isChangesToBot: boolean = false;
+  distinctAvailableStocks: string[] = []
 
   showAddFunds() {
     const dialogRef = this.dialog.open(AddFundsComponent, {
@@ -110,7 +109,6 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.tradeDialogRef.afterClosed().subscribe(async (result: any) => {
       this.userSimFinData = await SimFinance.getSimFinData()
       console.log(result)
-      //this.lastOrder = await OrderController.getLastOrder();
       await this.getStockData()
 
     });
@@ -136,105 +134,12 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     console.log(this.selectedStockHistoryData)
 
   }
-
-  async getUserData() {
-    this.sharedCache.currentAccessToken.subscribe(token => this.accessToken = token!)
-    const url = 'https://api.schwabapi.com/trader/v1/userPreference';
-    const options = {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${this.accessToken}`
-      }
-    };
-    try {
-      const response = await fetch(url, options);
-      const result = await response.json();
-      this.userPreferenceData = result
-    }
-    catch (error: any) {
-      console.log(error.message)
-    }
-  }
-
-
   startWebsocket() {
-    this.schwabWebsocket = new WebSocket(this.userPreferenceData.streamerInfo[0].streamerSocketUrl)
-    const loginMsg = {
-      "requests": [
-        {
-          "service": "ADMIN",
-          "requestid": "0",
-          "command": "LOGIN",
-          "SchwabClientCustomerId": this.userPreferenceData.streamerInfo[0].schwabClientCustomerId,
-          "SchwabClientCorrelId": this.userPreferenceData.streamerInfo[0].schwabClientCorrelId,
-          "parameters": {
-            "Authorization": this.accessToken,
-            "SchwabClientChannel": this.userPreferenceData.streamerInfo[0].schwabClientChannel,
-            "SchwabClientFunctionId": this.userPreferenceData.streamerInfo[0].schwabClientFunctionId
-          }
-        }
-      ]
-    }
-    const aaplDataMsg = {
-      //add the level 2 data to this
-      "requests": [
-        {
-          "service": "LEVELONE_EQUITIES",
-          "requestid": "1",
-          "command": "SUBS",
-          "SchwabClientCustomerId": this.userPreferenceData.streamerInfo[0].schwabClientCustomerId,
-          "SchwabClientCorrelId": this.userPreferenceData.streamerInfo[0].schwabClientCorrelId,
-          "parameters": {
-            "keys": "AAPL",
-            "fields": "0,1,2,3,4,5,6,7,8,9,10,33"
-          }
-        },
-        {
-          "service": "NYSE_BOOK",
-          "requestid": "23",
-          "command": "SUBS",
-          "SchwabClientCustomerId": this.userPreferenceData.streamerInfo[0].schwabClientCustomerId,
-          "SchwabClientCorrelId": this.userPreferenceData.streamerInfo[0].schwabClientCorrelId,
-          "parameters": {
-            "keys": "AAPL",
-            "fields": "0,1,2,3"
-          }
-        }
-      ]
-    }
-
-    this.schwabWebsocket.onopen = () => {
-      this.schwabWebsocket!.send(JSON.stringify(loginMsg))
-    }
-    let count = 0
-    this.schwabWebsocket.onmessage = async (event: any) => {
-      console.log(JSON.parse(event.data))
-
-      let data = JSON.parse(event.data)
-
-      if (Object.hasOwn(data, 'response')) {
-        if (data.response[0].content.code == 0 && this.hasBeenSent == false) {
-          this.schwabWebsocket!.send(JSON.stringify(aaplDataMsg))
-          console.log('send aapl')
-          this.hasBeenSent = true
-        }
-      }
-      if (Object.hasOwn(data, 'data') && this.hasBeenSent == true) {
-        if (Object.hasOwn(data.data[0].content[0], '3')) {
-          await this.refreshData(data)
-        }
-        if (Object.hasOwn(data.data[0].content[0], '8')) {
-          this.refreshVolumeData(data)
-        }
-
-      }
-      /* 
-      if (count == 0) {
-        this.schwabWebsocket.send(JSON.stringify(aaplDataMsg))
-      }
-      count++ */
-    }
-
+    this.unsubscribe = dbCurrentDayStockDataRepo
+       .liveQuery({
+         where: DbCurrentDayStockData.getCurrentStockDataByName({stockName: this.selectedStockName}),orderBy: {time: 'asc'}
+       })
+       .subscribe(info => this.refreshData(info.items)) 
   }
 
   chartData: StockAnalysisDto = {
@@ -251,10 +156,16 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.selectedStockVolumeCurrent = this.chartData.volume[this.chartData.volume.length - 1]
     this.updateVolumeChart()
   }
-  async refreshData(data: any) {
-    this.chartData.history.push(data.data[0].content[0]['3'])
-    this.chartData.labels.push(reusedFunctions.epochToLocalTime(data.data[0].timestamp))
-    this.chartData.time.push(Number(data.data[0].timestamp))
+  chartInfo: DbCurrentDayStockData[] = [{
+    stockName: '',
+    stockPrice: 0,
+    time: 0
+  }]
+  async refreshData(data: DbCurrentDayStockData[]) {
+    this.chartInfo = data.slice()
+    this.chartData.history = this.chartInfo.map(e => e.stockPrice)
+    this.chartData.labels = this.chartInfo.map(e => e.time.toString())
+    this.chartData.time = this.chartInfo.map(e => e.time)
     this.selectedStockCurrent = this.chartData.history[this.chartData.history.length - 1]
     this.selectedStockHigh = Math.max(...this.chartData.history)
     this.selectedStockLow = Math.min(...this.chartData.history)
@@ -301,8 +212,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
 
   }
   updateChart() {
-    this.stockChart.data.datasets[0].data = this.chartData.history
-    this.stockChart.data.datasets[0].labels = this.chartData.labels
+    this.stockChart.data.datasets[0].data = [...this.chartData.history]
+    this.stockChart.data.datasets[0].labels = [...this.chartData.labels]
     this.stockChart.options.scales.y.max = this.selectedStockHigh + 2
     this.stockChart.options.scales.y.min = this.selectedStockLow - 2
     this.stockChart.update()
@@ -631,20 +542,30 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   navToTestEnv(){
     this.router.navigate(['/testEnv'])
   }
+  onSelectedStockChange(event: any){
+    console.log(event)
+    this.selectedStockName = event.value
+  }
   
+
 
   isLoading: boolean = true;
   async ngOnInit() {
     Chart.register(annotationPlugin);
     Chart.register(...registerables)
-    this.selectedStockName = 'AAPL'
+    
     let user = await remult.initUser()
-    //await this.getUserData()
     //await this.getMovers()
     await this.getUserFinanceData()
     await this.getStockData()
     this.createOrUpdateChart()
     this.createVolumeChart()
+    this.distinctAvailableStocks = (await dbCurrentDayStockDataRepo.groupBy({group: ['stockName'], orderBy: {stockName: 'desc'}})).map(e => e.stockName)
+    this.selectedStockName = this.distinctAvailableStocks[0]
+    this.onStartWebSocket()
+
+    
+    
     
 
     /*  this.unsubscribe = rhRepo
