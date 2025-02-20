@@ -156,50 +156,6 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     stockPrice: 0,
     time: 0
   }]
-  annotationLines: any = {
-    orderLine0: {
-      type: 'line',
-      xMin: 0,
-      xMax: 0,
-      borderColor: '#7874ff',
-      borderWidth: 2
-    },
-    orderLine1: {
-      type: 'line',
-      xMin: 0,
-      xMax: 0,
-      borderColor: '#7874ff',
-      borderWidth: 2
-    },
-    orderLine2: {
-      type: 'line',
-      xMin: 0,
-      xMax: 0,
-      borderColor: '#7874ff',
-      borderWidth: 2
-    },
-    orderLine3: {
-      type: 'line',
-      xMin: 0,
-      xMax: 0,
-      borderColor: '#7874ff',
-      borderWidth: 2
-    },
-    orderLine4: {
-      type: 'line',
-      xMin: 0,
-      xMax: 0,
-      borderColor: '#7874ff',
-      borderWidth: 2
-    },
-    orderLine5: {
-      type: 'line',
-      xMin: 0,
-      xMax: 0,
-      borderColor: '#7874ff',
-      borderWidth: 2
-    }
-  }
   async refreshData(data: DbCurrentDayStockData) {
     
     this.chartData.history.push(data.stockPrice)
@@ -222,18 +178,18 @@ export class TestScreenComponent implements OnInit, OnDestroy {
         let returnVal = []
         returnVal = AnalysisService.predicitveTrendLine(this.chartData, this.selectedStockHistoryData)
         console.log(returnVal)
-        this.annotationLines.orderLine0.xMin = returnVal[0].time
-        this.annotationLines.orderLine0.xMax = returnVal[0].time
-        this.annotationLines.orderLine1.xMin = returnVal[1].time
-        this.annotationLines.orderLine1.xMax = returnVal[1].time
-        this.annotationLines.orderLine2.xMin = returnVal[2].time
-        this.annotationLines.orderLine2.xMax = returnVal[2].time
-        this.annotationLines.orderLine3.xMin = returnVal[3].time
-        this.annotationLines.orderLine3.xMax = returnVal[3].time
-        this.annotationLines.orderLine4.xMin = returnVal[4].time
-        this.annotationLines.orderLine4.xMax = returnVal[4].time
-        this.annotationLines.orderLine5.xMin = returnVal[5].time
-        this.annotationLines.orderLine5.xMax = returnVal[5].time
+        this.stockChart.options.plugins.annotation.annotations.orderLine1.xMin = returnVal[1].time
+        this.stockChart.options.plugins.annotation.annotations.orderLine0.xMin = returnVal[0].time
+        this.stockChart.options.plugins.annotation.annotations.orderLine0.xMax = returnVal[0].time
+        this.stockChart.options.plugins.annotation.annotations.orderLine1.xMax = returnVal[1].time
+        this.stockChart.options.plugins.annotation.annotations.orderLine2.xMin = returnVal[2].time
+        this.stockChart.options.plugins.annotation.annotations.orderLine2.xMax = returnVal[2].time
+        this.stockChart.options.plugins.annotation.annotations.orderLine3.xMin = returnVal[3].time
+        this.stockChart.options.plugins.annotation.annotations.orderLine3.xMax = returnVal[3].time
+        this.stockChart.options.plugins.annotation.annotations.orderLine4.xMin = returnVal[4].time
+        this.stockChart.options.plugins.annotation.annotations.orderLine4.xMax = returnVal[4].time
+        this.stockChart.options.plugins.annotation.annotations.orderLine5.xMin = returnVal[5].time
+        this.stockChart.options.plugins.annotation.annotations.orderLine5.xMax = returnVal[5].time
 
       }
 
@@ -268,7 +224,6 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     this.stockChart.data.labels = this.chartData.labels
     this.stockChart.options.scales.y.max = this.selectedStockHigh + 2
     this.stockChart.options.scales.y.min = this.selectedStockLow - 2
-    this.stockChart.options.plugins.annotation.annotations = this.annotationLines
     this.stockChart.update()
   }
   updateVolumeChart() {
@@ -352,39 +307,50 @@ export class TestScreenComponent implements OnInit, OnDestroy {
         },
         plugins: {
           annotation: {
-            annotations: this.annotationLines
-            
-            
-            /*{
-              orderLine: {
+            annotations: {
+              orderLine0: {
                 type: 'line',
-                yMin: this.selectedStockHistoryData[0]?.stockPrice,
-                yMax: this.selectedStockHistoryData[0]?.stockPrice,
+                xMin: 0,
+                xMax: 0,
                 borderColor: '#7874ff',
                 borderWidth: 2
               },
-              targetLine: {
+              orderLine1: {
                 type: 'line',
-                yMin: this.targetPrice,
-                yMax: this.targetPrice,
-                borderColor: '#ff8f50',
+                xMin: 0,
+                xMax: 0,
+                borderColor: '#7874ff',
                 borderWidth: 2
               },
-              stopLossLine: {
+              orderLine2: {
                 type: 'line',
-                yMin: this.stopLossPrice,
-                yMax: this.stopLossPrice,
-                borderColor: '#ea4c4c',
+                xMin: 0,
+                xMax: 0,
+                borderColor: '#7874ff',
                 borderWidth: 2
               },
-              trendIndex: {
+              orderLine3: {
                 type: 'line',
-                xMin: this.trendAlgoStartingPoint,
-                xMax: this.trendAlgoStartingPoint,
-                borderColor: '#ff82e3',
+                xMin: 0,
+                xMax: 0,
+                borderColor: '#7874ff',
+                borderWidth: 2
+              },
+              orderLine4: {
+                type: 'line',
+                xMin: 0,
+                xMax: 0,
+                borderColor: '#7874ff',
+                borderWidth: 2
+              },
+              orderLine5: {
+                type: 'line',
+                xMin: 0,
+                xMax: 0,
+                borderColor: '#7874ff',
                 borderWidth: 2
               }
-            }*/
+            }
 
           }
         } 
