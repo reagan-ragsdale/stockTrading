@@ -523,7 +523,9 @@ export class TestScreenComponent implements OnInit, OnDestroy {
 
   async startTestThing(){
     let allDayStockData = await dbStockHistoryDataRepo.find({where: {stockName: 'AAPL'},orderBy: {time: 'asc'}})
+    console.log(allDayStockData.length)
     for(let i = 0; i < allDayStockData.length; i++){
+      console.log('here')
       let stockData: DbCurrentDayStockData = {
         stockName: allDayStockData[i].stockName,
         stockPrice: allDayStockData[i].stockPrice,
