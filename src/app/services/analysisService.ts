@@ -424,9 +424,7 @@ export class AnalysisService {
         let val = 1 - (ssRes / ssTot);
 
         //determine how close to 1 each of these numbers are
-        for(let i = 0; i < listOfMaximas.length; i++){
-            listOfMaximas[i].time = reusedFunctions.epochToLocalTime(listOfMaximas[i].time)
-        }
+        
         return listOfMaximas
         //find the outliers of the line
     }

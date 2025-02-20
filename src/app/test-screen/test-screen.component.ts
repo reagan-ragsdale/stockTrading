@@ -178,18 +178,24 @@ export class TestScreenComponent implements OnInit, OnDestroy {
         let returnVal = []
         returnVal = AnalysisService.predicitveTrendLine(this.chartData, this.selectedStockHistoryData)
         console.log(returnVal)
-        this.stockChart.options.plugins.annotation.annotations.orderLine0.xMin = returnVal[0].time
-        this.stockChart.options.plugins.annotation.annotations.orderLine0.xMax = returnVal[0].time
-        this.stockChart.options.plugins.annotation.annotations.orderLine1.xMin = returnVal[1].time
-        this.stockChart.options.plugins.annotation.annotations.orderLine1.xMax = returnVal[1].time
-        this.stockChart.options.plugins.annotation.annotations.orderLine2.xMin = returnVal[2].time
-        this.stockChart.options.plugins.annotation.annotations.orderLine2.xMax = returnVal[2].time
-        this.stockChart.options.plugins.annotation.annotations.orderLine3.xMin = returnVal[3].time
-        this.stockChart.options.plugins.annotation.annotations.orderLine3.xMax = returnVal[3].time
-        this.stockChart.options.plugins.annotation.annotations.orderLine4.xMin = returnVal[4].time
-        this.stockChart.options.plugins.annotation.annotations.orderLine4.xMax = returnVal[4].time
-        this.stockChart.options.plugins.annotation.annotations.orderLine5.xMin = returnVal[5].time
-        this.stockChart.options.plugins.annotation.annotations.orderLine5.xMax = returnVal[5].time
+        let indexOfZero = this.chartData.time.indexOf(returnVal[0].time)
+        this.stockChart.options.plugins.annotation.annotations.orderLine0.xMin = indexOfZero
+        this.stockChart.options.plugins.annotation.annotations.orderLine0.xMax = indexOfZero
+        let indexOfOne = this.chartData.time.indexOf(returnVal[1].time)
+        this.stockChart.options.plugins.annotation.annotations.orderLine1.xMin = indexOfOne
+        this.stockChart.options.plugins.annotation.annotations.orderLine1.xMax = indexOfOne
+        let indexOfTwo = this.chartData.time.indexOf(returnVal[2].time)
+        this.stockChart.options.plugins.annotation.annotations.orderLine2.xMin = indexOfTwo
+        this.stockChart.options.plugins.annotation.annotations.orderLine2.xMax = indexOfTwo
+        let indexOfThree = this.chartData.time.indexOf(returnVal[3].time)
+        this.stockChart.options.plugins.annotation.annotations.orderLine3.xMin = indexOfThree
+        this.stockChart.options.plugins.annotation.annotations.orderLine3.xMax = indexOfThree
+        let indexOfFour = this.chartData.time.indexOf(returnVal[4].time)
+        this.stockChart.options.plugins.annotation.annotations.orderLine4.xMin = indexOfFour
+        this.stockChart.options.plugins.annotation.annotations.orderLine4.xMax = indexOfFour
+        let indexOfFive = this.chartData.time.indexOf(returnVal[5].time)
+        this.stockChart.options.plugins.annotation.annotations.orderLine5.xMin = indexOfFive
+        this.stockChart.options.plugins.annotation.annotations.orderLine5.xMax = indexOfFive
 
       }
 
