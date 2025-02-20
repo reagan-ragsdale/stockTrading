@@ -554,6 +554,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     
   }
   changeSpeed(speed: number){
+    console.log('here in change speed')
     this.speed = speed
   }
   isLoading: boolean = true;
