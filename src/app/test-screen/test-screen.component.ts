@@ -28,13 +28,13 @@ import { TestTradeComponent } from './test-trade/test-trade.component';
 import { RegressionStockController } from '../../shared/controllers/RegressionStockController';
 import { RegressionOrderController } from '../../shared/controllers/RegressionOrderController';
 import { RegressionOrderService } from '../services/regressionOrderService';
-import {MatMenuModule} from '@angular/material/menu';
+import { MatMenuModule } from '@angular/material/menu';
 import { Router } from '@angular/router';
 import { DbCurrentDayStockData, dbCurrentDayStockDataRepo } from '../../shared/tasks/dbCurrentDayStockData';
 import { dbStockHistoryDataRepo } from '../../shared/tasks/dbStockHistoryData';
 @Component({
   selector: 'app-test-screen',
-  imports: [CommonModule, FormsModule,TestTradeComponent,MatMenuModule, MatInputModule, MatFormFieldModule, MatIconModule, MatRadioModule, MatProgressSpinnerModule, MatButtonModule, MatButtonToggleModule],
+  imports: [CommonModule, FormsModule, TestTradeComponent, MatMenuModule, MatInputModule, MatFormFieldModule, MatIconModule, MatRadioModule, MatProgressSpinnerModule, MatButtonModule, MatButtonToggleModule],
   templateUrl: './test-screen.component.html',
   styleUrl: './test-screen.component.css'
 })
@@ -79,7 +79,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
   targetPrice: number = 0
   stopLossPrice: number = 0
   tradeInitialAverage: number = 0
-  tradeCurrentHigh:number = 0
+  tradeCurrentHigh: number = 0
   isOrderPending: boolean = false;
   tempSelectedAlgo: string = ''
   selectedAlgo: string = ''
@@ -88,7 +88,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
   isBotAuthorized: boolean = false;
   isChangesToBot: boolean = false;
 
- 
+
   showAddFunds() {
     const dialogRef = this.dialog.open(TestAddFundsComponent, {
       width: '300px',
@@ -125,9 +125,9 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     this.selectedStockHistoryData = this.stockHistoryData.filter(e => e.stockName == this.selectedStockName)
 
     //below is most likely not the best wat to find the net but it'll work for now
-    for(let i = 0; i < this.selectedStockHistoryData.length - 1; i++){
+    for (let i = 0; i < this.selectedStockHistoryData.length - 1; i++) {
       //need to find each pair of buy and sells
-      if(this.selectedStockHistoryData[i].orderType == 'Sell' && this.selectedStockHistoryData[i + 1].orderType == 'Buy'){
+      if (this.selectedStockHistoryData[i].orderType == 'Sell' && this.selectedStockHistoryData[i + 1].orderType == 'Buy') {
         this.selectedStockTotalNet += ((this.selectedStockHistoryData[i].shareQty * this.selectedStockHistoryData[i].stockPrice) - (this.selectedStockHistoryData[i + 1].shareQty * this.selectedStockHistoryData[i + 1].stockPrice))
       }
     }
@@ -157,7 +157,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     time: 0
   }]
   async refreshData(data: DbCurrentDayStockData) {
-    
+
     this.chartData.history.push(data.stockPrice)
     this.chartData.labels.push(data.time.toString())
     this.chartData.time.push(data.time)
@@ -183,11 +183,11 @@ export class TestScreenComponent implements OnInit, OnDestroy {
         this.stockChart.options.plugins.annotation.annotations.orderLine.yMin = this.selectedStockHistoryData[0]?.stockPrice
         this.stockChart.options.plugins.annotation.annotations.orderLine.yMax = this.selectedStockHistoryData[0]?.stockPrice
       }
-      else{
-        if(shouldPlaceOrder.stopLossPrice !== undefined){
+      else {
+        if (shouldPlaceOrder.stopLossPrice !== undefined) {
           this.stopLossPrice = shouldPlaceOrder.stopLossPrice
         }
-        if(shouldPlaceOrder.tradeHigh !== undefined){
+        if (shouldPlaceOrder.tradeHigh !== undefined) {
           this.tradeCurrentHigh = shouldPlaceOrder.tradeHigh
         }
       }
@@ -209,7 +209,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     this.stockChart.update()
   }
   updateVolumeChart() {
-   
+
 
     this.volumeChart.options.scales.y.max = this.selectedStockVolumeHigh + 10000
     this.volumeChart.options.scales.y.min = this.selectedStockVolumeLow - 10000
@@ -517,27 +517,26 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     this.stockChart.options.plugins.annotation.annotations.trendIndex.xMax = this.tempTrendAlgoStartingPoint
     this.stockChart.update()
   }
-  navToLiveEnv(){
+  navToLiveEnv() {
     this.router.navigate(['/home'])
   }
 
-  async startTestThing(){
-    let allDayStockData = await dbStockHistoryDataRepo.find({where: {stockName: 'AAPL'},orderBy: {time: 'asc'}})
+  async startTestThing() {
+    let allDayStockData = await dbStockHistoryDataRepo.find({ where: { stockName: 'AAPL' }, orderBy: { time: 'asc' } })
     console.log(allDayStockData.length)
-    for(let i = 0; i < allDayStockData.length; i++){
+    for (let i = 0; i < allDayStockData.length; i++) {
       console.log('here')
-      
-      setTimeout(() => {
-        let stockData: DbCurrentDayStockData = {
-          stockName: allDayStockData[i].stockName,
-          stockPrice: allDayStockData[i].stockPrice,
-          time: allDayStockData[i].time
-        }
-        this.refreshData(stockData)
-      }, 10000)
-      
+
+
+      let stockData: DbCurrentDayStockData = {
+        stockName: allDayStockData[i].stockName,
+        stockPrice: allDayStockData[i].stockPrice,
+        time: allDayStockData[i].time
+      }
+      this.refreshData(stockData)
+
     }
-    
+
   }
   isLoading: boolean = true;
   async ngOnInit() {
@@ -550,7 +549,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     await this.getStockData()
     this.createOrUpdateChart()
     //this.createVolumeChart()
-    
+
     await this.startTestThing()
     /*  this.unsubscribe = rhRepo
        .liveQuery({
