@@ -536,6 +536,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     this.router.navigate(['/home'])
   }
 
+  speed = 1000
   async startTestThing(){
     let allDayStockData = await dbStockHistoryDataRepo.find({where: {stockName: 'AAPL'},orderBy: {time: 'asc'}})
     console.log(allDayStockData.length)
@@ -548,9 +549,12 @@ export class TestScreenComponent implements OnInit, OnDestroy {
         }
         this.refreshData(stockData)
         count++
-      }, 1000)
+      }, this.speed)
     
     
+  }
+  changeSpeed(speed: number){
+    this.speed = speed
   }
   isLoading: boolean = true;
   async ngOnInit() {

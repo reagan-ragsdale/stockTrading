@@ -45,6 +45,11 @@
         <div style="padding-left: 1rem; padding-right:1rem; display:flex; flex-direction: column;">
             <div style="display: flex; gap:2rem;">
                 <h3>Bot: {{isBotAuthorized ? 'On' : 'Off'}}</h3>
+                <div>
+                    <h3>Speed</h3>
+                    <button style="width: max-content; margin: auto;"mat-raised-button color="warn" aria-label="Add more funds" (click)="changeSpeed(1000)">x1</button>
+                    <button style="width: max-content; margin: auto;"mat-raised-button color="warn" aria-label="Add more funds" (click)="changeSpeed(500)">x2</button>
+                </div>
             </div>
               <!-- <div>
                 <button *ngFor="let mover of moversData" style="width: max-content;"mat-raised-button color="primary" aria-label="Add more funds" >{{mover.symbol}}</button>
