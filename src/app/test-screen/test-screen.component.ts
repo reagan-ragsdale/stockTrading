@@ -546,7 +546,9 @@ export class TestScreenComponent implements OnInit, OnDestroy {
           stockPrice: allDayStockData[i].stockPrice,
           time: allDayStockData[i].time
         }
+        console.log('here 1')
         await this.refreshData(stockData)
+        console.log('here 2')
       }
     
     
