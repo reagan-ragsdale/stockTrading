@@ -159,7 +159,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
   async refreshData(data: DbCurrentDayStockData) {
     
     this.chartData.history.push(data.stockPrice)
-    this.chartData.labels.push(data.time.toString())
+    this.chartData.labels.push(reusedFunctions.epochToLocalTime(data.time))
     this.chartData.time.push(data.time)
     this.selectedStockCurrent = this.chartData.history[this.chartData.history.length - 1]
     this.selectedStockHigh = Math.max(...this.chartData.history)
@@ -412,24 +412,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
 
   }
 
-  endStream() {
-    let logoutMsg = {
-      "requests": [
-        {
-          "service": "ADMIN",
-          "requestid": "10",
-          "command": "LOGOUT",
-          "SchwabClientCustomerId": this.userPreferenceData.streamerInfo[0].schwabClientCustomerId,
-          "SchwabClientCorrelId": this.userPreferenceData.streamerInfo[0].schwabClientCorrelId,
-          "parameters": ''
-        }
-      ]
-    }
-    this.schwabWebsocket!.send(JSON.stringify(logoutMsg))
-    console.log(this.schwabWebsocket)
-    this.schwabWebsocket!.close()
-    console.log(this.schwabWebsocket)
-  }
+  
 
   tradeBuyOrSell = 'Buy'
   placeTrade() {
