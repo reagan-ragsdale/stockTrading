@@ -547,6 +547,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
           time: allDayStockData[i].time
         }
         await this.refreshData(stockData)
+        await new Promise(resolve => setTimeout(resolve, 100));
       }
     
     
