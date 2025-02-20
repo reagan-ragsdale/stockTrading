@@ -548,7 +548,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     this.createOrUpdateChart()
     //this.createVolumeChart()
     
-    this.startTestThing()
+    await this.startTestThing()
     /*  this.unsubscribe = rhRepo
        .liveQuery({
          where: Rhkeys.getTokenUpdates({})
