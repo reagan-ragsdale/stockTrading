@@ -178,9 +178,9 @@ export class TestScreenComponent implements OnInit, OnDestroy {
         let returnVal = []
         returnVal = AnalysisService.predicitveTrendLine(this.chartData, this.selectedStockHistoryData)
         console.log(returnVal)
-        this.stockChart.options.plugins.annotation.annotations.orderLine1.xMin = returnVal[1].time
         this.stockChart.options.plugins.annotation.annotations.orderLine0.xMin = returnVal[0].time
         this.stockChart.options.plugins.annotation.annotations.orderLine0.xMax = returnVal[0].time
+        this.stockChart.options.plugins.annotation.annotations.orderLine1.xMin = returnVal[1].time
         this.stockChart.options.plugins.annotation.annotations.orderLine1.xMax = returnVal[1].time
         this.stockChart.options.plugins.annotation.annotations.orderLine2.xMin = returnVal[2].time
         this.stockChart.options.plugins.annotation.annotations.orderLine2.xMax = returnVal[2].time
