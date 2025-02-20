@@ -156,7 +156,50 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     stockPrice: 0,
     time: 0
   }]
-  annotationLines: any = []
+  annotationLines: any = {
+    orderLine0: {
+      type: 'line',
+      xMin: 0,
+      xMax: 0,
+      borderColor: '#7874ff',
+      borderWidth: 2
+    },
+    orderLine1: {
+      type: 'line',
+      xMin: 0,
+      xMax: 0,
+      borderColor: '#7874ff',
+      borderWidth: 2
+    },
+    orderLine2: {
+      type: 'line',
+      xMin: 0,
+      xMax: 0,
+      borderColor: '#7874ff',
+      borderWidth: 2
+    },
+    orderLine3: {
+      type: 'line',
+      xMin: 0,
+      xMax: 0,
+      borderColor: '#7874ff',
+      borderWidth: 2
+    },
+    orderLine4: {
+      type: 'line',
+      xMin: 0,
+      xMax: 0,
+      borderColor: '#7874ff',
+      borderWidth: 2
+    },
+    orderLine5: {
+      type: 'line',
+      xMin: 0,
+      xMax: 0,
+      borderColor: '#7874ff',
+      borderWidth: 2
+    }
+  }
   async refreshData(data: DbCurrentDayStockData) {
     
     this.chartData.history.push(data.stockPrice)
@@ -179,17 +222,18 @@ export class TestScreenComponent implements OnInit, OnDestroy {
         let returnVal = []
         returnVal = AnalysisService.predicitveTrendLine(this.chartData, this.selectedStockHistoryData)
         console.log(returnVal)
-        for(let i = 0; i < returnVal.length; i++){
-          this.annotationLines.push({
-            orderLine: {
-              type: 'line',
-              xMin: returnVal[i].time,
-              xMax: returnVal[i].time,
-              borderColor: '#7874ff',
-              borderWidth: 2
-            }
-          })
-        }
+        this.annotationLines.orderLine0.xMin = returnVal[0].time
+        this.annotationLines.orderLine0.xMax = returnVal[0].time
+        this.annotationLines.orderLine1.xMin = returnVal[1].time
+        this.annotationLines.orderLine1.xMax = returnVal[1].time
+        this.annotationLines.orderLine2.xMin = returnVal[2].time
+        this.annotationLines.orderLine2.xMax = returnVal[2].time
+        this.annotationLines.orderLine3.xMin = returnVal[3].time
+        this.annotationLines.orderLine3.xMax = returnVal[3].time
+        this.annotationLines.orderLine4.xMin = returnVal[4].time
+        this.annotationLines.orderLine4.xMax = returnVal[4].time
+        this.annotationLines.orderLine5.xMin = returnVal[5].time
+        this.annotationLines.orderLine5.xMax = returnVal[5].time
 
       }
 
