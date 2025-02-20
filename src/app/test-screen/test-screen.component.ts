@@ -541,7 +541,6 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     let allDayStockData = await dbStockHistoryDataRepo.find({where: {stockName: 'AAPL'},orderBy: {time: 'asc'}})
     console.log(allDayStockData.length)
       let count = 0
-      setInterval(() => {
         let stockData: DbCurrentDayStockData = {
           stockName: allDayStockData[count].stockName,
           stockPrice: allDayStockData[count].stockPrice,
@@ -549,7 +548,6 @@ export class TestScreenComponent implements OnInit, OnDestroy {
         }
         this.refreshData(stockData)
         count++
-      }, this.speed)
     
     
   }
