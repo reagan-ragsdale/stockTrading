@@ -2,6 +2,7 @@ import { last, max } from "rxjs";
 import { buySellDto } from "../Dtos/buySellDto";
 import { StockAnalysisDto } from "../Dtos/stockAnalysisDto";
 import { stockOrder } from "../Dtos/stockOrder";
+import { reusedFunctions } from "./reusedFunctions";
 
 export class AnalysisService {
     static checkIsLowBuyIsHighSell(stock: number[], orderHistory: stockOrder[], currentStopLoss: number, initialAverage: number, currentTradeHigh: number): buySellDto {
@@ -423,6 +424,9 @@ export class AnalysisService {
         let val = 1 - (ssRes / ssTot);
 
         //determine how close to 1 each of these numbers are
+        for(let i = 0; i < listOfMaximas.length; i++){
+            listOfMaximas[i].time = reusedFunctions.epochToLocalTime(listOfMaximas[i].time)
+        }
         return listOfMaximas
         //find the outliers of the line
     }
