@@ -31,6 +31,7 @@ import { RegressionOrderService } from '../services/regressionOrderService';
 import {MatMenuModule} from '@angular/material/menu';
 import { Router } from '@angular/router';
 import { DbCurrentDayStockData, dbCurrentDayStockDataRepo } from '../../shared/tasks/dbCurrentDayStockData';
+import { dbStockHistoryDataRepo } from '../../shared/tasks/dbStockHistoryData';
 @Component({
   selector: 'app-test-screen',
   imports: [CommonModule, FormsModule,TestTradeComponent,MatMenuModule, MatInputModule, MatFormFieldModule, MatIconModule, MatRadioModule, MatProgressSpinnerModule, MatButtonModule, MatButtonToggleModule],
@@ -134,95 +135,6 @@ export class TestScreenComponent implements OnInit, OnDestroy {
 
   }
 
-  async getUserData() {
-    this.sharedCache.currentAccessToken.subscribe(token => this.accessToken = token!)
-    const url = 'https://api.schwabapi.com/trader/v1/userPreference';
-    const options = {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${this.accessToken}`
-      }
-    };
-    try {
-      const response = await fetch(url, options);
-      const result = await response.json();
-      this.userPreferenceData = result
-    }
-    catch (error: any) {
-      console.log(error.message)
-    }
-  }
-
-
-  startWebsocket() {
-    this.schwabWebsocket = new WebSocket(this.userPreferenceData.streamerInfo[0].streamerSocketUrl)
-    const loginMsg = {
-      "requests": [
-        {
-          "service": "ADMIN",
-          "requestid": "0",
-          "command": "LOGIN",
-          "SchwabClientCustomerId": this.userPreferenceData.streamerInfo[0].schwabClientCustomerId,
-          "SchwabClientCorrelId": this.userPreferenceData.streamerInfo[0].schwabClientCorrelId,
-          "parameters": {
-            "Authorization": this.accessToken,
-            "SchwabClientChannel": this.userPreferenceData.streamerInfo[0].schwabClientChannel,
-            "SchwabClientFunctionId": this.userPreferenceData.streamerInfo[0].schwabClientFunctionId
-          }
-        }
-      ]
-    }
-    const aaplDataMsg = {
-      //add the level 2 data to this
-      "requests": [
-        {
-          "service": "LEVELONE_EQUITIES",
-          "requestid": "1",
-          "command": "SUBS",
-          "SchwabClientCustomerId": this.userPreferenceData.streamerInfo[0].schwabClientCustomerId,
-          "SchwabClientCorrelId": this.userPreferenceData.streamerInfo[0].schwabClientCorrelId,
-          "parameters": {
-            "keys": "AAPL",
-            "fields": "0,1,2,3,4,5,6,7,8,9,10,33"
-          }
-        }
-      ]
-    }
-
-    this.schwabWebsocket.onopen = () => {
-      this.schwabWebsocket!.send(JSON.stringify(loginMsg))
-    }
-    let count = 0
-    this.schwabWebsocket.onmessage = (event: any) => {
-      console.log(JSON.parse(event.data))
-
-      let data = JSON.parse(event.data)
-
-      if (Object.hasOwn(data, 'response')) {
-        if (data.response[0].content.code == 0 && this.hasBeenSent == false) {
-          this.schwabWebsocket!.send(JSON.stringify(aaplDataMsg))
-          console.log('send aapl')
-          this.hasBeenSent = true
-        }
-      }
-      if (Object.hasOwn(data, 'data') && this.hasBeenSent == true) {
-        if (Object.hasOwn(data.data[0].content[0], '3')) {
-          this.refreshData(data)
-        }
-        if (Object.hasOwn(data.data[0].content[0], '8')) {
-          this.refreshVolumeData(data)
-        }
-
-      }
-      /* 
-      if (count == 0) {
-        this.schwabWebsocket.send(JSON.stringify(aaplDataMsg))
-      }
-      count++ */
-    }
-
-  }
-
   chartData: StockAnalysisDto = {
     history: [],
     labels: [],
@@ -244,11 +156,11 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     stockPrice: 0,
     time: 0
   }]
-  async refreshData(data: DbCurrentDayStockData[]) {
-    this.chartInfo = data.slice()
-    this.chartData.history = this.chartInfo.map(e => e.stockPrice)
-    this.chartData.history.push(this.chartInfo[this.chartInfo.length - 1].stockPrice)
-    this.chartData.labels.push(this.chartInfo[this.chartInfo.length - 1].time.toString())
+  async refreshData(data: DbCurrentDayStockData) {
+    
+    this.chartData.history.push(data.stockPrice)
+    this.chartData.labels.push(data.time.toString())
+    this.chartData.time.push(data.time)
     this.selectedStockCurrent = this.chartData.history[this.chartData.history.length - 1]
     this.selectedStockHigh = Math.max(...this.chartData.history)
     this.selectedStockLow = Math.min(...this.chartData.history)
@@ -290,8 +202,8 @@ export class TestScreenComponent implements OnInit, OnDestroy {
 
   }
   updateChart() {
-    this.stockChart.data.datasets[0].data = [...this.chartData.history]
-    this.stockChart.data.datasets[0].labels = [...this.chartData.labels]
+    this.stockChart.data.datasets[0].data = this.chartData.history
+    this.stockChart.data.labels = this.chartData.labels
     this.stockChart.options.scales.y.max = this.selectedStockHigh + 2
     this.stockChart.options.scales.y.min = this.selectedStockLow - 2
     this.stockChart.update()
@@ -605,19 +517,24 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     this.stockChart.options.plugins.annotation.annotations.trendIndex.xMax = this.tempTrendAlgoStartingPoint
     this.stockChart.update()
   }
-  onStartWebSocket(){
-    this.startWebsocket()
-  }
   navToLiveEnv(){
     this.router.navigate(['/home'])
   }
 
-  startTestThing(){
-    this.unsubscribe = dbCurrentDayStockDataRepo
-       .liveQuery({
-         where: DbCurrentDayStockData.getCurrentStockDataByName({stockName: 'AAPL'}),orderBy: {time: 'asc'}
-       })
-       .subscribe(info => this.refreshData(info.items)) 
+  async startTestThing(){
+    let allDayStockData = await dbStockHistoryDataRepo.find({where: {stockName: 'AAPL'},orderBy: {time: 'asc'}})
+    for(let i = 0; i < allDayStockData.length; i++){
+      let stockData: DbCurrentDayStockData = {
+        stockName: allDayStockData[i].stockName,
+        stockPrice: allDayStockData[i].stockPrice,
+        time: allDayStockData[i].time
+      }
+      this.refreshData(stockData)
+      setTimeout(() => {
+
+      }, 1000)
+    }
+    
   }
   isLoading: boolean = true;
   async ngOnInit() {
@@ -625,7 +542,6 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     Chart.register(...registerables)
     this.selectedStockName = 'AAPL'
     let user = await remult.initUser()
-    await this.getUserData()
     //await this.getMovers()
     await this.getUserFinanceData()
     await this.getStockData()

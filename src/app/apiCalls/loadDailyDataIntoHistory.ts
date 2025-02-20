@@ -18,5 +18,6 @@ export const loadDailyDataIntoHistory = async () => {
         })
     }
     await StockHistoryController.insertDailyHistory(stockData)
+    await dbCurrentDayStockDataRepo.deleteMany({where: {stockName: {'!=': ''}}})
     
 }
