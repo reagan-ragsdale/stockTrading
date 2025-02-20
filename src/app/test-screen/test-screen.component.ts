@@ -534,7 +534,8 @@ export class TestScreenComponent implements OnInit, OnDestroy {
           time: allDayStockData[i].time
         }
         this.refreshData(stockData)
-      }, 1000)
+      }, 10000)
+      
     }
     
   }
