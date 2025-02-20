@@ -425,7 +425,7 @@ export class AnalysisService {
 
         //determine how close to 1 each of these numbers are
         
-        return listOfMaximas
+        return val
         //find the outliers of the line
     }
     //how to find the local maximas and minimas
