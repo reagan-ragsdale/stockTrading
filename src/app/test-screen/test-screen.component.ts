@@ -156,6 +156,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     stockPrice: 0,
     time: 0
   }]
+  annotationLines: any = []
   async refreshData(data: DbCurrentDayStockData) {
     
     this.chartData.history.push(data.stockPrice)
@@ -171,14 +172,31 @@ export class TestScreenComponent implements OnInit, OnDestroy {
       if (this.selectedAlgo == 'highLow') {
         shouldPlaceOrder = AnalysisService.checkIsLowBuyIsHighSell(this.chartData.history.slice(-401), this.selectedStockHistoryData, this.stopLossPrice, this.tradeInitialAverage, this.tradeCurrentHigh)
       }
-      else {
+      else if(this.selectedAlgo == 'trend'){
         shouldPlaceOrder = AnalysisService.trendTrading(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1), this.selectedStockHistoryData)
+      }
+      else if(this.selectedAlgo == 'trendV2'){
+        let returnVal = []
+        returnVal = AnalysisService.predicitveTrendLine(this.chartData, this.selectedStockHistoryData)
+        console.log(returnVal)
+        for(let i = 0; i < returnVal.length; i++){
+          this.annotationLines.push({
+            orderLine: {
+              type: 'line',
+              xMin: returnVal[i].time,
+              xMax: returnVal[i].time,
+              borderColor: '#7874ff',
+              borderWidth: 2
+            }
+          })
+        }
+
       }
 
 
       //add check to see when the last order was placed. Don't want to be placing order every 3 seconds
       //maybe wait 30 seconds
-      if (shouldPlaceOrder.shouldExecuteOrder == true && !this.isOrderPending) {
+      /* if (shouldPlaceOrder.shouldExecuteOrder == true && !this.isOrderPending) {
         await this.placeOrder(shouldPlaceOrder.isBuyOrSell!)
         this.stockChart.options.plugins.annotation.annotations.orderLine.yMin = this.selectedStockHistoryData[0]?.stockPrice
         this.stockChart.options.plugins.annotation.annotations.orderLine.yMax = this.selectedStockHistoryData[0]?.stockPrice
@@ -195,7 +213,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
         this.targetPrice = shouldPlaceOrder.targetPrice
         this.stockChart.options.plugins.annotation.annotations.targetLine.yMin = this.targetPrice
         this.stockChart.options.plugins.annotation.annotations.targetLine.yMax = this.targetPrice
-      }
+      } */
     }
     this.updateChart()
 
@@ -206,6 +224,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     this.stockChart.data.labels = this.chartData.labels
     this.stockChart.options.scales.y.max = this.selectedStockHigh + 2
     this.stockChart.options.scales.y.min = this.selectedStockLow - 2
+    this.stockChart.options.plugins.annotation.annotations = this.annotationLines
     this.stockChart.update()
   }
   updateVolumeChart() {
@@ -286,10 +305,13 @@ export class TestScreenComponent implements OnInit, OnDestroy {
 
           }
 
-        },/* 
+        },
         plugins: {
           annotation: {
-            annotations: {
+            annotations: this.annotationLines
+            
+            
+            /*{
               orderLine: {
                 type: 'line',
                 yMin: this.selectedStockHistoryData[0]?.stockPrice,
@@ -318,10 +340,10 @@ export class TestScreenComponent implements OnInit, OnDestroy {
                 borderColor: '#ff82e3',
                 borderWidth: 2
               }
-            }
+            }*/
 
           }
-        } */
+        } 
       }
     })
 

@@ -76,9 +76,9 @@ export const insertCall = async (): Promise<void> => {
         }
     });
 
-    setTimeout(() => {
+    /* setTimeout(() => {
         schwabWebsocket.close()
-    },23400000)
+    },23400000) */
 
       
       

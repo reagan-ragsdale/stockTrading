@@ -21,6 +21,7 @@
                 <mat-radio-group [color]="'accent'" (change)="onAlgoChanged($event)">
                     <mat-radio-button value="highLow">HighLow</mat-radio-button>
                     <mat-radio-button value="trend">Trend</mat-radio-button>
+                    <mat-radio-button value="trendV2">TrendV2</mat-radio-button>
                 </mat-radio-group>
                 <div *ngIf="tempSelectedAlgo == 'trend'" style="margin-left:1rem;">
                     <form class="auth-form">
@@ -58,6 +59,7 @@
                     <h4>{{selectedStockCurrent}}</h4>
                     <h4>H:{{selectedStockHigh}}</h4>
                     <h4>L:{{selectedStockLow}}</h4>
+                    <h4>{{chartData.history.length}}</h4>
                     <h4 *ngIf="isUserOrBot == 'Bot' && targetPrice != 0" style="color: #ff8f50 !important;">T:{{targetPrice | number:'1.2-5'}}</h4>
                 </div>
                 <div style="flex-grow: 1;">
