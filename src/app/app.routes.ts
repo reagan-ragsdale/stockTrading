@@ -9,9 +9,9 @@ import { TestScreenComponent } from './test-screen/test-screen.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full'},
-    {path: 'home', title: 'home', component: HomeScreenComponent, canActivate: [AuthGuard]},
-    {path: 'testEnv', title: 'TestEnv', component: TestScreenComponent, canActivate: [AuthGuard]},
+    {path: 'home', title: 'home', component: HomeScreenComponent},
+    {path: 'testEnv', title: 'TestEnv', component: TestScreenComponent},
     {path: 'login', component: AuthComponent},
-    {path: 'keys', component: KeyScreenComponent, canActivate: [AuthGuard]},
+    {path: 'keys', component: KeyScreenComponent},
     {path: 'auth', component: AuthScreenComponent}
 ];
