@@ -526,14 +526,14 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     console.log(allDayStockData.length)
     for(let i = 0; i < allDayStockData.length; i++){
       console.log('here')
-      let stockData: DbCurrentDayStockData = {
-        stockName: allDayStockData[i].stockName,
-        stockPrice: allDayStockData[i].stockPrice,
-        time: allDayStockData[i].time
-      }
-      this.refreshData(stockData)
+      
       setTimeout(() => {
-
+        let stockData: DbCurrentDayStockData = {
+          stockName: allDayStockData[i].stockName,
+          stockPrice: allDayStockData[i].stockPrice,
+          time: allDayStockData[i].time
+        }
+        this.refreshData(stockData)
       }, 1000)
     }
     
