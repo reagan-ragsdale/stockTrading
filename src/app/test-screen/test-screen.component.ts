@@ -536,11 +536,12 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     this.router.navigate(['/home'])
   }
 
-  speed = 1000
+  speed = 400
   async startTestThing(){
     let allDayStockData = await dbStockHistoryDataRepo.find({where: {stockName: 'AAPL'},orderBy: {time: 'asc'}})
     console.log(allDayStockData.length)
       let count = 0
+      setInterval(() => {
         let stockData: DbCurrentDayStockData = {
           stockName: allDayStockData[count].stockName,
           stockPrice: allDayStockData[count].stockPrice,
@@ -548,6 +549,9 @@ export class TestScreenComponent implements OnInit, OnDestroy {
         }
         this.refreshData(stockData)
         count++
+      }, this.speed)
+    
+    
   }
   changeSpeed(speed: number){
     console.log('here in change speed')
