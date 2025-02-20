@@ -157,7 +157,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     time: 0
   }]
   async refreshData(data: DbCurrentDayStockData) {
-    
+    console.log('hererrerere')
     this.chartData.history.push(data.stockPrice)
     this.chartData.labels.push(reusedFunctions.epochToLocalTime(data.time))
     this.chartData.time.push(data.time)
@@ -546,9 +546,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
           stockPrice: allDayStockData[i].stockPrice,
           time: allDayStockData[i].time
         }
-        console.log('here 1')
         await this.refreshData(stockData)
-        console.log('here 2')
       }
     
     
