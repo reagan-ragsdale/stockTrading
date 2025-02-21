@@ -70,7 +70,7 @@ export const insertCall = async (): Promise<void> => {
                 console.log('send aapl')
                 hasBeenSent = true
             }
-            if(newEvent.response[0].service == 'NYSE_BOOK'){
+            if(newEvent.response[0].service == 'SCREENER_EQUITY'){
                 console.log(newEvent.response[0].content)
             }
         }
