@@ -40,7 +40,7 @@ export const insertCall = async (): Promise<void> => {
                     "keys": "AAPL",
                     "fields": "0,1,2,3,4,5,6,7,8,9,10,33"
                 }
-            }/* ,
+            } ,
           {
             "service": "NYSE_BOOK",
             "requestid": "23",
@@ -51,7 +51,7 @@ export const insertCall = async (): Promise<void> => {
               "keys": "AAPL",
               "fields": "0,1,2,3"
             }
-          } */
+          } 
         ]
     }
     schwabWebsocket.on('open', () => {
@@ -59,6 +59,7 @@ export const insertCall = async (): Promise<void> => {
     })
     schwabWebsocket.on('message', async (event) => {
         let newEvent = JSON.parse(event.toString())
+        console.log(newEvent)
         //console.log(newEvent.response[0].content)
 
         if (Object.hasOwn(newEvent, 'response')) {
