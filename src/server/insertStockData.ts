@@ -42,14 +42,14 @@ export const insertCall = async (): Promise<void> => {
                 }
             } ,
           {
-            "service": "SCREENER_EQUITY",
+            "service": "NYSE_BOOK",
             "requestid": "23",
             "command": "SUBS",
             "SchwabClientCustomerId": userData.schwabClientCustomerId,
             "SchwabClientCorrelId": userData.schwabClientCorrelId,
             "parameters": {
-              "keys": "AAPL_VOLUME,TRADES_0",
-              "fields": "description,lastPrice,marketShare,symbol,trades"
+              "keys": "AAPL",
+              "fields": "0,1,2,3"
             }
           } 
         ]
@@ -59,7 +59,6 @@ export const insertCall = async (): Promise<void> => {
     })
     schwabWebsocket.on('message', async (event) => {
         let newEvent = JSON.parse(event.toString())
-        console.log(newEvent)
 
         //console.log(newEvent.response[0].content)
 
@@ -70,7 +69,7 @@ export const insertCall = async (): Promise<void> => {
                 console.log('send aapl')
                 hasBeenSent = true
             }
-            if(newEvent.response[0].service == 'SCREENER_EQUITY'){
+            if(newEvent.response[0].service == 'NYSE_BOOK'){
                 console.log(newEvent.response[0].content)
             }
         }
