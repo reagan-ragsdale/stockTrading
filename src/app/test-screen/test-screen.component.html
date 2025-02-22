@@ -32,7 +32,8 @@
                     </form>
                 </div>
                 <button style="width: max-content; margin-top:auto; margin-bottom:auto;" mat-raised-button color="primary" aria-label="Confirm Algorithm" [disabled]="!isChangesToBot" (click)="confirmAlgo()">Save</button> 
-                <button *ngIf="tempSelectedAlgo == 'trend' && tempTrendAlgoStartingPoint > 0" style="width: max-content; margin-top:auto; margin-bottom:auto;" mat-raised-button color="primary" aria-label="Confirm Algorithm" [disabled]="!isChangesToBot" (click)="resetAlgo()">Reset</button>   
+                <button *ngIf="tempSelectedAlgo == 'trend' && tempTrendAlgoStartingPoint > 0" style="width: max-content; margin-top:auto; margin-bottom:auto;" mat-raised-button color="primary" aria-label="Confirm Algorithm" [disabled]="!isChangesToBot" (click)="resetAlgo()">Reset</button>
+                <h3>Bot: {{isBotAuthorized ? 'On' : 'Off'}}</h3>   
             </div>
         </div>
         <button style="margin-left:auto; margin-top:auto; margin-bottom:auto;" mat-icon-button aria-label="Add more funds" (click)="showAddFunds()">
@@ -44,8 +45,15 @@
     <div class="dashboard">
         <div style="padding-left: 1rem; padding-right:1rem; display:flex; flex-direction: column;">
             <div style="display: flex; gap:2rem;">
-                <h3>Bot: {{isBotAuthorized ? 'On' : 'Off'}}</h3>
                 <div>
+                    <mat-form-field>
+                        <mat-label>Select date</mat-label>
+                        <mat-select disableRipple [(value)]="selectedDate">
+                          <mat-option *ngFor="let date of distinctDates" value="{{date}}" (onSelectionChange)="onSelectedDateChange($event)">{{date}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    <button style="width: max-content; margin: auto;"mat-raised-button color="warn" aria-label="Add more funds" (click)="beginSimulation()">Simulate</button>
+                    <button style="width: max-content; margin: auto;"mat-raised-button color="warn" aria-label="Add more funds" (click)="endSimulation()">Stop</button>
                     <h3>Speed</h3>
                     <button style="width: max-content; margin: auto;"mat-raised-button color="warn" aria-label="Add more funds" (click)="changeSpeed(1000)">x1</button>
                     <button style="width: max-content; margin: auto;"mat-raised-button color="warn" aria-label="Add more funds" (click)="changeSpeed(500)">x2</button>

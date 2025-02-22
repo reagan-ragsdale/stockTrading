@@ -31,10 +31,11 @@ import { RegressionOrderService } from '../services/regressionOrderService';
 import {MatMenuModule} from '@angular/material/menu';
 import { Router } from '@angular/router';
 import { DbCurrentDayStockData, dbCurrentDayStockDataRepo } from '../../shared/tasks/dbCurrentDayStockData';
-import { dbStockHistoryDataRepo } from '../../shared/tasks/dbStockHistoryData';
+import { DbStockHistoryData, dbStockHistoryDataRepo } from '../../shared/tasks/dbStockHistoryData';
+import {MatSelectModule} from '@angular/material/select';
 @Component({
   selector: 'app-test-screen',
-  imports: [CommonModule, FormsModule,TestTradeComponent,MatMenuModule, MatInputModule, MatFormFieldModule, MatIconModule, MatRadioModule, MatProgressSpinnerModule, MatButtonModule, MatButtonToggleModule],
+  imports: [CommonModule, FormsModule,MatSelectModule,TestTradeComponent,MatMenuModule, MatInputModule, MatFormFieldModule, MatIconModule, MatRadioModule, MatProgressSpinnerModule, MatButtonModule, MatButtonToggleModule],
   templateUrl: './test-screen.component.html',
   styleUrl: './test-screen.component.css'
 })
@@ -87,6 +88,8 @@ export class TestScreenComponent implements OnInit, OnDestroy {
   trendAlgoStartingPoint: number = 0
   isBotAuthorized: boolean = false;
   isChangesToBot: boolean = false;
+  distinctDates: string[] = []
+  selectedDate: string = ''
 
  
   showAddFunds() {
@@ -545,6 +548,29 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     console.log('here in change speed')
     this.speed = speed
   }
+  onSelectedDateChange(event: any){
+    this.selectedDate = event.source.value
+  }
+  beginSimulation(){
+
+  }
+  endSimulation(){
+
+  }
+  async getStockHistoricalData(){
+    this.allStockDataForSelectedStock = await dbStockHistoryDataRepo.find({where: {stockName: this.selectedStockName}, orderBy: {time: 'asc'}})
+    this.distinctDates = this.allStockDataForSelectedStock.map(e => e.date).filter((v,i,a) => a.indexOf(v) === i)
+    this.selectedDate = this.distinctDates[0]
+    this.stockDataForSelectedDay = this.allStockDataForSelectedStock.filter(e => e.date == this.selectedDate)
+    this.updateStockChartData()
+  }
+  updateStockChartData(){
+    this.chartData.history = this.stockDataForSelectedDay.map(e => e.stockPrice)
+    this.chartData.labels = this.stockDataForSelectedDay.map(e => reusedFunctions.epochToLocalTime(e.time))
+    this.stockChart.update()
+  }
+  stockDataForSelectedDay: DbStockHistoryData[] = []
+  allStockDataForSelectedStock: DbStockHistoryData[] = []
   isLoading: boolean = true;
   async ngOnInit() {
     Chart.register(annotationPlugin);
@@ -556,7 +582,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     await this.getStockData()
     this.createOrUpdateChart()
     //this.createVolumeChart()
-    
+    await this.getStockHistoricalData()
     await this.startTestThing()
     /*  this.unsubscribe = rhRepo
        .liveQuery({
