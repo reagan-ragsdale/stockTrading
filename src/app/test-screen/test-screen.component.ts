@@ -551,6 +551,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
   }
   onSelectedDateChange(event: any){
     this.selectedDate = event.source.value
+    this.updateStockChartData()
   }
   beginSimulation(){
 
@@ -562,10 +563,11 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     this.allStockDataForSelectedStock = await dbStockHistoryDataRepo.find({where: {stockName: this.selectedStockName}, orderBy: {time: 'asc'}})
     this.distinctDates = this.allStockDataForSelectedStock.map(e => e.date).filter((v,i,a) => a.indexOf(v) === i)
     this.selectedDate = this.distinctDates[0]
-    this.stockDataForSelectedDay = this.allStockDataForSelectedStock.filter(e => e.date == this.selectedDate)
+    
     this.updateStockChartData()
   }
   updateStockChartData(){
+    this.stockDataForSelectedDay = this.allStockDataForSelectedStock.filter(e => e.date == this.selectedDate)
     this.chartData.history = this.stockDataForSelectedDay.map(e => e.stockPrice)
     this.chartData.labels = this.stockDataForSelectedDay.map(e => reusedFunctions.epochToLocalTime(e.time))
     
