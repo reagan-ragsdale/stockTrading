@@ -165,8 +165,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     this.chartData.labels.push(reusedFunctions.epochToLocalTime(data.time))
     this.chartData.time.push(data.time)
     this.selectedStockCurrent = this.chartData.history[this.chartData.history.length - 1]
-    this.selectedStockHigh = Math.max(...this.chartData.history)
-    this.selectedStockLow = Math.min(...this.chartData.history)
+    
     if (this.isUserOrBot == 'Bot' && this.isBotAuthorized == true && this.chartData.history.length >= 400) {
       let shouldPlaceOrder: buySellDto = {
         shouldExecuteOrder: false
@@ -214,7 +213,10 @@ export class TestScreenComponent implements OnInit, OnDestroy {
   updateChart() {
     this.stockChart.data.datasets[0].data = this.chartData.history
     this.stockChart.data.labels = this.chartData.labels
-    
+    this.selectedStockHigh = Math.max(...this.chartData.history)
+    this.selectedStockLow = Math.min(...this.chartData.history)
+    this.stockChart.options.scales.y.max = this.selectedStockHigh + 2
+    this.stockChart.options.scales.y.min = this.selectedStockLow - 2
     this.stockChart.update()
   }
   updateVolumeChart() {
@@ -566,8 +568,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
   updateStockChartData(){
     this.chartData.history = this.stockDataForSelectedDay.map(e => e.stockPrice)
     this.chartData.labels = this.stockDataForSelectedDay.map(e => reusedFunctions.epochToLocalTime(e.time))
-    this.stockChart.options.scales.y.max = this.selectedStockHigh + 2
-    this.stockChart.options.scales.y.min = this.selectedStockLow - 2
+    
     this.updateChart()
   }
   stockDataForSelectedDay: DbStockHistoryData[] = []
