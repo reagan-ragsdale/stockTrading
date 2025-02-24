@@ -108,7 +108,9 @@ export class AuthController {
 
   @BackendMethod({ allowed: true })
   static async updateTokens(tokens: string[]) {
+    console.log('here before update tokens')
     let currentUser = getCurrentUser()
+    console.log('here after update tokens')
     let userInfo = await userRepo.findFirst({id: currentUser.id})
     let keys = await rhRepo.findFirst({userId: userInfo?.userId})
     await rhRepo.save({...keys, accessToken: tokens[0], refreshToken: tokens[1]})
