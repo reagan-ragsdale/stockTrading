@@ -12,20 +12,20 @@ import { MatButtonModule } from '@angular/material/button';
 import { AuthController } from '../../shared/controllers/AuthController.js';
 import { Router } from '@angular/router';
 import { CachedData } from '../services/cachedDataService.js';
-import { remult } from 'remult';
+import { remult, UserInfo } from 'remult';
 import { Rhkeys, rhRepo } from '../../shared/tasks/rhkeys.js';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-key-screen',
   standalone: true,
-  imports: [CommonModule,MatProgressSpinnerModule, FormsModule, MatCardModule, MatToolbarModule, MatFormFieldModule, MatSnackBarModule, MatInputModule, MatButtonModule],
+  imports: [CommonModule, MatProgressSpinnerModule, FormsModule, MatCardModule, MatToolbarModule, MatFormFieldModule, MatSnackBarModule, MatInputModule, MatButtonModule],
   templateUrl: './key-screen.component.html',
   styleUrl: './key-screen.component.css'
 })
-export class KeyScreenComponent implements OnInit, OnDestroy{
+export class KeyScreenComponent implements OnInit, OnDestroy {
   constructor(private router: Router, private _snackBar: MatSnackBar, private cachedData: CachedData) {
-    }
+  }
   remult = remult
   keys: PublicPRivateKeys = {
     publicKey: '',
@@ -37,24 +37,24 @@ export class KeyScreenComponent implements OnInit, OnDestroy{
   incomingTokensFromDb: any = []
   isLoadingTokens: boolean = false;
 
-  async allowOAuth(){
-  await AuthController.insertKeyPairs(this.appKey, this.appSecret)
-   window.open(`https://api.schwabapi.com/v1/oauth/authorize?response_type=code&client_id=${this.appKey}&scope=readonly&redirect_uri=https://stocktrading.up.railway.app/auth`,
+  async allowOAuth() {
+    await AuthController.insertKeyPairs(this.appKey, this.appSecret)
+    window.open(`https://api.schwabapi.com/v1/oauth/authorize?response_type=code&client_id=${this.appKey}&scope=readonly&redirect_uri=https://stocktrading.up.railway.app/auth`,
       "_blank"
     )?.focus()
     this.isLoadingTokens = true;
-   //add livequery to look for the new update to the token table
+    //add livequery to look for the new update to the token table
     this.unsubscribe = rhRepo
       .liveQuery({
-        where: Rhkeys.getTokenUpdates({  })
+        where: Rhkeys.getTokenUpdates({ id: this.user?.id! })
       })
       .subscribe(info => this.checkData(info.items))
-    
+
   }
-  checkData(change: any){
+  checkData(change: any) {
     this.incomingTokensFromDb.push(change[0].accessToken)
-    if(this.incomingTokensFromDb.length == 2){
-      if(this.incomingTokensFromDb[0] != this.incomingTokensFromDb[1]){
+    if (this.incomingTokensFromDb.length == 2) {
+      if (this.incomingTokensFromDb[0] != this.incomingTokensFromDb[1]) {
         this.cachedData.changeAccessToken(this.incomingTokensFromDb[1])
         this.router.navigate(['/home'])
       }
@@ -66,24 +66,25 @@ export class KeyScreenComponent implements OnInit, OnDestroy{
 
   newId: string = ''
   isKeysGenerated: boolean = false;
-  async ngOnInit(){
+  user: UserInfo | undefined;
+  async ngOnInit() {
     this.isKeysGenerated = await AuthController.checkKeyGeneration()
-    let user = await remult.initUser()
-    if(this.isKeysGenerated){
+    this.user = await remult.initUser()
+    if (this.isKeysGenerated) {
       let userKeys = await AuthController.getKeyPairs()
       window.open(`https://api.schwabapi.com/v1/oauth/authorize?response_type=code&client_id=${userKeys.appKey}&scope=readonly&redirect_uri=https://stocktrading.up.railway.app/auth`,
         "_blank"
       )?.focus()
       this.isLoadingTokens = true;
       this.unsubscribe = rhRepo
-      .liveQuery({
-        where: Rhkeys.getTokenUpdates({ id: user?.id! })
-      })
-      .subscribe(info => this.checkData(info.items))
+        .liveQuery({
+          where: Rhkeys.getTokenUpdates({ id: this.user?.id! })
+        })
+        .subscribe(info => this.checkData(info.items))
     }
   }
   ngOnDestroy() {
     this.unsubscribe()
   }
-  
+
 }
