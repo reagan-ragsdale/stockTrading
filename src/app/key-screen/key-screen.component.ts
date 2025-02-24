@@ -68,7 +68,7 @@ export class KeyScreenComponent implements OnInit, OnDestroy{
   isKeysGenerated: boolean = false;
   async ngOnInit(){
     this.isKeysGenerated = await AuthController.checkKeyGeneration()
-    let user = remult.initUser()
+    let user = await remult.initUser()
     if(this.isKeysGenerated){
       let userKeys = await AuthController.getKeyPairs()
       window.open(`https://api.schwabapi.com/v1/oauth/authorize?response_type=code&client_id=${userKeys.appKey}&scope=readonly&redirect_uri=https://stocktrading.up.railway.app/auth`,
@@ -77,7 +77,7 @@ export class KeyScreenComponent implements OnInit, OnDestroy{
       this.isLoadingTokens = true;
       this.unsubscribe = rhRepo
       .liveQuery({
-        where: Rhkeys.getTokenUpdates({  })
+        where: Rhkeys.getTokenUpdates({ id: user?.id! })
       })
       .subscribe(info => this.checkData(info.items))
     }
