@@ -29,11 +29,13 @@ export class AuthController {
       throw Error("Invalid Credentials")
     if (!AuthController.verify(password, user.userPass))
       throw Error("Invalid Credentials")
-    return setSessionUser({
-      id: user.id!,
-      name: user.userName!,
-      roles: user.isAdmin ? ['admin'] : []
-    })
+    remult.user = {
+        id: user.id!,
+        name: user.userName,
+        roles: user.isAdmin ? ["admin"] : [],
+      };
+      remult.context.request!.session!["user"] = remult.user;
+      return remult.user;
   }
 
   @BackendMethod({ allowed: true })

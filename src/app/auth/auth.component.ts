@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { remult } from 'remult'
+import { remult, UserInfo } from 'remult'
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms'
 import { AuthController } from '../../shared/controllers/AuthController'
@@ -14,7 +14,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { NewUserService } from '../services/newUserService.js';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CachedData } from '../services/cachedDataService';
-
 
 @Component({
   selector: 'app-auth',
@@ -82,6 +81,6 @@ export class AuthComponent implements OnInit {
 
   
   async ngOnInit() {
-    let user = await remult.initUser()
+    remult.initUser()
   }
 }

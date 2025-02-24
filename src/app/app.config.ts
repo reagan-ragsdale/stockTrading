@@ -11,6 +11,7 @@ import { AuthGuard } from './app-auth-guard.js';
 import {  MatButtonModule } from '@angular/material/button';
 import { AuthController } from '../shared/controllers/AuthController.js';
 import { remult } from 'remult';
+import { api } from '../server/api';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), 
