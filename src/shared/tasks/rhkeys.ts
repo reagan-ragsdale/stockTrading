@@ -30,7 +30,9 @@ export class Rhkeys {
 
 
     static getTokenUpdates = Filter.createCustom<Rhkeys, {  }>(async () => {
+        console.log('here in rhkeys')
         let currentUser = getCurrentUser()
+        console.log('here after rhkeys')
         let userInfo = await userRepo.findFirst({id: currentUser.id})
         return {
           userId: userInfo?.userId,

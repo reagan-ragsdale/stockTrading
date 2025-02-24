@@ -554,7 +554,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     Chart.register(annotationPlugin);
     Chart.register(...registerables)
     
-    let user = await remult.initUser()
+    //remult.initUser()
     //await this.getMovers()
     await this.getUserFinanceData()
     this.distinctAvailableStocks = (await dbCurrentDayStockDataRepo.groupBy({group: ['stockName'], orderBy: {stockName: 'desc'}})).map(e => e.stockName)

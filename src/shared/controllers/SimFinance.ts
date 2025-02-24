@@ -42,7 +42,9 @@ export class SimFinance {
 
     @BackendMethod({ allowed: true })
     static async getSimFinData(): Promise<SimFInance[]> {
+        console.log('here in sim fin data')
         const userInfo = getCurrentUser()
+        console.log('here after sim fin data')
         const user = await userRepo.findFirst({ id: userInfo.id })
         return await simFinRepo.find({where: {userId: user?.userId}})
     }
