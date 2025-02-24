@@ -1,4 +1,4 @@
-import { Component,NgZone  } from '@angular/core';
+import { Component,NgZone, OnInit  } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { remult } from "remult"
 import { Router } from '@angular/router';
@@ -18,7 +18,7 @@ import {MatIconModule} from '@angular/material/icon';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent {
+export class AppComponent implements OnInit{
   constructor(zone: NgZone, private router: Router) {
     remult.apiClient.wrapMessageHandling = handler => zone.run(() => handler())
   }
