@@ -81,7 +81,7 @@ export class AuthComponent implements OnInit {
 
   
   async ngOnInit() {
-    remult.initUser()
+    await remult.initUser()
     if(remult.authenticated()){
       this.router.navigate(['/keys'])
     }
