@@ -29,14 +29,11 @@ export class Rhkeys {
     createdAt?: Date
 
 
-    static getTokenUpdates = Filter.createCustom<Rhkeys, {  }>(async () => {
-        console.log('here in rhkeys')
-        let currentUser = getCurrentUser()
-        console.log('here after rhkeys')
-        let userInfo = await userRepo.findFirst({id: currentUser.id})
+    static getTokenUpdates = Filter.createCustom<Rhkeys, { id: string }>(async ({id}) => {
+        
+        let userInfo = await userRepo.findFirst({id: id})
         return {
-          userId: userInfo?.userId,
-
+          userId: userInfo?.userId
         }
       });
 
