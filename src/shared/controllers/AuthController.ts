@@ -35,6 +35,7 @@ export class AuthController {
         roles: user.isAdmin ? ["admin"] : [],
       };
       remult.context.request!.session!["user"] = remult.user;
+      console.log('here in login')
       return remult.user;
   }
 
@@ -92,7 +93,9 @@ export class AuthController {
 
   @BackendMethod({ allowed: true })
   static async checkKeyGeneration(): Promise<boolean> {
+    console.log('here before key')
     let currentUser = getCurrentUser()
+    console.log('here after key')
     let userInfo = await userRepo.findFirst({id: currentUser.id})
     let userKeyData = await rhRepo.findFirst({userId: userInfo?.userId})
     if(userKeyData){
