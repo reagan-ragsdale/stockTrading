@@ -27,8 +27,7 @@ export const insertCall = async (): Promise<void> => {
             }
         ]
     }
-    const aaplDataMsg = {
-        //add the level 2 data to this
+    const socketSendMsg = {
         "requests": [
             {
                 "service": "LEVELONE_EQUITIES",
@@ -40,18 +39,18 @@ export const insertCall = async (): Promise<void> => {
                     "keys": "AAPL",
                     "fields": "0,1,2,3,4,5,6,7,8,9,10,33"
                 }
-            } ,
-          {
-            "service": "NYSE_BOOK",
-            "requestid": "23",
-            "command": "SUBS",
-            "SchwabClientCustomerId": userData.schwabClientCustomerId,
-            "SchwabClientCorrelId": userData.schwabClientCorrelId,
-            "parameters": {
-              "keys": "AAPL",
-              "fields": "0,1,2,3"
+            },
+            {
+                "service": "NYSE_BOOK",
+                "requestid": "23",
+                "command": "SUBS",
+                "SchwabClientCustomerId": userData.schwabClientCustomerId,
+                "SchwabClientCorrelId": userData.schwabClientCorrelId,
+                "parameters": {
+                    "keys": "AAPL",
+                    "fields": "0,1,2,3"
+                }
             }
-          } 
         ]
     }
     schwabWebsocket.on('open', () => {
@@ -59,17 +58,18 @@ export const insertCall = async (): Promise<void> => {
     })
     schwabWebsocket.on('message', async (event) => {
         let newEvent = JSON.parse(event.toString())
+        console.log(newEvent)
 
         //console.log(newEvent.response[0].content)
 
         if (Object.hasOwn(newEvent, 'response')) {
             if (newEvent.response[0].requestid == 0 && hasBeenSent == false) {
                 console.log(newEvent.response[0].content)
-                schwabWebsocket.send(JSON.stringify(aaplDataMsg))
+                schwabWebsocket.send(JSON.stringify(socketSendMsg))
                 console.log('send aapl')
                 hasBeenSent = true
             }
-            if(newEvent.response[0].service == 'NYSE_BOOK'){
+            if (newEvent.response[0].service == 'NYSE_BOOK') {
                 console.log(newEvent.response[0].content)
             }
         }
@@ -85,8 +85,8 @@ export const insertCall = async (): Promise<void> => {
         schwabWebsocket.close()
     },23400000) */
 
-      
-      
+
+
 
 }
 
