@@ -29,4 +29,8 @@ export class AppComponent {
     remult.user = undefined;
     this.router.navigate([`/login`])
   }
+
+  ngOnInit(){
+    remult.initUser()
+  }
 }
