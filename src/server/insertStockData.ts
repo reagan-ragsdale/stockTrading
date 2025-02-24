@@ -41,7 +41,7 @@ export const insertCall = async (): Promise<void> => {
                 }
             },
             {
-                "service": "NYSE_BOOK",
+                "service": "NASDAQ_BOOK",
                 "requestid": "23",
                 "command": "SUBS",
                 "SchwabClientCustomerId": userData.schwabClientCustomerId,
