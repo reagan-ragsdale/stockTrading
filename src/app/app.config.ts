@@ -29,7 +29,8 @@ export const appConfig: ApplicationConfig = {
 export function initApp() {
   const loadCurrentUserBeforeAppStarts = async () => {
     //remult.user = await AuthController.currentUser()
-    await remult.initUser()
+    let userThing = await remult.initUser()
+    console.log(userThing)
     
   }
   return loadCurrentUserBeforeAppStarts
