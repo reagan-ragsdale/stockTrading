@@ -60,7 +60,7 @@ export const insertCall = async (): Promise<void> => {
         let newEvent = JSON.parse(event.toString())
         console.log(newEvent)
 
-        
+
         if (Object.hasOwn(newEvent, 'response')) {
             if (newEvent.response[0].requestid == 0 && hasBeenSent == false) {
                 console.log(newEvent.response[0].content)
@@ -75,6 +75,9 @@ export const insertCall = async (): Promise<void> => {
         if (Object.hasOwn(newEvent, 'data') && hasBeenSent == true) {
             if (newEvent.data[0].service == 'LEVELONE_EQUITIES' && Object.hasOwn(newEvent.data[0].content[0], '3')) {
                 await dbCurrentDayStockDataRepo.insert({ stockName: newEvent.data[0].content[0].key, stockPrice: newEvent.data[0].content[0]['3'], time: Number(newEvent.data[0].timestamp) })
+            }
+            if(newEvent.data[1].service == 'NASDAQ_BOOK' && hasBeenSent == true){
+                console.log(newEvent.data[1].content)
             }
 
         }
