@@ -73,12 +73,15 @@ export const insertCall = async (): Promise<void> => {
             }
         }
         if (Object.hasOwn(newEvent, 'data') && hasBeenSent == true) {
-            if (newEvent.data[0].service == 'LEVELONE_EQUITIES' && Object.hasOwn(newEvent.data[0].content[0], '3')) {
-                await dbCurrentDayStockDataRepo.insert({ stockName: newEvent.data[0].content[0].key, stockPrice: newEvent.data[0].content[0]['3'], time: Number(newEvent.data[0].timestamp) })
+            for(let i = 0; i < newEvent.data.length; i++){
+                if (newEvent.data[i].service == 'LEVELONE_EQUITIES' && Object.hasOwn(newEvent.data[0].content[0], '3')) {
+                    await dbCurrentDayStockDataRepo.insert({ stockName: newEvent.data[i].content[0].key, stockPrice: newEvent.data[i].content[0]['3'], time: Number(newEvent.data[i].timestamp) })
+                }
+                if(newEvent.data[i].service == 'NASDAQ_BOOK'){
+                    console.log(newEvent.data[1].content)
+                }
             }
-            if(newEvent.data[1].service == 'NASDAQ_BOOK' && hasBeenSent == true){
-                console.log(newEvent.data[1].content)
-            }
+            
 
         }
     });
