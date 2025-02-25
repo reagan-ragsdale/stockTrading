@@ -78,7 +78,8 @@ export const insertCall = async (): Promise<void> => {
                     await dbCurrentDayStockDataRepo.insert({ stockName: newEvent.data[i].content[0].key, stockPrice: newEvent.data[i].content[0]['3'], time: Number(newEvent.data[i].timestamp) })
                 }
                 if(newEvent.data[i].service == 'NASDAQ_BOOK'){
-                    console.log(newEvent.data[i].content[0]['2'][0])
+                    //for(let j = 0; j < )
+                    console.log(newEvent.data[i].content)
                 }
             }
             

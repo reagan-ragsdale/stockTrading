@@ -31,6 +31,7 @@ import { StockHistoryController } from '../shared/controllers/StockHistoryContro
 import { DbStockHistoryData } from '../shared/tasks/dbStockHistoryData.js'
 import { DbCurrentDayStockData } from '../shared/tasks/dbCurrentDayStockData.js'
 import { loadDailyDataIntoHistory } from '../app/apiCalls/loadDailyDataIntoHistory.js'
+import { DbLevelTwoData } from '../shared/tasks/dbLevelTwoData.js'
 //import ev from '../../environmentVariables.json'
 
 config()
@@ -43,7 +44,7 @@ OAuthContoller.sendCall = oauthCall;
 
 export const api = remultExpress({
     controllers:[AuthController, SimFinance, OAuthContoller, OrderController,StockController, RegFinanceController, RegressionOrderController, RegressionStockController, StockHistoryController],
-    entities: [Task,Users,Rhkeys, SimFInance, testEnc, DbOrders, UsersStocks,RegressionFinance, DbRegressionOrders, dbRegressionUserStocks, DbTOkens, DbStockHistoryData, DbCurrentDayStockData],
+    entities: [Task,Users,Rhkeys, SimFInance, testEnc, DbOrders, UsersStocks,RegressionFinance, DbRegressionOrders, dbRegressionUserStocks, DbTOkens, DbStockHistoryData, DbCurrentDayStockData, DbLevelTwoData],
     admin:true,
     getUser: (req) => req.session!['user'],
     dataProvider: process.env['DATABASE_URL'] ?
