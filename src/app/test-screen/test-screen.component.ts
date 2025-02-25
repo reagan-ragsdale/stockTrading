@@ -553,8 +553,22 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     this.selectedDate = event.source.value
     this.updateStockChartData()
   }
-  beginSimulation(){
-
+  async beginSimulation(){
+    this.chartData.history = []
+    this.chartData.labels = []
+    this.selectedStockCurrent = 0
+    this.selectedStockHigh = 0
+    this.selectedStockLow = 0
+    this.updateChart()
+    for(let i = 0; i < this.stockDataForSelectedDay.length; i++){
+      let stockData: DbCurrentDayStockData = {
+        stockName: this.stockDataForSelectedDay[i].stockName,
+        stockPrice: this.stockDataForSelectedDay[i].stockPrice,
+        time: this.stockDataForSelectedDay[i].time
+      }
+      await this.refreshData(stockData)
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
   }
   endSimulation(){
 

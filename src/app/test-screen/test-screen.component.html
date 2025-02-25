@@ -44,8 +44,8 @@
     </div>
     <div class="dashboard">
         <div style="padding-left: 1rem; padding-right:1rem; display:flex; flex-direction: column;">
-            <div style="display: flex; gap:2rem;">
-                <div>
+            <div style="display: flex;">
+                <div style="display: flex; gap: 1rem;align-items: center;">
                     <mat-form-field>
                         <mat-label>Select date</mat-label>
                         <mat-select disableRipple [(value)]="selectedDate">
@@ -54,7 +54,7 @@
                       </mat-form-field>
                     <button style="width: max-content; margin: auto;"mat-raised-button color="warn" aria-label="Add more funds" (click)="beginSimulation()">Simulate</button>
                     <button style="width: max-content; margin: auto;"mat-raised-button color="warn" aria-label="Add more funds" (click)="endSimulation()">Stop</button>
-                    <h3>Speed</h3>
+                    <h3>Speed:</h3>
                     <button style="width: max-content; margin: auto;"mat-raised-button color="warn" aria-label="Add more funds" (click)="changeSpeed(1000)">x1</button>
                     <button style="width: max-content; margin: auto;"mat-raised-button color="warn" aria-label="Add more funds" (click)="changeSpeed(500)">x2</button>
                 </div>
