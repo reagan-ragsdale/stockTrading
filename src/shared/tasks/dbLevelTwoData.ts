@@ -26,8 +26,8 @@ export class DbLevelTwoData {
     @Fields.number()
     marketMakerCount = 0
 
-    @Fields.number()
-    marketMakerId = 0
+    @Fields.string()
+    marketMakerId = ''
 
     @Fields.number()
     size = 0
