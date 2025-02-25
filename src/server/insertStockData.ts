@@ -81,6 +81,9 @@ export const insertCall = async (): Promise<void> => {
                     console.log(newEvent.data[i].content)
                     if(Object.hasOwn(newEvent.data[i].content[0], '2')){
                         console.log(newEvent.data[i].content[0]['2'])
+                        for(let j = 0; j < newEvent.data[i].content[0]['2'].length; j++){
+                            console.log(newEvent.data[i].content[0]['2'][0])
+                        }
                     }
                     
                 }
