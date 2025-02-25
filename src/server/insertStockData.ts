@@ -82,7 +82,7 @@ export const insertCall = async (): Promise<void> => {
                     if(Object.hasOwn(newEvent.data[i].content[0], '2')){
                         console.log(newEvent.data[i].content[0]['2'])
                         for(let j = 0; j < newEvent.data[i].content[0]['2'].length; j++){
-                            console.log(newEvent.data[i].content[0]['2'][0])
+                            console.log(newEvent.data[i].content[0]['2'][i]['3'])
                         }
                     }
                     
