@@ -79,8 +79,8 @@ export const insertCall = async (): Promise<void> => {
                 }
                 if(newEvent.data[i].service == 'NASDAQ_BOOK'){
                     console.log(newEvent.data[i].content)
-                    if(Object.hasOwn(newEvent.data[i].content, '2')){
-                        console.log(newEvent.data[i].content['2'])
+                    if(Object.hasOwn(newEvent.data[i].content[0], '2')){
+                        console.log(newEvent.data[i].content[0]['2'])
                     }
                     
                 }
