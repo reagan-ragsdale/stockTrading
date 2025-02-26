@@ -16,12 +16,10 @@ export class RegFinanceController {
 
     @BackendMethod({ allowed: true })
     static async insertOrUpdateAmountReg(spending: number, savings?: number) {
-        const userInfo = getCurrentUser()
-        const user = await userRepo.findFirst({ id: userInfo.id })
-        const regFinUser = await regFinRepo.findFirst({userId: user?.userId})
+        const regFinUser = await regFinRepo.findFirst({userId: remult.context.request!.session!["user"].id})
         if (!regFinUser){
             await regFinRepo.insert({
-                userId: user?.userId,
+                userId: remult.context.request!.session!["user"].id,
                 spending: spending,
                 savings: 0
             })
@@ -38,17 +36,13 @@ export class RegFinanceController {
 
     @BackendMethod({ allowed: true })
     static async getRegSimFinData(): Promise<RegressionFinance[]> {
-        const userInfo = getCurrentUser()
-        const user = await userRepo.findFirst({ id: userInfo.id })
-        return await regFinRepo.find({where: {userId: user?.userId}})
+        return await regFinRepo.find({where: {userId: remult.context.request!.session!["user"].id}})
     }
 
     @BackendMethod({ allowed: true })
     static async createNewRegSimUser() {
-        const userInfo = getCurrentUser()
-        const user = await userRepo.findFirst({ id: userInfo.id })
         await regFinRepo.insert({
-            userId: user?.userId,
+            userId: remult.context.request!.session!["user"].id,
             savings: 0,
             spending: 0
         })

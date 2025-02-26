@@ -12,16 +12,12 @@ export class StockController {
 
   @BackendMethod({ allowed: true })
   static async getAllStocks(): Promise<UsersStocks[]> {
-    const currentUser = getCurrentUser()
-    const userInfo = await userRepo.findFirst({id: currentUser.id})
-    return await usersStocksRepo.find({where: {userId: userInfo?.userId}})
+    return await usersStocksRepo.find({where: {userId: remult.context.request!.session!["user"].id}})
   }
 
   @BackendMethod({ allowed: true })
   static async insertOrUpdateStock(stock: stockOrder) {
-    const currentUser = getCurrentUser()
-    const userInfo = await userRepo.findFirst({id: currentUser.id})
-    let stocks = await usersStocksRepo.findFirst({userId: userInfo?.userId, stockName: stock.stockName})
+    let stocks = await usersStocksRepo.findFirst({userId: remult.context.request!.session!["user"].id, stockName: stock.stockName})
     if(stocks){
         if(stock.orderType == 'Buy'){
             let newStockAmnt = stocks.shareQty + stock.shareQty
@@ -35,7 +31,7 @@ export class StockController {
     }
     else{
         await usersStocksRepo.insert({
-            userId: userInfo?.userId,
+            userId: remult.context.request!.session!["user"].id,
             stockName: stock.stockName,
             shareQty: stock.shareQty
         })

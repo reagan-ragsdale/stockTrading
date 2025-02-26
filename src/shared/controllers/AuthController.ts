@@ -35,9 +35,6 @@ export class AuthController {
         roles: user.isAdmin ? ["admin"] : [],
       };
       remult.context.request!.session!["user"] = remult.user;
-      console.log('user info below')
-      console.log(remult.context.request!.session!["user"].id)
-      console.log('here in login')
       return remult.user;
   }
 
@@ -87,19 +84,13 @@ export class AuthController {
   }
   @BackendMethod({ allowed: true })
   static async getKeyPairs(): Promise<Rhkeys> {
-    let currentUser = getCurrentUser()
-    let userInfo = await userRepo.findFirst({id: currentUser.id})
-    return await rhRepo.findFirst({userId: userInfo?.userId}) as Rhkeys
+    return await rhRepo.findFirst({userId: remult.context.request!.session!["user"].id}) as Rhkeys
 
   }
 
   @BackendMethod({ allowed: true })
   static async checkKeyGeneration(): Promise<boolean> {
-    console.log('here before key')
-    let currentUser = getCurrentUser()
-    console.log('here after key')
-    let userInfo = await userRepo.findFirst({id: currentUser.id})
-    let userKeyData = await rhRepo.findFirst({userId: userInfo?.userId})
+    let userKeyData = await rhRepo.findFirst({userId: remult.context.request!.session!["user"].id})
     if(userKeyData){
       return true
     }
@@ -110,11 +101,7 @@ export class AuthController {
 
   @BackendMethod({ allowed: true })
   static async updateTokens(tokens: string[]) {
-    console.log('here before update tokens')
-    let currentUser = getCurrentUser()
-    console.log('here after update tokens')
-    let userInfo = await userRepo.findFirst({id: currentUser.id})
-    let keys = await rhRepo.findFirst({userId: userInfo?.userId})
+    let keys = await rhRepo.findFirst({userId: remult.context.request!.session!["user"].id})
     await rhRepo.save({...keys, accessToken: tokens[0], refreshToken: tokens[1]})
     let tokenRepo = await dbTokenRepo.findFirst({id: {'!=': ''}})
     await dbTokenRepo.save({...tokenRepo, accessToken: tokens[0], refreshToken: tokens[1]})
@@ -123,9 +110,7 @@ export class AuthController {
 
   @BackendMethod({ allowed: true })
   static async updateAccessToken(token: string) {
-    let currentUser = getCurrentUser()
-    let userInfo = await userRepo.findFirst({id: currentUser.id})
-    let keys = await rhRepo.findFirst({userId: userInfo?.userId})
+    let keys = await rhRepo.findFirst({userId: remult.context.request!.session!["user"].id})
     await rhRepo.save({...keys, accessToken: token})
 
   }

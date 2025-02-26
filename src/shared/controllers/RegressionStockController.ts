@@ -11,16 +11,12 @@ export class RegressionStockController {
 
   @BackendMethod({ allowed: true })
   static async getAllStocks(): Promise<dbRegressionUserStocks[]> {
-    const currentUser = getCurrentUser()
-    const userInfo = await userRepo.findFirst({id: currentUser.id})
-    return await dbRegressionUserStocksRepo.find({where: {userId: userInfo?.userId}})
+    return await dbRegressionUserStocksRepo.find({where: {userId: remult.context.request!.session!["user"].id}})
   }
 
   @BackendMethod({ allowed: true })
   static async insertOrUpdateStock(stock: stockOrder) {
-    const currentUser = getCurrentUser()
-    const userInfo = await userRepo.findFirst({id: currentUser.id})
-    let stocks = await dbRegressionUserStocksRepo.findFirst({userId: userInfo?.userId, stockName: stock.stockName})
+    let stocks = await dbRegressionUserStocksRepo.findFirst({userId: remult.context.request!.session!["user"].id, stockName: stock.stockName})
     if(stocks){
         if(stock.orderType == 'Buy'){
             let newStockAmnt = stocks.shareQty + stock.shareQty
@@ -34,7 +30,7 @@ export class RegressionStockController {
     }
     else{
         await dbRegressionUserStocksRepo.insert({
-            userId: userInfo?.userId,
+            userId: remult.context.request!.session!["user"].id,
             stockName: stock.stockName,
             shareQty: stock.shareQty
         })

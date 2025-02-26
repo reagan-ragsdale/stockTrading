@@ -11,10 +11,8 @@ export class OrderController {
 
   @BackendMethod({ allowed: true })
   static async placeOrder(order: stockOrder) {
-    const currentUser = getCurrentUser()
-    const userInfo = await userRepo.findFirst({id: currentUser.id})
     await dbOrdersRepo.insert({
-        userId: userInfo?.userId,
+        userId: remult.context.request!.session!["user"].id,
         stockName: order.stockName,
         orderType: order.orderType,
         stockPrice: order.stockPrice,
@@ -25,17 +23,13 @@ export class OrderController {
 
   @BackendMethod({ allowed: true })
   static async getLastOrder(): Promise<DbOrders> {
-    const currentUser = getCurrentUser()
-    const userInfo = await userRepo.findFirst({id: currentUser.id})
-    const orders = await dbOrdersRepo.find({where: {userId: userInfo?.userId}, orderBy: {orderTime: 'desc'}})
+    const orders = await dbOrdersRepo.find({where: {userId: remult.context.request!.session!["user"].id}, orderBy: {orderTime: 'desc'}})
     return orders[0]
   }
 
   @BackendMethod({ allowed: true })
   static async getAllOrders(): Promise<DbOrders[]> {
-    const currentUser = getCurrentUser()
-    const userInfo = await userRepo.findFirst({id: currentUser.id})
-    return await dbOrdersRepo.find({where: {userId: userInfo?.userId}, orderBy: {orderTime: 'desc'}})
+    return await dbOrdersRepo.find({where: {userId: remult.context.request!.session!["user"].id}, orderBy: {orderTime: 'desc'}})
     
   }
 }

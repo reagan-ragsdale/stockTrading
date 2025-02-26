@@ -20,12 +20,10 @@ export class SimFinance {
 
     @BackendMethod({ allowed: true })
     static async insertOrUpdateAmount(spending: number, savings?: number) {
-        const userInfo = getCurrentUser()
-        const user = await userRepo.findFirst({ id: userInfo.id })
-        const simFinUser = await simFinRepo.findFirst({userId: user?.userId})
+        const simFinUser = await simFinRepo.findFirst({userId: remult.context.request!.session!["user"].id})
         if (!simFinUser){
             await simFinRepo.insert({
-                userId: user?.userId,
+                userId: remult.context.request!.session!["user"].id,
                 spending: spending,
                 savings: 0
             })
@@ -42,19 +40,13 @@ export class SimFinance {
 
     @BackendMethod({ allowed: true })
     static async getSimFinData(): Promise<SimFInance[]> {
-        console.log('here in sim fin data')
-        const userInfo = getCurrentUser()
-        console.log('here after sim fin data')
-        const user = await userRepo.findFirst({ id: userInfo.id })
-        return await simFinRepo.find({where: {userId: user?.userId}})
+        return await simFinRepo.find({where: {userId: remult.context.request!.session!["user"].id}})
     }
 
     @BackendMethod({ allowed: true })
     static async createNewSimUser() {
-        const userInfo = getCurrentUser()
-        const user = await userRepo.findFirst({ id: userInfo.id })
         await simFinRepo.insert({
-            userId: user?.userId,
+            userId: remult.context.request!.session!["user"].id,
             savings: 0,
             spending: 0
         })
