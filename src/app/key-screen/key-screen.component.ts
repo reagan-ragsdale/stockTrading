@@ -46,7 +46,7 @@ export class KeyScreenComponent implements OnInit, OnDestroy {
     //add livequery to look for the new update to the token table
     this.unsubscribe = rhRepo
       .liveQuery({
-        where: Rhkeys.getTokenUpdates({ id: this.user?.id! })
+        where: Rhkeys.getTokenUpdates({ id: remult.context.request!.session!["user"].id })
       })
       .subscribe(info => this.checkData(info.items))
 
@@ -66,10 +66,10 @@ export class KeyScreenComponent implements OnInit, OnDestroy {
 
   newId: string = ''
   isKeysGenerated: boolean = false;
-  user: UserInfo | undefined;
+  //user: UserInfo | undefined;
   async ngOnInit() {
     this.isKeysGenerated = await AuthController.checkKeyGeneration()
-    this.user = await remult.initUser()
+    //this.user = await remult.initUser()
     if (this.isKeysGenerated) {
       let userKeys = await AuthController.getKeyPairs()
       window.open(`https://api.schwabapi.com/v1/oauth/authorize?response_type=code&client_id=${userKeys.appKey}&scope=readonly&redirect_uri=https://stocktrading.up.railway.app/auth`,
@@ -78,7 +78,7 @@ export class KeyScreenComponent implements OnInit, OnDestroy {
       this.isLoadingTokens = true;
       this.unsubscribe = rhRepo
         .liveQuery({
-          where: Rhkeys.getTokenUpdates({ id: this.user?.id! })
+          where: Rhkeys.getTokenUpdates({ id: remult.context.request!.session!["user"].id })
         })
         .subscribe(info => this.checkData(info.items))
     }

@@ -90,6 +90,7 @@ export class AuthController {
 
   @BackendMethod({ allowed: true })
   static async checkKeyGeneration(): Promise<boolean> {
+    console.log(remult.context.request!.session!["user"].id)
     let userKeyData = await rhRepo.findFirst({userId: remult.context.request!.session!["user"].id})
     if(userKeyData){
       return true
