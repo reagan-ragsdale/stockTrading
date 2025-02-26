@@ -72,13 +72,14 @@ export class KeyScreenComponent implements OnInit, OnDestroy {
     //this.user = await remult.initUser()
     if (this.isKeysGenerated) {
       let userKeys = await AuthController.getKeyPairs()
+      let user = remult.context.request!.session!["user"].id
       window.open(`https://api.schwabapi.com/v1/oauth/authorize?response_type=code&client_id=${userKeys.appKey}&scope=readonly&redirect_uri=https://stocktrading.up.railway.app/auth`,
         "_blank"
       )?.focus()
       this.isLoadingTokens = true;
       this.unsubscribe = rhRepo
         .liveQuery({
-          where: Rhkeys.getTokenUpdates({ id: remult.context.request!.session!["user"].id })
+          where: Rhkeys.getTokenUpdates({ id: user })
         })
         .subscribe(info => this.checkData(info.items))
     }
