@@ -354,7 +354,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
               },
               trendIndex: {
                 type: 'line',
-                display: this.trendAlgoStartingPoint != 0,
+                display: this.tempTrendAlgoStartingPoint != 0,
                 xMin: this.trendAlgoStartingPoint,
                 xMax: this.trendAlgoStartingPoint,
                 borderColor: '#ff82e3',
