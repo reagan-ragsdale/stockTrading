@@ -30,10 +30,9 @@ export class Rhkeys {
 
 
     static getTokenUpdates = Filter.createCustom<Rhkeys, { id: string }>(async ({id}) => {
-        
-        let userInfo = await userRepo.findFirst({id: id})
+       
         return {
-          userId: userInfo?.userId
+          userId: id
         }
       });
 
