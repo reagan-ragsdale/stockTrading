@@ -581,18 +581,21 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   }
   async onSelectedStockChange(event: any) {
     console.log(event)
-    this.selectedStockName = event.source.value
-    await this.getStockData()
-    this.unsubscribe()
-    this.chartData = {
-      history: [],
-      labels: [],
-      name: this.selectedStockName,
-      time: [],
-      volume: [],
-      volumeTime: []
+    if(event.isUserInput == true){
+      this.selectedStockName = event.source.value
+      await this.getStockData()
+      this.unsubscribe()
+      this.chartData = {
+        history: [],
+        labels: [],
+        name: this.selectedStockName,
+        time: [],
+        volume: [],
+        volumeTime: []
+      }
+      this.onStartWebSocket()
     }
-    this.onStartWebSocket()
+    
   }
 
 
