@@ -39,12 +39,12 @@ export class AnalysisService {
         let average = total / lastGroup.length
 
         //find standard deviation
-        let totalOfSqaredDeviations = 0
+        /* let totalOfSqaredDeviations = 0
         for (let i = 0; i < lastGroup.length; i++) {
             totalOfSqaredDeviations += Math.pow((lastGroup[i] - average), 2)
         }
         let standardDeviation = Math.sqrt((totalOfSqaredDeviations / (lastGroup.length - 1)))
-
+ */
 
         //if the current price is an outlier return false
         /* if (Math.abs(((incomingPrice - average) / standardDeviation)) > 3) {
@@ -56,25 +56,25 @@ export class AnalysisService {
 
 
         //filter out anything with a zscore outside Math.abs(-3)
-        let filteredGroup: number[] = []
+       /*  let filteredGroup: number[] = []
         for (let i = 0; i < lastGroup.length; i++) {
             let zscore = ((lastGroup[i] - average) / standardDeviation)
             if (Math.abs(zscore) < 3) {
                 filteredGroup.push(lastGroup[i])
             }
-        }
+        } */
 
 
 
         //get high and low and new avg
-        let recentHigh = Math.max(...filteredGroup)
-        let recentLow = Math.min(...filteredGroup)
+        let recentHigh = Math.max(...lastGroup)
+        let recentLow = Math.min(...lastGroup)
 
         total = 0
-        for (let i = 0; i < filteredGroup.length; i++) {
-            total += filteredGroup[i]
+        for (let i = 0; i < lastGroup.length; i++) {
+            total += lastGroup[i]
         }
-        let newAverage = total / filteredGroup.length
+        let newAverage = total / lastGroup.length
 
 
         //want to define gutters on each high and low that if the price is in that gutter then execute the order

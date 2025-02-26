@@ -36,7 +36,7 @@ export class AuthController {
       };
       remult.context.request!.session!["user"] = remult.user;
       console.log('user info below')
-      console.log(remult.context.request!.session!["user"])
+      console.log(remult.context.request!.session!["user"].id)
       console.log('here in login')
       return remult.user;
   }
