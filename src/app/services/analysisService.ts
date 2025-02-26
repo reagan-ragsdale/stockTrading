@@ -170,6 +170,7 @@ export class AnalysisService {
                     //check to see if price is at average
                     if (incomingPrice >= initialAverage) {
                         //set new stop loss
+                        console.log('here')
                         newStopLoss = ((initialAverage - orderHistory[0].stockPrice) * .3) + orderHistory[0].stockPrice
                     }
                     else {
@@ -179,10 +180,14 @@ export class AnalysisService {
                     if (incomingPrice > currentTradeHigh) {
                         newHigh = incomingPrice
                     }
+                    else{
+                        newHigh = currentTradeHigh
+                    }
                 }
                 //if there is a new stop loss
                 else {
                     if (incomingPrice > currentTradeHigh) {
+                        console.log('here 2')
                         newStopLoss += (incomingPrice - currentTradeHigh)
                         newHigh = incomingPrice
                     }
