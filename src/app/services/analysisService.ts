@@ -47,12 +47,12 @@ export class AnalysisService {
 
 
         //if the current price is an outlier return false
-        if (Math.abs(((incomingPrice - average) / standardDeviation)) > 3) {
+        /* if (Math.abs(((incomingPrice - average) / standardDeviation)) > 3) {
             return {
                 shouldExecuteOrder: false
             }
 
-        }
+        } */
 
 
         //filter out anything with a zscore outside Math.abs(-3)
