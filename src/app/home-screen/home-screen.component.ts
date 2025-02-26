@@ -27,19 +27,19 @@ import { FormsModule } from '@angular/forms'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input';
 import { buySellDto } from '../Dtos/buySellDto';
-import {MatMenuModule} from '@angular/material/menu';
+import { MatMenuModule } from '@angular/material/menu';
 import { Router } from '@angular/router';
 import { DbCurrentDayStockData, dbCurrentDayStockDataRepo } from '../../shared/tasks/dbCurrentDayStockData';
-import {MatSelectModule} from '@angular/material/select';
+import { MatSelectModule } from '@angular/material/select';
 import { reusedFunctions } from '../services/reusedFunctions';
 @Component({
   selector: 'app-home-screen',
-  imports: [CommonModule, FormsModule,MatSelectModule, MatInputModule,MatMenuModule, MatFormFieldModule, MatIconModule, MatRadioModule, MatProgressSpinnerModule, MatButtonModule, MatButtonToggleModule, TradeComponent],
+  imports: [CommonModule, FormsModule, MatSelectModule, MatInputModule, MatMenuModule, MatFormFieldModule, MatIconModule, MatRadioModule, MatProgressSpinnerModule, MatButtonModule, MatButtonToggleModule, TradeComponent],
   templateUrl: './home-screen.component.html',
   styleUrl: './home-screen.component.css'
 })
 export class HomeScreenComponent implements OnInit, OnDestroy {
-  constructor(private sharedCache: CachedData,private router: Router) { }
+  constructor(private sharedCache: CachedData, private router: Router) { }
   remult = remult
   readonly dialog = inject(MatDialog);
   @ViewChild('modalTemplate', { static: true }) modalTemplate!: TemplateRef<any>;
@@ -79,7 +79,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   targetPrice: number = 0
   stopLossPrice: number = 0
   tradeInitialAverage: number = 0
-  tradeCurrentHigh:number = 0
+  tradeCurrentHigh: number = 0
   isOrderPending: boolean = false;
   tempSelectedAlgo: string = ''
   selectedAlgo: string = ''
@@ -126,9 +126,9 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.selectedStockHistoryData = this.stockHistoryData.filter(e => e.stockName == this.selectedStockName)
 
     //below is most likely not the best wat to find the net but it'll work for now
-    for(let i = 0; i < this.selectedStockHistoryData.length - 1; i++){
+    for (let i = 0; i < this.selectedStockHistoryData.length - 1; i++) {
       //need to find each pair of buy and sells
-      if(this.selectedStockHistoryData[i].orderType == 'Sell' && this.selectedStockHistoryData[i + 1].orderType == 'Buy'){
+      if (this.selectedStockHistoryData[i].orderType == 'Sell' && this.selectedStockHistoryData[i + 1].orderType == 'Buy') {
         this.selectedStockTotalNet += ((this.selectedStockHistoryData[i].shareQty * this.selectedStockHistoryData[i].stockPrice) - (this.selectedStockHistoryData[i + 1].shareQty * this.selectedStockHistoryData[i + 1].stockPrice))
       }
     }
@@ -137,16 +137,16 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   }
   startWebsocket() {
     this.unsubscribe = dbCurrentDayStockDataRepo
-       .liveQuery({
-         where: DbCurrentDayStockData.getCurrentStockDataByName({stockName: this.selectedStockName}),orderBy: {time: 'asc'}
-       })
-       .subscribe(info => this.refreshData(info.items)) 
+      .liveQuery({
+        where: DbCurrentDayStockData.getCurrentStockDataByName({ stockName: this.selectedStockName }), orderBy: { time: 'asc' }
+      })
+      .subscribe(info => this.refreshData(info.items))
   }
 
   chartData: StockAnalysisDto = {
     history: [],
     labels: [],
-    name: 'AAPL',
+    name: '',
     time: [],
     volume: [],
     volumeTime: []
@@ -184,7 +184,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       //add check to see when the last order was placed. Don't want to be placing order every 3 seconds
       //maybe wait 30 seconds
       if (shouldPlaceOrder.shouldExecuteOrder == true) {
-        if(!this.isOrderPending){
+        if (!this.isOrderPending) {
           await this.placeOrder(shouldPlaceOrder.isBuyOrSell!)
           this.stopLossPrice = shouldPlaceOrder.stopLossPrice!
           this.tradeCurrentHigh = shouldPlaceOrder.tradeHigh!
@@ -193,19 +193,19 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
           this.stockChart.options.plugins.annotation.annotations.orderLine.yMax = this.selectedStockHistoryData[0]?.stockPrice
           this.stockChart.options.plugins.annotation.annotations.avgLine.yMin = this.tradeInitialAverage
           this.stockChart.options.plugins.annotation.annotations.avgLine.yMax = this.tradeInitialAverage
-          if(shouldPlaceOrder.soldAtStopLoss == true){
+          if (shouldPlaceOrder.soldAtStopLoss == true) {
             this.isBotAuthorized = false;
           }
         }
-        
+
       }
-      else{
-        if(shouldPlaceOrder.stopLossPrice !== undefined){
+      else {
+        if (shouldPlaceOrder.stopLossPrice !== undefined) {
           this.stopLossPrice = shouldPlaceOrder.stopLossPrice
           this.stockChart.options.plugins.annotation.annotations.stopLossLine.yMin = this.stopLossPrice
           this.stockChart.options.plugins.annotation.annotations.stopLossLine.yMax = this.stopLossPrice
         }
-        if(shouldPlaceOrder.tradeHigh !== undefined){
+        if (shouldPlaceOrder.tradeHigh !== undefined) {
           this.tradeCurrentHigh = shouldPlaceOrder.tradeHigh
         }
       }
@@ -227,9 +227,9 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.stockChart.update()
   }
   updateVolumeChart() {
-   
 
-    
+
+
     const rates = [];
     for (let i = 1; i < this.chartData.volumeTime.length; i++) {
       let rate = (this.chartData.volume[i] - this.chartData.volume[i - 1]) / (this.chartData.volumeTime[i] - this.chartData.volumeTime[i - 1]);
@@ -529,7 +529,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       this.updateChartLines()
     }
   }
-  updateChartLines(){
+  updateChartLines() {
     this.stockChart.options.plugins.annotation.annotations.trendIndex.xMin = 0
     this.stockChart.options.plugins.annotation.annotations.trendIndex.xMax = 0
     this.stockChart.options.plugins.annotation.annotations.targetLine.yMin = 0
@@ -573,42 +573,50 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.stockChart.options.plugins.annotation.annotations.trendIndex.xMax = this.tempTrendAlgoStartingPoint
     this.stockChart.update()
   }
-  onStartWebSocket(){
+  onStartWebSocket() {
     this.startWebsocket()
   }
-  navToTestEnv(){
+  navToTestEnv() {
     this.router.navigate(['/testEnv'])
   }
-  async onSelectedStockChange(event: any){
+  async onSelectedStockChange(event: any) {
     console.log(event)
     this.selectedStockName = event.source.value
     await this.getStockData()
     this.unsubscribe()
+    this.chartData = {
+      history: [],
+      labels: [],
+      name: this.selectedStockName,
+      time: [],
+      volume: [],
+      volumeTime: []
+    }
     this.onStartWebSocket()
   }
-  
+
 
 
   isLoading: boolean = true;
   async ngOnInit() {
     Chart.register(annotationPlugin);
     Chart.register(...registerables)
-    
+
     //remult.initUser()
     //await this.getMovers()
     await this.getUserFinanceData()
-    this.distinctAvailableStocks = (await dbCurrentDayStockDataRepo.groupBy({group: ['stockName'], orderBy: {stockName: 'desc'}})).map(e => e.stockName)
+    this.distinctAvailableStocks = (await dbCurrentDayStockDataRepo.groupBy({ group: ['stockName'], orderBy: { stockName: 'desc' } })).map(e => e.stockName)
     console.log(this.distinctAvailableStocks)
     this.selectedStockName = this.distinctAvailableStocks[0]
     await this.getStockData()
     this.createOrUpdateChart()
     this.createVolumeChart()
-    
+
     this.onStartWebSocket()
 
-    
-    
-    
+
+
+
 
     /*  this.unsubscribe = rhRepo
        .liveQuery({
