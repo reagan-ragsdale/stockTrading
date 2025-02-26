@@ -30,7 +30,7 @@ export class AuthController {
     if (!AuthController.verify(password, user.userPass))
       throw Error("Invalid Credentials")
     remult.user = {
-        id: user.id!,
+        id: user.userId,
         name: user.userName,
         roles: user.isAdmin ? ["admin"] : [],
       };
