@@ -518,6 +518,9 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       this.isBotAuthorized = false;
       this.trendAlgoStartingPoint = 0;
       this.tempTrendAlgoStartingPoint = 0;
+      this.targetPrice = 0;
+      this.stopLossPrice = 0
+      this.tradeCurrentHigh = 0
       this.updateChartLines()
     }
   }
@@ -571,9 +574,11 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   navToTestEnv(){
     this.router.navigate(['/testEnv'])
   }
-  onSelectedStockChange(event: any){
+  async onSelectedStockChange(event: any){
     console.log(event)
     this.selectedStockName = event.source.value
+    await this.getStockData()
+    this.onStartWebSocket()
   }
   
 
