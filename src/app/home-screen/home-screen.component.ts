@@ -310,6 +310,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
             annotations: {
               orderLine: {
                 type: 'line',
+                display: this.selectedStockHistoryData.length > 0,
                 yMin: this.selectedStockHistoryData[0]?.stockPrice,
                 yMax: this.selectedStockHistoryData[0]?.stockPrice,
                 borderColor: '#7874ff',
@@ -320,6 +321,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
               },
               targetLine: {
                 type: 'line',
+                display: this.targetPrice != 0,
                 yMin: this.targetPrice,
                 yMax: this.targetPrice,
                 borderColor: '#ff8f50',
@@ -330,6 +332,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
               },
               stopLossLine: {
                 type: 'line',
+                display: this.stopLossPrice != 0,
                 yMin: this.stopLossPrice,
                 yMax: this.stopLossPrice,
                 borderColor: '#ea4c4c',
@@ -340,6 +343,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
               },
               avgLine: {
                 type: 'line',
+                display: this.tradeInitialAverage != 0,
                 yMin: this.tradeInitialAverage,
                 yMax: this.tradeInitialAverage,
                 borderColor: '#9dfd01',
@@ -350,6 +354,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
               },
               trendIndex: {
                 type: 'line',
+                display: this.trendAlgoStartingPoint != 0,
                 xMin: this.trendAlgoStartingPoint,
                 xMax: this.trendAlgoStartingPoint,
                 borderColor: '#ff82e3',
@@ -578,6 +583,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     console.log(event)
     this.selectedStockName = event.source.value
     await this.getStockData()
+    this.unsubscribe()
     this.onStartWebSocket()
   }
   
