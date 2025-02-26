@@ -86,7 +86,7 @@ export class AnalysisService {
         let gutter = 0
 
         //possibly also add a trend indicator and adjust the multiplyFactor based on if its going up and were trying to sell or going up and trying to buy etc
-        let multiplyFactor = 0.4
+        let multiplyFactor = 0.45
 
         //need to also add a stop loss to set as a saftey net for if a price dips below a certain proint
         //Almost always when you see someone day trading, they'll set a target price which is above where they bought
@@ -138,15 +138,33 @@ export class AnalysisService {
         else {
             gutter = Math.abs(newAverage - recentHigh) * multiplyFactor
             console.log('greater than: ' + (recentHigh - gutter))
-            if (((incomingPrice > (recentHigh - gutter)) && (incomingPrice > lastOrderPrice)) || incomingPrice <= currentStopLoss) {
+            if (((incomingPrice > (recentHigh - gutter)) && (incomingPrice > lastOrderPrice))) {
                 return {
                     shouldExecuteOrder: true,
                     isBuyOrSell: 'Sell'
                 }
             }
+            else if(incomingPrice <= currentStopLoss){
+                if(currentStopLoss > orderHistory[0].stockPrice){
+                    return {
+                        shouldExecuteOrder: true,
+                        isBuyOrSell: 'Sell',
+                        soldAtStopLoss: false
+                    }
+                }
+                else{
+                    return {
+                        shouldExecuteOrder: true,
+                        isBuyOrSell: 'Sell',
+                        soldAtStopLoss: true
+                    }
+                }
+                
+            }
             else {
                 let newStopLoss = 0
                 let newHigh = 0
+
                 //if the price has not gotten to the average yet
                 if (currentStopLoss < orderHistory[0].stockPrice) {
                     //check to see if price is at average

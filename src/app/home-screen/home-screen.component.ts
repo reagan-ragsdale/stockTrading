@@ -183,13 +183,21 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       console.log(shouldPlaceOrder)
       //add check to see when the last order was placed. Don't want to be placing order every 3 seconds
       //maybe wait 30 seconds
-      if (shouldPlaceOrder.shouldExecuteOrder == true && !this.isOrderPending) {
-        await this.placeOrder(shouldPlaceOrder.isBuyOrSell!)
-        this.stopLossPrice = shouldPlaceOrder.stopLossPrice!
-        this.tradeCurrentHigh = shouldPlaceOrder.tradeHigh!
-        this.tradeInitialAverage = shouldPlaceOrder.initialAverage!
-        this.stockChart.options.plugins.annotation.annotations.orderLine.yMin = this.selectedStockHistoryData[0]?.stockPrice
-        this.stockChart.options.plugins.annotation.annotations.orderLine.yMax = this.selectedStockHistoryData[0]?.stockPrice
+      if (shouldPlaceOrder.shouldExecuteOrder == true) {
+        if(!this.isOrderPending){
+          await this.placeOrder(shouldPlaceOrder.isBuyOrSell!)
+          this.stopLossPrice = shouldPlaceOrder.stopLossPrice!
+          this.tradeCurrentHigh = shouldPlaceOrder.tradeHigh!
+          this.tradeInitialAverage = shouldPlaceOrder.initialAverage!
+          this.stockChart.options.plugins.annotation.annotations.orderLine.yMin = this.selectedStockHistoryData[0]?.stockPrice
+          this.stockChart.options.plugins.annotation.annotations.orderLine.yMax = this.selectedStockHistoryData[0]?.stockPrice
+          this.stockChart.options.plugins.annotation.annotations.avgLine.yMin = this.tradeInitialAverage
+          this.stockChart.options.plugins.annotation.annotations.avgLine.yMax = this.tradeInitialAverage
+          if(shouldPlaceOrder.soldAtStopLoss == true){
+            this.isBotAuthorized = false;
+          }
+        }
+        
       }
       else{
         if(shouldPlaceOrder.stopLossPrice !== undefined){
@@ -325,6 +333,16 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
                 yMin: this.stopLossPrice,
                 yMax: this.stopLossPrice,
                 borderColor: '#ea4c4c',
+                borderWidth: 2,
+                label: {
+                  content: 'Stop Loss'
+                }
+              },
+              avgLine: {
+                type: 'line',
+                yMin: this.tradeInitialAverage,
+                yMax: this.tradeInitialAverage,
+                borderColor: '#9dfd01',
                 borderWidth: 2,
                 label: {
                   content: 'Stop Loss'
@@ -500,8 +518,19 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       this.isBotAuthorized = false;
       this.trendAlgoStartingPoint = 0;
       this.tempTrendAlgoStartingPoint = 0;
-      this.updateTrendIndexLine()
+      this.updateChartLines()
     }
+  }
+  updateChartLines(){
+    this.stockChart.options.plugins.annotation.annotations.trendIndex.xMin = 0
+    this.stockChart.options.plugins.annotation.annotations.trendIndex.xMax = 0
+    this.stockChart.options.plugins.annotation.annotations.targetLine.yMin = 0
+    this.stockChart.options.plugins.annotation.annotations.targetLine.yMax = 0
+    this.stockChart.options.plugins.annotation.annotations.stopLossLine.yMin = 0
+    this.stockChart.options.plugins.annotation.annotations.stopLossLine.yMax = 0
+    this.stockChart.options.plugins.annotation.annotations.avgLine.yMin = 0
+    this.stockChart.options.plugins.annotation.annotations.avgLine.yMax = 0
+    this.stockChart.update()
   }
   onAlgoChanged(event: any) {
     this.tempSelectedAlgo = event.value

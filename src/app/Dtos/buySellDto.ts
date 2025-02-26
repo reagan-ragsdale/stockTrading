@@ -5,4 +5,5 @@ export type buySellDto = {
     stopLossPrice?: number;
     initialAverage?:number;
     tradeHigh?: number;
+    soldAtStopLoss?: boolean;
 }
