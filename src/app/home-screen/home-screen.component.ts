@@ -140,7 +140,10 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       .liveQuery({
         where: DbCurrentDayStockData.getCurrentStockDataByName({ stockName: this.selectedStockName }), orderBy: { time: 'asc' }
       })
-      .subscribe(info => this.refreshData(info.items))
+      .subscribe(info => {
+        this.chartInfo = info.applyChanges(this.chartInfo);
+        this.refreshData();
+  })
   }
 
   chartData: StockAnalysisDto = {
@@ -162,10 +165,10 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     stockPrice: 0,
     time: 0
   }]
-  async refreshData(data: DbCurrentDayStockData[]) {
-    this.chartData.history = data.map(e => e.stockPrice)
-    this.chartData.labels = data.map(e => reusedFunctions.epochToLocalTime(e.time))
-    this.chartData.time = data.map(e => e.time)
+  async refreshData() {
+    this.chartData.history = this.chartInfo.map(e => e.stockPrice)
+    this.chartData.labels = this.chartInfo.map(e => reusedFunctions.epochToLocalTime(e.time))
+    this.chartData.time = this.chartInfo.map(e => e.time)
     this.selectedStockCurrent = this.chartData.history[this.chartData.history.length - 1]
     this.selectedStockHigh = Math.max(...this.chartData.history)
     this.selectedStockLow = Math.min(...this.chartData.history)
