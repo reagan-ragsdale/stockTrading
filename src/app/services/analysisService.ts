@@ -243,11 +243,39 @@ export class AnalysisService {
         const yMax = slope * xMax + intercept;
 
         //get the buffer zones to buy and sell between
-        const aboveyMin = slope * xMin + (intercept + 2);
-        const aboveyMax = slope * xMax + (intercept + 2);
 
-        const belowyMin = slope * xMin + (intercept - 2);
-        const belowyMax = slope * xMax + (intercept - 2);
+        // Find the point furthest from the trendline
+        let maxDistance = -Infinity;
+        let minDistance = Infinity;
+        let highestPoint = null
+        let lowestPoint = null
+    
+        //need to put them into an object and also find the highest and lowest
+        for (let i = 0; i < stock.length; i ++) {
+            let distance = (slope * i - stock[i] + intercept) / Math.sqrt(slope * slope + 1);
+            if (distance > maxDistance) {
+                maxDistance = distance;
+                highestPoint = {x: i, y: stock[i]};
+            }
+            if(distance < minDistance){
+                minDistance = distance
+                lowestPoint = {x: i, y: stock[i]};
+            }
+        }
+
+        //figure out how much above and below the trend line the highest and lowest points are
+        //y = mx + b
+        //we have  m,x need to find b
+        let interAbove = stock[highestPoint!.x]
+        let aboveB = interAbove - highestPoint!.y
+        let interBelow = stock[lowestPoint!.x]
+        let belowB = lowestPoint!.y - interBelow
+
+        const aboveyMin = slope * xMin + (intercept + aboveB);
+        const aboveyMax = slope * xMax + (intercept + aboveB);
+
+        const belowyMin = slope * xMin + (intercept - belowB);
+        const belowyMax = slope * xMax + (intercept - belowB);
 
 
         //find the trend line
