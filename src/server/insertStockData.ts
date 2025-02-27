@@ -1,6 +1,6 @@
 import { AuthController } from "../shared/controllers/AuthController.js"
 import { StockHistoryController } from "../shared/controllers/StockHistoryController.js"
-import { dbCurrentDayStockDataRepo } from "../shared/tasks/dbCurrentDayStockData.js"
+import { DbCurrentDayStockData, dbCurrentDayStockDataRepo } from "../shared/tasks/dbCurrentDayStockData.js"
 import { DbLevelTwoData, dbLevelTwoDataRepo } from "../shared/tasks/dbLevelTwoData.js";
 import { dbTokenRepo, DbTOkens } from "../shared/tasks/dbTokens.js"
 import { WebSocket } from 'ws';
@@ -75,12 +75,19 @@ export const insertCall = async (): Promise<void> => {
         }
         if (Object.hasOwn(newEvent, 'data') && hasBeenSent == true) {
             if(newEvent.data[0].service == 'LEVELONE_EQUITIES'){
+                let insertData: DbCurrentDayStockData[] = []
                 for (let i = 0; i < newEvent.data[0].content.length; i++) {
                     if (Object.hasOwn(newEvent.data[0].content[i], '3')) {
-                        await dbCurrentDayStockDataRepo.insert({ stockName: newEvent.data[0].content[i].key, stockPrice: newEvent.data[0].content[i]['3'], time: Number(newEvent.data[0].timestamp) })
+                        let data: DbCurrentDayStockData = {
+                            stockName: newEvent.data[0].content[i].key,
+                            stockPrice: newEvent.data[0].content[i]['3'],
+                            time: Number(newEvent.data[0].timestamp)
+                        }
+                        insertData.push(data)
                     }
     
                 }
+                await dbCurrentDayStockDataRepo.insert(insertData)
             }
             
             /* if(newEvent.data[i].service == 'NASDAQ_BOOK'){
