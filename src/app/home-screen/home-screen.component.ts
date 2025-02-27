@@ -169,7 +169,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.selectedStockCurrent = this.chartData.history[this.chartData.history.length - 1]
     this.selectedStockHigh = Math.max(...this.chartData.history)
     this.selectedStockLow = Math.min(...this.chartData.history)
-    if (this.isUserOrBot == 'Bot' && this.isBotAuthorized == true && this.chartData.history.length >= 400) {
+    if (this.isUserOrBot == 'Bot' && this.isBotAuthorized == true) {
       let shouldPlaceOrder: buySellDto = {
         shouldExecuteOrder: false
       }
