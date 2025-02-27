@@ -56,13 +56,13 @@ export class AnalysisService {
 
 
         //filter out anything with a zscore outside Math.abs(-3)
-       /*  let filteredGroup: number[] = []
-        for (let i = 0; i < lastGroup.length; i++) {
-            let zscore = ((lastGroup[i] - average) / standardDeviation)
-            if (Math.abs(zscore) < 3) {
-                filteredGroup.push(lastGroup[i])
-            }
-        } */
+        /*  let filteredGroup: number[] = []
+         for (let i = 0; i < lastGroup.length; i++) {
+             let zscore = ((lastGroup[i] - average) / standardDeviation)
+             if (Math.abs(zscore) < 3) {
+                 filteredGroup.push(lastGroup[i])
+             }
+         } */
 
 
 
@@ -123,7 +123,7 @@ export class AnalysisService {
                 return {
                     shouldExecuteOrder: true,
                     isBuyOrSell: 'Buy',
-                    stopLossPrice: recentLow - gutter,
+                    stopLossPrice: recentLow - .25,
                     initialAverage: newAverage,
                     tradeHigh: incomingPrice
                 }
@@ -144,22 +144,22 @@ export class AnalysisService {
                     isBuyOrSell: 'Sell'
                 }
             }
-            else if(incomingPrice <= currentStopLoss){
-                if(currentStopLoss > orderHistory[0].stockPrice){
+            else if (incomingPrice <= currentStopLoss) {
+                if (currentStopLoss > orderHistory[0].stockPrice) {
                     return {
                         shouldExecuteOrder: true,
                         isBuyOrSell: 'Sell',
                         soldAtStopLoss: false
                     }
                 }
-                else{
+                else {
                     return {
                         shouldExecuteOrder: true,
                         isBuyOrSell: 'Sell',
                         soldAtStopLoss: true
                     }
                 }
-                
+
             }
             else {
                 let newStopLoss = 0
@@ -180,7 +180,7 @@ export class AnalysisService {
                     if (incomingPrice > currentTradeHigh) {
                         newHigh = incomingPrice
                     }
-                    else{
+                    else {
                         newHigh = currentTradeHigh
                     }
                 }
@@ -207,20 +207,38 @@ export class AnalysisService {
     }
 
 
-    static trendTrading(stock: number[], orderHistory: stockOrder[],): buySellDto {
+    static trendTrading(stock: number[], time: number[], orderHistory: stockOrder[]) {
 
 
-        let nextOrderType = 'Buy'
+        /* let nextOrderType = 'Buy'
         let lastOrderPrice = 0
         if (orderHistory.length > 0) {
             lastOrderPrice = orderHistory[0].stockPrice
             if (orderHistory[0].orderType == 'Buy') {
                 nextOrderType = 'Sell'
             }
-        }
+        } */
+
+        const n = stock.length;
+        const sumX = time.reduce((a, b) => a + b, 0);
+        const sumY = stock.reduce((a, b) => a + b, 0);
+        const sumXY = time.map((xi, i) => xi * stock[i]).reduce((a, b) => a + b, 0);
+        const sumX2 = time.map(xi => xi ** 2).reduce((a, b) => a + b, 0);
+
+        // Compute slope (m) and intercept (b)
+        const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX ** 2);
+        const intercept = (sumY - slope * sumX) / n;
+
+
+
+        // Get trendline start and end points
+        const xMin = Math.min(...time);
+        const xMax = Math.max(...stock);
+        const yMin = slope * xMin + intercept;
+        const yMax = slope * xMax + intercept;
 
         //find the trend line
-        let dataPointTotal = 0
+        /* let dataPointTotal = 0
         let xAxisTotal = 0
         for (let i = 0; i < stock.length; i++) {
             dataPointTotal += stock[i]
@@ -239,121 +257,14 @@ export class AnalysisService {
         }
         let trend = numerator / denominator
 
-        let trendDirection = trend > 0 ? 'Positive' : 'Negative'
-
-        //if trend is arbitrary positive number then it could be an indicator of wanting to trade
-        //taking the absolute value because it might be a negative trend and do the same thing
-
-        //for now just use the global trend and establish a bound you want to stay within until you want to break your trade.
-        //then compare the last 200 and 50 data points to see wheter they're still within those bounds
-        //if so then return no trade, else return trade
-
-
-        //edit 1: need to tweak it for when it just recently bought an uptrend and then it breaks trend quickly but the past 100 have not show that break yet
-        // somehow need to compare the past 25, 50,100 etc so get a better picture of how it trending
-
-        //lolcal 100 trend
-        let local100 = stock.slice(-100)
-        dataPointTotal = 0
-        xAxisTotal = 0
-        for (let i = 0; i < local100.length; i++) {
-            dataPointTotal += local100[i]
-            xAxisTotal += i
+        let trendDirection = trend > 0 ? 'Positive' : 'Negative' */
+        return{
+            xMin: xMin,
+            xMax: xMax,
+            yMin: yMin,
+            yMax: yMax
         }
-        averageOfDataPoints = dataPointTotal / local100.length
-        xAxisAverage = xAxisTotal / local100.length
 
-
-        numerator = 0
-        denominator = 0
-
-        for (let i = 0; i < local100.length; i++) {
-            numerator += ((local100[i] - averageOfDataPoints) * (i - xAxisAverage))
-            denominator += ((local100[i] - averageOfDataPoints) * (local100[i] - averageOfDataPoints))
-        }
-        let local100Trend = numerator / denominator
-
-
-        //local 50 trend
-        /* let local50 = stock.slice(-50)
-        dataPointTotal = 0
-        xAxisTotal = 0
-        for (let i = 0; i < local50.length; i++) {
-            dataPointTotal += local50[i]
-            xAxisTotal += i
-        }
-        averageOfDataPoints = dataPointTotal / local50.length
-        xAxisAverage = xAxisTotal / local50.length
-
-
-        numerator = 0
-        denominator = 0
-
-        for (let i = 0; i < local50.length; i++) {
-            numerator += ((local50[i] - averageOfDataPoints) * (i - xAxisAverage))
-            denominator += ((local50[i] - averageOfDataPoints) * (local50[i] - averageOfDataPoints))
-        }
-        let local50Trend = numerator / denominator */
-
-
-        //set arbitrary bound to stay within the global trend
-        let bound = 0.8
-        //if global trend is 1.25 and the local trend is within (1.25 * .8) = 1 then keep 
-        // but if it dips below that line then trade it
-
-        if (trendDirection == 'Positive') {
-            if (nextOrderType == 'Buy') {
-                if ((local100Trend > (trend - (trend * bound)))) {
-                    return {
-                        shouldExecuteOrder: true,
-                        isBuyOrSell: 'Buy'
-                    }
-                }
-                else {
-                    return {
-                        shouldExecuteOrder: false
-                    }
-                }
-            }
-            else {
-                if ((local100Trend > (trend - (trend * bound)))) {
-                    return {
-                        shouldExecuteOrder: false
-                    }
-                }
-                else {
-                    return {
-                        shouldExecuteOrder: true,
-                        isBuyOrSell: 'Sell'
-                    }
-                }
-            }
-        }
-        else {
-            if (nextOrderType == 'Buy') {
-                if ((local100Trend < (trend - (trend * bound)))) {
-                    return {
-                        shouldExecuteOrder: false
-                    }
-                }
-                else {
-                    return {
-                        shouldExecuteOrder: true,
-                        isBuyOrSell: 'Buy'
-                    }
-                }
-            }
-            else {
-                //do not sell on a downward trend
-                return {
-                    shouldExecuteOrder: false
-                }
-            }
-        }
-        //note: what to do if it was a down trend and it broke so the bot bought 
-        //might need a function to automatically switch between algorithms. Once the above scenario happens then 
-        //switch to an algo that just tries to get the sell to a certain point
-        //or if theres an up trend just follow it up until it breaks
     }
 
     static predicitveTrendLine(stock: StockAnalysisDto, orderHistory: stockOrder[]) {
@@ -447,7 +358,7 @@ export class AnalysisService {
         let val = 1 - (ssRes / ssTot);
 
         //determine how close to 1 each of these numbers are
-        
+
         return val
         //find the outliers of the line
     }

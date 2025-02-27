@@ -177,7 +177,11 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         shouldPlaceOrder = AnalysisService.checkIsLowBuyIsHighSell(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1), this.selectedStockHistoryData, this.stopLossPrice, this.tradeInitialAverage, this.tradeCurrentHigh)
       }
       else {
-        shouldPlaceOrder = AnalysisService.trendTrading(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1), this.selectedStockHistoryData)
+        let returnVal = AnalysisService.trendTrading(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1), this.chartData.time.slice((this.chartData.time.length - this.trendAlgoStartingPoint) * -1),this.selectedStockHistoryData)
+        this.stockChart.options.plugins.annotation.annotations.trendLine.xMin = returnVal.xMin
+        this.stockChart.options.plugins.annotation.annotations.trendLine.xMax = returnVal.xMax
+        this.stockChart.options.plugins.annotation.annotations.trendLine.yMin = returnVal.yMin
+        this.stockChart.options.plugins.annotation.annotations.trendLine.yMax = returnVal.yMax
       }
 
       console.log(shouldPlaceOrder)
@@ -358,6 +362,16 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
                 xMin: this.trendAlgoStartingPoint,
                 xMax: this.trendAlgoStartingPoint,
                 borderColor: '#ff82e3',
+                borderWidth: 2
+              },
+              trendLine: {
+                type: 'line',
+                //display: this.tempTrendAlgoStartingPoint != 0,
+                xMin: 0,
+                xMax: 0,
+                yMin: 0,
+                yMax: 0,
+                borderColor: '#040502',
                 borderWidth: 2
               }
             }
