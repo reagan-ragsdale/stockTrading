@@ -177,12 +177,20 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         shouldPlaceOrder = AnalysisService.checkIsLowBuyIsHighSell(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1), this.selectedStockHistoryData, this.stopLossPrice, this.tradeInitialAverage, this.tradeCurrentHigh)
       }
       else {
-        let returnVal = AnalysisService.trendTrading(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1),this.selectedStockHistoryData)
+        let returnVal = AnalysisService.trendTrading(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1), this.selectedStockHistoryData)
         console.log(returnVal)
         this.stockChart.options.plugins.annotation.annotations.trendLine.xMin = returnVal.xMin + this.trendAlgoStartingPoint
         this.stockChart.options.plugins.annotation.annotations.trendLine.xMax = returnVal.xMax + this.trendAlgoStartingPoint
         this.stockChart.options.plugins.annotation.annotations.trendLine.yMin = returnVal.yMin
         this.stockChart.options.plugins.annotation.annotations.trendLine.yMax = returnVal.yMax
+        this.stockChart.options.plugins.annotation.annotations.trendLineAbove.xMin = returnVal.xMin + this.trendAlgoStartingPoint
+        this.stockChart.options.plugins.annotation.annotations.trendLineAbove.xMax = returnVal.xMax + this.trendAlgoStartingPoint
+        this.stockChart.options.plugins.annotation.annotations.trendLineAbove.yMin = returnVal.aboveyMin
+        this.stockChart.options.plugins.annotation.annotations.trendLineAbove.yMax = returnVal.aboveyMax
+        this.stockChart.options.plugins.annotation.annotations.trendLineBelow.xMin = returnVal.xMin + this.trendAlgoStartingPoint
+        this.stockChart.options.plugins.annotation.annotations.trendLineBelow.xMax = returnVal.xMax + this.trendAlgoStartingPoint
+        this.stockChart.options.plugins.annotation.annotations.trendLineBelow.yMin = returnVal.belowyMin
+        this.stockChart.options.plugins.annotation.annotations.trendLineBelow.yMax = returnVal.belowyMax
       }
 
       console.log(shouldPlaceOrder)
@@ -374,6 +382,26 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
                 yMax: 0,
                 borderColor: '#040502',
                 borderWidth: 2
+              },
+              trendLineAbove: {
+                type: 'line',
+                //display: this.tempTrendAlgoStartingPoint != 0,
+                xMin: 0,
+                xMax: 0,
+                yMin: 0,
+                yMax: 0,
+                borderColor: '#5afefc',
+                borderWidth: 2
+              },
+              trendLineBelow: {
+                type: 'line',
+                //display: this.tempTrendAlgoStartingPoint != 0,
+                xMin: 0,
+                xMax: 0,
+                yMin: 0,
+                yMax: 0,
+                borderColor: '#5afefc',
+                borderWidth: 2
               }
             }
 
@@ -553,6 +581,18 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.stockChart.options.plugins.annotation.annotations.stopLossLine.yMax = 0
     this.stockChart.options.plugins.annotation.annotations.avgLine.yMin = 0
     this.stockChart.options.plugins.annotation.annotations.avgLine.yMax = 0
+    this.stockChart.options.plugins.annotation.annotations.trendLine.xMin = 0
+    this.stockChart.options.plugins.annotation.annotations.trendLine.xMax = 0
+    this.stockChart.options.plugins.annotation.annotations.trendLine.yMin = 0
+    this.stockChart.options.plugins.annotation.annotations.trendLine.yMax = 0
+    this.stockChart.options.plugins.annotation.annotations.trendLineAbove.xMin = 0
+    this.stockChart.options.plugins.annotation.annotations.trendLineAbove.xMax = 0
+    this.stockChart.options.plugins.annotation.annotations.trendLineAbove.yMin = 0
+    this.stockChart.options.plugins.annotation.annotations.trendLineAbove.yMax = 0
+    this.stockChart.options.plugins.annotation.annotations.trendLineBelow.xMin = 0
+    this.stockChart.options.plugins.annotation.annotations.trendLineBelow.xMax = 0
+    this.stockChart.options.plugins.annotation.annotations.trendLineBelow.yMin = 0
+    this.stockChart.options.plugins.annotation.annotations.trendLineBelow.yMax = 0
     this.stockChart.update()
   }
   onAlgoChanged(event: any) {
@@ -596,7 +636,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   }
   async onSelectedStockChange(event: any) {
     console.log(event)
-    if(event.isUserInput == true){
+    if (event.isUserInput == true) {
       this.selectedStockName = event.source.value
       await this.getStockData()
       this.unsubscribe()
@@ -610,7 +650,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       }
       this.onStartWebSocket()
     }
-    
+
   }
 
 

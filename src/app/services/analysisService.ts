@@ -232,6 +232,7 @@ export class AnalysisService {
         // Compute slope (m) and intercept (b)
         const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX ** 2);
         const intercept = (sumY - slope * sumX) / n;
+        console.log(intercept)
 
 
 
@@ -240,6 +241,14 @@ export class AnalysisService {
         const xMax = Math.max(...time);
         const yMin = slope * xMin + intercept;
         const yMax = slope * xMax + intercept;
+
+        //get the buffer zones to buy and sell between
+        const aboveyMin = slope * xMin + (intercept + 2);
+        const aboveyMax = slope * xMax + (intercept + 2);
+
+        const belowyMin = slope * xMin + (intercept - 2);
+        const belowyMax = slope * xMax + (intercept - 2);
+
 
         //find the trend line
         /* let dataPointTotal = 0
@@ -266,7 +275,11 @@ export class AnalysisService {
             xMin: xMin,
             xMax: xMax,
             yMin: yMin,
-            yMax: yMax
+            yMax: yMax,
+            aboveyMin: aboveyMin,
+            aboveyMax: aboveyMax,
+            belowyMin: belowyMin,
+            belowyMax: belowyMax
         }
 
     }

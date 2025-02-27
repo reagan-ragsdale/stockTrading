@@ -59,14 +59,11 @@ export const insertCall = async (): Promise<void> => {
     })
     schwabWebsocket.on('message', async (event) => {
         let newEvent = JSON.parse(event.toString())
-        console.log(newEvent)
 
 
         if (Object.hasOwn(newEvent, 'response')) {
             if (newEvent.response[0].requestid == 0 && hasBeenSent == false) {
-                console.log(newEvent.response[0].content)
                 schwabWebsocket.send(JSON.stringify(socketSendMsg))
-                console.log('send aapl')
                 hasBeenSent = true
             }
             /*  if (newEvent.response[0].service == 'NYSE_BOOK') {
