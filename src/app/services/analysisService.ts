@@ -265,17 +265,18 @@ export class AnalysisService {
 
         //figure out how much above and below the trend line the highest and lowest points are
         //y = mx + b
-        //we have  m,x need to find b
-        let interAbove = stock[highestPoint!.x]
-        let aboveB = interAbove - highestPoint!.y
-        let interBelow = stock[lowestPoint!.x]
-        let belowB = lowestPoint!.y - interBelow
+        //we have y, m,x need to find b
+        let highTrendY = (slope * highestPoint!.x) + intercept
+        let differenceHigh = highestPoint!.y - highTrendY
 
-        const aboveyMin = slope * xMin + (intercept + aboveB);
-        const aboveyMax = slope * xMax + (intercept + aboveB);
+        let lowTrendY = (slope * lowestPoint!.x) + intercept
+        let differenceLow = lowTrendY - highestPoint!.y
 
-        const belowyMin = slope * xMin + (intercept - belowB);
-        const belowyMax = slope * xMax + (intercept - belowB);
+        const aboveyMin = slope * xMin + (intercept + differenceHigh);
+        const aboveyMax = slope * xMax + (intercept + differenceHigh);
+
+        const belowyMin = slope * xMin + (intercept - differenceLow);
+        const belowyMax = slope * xMax + (intercept - differenceLow);
 
 
         //find the trend line
