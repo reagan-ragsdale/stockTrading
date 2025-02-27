@@ -267,11 +267,11 @@ export class AnalysisService {
         //y = mx + b
         //we have y, m,x need to find b
         let highTrendY = (slope * highestPoint!.x) + intercept
-        let differenceHigh = highestPoint!.y - highTrendY
+        let differenceHigh = highTrendY - highestPoint!.y
         console.log(differenceHigh)
 
         let lowTrendY = (slope * lowestPoint!.x) + intercept
-        let differenceLow = lowTrendY - highestPoint!.y
+        let differenceLow = highestPoint!.y - lowTrendY 
         console.log(differenceLow)
 
         const aboveyMin = slope * xMin + (intercept + differenceHigh);

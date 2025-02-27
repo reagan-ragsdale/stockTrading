@@ -400,7 +400,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
                 xMax: 0,
                 yMin: 0,
                 yMax: 0,
-                borderColor: '#5afefc',
+                borderColor: '#1b8e8d',
                 borderWidth: 2
               }
             }
