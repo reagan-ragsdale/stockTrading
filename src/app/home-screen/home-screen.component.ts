@@ -177,12 +177,12 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         shouldPlaceOrder = AnalysisService.checkIsLowBuyIsHighSell(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1), this.selectedStockHistoryData, this.stopLossPrice, this.tradeInitialAverage, this.tradeCurrentHigh)
       }
       else {
-        let returnVal = AnalysisService.trendTrading(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1), this.chartData.time.slice((this.chartData.time.length - this.trendAlgoStartingPoint) * -1),this.selectedStockHistoryData)
+        let returnVal = AnalysisService.trendTrading(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1),this.selectedStockHistoryData)
         console.log(returnVal)
-        this.stockChart.options.plugins.annotation.annotations.trendLine.xMin = returnVal.yMin
-        this.stockChart.options.plugins.annotation.annotations.trendLine.xMax = returnVal.yMax
-        this.stockChart.options.plugins.annotation.annotations.trendLine.yMin = returnVal.xMin
-        this.stockChart.options.plugins.annotation.annotations.trendLine.yMax = returnVal.xMax
+        this.stockChart.options.plugins.annotation.annotations.trendLine.xMin = returnVal.xMin
+        this.stockChart.options.plugins.annotation.annotations.trendLine.xMax = returnVal.xMax
+        this.stockChart.options.plugins.annotation.annotations.trendLine.yMin = returnVal.yMin
+        this.stockChart.options.plugins.annotation.annotations.trendLine.yMax = returnVal.yMax
       }
 
       console.log(shouldPlaceOrder)

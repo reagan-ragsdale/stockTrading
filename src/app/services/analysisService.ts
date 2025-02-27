@@ -207,7 +207,7 @@ export class AnalysisService {
     }
 
 
-    static trendTrading(stock: number[], time: number[], orderHistory: stockOrder[]) {
+    static trendTrading(stock: number[], orderHistory: stockOrder[]) {
 
 
         /* let nextOrderType = 'Buy'
@@ -218,6 +218,10 @@ export class AnalysisService {
                 nextOrderType = 'Sell'
             }
         } */
+       let time: number[] = []
+       for(let i = 1; i < stock.length; i++){
+        time.push(i)
+       }
 
         const n = stock.length;
         const sumX = time.reduce((a, b) => a + b, 0);
