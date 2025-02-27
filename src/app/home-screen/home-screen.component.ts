@@ -178,6 +178,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       }
       else {
         let returnVal = AnalysisService.trendTrading(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1), this.chartData.time.slice((this.chartData.time.length - this.trendAlgoStartingPoint) * -1),this.selectedStockHistoryData)
+        console.log(returnVal)
         this.stockChart.options.plugins.annotation.annotations.trendLine.xMin = returnVal.xMin
         this.stockChart.options.plugins.annotation.annotations.trendLine.xMax = returnVal.xMax
         this.stockChart.options.plugins.annotation.annotations.trendLine.yMin = returnVal.yMin
