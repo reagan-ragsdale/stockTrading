@@ -233,7 +233,7 @@ export class AnalysisService {
 
         // Get trendline start and end points
         const xMin = Math.min(...time);
-        const xMax = Math.max(...stock);
+        const xMax = Math.max(...time);
         const yMin = slope * xMin + intercept;
         const yMax = slope * xMax + intercept;
 
