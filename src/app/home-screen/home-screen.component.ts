@@ -394,7 +394,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
                 yMin: 0,
                 yMax: 0,
                 borderColor: '#5afefc',
-                borderWidth: 2
+                borderWidth: 2,
+                //white
               },
               trendLineBelow: {
                 type: 'line',
@@ -404,7 +405,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
                 yMin: 0,
                 yMax: 0,
                 borderColor: '#1b8e8d',
-                borderWidth: 2
+                borderWidth: 2,
+                //grey
               }
             }
 

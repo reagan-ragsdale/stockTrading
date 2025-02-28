@@ -270,12 +270,13 @@ export class AnalysisService {
         let differenceHigh = highTrendY - highestPoint!.y
         console.log(highTrendY)
         console.log(highestPoint!.y)
+        console.log(highTrendY - highestPoint!.y)
 
         let lowTrendY = (slope * lowestPoint!.x) + intercept
-        let differenceLow = highestPoint!.y - lowTrendY 
+        let differenceLow = lowestPoint!.y - lowTrendY 
         console.log(lowTrendY)
         console.log(highestPoint!.y)
-
+        console.log(lowestPoint!.y - lowTrendY)
         const aboveyMin = slope * xMin + (intercept - differenceHigh);
         const aboveyMax = slope * xMax + (intercept - differenceHigh);
 
