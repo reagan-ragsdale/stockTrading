@@ -31,7 +31,7 @@ import { DbStockHistoryData } from '../shared/tasks/dbStockHistoryData.js'
 import { DbCurrentDayStockData } from '../shared/tasks/dbCurrentDayStockData.js'
 import { loadDailyDataIntoHistory } from '../app/apiCalls/loadDailyDataIntoHistory.js'
 import { DbLevelTwoData } from '../shared/tasks/dbLevelTwoData.js'
-import { startWorker } from './insertStockData.js'
+import { startWorker } from './spawnSocketWorker.js'
 
 //import ev from '../../environmentVariables.json'
 

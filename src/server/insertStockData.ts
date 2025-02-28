@@ -4,10 +4,9 @@ import { DbCurrentDayStockData, dbCurrentDayStockDataRepo } from "../shared/task
 import { DbLevelTwoData, dbLevelTwoDataRepo } from "../shared/tasks/dbLevelTwoData.js";
 import { dbTokenRepo, DbTOkens } from "../shared/tasks/dbTokens.js"
 import { WebSocket } from 'ws';
-import { Worker } from 'node:worker_threads'
 
-export const startWorker = async (): Promise<void> => {
-    const worker = new Worker(`console.log('here in insert file')
+
+    console.log('here in insert file')
     const userData = await dbTokenRepo.findFirst({ id: { '!=': '' } }) as DbTOkens
 
     const schwabWebsocket = new WebSocket(userData.streamerSocketUrl)
@@ -74,11 +73,7 @@ export const startWorker = async (): Promise<void> => {
             }
 
         }
-    });`, { eval: true })
+    });
 
 
 
-
-
-
-}
