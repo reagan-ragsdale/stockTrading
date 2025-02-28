@@ -286,7 +286,7 @@ export class AnalysisService {
         const belowyMax = slope * xMax + interceptBelow;
 
 
-        const gutterFactor = .3
+        const gutterFactor = .45
 
         const gutterAboveIntercept = interceptAbove - Math.abs(differenceHigh * gutterFactor)
         const gutterBelowIntercept = interceptBelow + Math.abs(differenceLow * gutterFactor)
