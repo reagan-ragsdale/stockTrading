@@ -255,11 +255,11 @@ export class AnalysisService {
             let distance = (slope * i - stock[i] + intercept) / Math.sqrt(slope * slope + 1);
             if (distance > maxDistance) {
                 maxDistance = distance;
-                highestPoint = {x: i, y: stock[i]};
+                lowestPoint = {x: i, y: stock[i]};
             }
             if(distance < minDistance){
                 minDistance = distance
-                lowestPoint = {x: i, y: stock[i]};
+                highestPoint = {x: i, y: stock[i]};
             }
         }
 
@@ -277,11 +277,11 @@ export class AnalysisService {
         console.log(lowTrendY)
         console.log(highestPoint!.y)
         console.log(lowestPoint!.y - lowTrendY)
-        const aboveyMin = slope * xMin + (intercept - differenceHigh);
-        const aboveyMax = slope * xMax + (intercept - differenceHigh);
+        const aboveyMin = slope * xMin + (intercept + differenceHigh);
+        const aboveyMax = slope * xMax + (intercept + differenceHigh);
 
-        const belowyMin = slope * xMin + (intercept + differenceLow);
-        const belowyMax = slope * xMax + (intercept + differenceLow);
+        const belowyMin = slope * xMin + (intercept - differenceLow);
+        const belowyMax = slope * xMax + (intercept - differenceLow);
 
 
         //find the trend line
