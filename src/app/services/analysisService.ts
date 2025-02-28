@@ -274,11 +274,11 @@ export class AnalysisService {
         let differenceLow = highestPoint!.y - lowTrendY 
         console.log(differenceLow)
 
-        const aboveyMin = slope * xMin + (intercept + differenceHigh);
-        const aboveyMax = slope * xMax + (intercept + differenceHigh);
+        const aboveyMin = slope * xMin + (intercept - differenceHigh);
+        const aboveyMax = slope * xMax + (intercept - differenceHigh);
 
-        const belowyMin = slope * xMin + (intercept - differenceLow);
-        const belowyMax = slope * xMax + (intercept - differenceLow);
+        const belowyMin = slope * xMin + (intercept + differenceLow);
+        const belowyMax = slope * xMax + (intercept + differenceLow);
 
 
         //find the trend line
