@@ -143,7 +143,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       .subscribe(info => {
         this.chartInfo = info.applyChanges(this.chartInfo);
         this.refreshData();
-  })
+      })
   }
 
   chartData: StockAnalysisDto = {
@@ -194,6 +194,14 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         this.stockChart.options.plugins.annotation.annotations.trendLineBelow.xMax = returnVal.xMax + this.trendAlgoStartingPoint
         this.stockChart.options.plugins.annotation.annotations.trendLineBelow.yMin = returnVal.belowyMin
         this.stockChart.options.plugins.annotation.annotations.trendLineBelow.yMax = returnVal.belowyMax
+        this.stockChart.options.plugins.annotation.annotations.gutterLineAbove.xMin = returnVal.xMin + this.trendAlgoStartingPoint
+        this.stockChart.options.plugins.annotation.annotations.gutterLineAbove.xMax = returnVal.xMax + this.trendAlgoStartingPoint
+        this.stockChart.options.plugins.annotation.annotations.gutterLineAbove.yMin = returnVal.gutterLineAboveMin
+        this.stockChart.options.plugins.annotation.annotations.gutterLineAbove.yMax = returnVal.gutterLineAboveMax
+        this.stockChart.options.plugins.annotation.annotations.gutterLineBelow.xMin = returnVal.xMin + this.trendAlgoStartingPoint
+        this.stockChart.options.plugins.annotation.annotations.gutterLineBelow.xMax = returnVal.xMax + this.trendAlgoStartingPoint
+        this.stockChart.options.plugins.annotation.annotations.gutterLineBelow.yMin = returnVal.gutterLineBelowMin
+        this.stockChart.options.plugins.annotation.annotations.gutterLineBelow.yMax = returnVal.gutterLineBelowMax
       }
 
       console.log(shouldPlaceOrder)
@@ -407,6 +415,28 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
                 borderColor: '#1b8e8d',
                 borderWidth: 2,
                 //grey
+              },
+              gutterLineAbove: {
+                type: 'line',
+                //display: this.tempTrendAlgoStartingPoint != 0,
+                xMin: 0,
+                xMax: 0,
+                yMin: 0,
+                yMax: 0,
+                borderColor: '#ff2b2b',
+                borderWidth: 2,
+                //red
+              },
+              gutterLineBelow: {
+                type: 'line',
+                //display: this.tempTrendAlgoStartingPoint != 0,
+                xMin: 0,
+                xMax: 0,
+                yMin: 0,
+                yMax: 0,
+                borderColor: '#2b88ff',
+                borderWidth: 2,
+                //blue
               }
             }
 
@@ -598,6 +628,14 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.stockChart.options.plugins.annotation.annotations.trendLineBelow.xMax = 0
     this.stockChart.options.plugins.annotation.annotations.trendLineBelow.yMin = 0
     this.stockChart.options.plugins.annotation.annotations.trendLineBelow.yMax = 0
+    this.stockChart.options.plugins.annotation.annotations.gutterLineAbove.xMin = 0
+    this.stockChart.options.plugins.annotation.annotations.gutterLineAbove.xMax = 0
+    this.stockChart.options.plugins.annotation.annotations.gutterLineAbove.yMin = 0
+    this.stockChart.options.plugins.annotation.annotations.gutterLineAbove.yMax = 0
+    this.stockChart.options.plugins.annotation.annotations.gutterLineBelow.xMin = 0
+    this.stockChart.options.plugins.annotation.annotations.gutterLineBelow.xMax = 0
+    this.stockChart.options.plugins.annotation.annotations.gutterLineBelow.yMin = 0
+    this.stockChart.options.plugins.annotation.annotations.gutterLineBelow.yMax = 0
     this.stockChart.update()
   }
   onAlgoChanged(event: any) {

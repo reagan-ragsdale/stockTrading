@@ -277,11 +277,25 @@ export class AnalysisService {
         console.log(lowTrendY)
         console.log(highestPoint!.y)
         console.log(lowestPoint!.y - lowTrendY)
-        const aboveyMin = slope * xMin + (intercept + differenceHigh);
-        const aboveyMax = slope * xMax + (intercept + differenceHigh);
+        const interceptAbove = intercept + differenceHigh
+        const aboveyMin = slope * xMin + interceptAbove;
+        const aboveyMax = slope * xMax + interceptAbove;
 
-        const belowyMin = slope * xMin + (intercept - differenceLow);
-        const belowyMax = slope * xMax + (intercept - differenceLow);
+        const interceptBelow = intercept - differenceLow 
+        const belowyMin = slope * xMin + interceptBelow;
+        const belowyMax = slope * xMax + interceptBelow;
+
+
+        const gutterFactor = .3
+
+        const gutterAboveIntercept = interceptAbove - Math.abs(differenceHigh * gutterFactor)
+        const gutterBelowIntercept = interceptBelow + Math.abs(differenceLow * gutterFactor)
+
+        const gutterLineAboveMin = slope * xMin + gutterAboveIntercept
+        const gutterLineAboveMax = slope * xMax + gutterAboveIntercept
+
+        const gutterLineBelowMin = slope * xMin + gutterBelowIntercept
+        const gutterLineBelowMax = slope * xMax + gutterBelowIntercept
 
 
         //find the trend line
@@ -313,7 +327,11 @@ export class AnalysisService {
             aboveyMin: aboveyMin,
             aboveyMax: aboveyMax,
             belowyMin: belowyMin,
-            belowyMax: belowyMax
+            belowyMax: belowyMax,
+            gutterLineAboveMin: gutterLineAboveMin,
+            gutterLineAboveMax: gutterLineAboveMax,
+            gutterLineBelowMin: gutterLineBelowMin,
+            gutterLineBelowMax: gutterLineBelowMax
         }
 
     }
