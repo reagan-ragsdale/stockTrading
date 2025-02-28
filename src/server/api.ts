@@ -26,12 +26,13 @@ import { DbRegressionOrders } from '../shared/tasks/dbRegressionOrders.js'
 import { RegressionStockController } from '../shared/controllers/RegressionStockController.js'
 import { dbRegressionUserStocks } from '../shared/tasks/dbRegressionUserStocks.js'
 import { DbTOkens } from '../shared/tasks/dbTokens.js'
-import { insertCall } from './insertStockData.js'
 import { StockHistoryController } from '../shared/controllers/StockHistoryController.js'
 import { DbStockHistoryData } from '../shared/tasks/dbStockHistoryData.js'
 import { DbCurrentDayStockData } from '../shared/tasks/dbCurrentDayStockData.js'
 import { loadDailyDataIntoHistory } from '../app/apiCalls/loadDailyDataIntoHistory.js'
 import { DbLevelTwoData } from '../shared/tasks/dbLevelTwoData.js'
+import { startWorker } from './spawnSocketWorker.js'
+
 //import ev from '../../environmentVariables.json'
 
 config()
@@ -58,7 +59,7 @@ export const api = remultExpress({
     })  */ ,
     initRequest
     ,initApi: async () => {
-      insertCall(),
+      startWorker(),
       //cron.schedule('30 14 * * *', () => insertCall())
       cron.schedule('*/25 * * * *', () => loadNewToken()),
       cron.schedule('0 22 * * * ', () => loadDailyDataIntoHistory())

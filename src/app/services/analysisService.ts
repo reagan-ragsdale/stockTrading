@@ -210,14 +210,14 @@ export class AnalysisService {
     static trendTrading(stock: number[], orderHistory: stockOrder[]) {
 
 
-        /* let nextOrderType = 'Buy'
+        let nextOrderType = 'Buy'
         let lastOrderPrice = 0
         if (orderHistory.length > 0) {
             lastOrderPrice = orderHistory[0].stockPrice
             if (orderHistory[0].orderType == 'Buy') {
                 nextOrderType = 'Sell'
             }
-        } */
+        }
        let time: number[] = []
        for(let i = 1; i < stock.length; i++){
         time.push(i)
@@ -232,7 +232,6 @@ export class AnalysisService {
         // Compute slope (m) and intercept (b)
         const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX ** 2);
         const intercept = (sumY - slope * sumX) / n;
-        console.log(intercept)
 
 
 
@@ -268,15 +267,9 @@ export class AnalysisService {
         //we have y, m,x need to find b
         let highTrendY = (slope * highestPoint!.x) + intercept
         let differenceHigh = highestPoint!.y - highTrendY 
-        console.log(highTrendY)
-        console.log(highestPoint!.y)
-        console.log(highTrendY - highestPoint!.y)
 
         let lowTrendY = (slope * lowestPoint!.x) + intercept
         let differenceLow = lowTrendY - lowestPoint!.y
-        console.log(lowTrendY)
-        console.log(highestPoint!.y)
-        console.log(lowestPoint!.y - lowTrendY)
         const interceptAbove = intercept + differenceHigh
         const aboveyMin = slope * xMin + interceptAbove;
         const aboveyMax = slope * xMax + interceptAbove;
@@ -298,27 +291,23 @@ export class AnalysisService {
         const gutterLineBelowMax = slope * xMax + gutterBelowIntercept
 
 
-        //find the trend line
-        /* let dataPointTotal = 0
-        let xAxisTotal = 0
-        for (let i = 0; i < stock.length; i++) {
-            dataPointTotal += stock[i]
-            xAxisTotal += i
+        let incomingPoint = stock[stock.length - 1]
+
+        let shouldPlaceTrade = false;
+
+        if(nextOrderType == 'Buy'){
+            if(incomingPoint <= gutterLineBelowMax){
+                shouldPlaceTrade = true
+            }
         }
-        let averageOfDataPoints = dataPointTotal / stock.length
-        let xAxisAverage = xAxisTotal / stock.length
-
-
-        let numerator = 0
-        let denominator = 0
-
-        for (let i = 0; i < stock.length; i++) {
-            numerator += ((stock[i] - averageOfDataPoints) * (i - xAxisAverage))
-            denominator += ((stock[i] - averageOfDataPoints) * (stock[i] - averageOfDataPoints))
+        // else sell
+        else{
+            if(incomingPoint >= gutterLineAboveMax){
+                shouldPlaceTrade = true
+            }
         }
-        let trend = numerator / denominator
 
-        let trendDirection = trend > 0 ? 'Positive' : 'Negative' */
+
         return{
             xMin: xMin,
             xMax: xMax,
@@ -331,7 +320,9 @@ export class AnalysisService {
             gutterLineAboveMin: gutterLineAboveMin,
             gutterLineAboveMax: gutterLineAboveMax,
             gutterLineBelowMin: gutterLineBelowMin,
-            gutterLineBelowMax: gutterLineBelowMax
+            gutterLineBelowMax: gutterLineBelowMax,
+            shouldPlaceTrade: shouldPlaceTrade,
+            orderType: nextOrderType
         }
 
     }
