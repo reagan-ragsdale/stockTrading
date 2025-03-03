@@ -337,6 +337,7 @@ export class AnalysisService {
             shouldPlaceTrade: shouldPlaceTrade,
             orderType: nextOrderType
         } */
+       return {shouldPlaceTrade: false}
 
     }
 
