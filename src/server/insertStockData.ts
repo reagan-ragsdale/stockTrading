@@ -110,6 +110,7 @@ export const socketCall = async (): Promise<void> => {
     schwabWebsocket.on('message', async (event) => {
         console.log('hererere')
         let newEvent = JSON.parse(event.toString())
+        console.log(newEvent)
 
 
         if (Object.hasOwn(newEvent, 'response')) {
