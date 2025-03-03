@@ -48,10 +48,12 @@ export const socketCall = async (): Promise<void> => {
         // Checks out an idle connection in the pool to access the database
         const client = await pool.connect();
         try {
+            console.log('here before insert')
             // Makes a query with the client from the pool
             const text = 'INSERT INTO dbcurrentdaystockdata (stockname, stockprice, time) VALUES($1, $2, $3)';
             const values = [data.stockName, data.stockPrice, data.time]
             await client.query(text,values);
+            console.log('here after insert')
         } catch (err) { 
             console.error(err);
         } finally {
@@ -61,7 +63,7 @@ export const socketCall = async (): Promise<void> => {
     };
 
     const userData = await dbTokenRepo.findFirst({ id: { '!=': '' } }) as DbTOkens
-
+    console.log('here 1')
     //const worker = new Worker("./spawnSocketWorker.js", { workerData: userData})
 
     /* worker.on('message', async (data) => {
@@ -125,7 +127,9 @@ export const socketCall = async (): Promise<void> => {
                             time: Number(newEvent.data[0].timestamp)
                         }
                         //insertData.push(data)
+                        console.log('here 2')
                         await poolConnection(data)
+                        console.log('here 3')
                     }
 
                 }
