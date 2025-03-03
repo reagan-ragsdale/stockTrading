@@ -31,7 +31,7 @@ import { DbStockHistoryData } from '../shared/tasks/dbStockHistoryData.js'
 import { DbCurrentDayStockData } from '../shared/tasks/dbCurrentDayStockData.js'
 import { loadDailyDataIntoHistory } from '../app/apiCalls/loadDailyDataIntoHistory.js'
 import { DbLevelTwoData } from '../shared/tasks/dbLevelTwoData.js'
-import { startWorker } from './spawnSocketWorker.js'
+import { socketCall } from './insertStockData.js'
 
 //import ev from '../../environmentVariables.json'
 
@@ -59,7 +59,7 @@ export const api = remultExpress({
     })  */ ,
     initRequest
     ,initApi: async () => {
-      //startWorker(),
+      socketCall(),
       //cron.schedule('30 14 * * *', () => insertCall())
       cron.schedule('*/25 * * * *', () => loadNewToken()),
       cron.schedule('0 22 * * * ', () => loadDailyDataIntoHistory())
