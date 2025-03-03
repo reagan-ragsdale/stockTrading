@@ -28,14 +28,14 @@ import { TestTradeComponent } from './test-trade/test-trade.component';
 import { RegressionStockController } from '../../shared/controllers/RegressionStockController';
 import { RegressionOrderController } from '../../shared/controllers/RegressionOrderController';
 import { RegressionOrderService } from '../services/regressionOrderService';
-import {MatMenuModule} from '@angular/material/menu';
+import { MatMenuModule } from '@angular/material/menu';
 import { Router } from '@angular/router';
 import { DbCurrentDayStockData, dbCurrentDayStockDataRepo } from '../../shared/tasks/dbCurrentDayStockData';
 import { DbStockHistoryData, dbStockHistoryDataRepo } from '../../shared/tasks/dbStockHistoryData';
-import {MatSelectModule} from '@angular/material/select';
+import { MatSelectModule } from '@angular/material/select';
 @Component({
   selector: 'app-test-screen',
-  imports: [CommonModule, FormsModule,MatSelectModule,TestTradeComponent,MatMenuModule, MatInputModule, MatFormFieldModule, MatIconModule, MatRadioModule, MatProgressSpinnerModule, MatButtonModule, MatButtonToggleModule],
+  imports: [CommonModule, FormsModule, MatSelectModule, TestTradeComponent, MatMenuModule, MatInputModule, MatFormFieldModule, MatIconModule, MatRadioModule, MatProgressSpinnerModule, MatButtonModule, MatButtonToggleModule],
   templateUrl: './test-screen.component.html',
   styleUrl: './test-screen.component.css'
 })
@@ -80,7 +80,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
   targetPrice: number = 0
   stopLossPrice: number = 0
   tradeInitialAverage: number = 0
-  tradeCurrentHigh:number = 0
+  tradeCurrentHigh: number = 0
   isOrderPending: boolean = false;
   tempSelectedAlgo: string = ''
   selectedAlgo: string = ''
@@ -91,7 +91,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
   distinctDates: string[] = []
   selectedDate: string = ''
 
- 
+
   showAddFunds() {
     const dialogRef = this.dialog.open(TestAddFundsComponent, {
       width: '300px',
@@ -128,9 +128,9 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     this.selectedStockHistoryData = this.stockHistoryData.filter(e => e.stockName == this.selectedStockName)
 
     //below is most likely not the best wat to find the net but it'll work for now
-    for(let i = 0; i < this.selectedStockHistoryData.length - 1; i++){
+    for (let i = 0; i < this.selectedStockHistoryData.length - 1; i++) {
       //need to find each pair of buy and sells
-      if(this.selectedStockHistoryData[i].orderType == 'Sell' && this.selectedStockHistoryData[i + 1].orderType == 'Buy'){
+      if (this.selectedStockHistoryData[i].orderType == 'Sell' && this.selectedStockHistoryData[i + 1].orderType == 'Buy') {
         this.selectedStockTotalNet += ((this.selectedStockHistoryData[i].shareQty * this.selectedStockHistoryData[i].stockPrice) - (this.selectedStockHistoryData[i + 1].shareQty * this.selectedStockHistoryData[i + 1].stockPrice))
       }
     }
@@ -165,7 +165,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     this.chartData.labels.push(reusedFunctions.epochToLocalTime(data.time))
     this.chartData.time.push(data.time)
     this.selectedStockCurrent = this.chartData.history[this.chartData.history.length - 1]
-    
+
     if (this.isUserOrBot == 'Bot' && this.isBotAuthorized == true && this.chartData.history.length >= 400) {
       let shouldPlaceOrder: buySellDto = {
         shouldExecuteOrder: false
@@ -173,30 +173,23 @@ export class TestScreenComponent implements OnInit, OnDestroy {
       if (this.selectedAlgo == 'highLow') {
         shouldPlaceOrder = AnalysisService.checkIsLowBuyIsHighSell(this.chartData.history.slice(-401), this.selectedStockHistoryData, this.stopLossPrice, this.tradeInitialAverage, this.tradeCurrentHigh)
       }
-      else if(this.selectedAlgo == 'trend'){
-        //shouldPlaceOrder = AnalysisService.trendTrading(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1), this.selectedStockHistoryData)
-      }
-      else if(this.selectedAlgo == 'trendV2'){
-        let returnVal = 0
-        returnVal = AnalysisService.predicitveTrendLine(this.chartData, this.selectedStockHistoryData)
-        console.log(returnVal)
-        
-
+      else if (this.selectedAlgo == 'trend') {
+        shouldPlaceOrder = AnalysisService.trendTrading(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1), this.selectedStockHistoryData)
       }
 
 
       //add check to see when the last order was placed. Don't want to be placing order every 3 seconds
       //maybe wait 30 seconds
-      /* if (shouldPlaceOrder.shouldExecuteOrder == true && !this.isOrderPending) {
+      if (shouldPlaceOrder.shouldExecuteOrder == true && !this.isOrderPending) {
         await this.placeOrder(shouldPlaceOrder.isBuyOrSell!)
         this.stockChart.options.plugins.annotation.annotations.orderLine.yMin = this.selectedStockHistoryData[0]?.stockPrice
         this.stockChart.options.plugins.annotation.annotations.orderLine.yMax = this.selectedStockHistoryData[0]?.stockPrice
       }
-      else{
-        if(shouldPlaceOrder.stopLossPrice !== undefined){
+      else {
+        if (shouldPlaceOrder.stopLossPrice !== undefined) {
           this.stopLossPrice = shouldPlaceOrder.stopLossPrice
         }
-        if(shouldPlaceOrder.tradeHigh !== undefined){
+        if (shouldPlaceOrder.tradeHigh !== undefined) {
           this.tradeCurrentHigh = shouldPlaceOrder.tradeHigh
         }
       }
@@ -204,7 +197,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
         this.targetPrice = shouldPlaceOrder.targetPrice
         this.stockChart.options.plugins.annotation.annotations.targetLine.yMin = this.targetPrice
         this.stockChart.options.plugins.annotation.annotations.targetLine.yMax = this.targetPrice
-      } */
+      }
     }
     this.updateChart()
 
@@ -220,7 +213,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     this.stockChart.update()
   }
   updateVolumeChart() {
-   
+
 
     this.volumeChart.options.scales.y.max = this.selectedStockVolumeHigh + 10000
     this.volumeChart.options.scales.y.min = this.selectedStockVolumeLow - 10000
@@ -297,56 +290,120 @@ export class TestScreenComponent implements OnInit, OnDestroy {
 
           }
 
-        },/* 
+        },
         plugins: {
           annotation: {
             annotations: {
-              orderLine0: {
+              orderLine: {
                 type: 'line',
-                xMin: 0,
-                xMax: 0,
+                //display: this.selectedStockHistoryData.length > 0,
+                yMin: this.selectedStockHistoryData.length > 0 ? this.selectedStockHistoryData[0]?.stockPrice : 0,
+                yMax: this.selectedStockHistoryData.length > 0 ? this.selectedStockHistoryData[0]?.stockPrice : 0,
                 borderColor: '#7874ff',
+                borderWidth: 2,
+                label: {
+                  content: 'Previous Order'
+                }
+              },
+              targetLine: {
+                type: 'line',
+                //display: this.targetPrice != 0,
+                yMin: this.targetPrice,
+                yMax: this.targetPrice,
+                borderColor: '#ff8f50',
+                borderWidth: 2,
+                label: {
+                  content: 'Target'
+                }
+              },
+              stopLossLine: {
+                type: 'line',
+                //display: this.stopLossPrice != 0,
+                yMin: this.stopLossPrice,
+                yMax: this.stopLossPrice,
+                borderColor: '#ea4c4c',
+                borderWidth: 2,
+                label: {
+                  content: 'Stop Loss'
+                }
+              },
+              avgLine: {
+                type: 'line',
+                //display: this.tradeInitialAverage != 0,
+                yMin: this.tradeInitialAverage,
+                yMax: this.tradeInitialAverage,
+                borderColor: '#9dfd01',
+                borderWidth: 2,
+                label: {
+                  content: 'Stop Loss'
+                }
+              },
+              trendIndex: {
+                type: 'line',
+                //display: this.tempTrendAlgoStartingPoint != 0,
+                xMin: this.trendAlgoStartingPoint,
+                xMax: this.trendAlgoStartingPoint,
+                borderColor: '#ff82e3',
                 borderWidth: 2
               },
-              orderLine1: {
+              trendLine: {
                 type: 'line',
+                //display: this.tempTrendAlgoStartingPoint != 0,
                 xMin: 0,
                 xMax: 0,
-                borderColor: '#7874ff',
+                yMin: 0,
+                yMax: 0,
+                borderColor: '#040502',
                 borderWidth: 2
               },
-              orderLine2: {
+              trendLineAbove: {
                 type: 'line',
+                //display: this.tempTrendAlgoStartingPoint != 0,
                 xMin: 0,
                 xMax: 0,
-                borderColor: '#7874ff',
-                borderWidth: 2
+                yMin: 0,
+                yMax: 0,
+                borderColor: '#5afefc',
+                borderWidth: 2,
+                //white
               },
-              orderLine3: {
+              trendLineBelow: {
                 type: 'line',
+                //display: this.tempTrendAlgoStartingPoint != 0,
                 xMin: 0,
                 xMax: 0,
-                borderColor: '#7874ff',
-                borderWidth: 2
+                yMin: 0,
+                yMax: 0,
+                borderColor: '#1b8e8d',
+                borderWidth: 2,
+                //grey
               },
-              orderLine4: {
+              gutterLineAbove: {
                 type: 'line',
+                //display: this.tempTrendAlgoStartingPoint != 0,
                 xMin: 0,
                 xMax: 0,
-                borderColor: '#7874ff',
-                borderWidth: 2
+                yMin: 0,
+                yMax: 0,
+                borderColor: '#ff2b2b',
+                borderWidth: 2,
+                //red
               },
-              orderLine5: {
+              gutterLineBelow: {
                 type: 'line',
+                //display: this.tempTrendAlgoStartingPoint != 0,
                 xMin: 0,
                 xMax: 0,
-                borderColor: '#7874ff',
-                borderWidth: 2
+                yMin: 0,
+                yMax: 0,
+                borderColor: '#2b88ff',
+                borderWidth: 2,
+                //blue
               }
             }
 
           }
-        }  */
+        }
       }
     })
 
@@ -437,7 +494,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
 
   }
 
-  
+
 
   tradeBuyOrSell = 'Buy'
   placeTrade() {
@@ -525,42 +582,50 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     this.stockChart.options.plugins.annotation.annotations.trendIndex.xMax = this.tempTrendAlgoStartingPoint
     this.stockChart.update()
   }
-  navToLiveEnv(){
+  navToLiveEnv() {
     this.router.navigate(['/home'])
   }
 
   speed = 400
-  async startTestThing(){
-    let allDayStockData = await dbStockHistoryDataRepo.find({where: {stockName: 'AAPL', date: '19/02/2025'},orderBy: {time: 'asc'}})
+  async startTestThing() {
+    let allDayStockData = await dbStockHistoryDataRepo.find({ where: { stockName: 'AAPL', date: '19/02/2025' }, orderBy: { time: 'asc' } })
     console.log(allDayStockData.length)
-      for(let i = 0; i < allDayStockData.length; i++){
-        let stockData: DbCurrentDayStockData = {
-          stockName: allDayStockData[i].stockName,
-          stockPrice: allDayStockData[i].stockPrice,
-          time: allDayStockData[i].time
-        }
-        await this.refreshData(stockData)
-        await new Promise(resolve => setTimeout(resolve, 100));
+    for (let i = 0; i < allDayStockData.length; i++) {
+      let stockData: DbCurrentDayStockData = {
+        stockName: allDayStockData[i].stockName,
+        stockPrice: allDayStockData[i].stockPrice,
+        time: allDayStockData[i].time
       }
-    
-    
+      await this.refreshData(stockData)
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+
+
   }
-  changeSpeed(speed: number){
+  changeSpeed(speed: number) {
     console.log('here in change speed')
     this.speed = speed
   }
-  onSelectedDateChange(event: any){
-    this.selectedDate = event.source.value
-    this.updateStockChartData()
+  onSelectedDateChange(event: any) {
+    if (event.isUserInput == true) {
+      this.selectedDate = event.source.value
+      this.updateStockChartData()
+    }
   }
-  async beginSimulation(){
+  async onSelectedStockChange(event: any) {
+    if (event.isUserInput == true) {
+      this.selectedStockName = event.source.value
+      await this.getStockHistoricalData()
+    }
+  }
+  async beginSimulation() {
     this.chartData.history = []
     this.chartData.labels = []
     this.selectedStockCurrent = 0
     this.selectedStockHigh = 0
     this.selectedStockLow = 0
     this.updateChart()
-    for(let i = 0; i < this.stockDataForSelectedDay.length; i++){
+    for (let i = 0; i < this.stockDataForSelectedDay.length; i++) {
       let stockData: DbCurrentDayStockData = {
         stockName: this.stockDataForSelectedDay[i].stockName,
         stockPrice: this.stockDataForSelectedDay[i].stockPrice,
@@ -570,36 +635,40 @@ export class TestScreenComponent implements OnInit, OnDestroy {
       await new Promise(resolve => setTimeout(resolve, 100));
     }
   }
-  endSimulation(){
+  endSimulation() {
 
   }
-  async getStockHistoricalData(){
-    this.allStockDataForSelectedStock = await dbStockHistoryDataRepo.find({where: {stockName: this.selectedStockName}, orderBy: {time: 'asc'}})
-    this.distinctDates = this.allStockDataForSelectedStock.map(e => e.date).filter((v,i,a) => a.indexOf(v) === i)
+  async getStockHistoricalData() {
+    this.allStockDataForSelectedStock = await dbStockHistoryDataRepo.find({ where: { stockName: this.selectedStockName }, orderBy: { time: 'asc' } })
+    this.distinctDates = this.allStockDataForSelectedStock.map(e => e.date).filter((v, i, a) => a.indexOf(v) === i)
     this.selectedDate = this.distinctDates[0]
-    
+
     this.updateStockChartData()
   }
-  updateStockChartData(){
+  updateStockChartData() {
     this.stockDataForSelectedDay = this.allStockDataForSelectedStock.filter(e => e.date == this.selectedDate)
     this.chartData.history = this.stockDataForSelectedDay.map(e => e.stockPrice)
     this.chartData.labels = this.stockDataForSelectedDay.map(e => reusedFunctions.epochToLocalTime(e.time))
-    
+
     this.updateChart()
   }
   stockDataForSelectedDay: DbStockHistoryData[] = []
   allStockDataForSelectedStock: DbStockHistoryData[] = []
+  distinctStocks: string[] = []
   isLoading: boolean = true;
+
   async ngOnInit() {
     Chart.register(annotationPlugin);
     Chart.register(...registerables)
-    this.selectedStockName = 'AAPL'
     let user = await remult.initUser()
     //await this.getMovers()
+    this.distinctStocks = (await dbStockHistoryDataRepo.groupBy({ group: ['stockName'], orderBy: { stockName: 'desc' } })).map(e => e.stockName)
+    this.selectedStockName = this.distinctStocks[0]
     await this.getUserFinanceData()
     await this.getStockData()
     this.createOrUpdateChart()
     //this.createVolumeChart()
+    
     await this.getStockHistoricalData()
     //await this.startTestThing()
     /*  this.unsubscribe = rhRepo

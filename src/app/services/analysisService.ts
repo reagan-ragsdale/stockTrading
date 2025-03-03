@@ -207,7 +207,7 @@ export class AnalysisService {
     }
 
 
-    static trendTrading(stock: number[], orderHistory: stockOrder[]) {
+    static trendTrading(stock: number[], orderHistory: stockOrder[]): buySellDto {
 
 
         let nextOrderType = 'Buy'
@@ -337,7 +337,7 @@ export class AnalysisService {
             shouldPlaceTrade: shouldPlaceTrade,
             orderType: nextOrderType
         } */
-       return {shouldPlaceTrade: false}
+       return {shouldExecuteOrder: false}
 
     }
 

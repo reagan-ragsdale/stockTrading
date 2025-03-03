@@ -47,6 +47,12 @@
             <div style="display: flex;">
                 <div style="display: flex; gap: 1rem;align-items: center;">
                     <mat-form-field>
+                        <mat-label>Select Stock</mat-label>
+                        <mat-select disableRipple [(value)]="selectedStockName">
+                          <mat-option *ngFor="let stock of distinctStocks" value="{{stock}}" (onSelectionChange)="onSelectedStockChange($event)">{{stock}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    <mat-form-field>
                         <mat-label>Select date</mat-label>
                         <mat-select disableRipple [(value)]="selectedDate">
                           <mat-option *ngFor="let date of distinctDates" value="{{date}}" (onSelectionChange)="onSelectedDateChange($event)">{{date}}</mat-option>
