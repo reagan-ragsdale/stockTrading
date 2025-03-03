@@ -104,9 +104,11 @@ export const socketCall = async (): Promise<void> => {
         ]
     }
     schwabWebsocket.on('open', () => {
+        console.log('asdfasdf')
         schwabWebsocket.send(JSON.stringify(loginMsg))
     })
     schwabWebsocket.on('message', async (event) => {
+        console.log('hererere')
         let newEvent = JSON.parse(event.toString())
 
 
