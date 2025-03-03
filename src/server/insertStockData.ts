@@ -118,28 +118,34 @@ export const socketCall = async (): Promise<void> => {
                 hasBeenSent = true
             }
         }
-        if (Object.hasOwn(newEvent, 'data') && hasBeenSent == true) {
-            if (newEvent.data[0].service == 'LEVELONE_EQUITIES') {
-                let insertData: DbCurrentDayStockData[] = []
-                for (let i = 0; i < newEvent.data[0].content.length; i++) {
-                    if (Object.hasOwn(newEvent.data[0].content[i], '3')) {
-                        let data: DbCurrentDayStockData = {
-                            stockName: newEvent.data[0].content[i].key,
-                            stockPrice: newEvent.data[0].content[i]['3'],
-                            time: Number(newEvent.data[0].timestamp)
+        try{
+            if (Object.hasOwn(newEvent, 'data') && hasBeenSent == true) {
+                if (newEvent.data[0].service == 'LEVELONE_EQUITIES') {
+                    let insertData: DbCurrentDayStockData[] = []
+                    for (let i = 0; i < newEvent.data[0].content.length; i++) {
+                        if (Object.hasOwn(newEvent.data[0].content[i], '3')) {
+                            let data: DbCurrentDayStockData = {
+                                stockName: newEvent.data[0].content[i].key,
+                                stockPrice: newEvent.data[0].content[i]['3'],
+                                time: Number(newEvent.data[0].timestamp)
+                            }
+                            //insertData.push(data)
+                            console.log('here 2')
+                            await poolConnection(data)
+                            console.log('here 3')
                         }
-                        //insertData.push(data)
-                        console.log('here 2')
-                        await poolConnection(data)
-                        console.log('here 3')
+    
                     }
-
+                    //await dbCurrentDayStockDataRepo.insert(insertData)
+    
                 }
-                //await dbCurrentDayStockDataRepo.insert(insertData)
-
+    
             }
-
         }
+        catch(error: any){
+            console.log(error.message)
+        }
+        
     });
 
 
