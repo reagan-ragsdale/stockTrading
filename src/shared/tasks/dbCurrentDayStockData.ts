@@ -5,8 +5,6 @@ import { Allow, Entity, Fields, Filter, remult, Validators } from "remult"
 })
 export class DbCurrentDayStockData {
 
-    @Fields.cuid()
-    id? = ''
 
     @Fields.string()
     stockName = ''
@@ -16,9 +14,6 @@ export class DbCurrentDayStockData {
 
     @Fields.number()
     time = 0
-
-    @Fields.createdAt()
-    createdAt?: Date
 
     static getCurrentStockDataByName = Filter.createCustom<DbCurrentDayStockData[], { stockName: string}>(async ({ stockName }) => {
         return {
