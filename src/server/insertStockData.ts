@@ -3,7 +3,8 @@ import { DbCurrentDayStockData, dbCurrentDayStockDataRepo } from "../shared/task
 import { dbTokenRepo, DbTOkens } from "../shared/tasks/dbTokens.js"
 //import { Worker } from 'node:worker_threads'
 import { WebSocket } from 'ws';
-import { Client, Pool } from 'pg'
+import pkg from 'pg';
+const { Pool } = pkg;
 
 
 export const socketCall = async (): Promise<void> => {
