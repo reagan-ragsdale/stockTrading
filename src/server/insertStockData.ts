@@ -59,7 +59,6 @@ export const socketCall = async (): Promise<void> => {
             }
         }
         try{
-            console.time('parse and insert loop')
             if (Object.hasOwn(newEvent, 'data') && hasBeenSent == true) {
                 if (newEvent.data[0].service == 'LEVELONE_EQUITIES') {
                     let insertData: DbCurrentDayStockData[] = []
@@ -73,11 +72,8 @@ export const socketCall = async (): Promise<void> => {
                             insertData.push(data)
                         }
                     }
-                    console.time('insert data')
                     await dbCurrentDayStockDataRepo.insert(insertData)
-                    console.timeEnd('insert data')
                 }
-                console.timeEnd('parse and insert loop')
             }
         }
         catch(error: any){
