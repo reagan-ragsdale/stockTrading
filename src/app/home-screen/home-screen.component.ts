@@ -182,7 +182,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       else {
         let returnVal = AnalysisService.trendTrading(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1), this.selectedStockHistoryData)
         console.log(returnVal)
-        this.stockChart.options.plugins.annotation.annotations.trendLine.xMin = returnVal.xMin + this.trendAlgoStartingPoint
+       /*  this.stockChart.options.plugins.annotation.annotations.trendLine.xMin = returnVal.xMin + this.trendAlgoStartingPoint
         this.stockChart.options.plugins.annotation.annotations.trendLine.xMax = returnVal.xMax + this.trendAlgoStartingPoint
         this.stockChart.options.plugins.annotation.annotations.trendLine.yMin = returnVal.yMin
         this.stockChart.options.plugins.annotation.annotations.trendLine.yMax = returnVal.yMax
@@ -201,7 +201,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         this.stockChart.options.plugins.annotation.annotations.gutterLineBelow.xMin = returnVal.xMin + this.trendAlgoStartingPoint
         this.stockChart.options.plugins.annotation.annotations.gutterLineBelow.xMax = returnVal.xMax + this.trendAlgoStartingPoint
         this.stockChart.options.plugins.annotation.annotations.gutterLineBelow.yMin = returnVal.gutterLineBelowMin
-        this.stockChart.options.plugins.annotation.annotations.gutterLineBelow.yMax = returnVal.gutterLineBelowMax
+        this.stockChart.options.plugins.annotation.annotations.gutterLineBelow.yMax = returnVal.gutterLineBelowMax */
       }
 
       console.log(shouldPlaceOrder)

@@ -1,7 +1,6 @@
 import express from 'express'
 import { api } from "./api.js"
 import session from "cookie-session"
-import cors from 'cors'
 
 const app = express()
 

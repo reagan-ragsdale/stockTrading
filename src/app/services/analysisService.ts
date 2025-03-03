@@ -218,10 +218,10 @@ export class AnalysisService {
                 nextOrderType = 'Sell'
             }
         }
-       let time: number[] = []
-       for(let i = 1; i < stock.length; i++){
-        time.push(i)
-       }
+        let time: number[] = []
+        for (let i = 1; i < stock.length; i++) {
+            time.push(i)
+        }
 
         const n = stock.length;
         const sumX = time.reduce((a, b) => a + b, 0);
@@ -248,17 +248,17 @@ export class AnalysisService {
         let minDistance = Infinity;
         let highestPoint = null
         let lowestPoint = null
-    
+
         //need to put them into an object and also find the highest and lowest
-        for (let i = 0; i < stock.length; i ++) {
+        for (let i = 0; i < stock.length; i++) {
             let distance = (slope * i - stock[i] + intercept) / Math.sqrt(slope * slope + 1);
             if (distance > maxDistance) {
                 maxDistance = distance;
-                lowestPoint = {x: i, y: stock[i]};
+                lowestPoint = { x: i, y: stock[i] };
             }
-            if(distance < minDistance){
+            if (distance < minDistance) {
                 minDistance = distance
-                highestPoint = {x: i, y: stock[i]};
+                highestPoint = { x: i, y: stock[i] };
             }
         }
 
@@ -266,7 +266,7 @@ export class AnalysisService {
         //y = mx + b
         //we have y, m,x need to find b
         let highTrendY = (slope * highestPoint!.x) + intercept
-        let differenceHigh = highestPoint!.y - highTrendY 
+        let differenceHigh = highestPoint!.y - highTrendY
 
         let lowTrendY = (slope * lowestPoint!.x) + intercept
         let differenceLow = lowTrendY - lowestPoint!.y
@@ -274,7 +274,7 @@ export class AnalysisService {
         const aboveyMin = slope * xMin + interceptAbove;
         const aboveyMax = slope * xMax + interceptAbove;
 
-        const interceptBelow = intercept - differenceLow 
+        const interceptBelow = intercept - differenceLow
         const belowyMin = slope * xMin + interceptBelow;
         const belowyMax = slope * xMax + interceptBelow;
 
@@ -295,20 +295,33 @@ export class AnalysisService {
 
         let shouldPlaceTrade = false;
 
-        if(nextOrderType == 'Buy'){
-            if(incomingPoint <= gutterLineBelowMax){
-                shouldPlaceTrade = true
+        if (nextOrderType == 'Buy') {
+            if (incomingPoint >= gutterLineBelowMax) {
+                return {
+                    shouldExecuteOrder: true,
+                    isBuyOrSell: 'Buy'
+                }
+            }
+            else {
+                return {
+                    shouldExecuteOrder: false,
+                    targetPrice: gutterLineBelowMax
+                }
             }
         }
         // else sell
-        else{
-            if(incomingPoint >= gutterLineAboveMax){
-                shouldPlaceTrade = true
+        else {
+            if (incomingPoint <= gutterLineAboveMax) {
+                return{
+                    shouldExecuteOrder: true,
+                    isBuyOrSell: 'Sell',
+
+                }
             }
         }
 
 
-        return{
+        /* return{
             xMin: xMin,
             xMax: xMax,
             yMin: yMin,
@@ -323,7 +336,7 @@ export class AnalysisService {
             gutterLineBelowMax: gutterLineBelowMax,
             shouldPlaceTrade: shouldPlaceTrade,
             orderType: nextOrderType
-        }
+        } */
 
     }
 
