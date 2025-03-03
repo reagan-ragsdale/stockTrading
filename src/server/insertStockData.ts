@@ -49,7 +49,7 @@ export const socketCall = async (): Promise<void> => {
         const client = await pool.connect();
         try {
             // Makes a query with the client from the pool
-            const text = 'INSERT INTO dbcurrentdaystockdata (stockname, stockprice, time) VALUES($1, $2)';
+            const text = 'INSERT INTO dbcurrentdaystockdata (stockname, stockprice, time) VALUES($1, $2, $3)';
             const values = [data.stockName, data.stockPrice, data.time]
             await client.query(text,values);
         } catch (err) { 
