@@ -48,12 +48,10 @@ export const socketCall = async (): Promise<void> => {
         // Checks out an idle connection in the pool to access the database
         const client = await pool.connect();
         try {
-            console.log('here before insert')
             // Makes a query with the client from the pool
             const text = 'INSERT INTO dbcurrentdaystockdata (stockname, stockprice, time) VALUES($1, $2, $3)';
             const values = [data.stockName, data.stockPrice, data.time]
             await client.query(text,values);
-            console.log('here after insert')
         } catch (err) { 
             console.error(err);
         } finally {
@@ -63,12 +61,6 @@ export const socketCall = async (): Promise<void> => {
     };
 
     const userData = await dbTokenRepo.findFirst({ id: { '!=': '' } }) as DbTOkens
-    console.log('here 1')
-    //const worker = new Worker("./spawnSocketWorker.js", { workerData: userData})
-
-    /* worker.on('message', async (data) => {
-        await dbCurrentDayStockDataRepo.insert(data)
-    }) */
 
     const schwabWebsocket = new WebSocket(userData.streamerSocketUrl)
     let hasBeenSent = false
@@ -104,13 +96,10 @@ export const socketCall = async (): Promise<void> => {
         ]
     }
     schwabWebsocket.on('open', () => {
-        console.log('asdfasdf')
         schwabWebsocket.send(JSON.stringify(loginMsg))
     })
     schwabWebsocket.on('message', async (event) => {
-        console.log('hererere')
         let newEvent = JSON.parse(event.toString())
-        console.log(newEvent)
 
 
         if (Object.hasOwn(newEvent, 'response')) {
@@ -122,7 +111,6 @@ export const socketCall = async (): Promise<void> => {
         try{
             if (Object.hasOwn(newEvent, 'data') && hasBeenSent == true) {
                 if (newEvent.data[0].service == 'LEVELONE_EQUITIES') {
-                    let insertData: DbCurrentDayStockData[] = []
                     for (let i = 0; i < newEvent.data[0].content.length; i++) {
                         if (Object.hasOwn(newEvent.data[0].content[i], '3')) {
                             let data: DbCurrentDayStockData = {
@@ -130,14 +118,10 @@ export const socketCall = async (): Promise<void> => {
                                 stockPrice: newEvent.data[0].content[i]['3'],
                                 time: Number(newEvent.data[0].timestamp)
                             }
-                            //insertData.push(data)
-                            console.log('here 2')
                             await poolConnection(data)
-                            console.log('here 3')
                         }
     
                     }
-                    //await dbCurrentDayStockDataRepo.insert(insertData)
     
                 }
     

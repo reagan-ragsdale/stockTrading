@@ -15,12 +15,6 @@ export class DbCurrentDayStockData {
     @Fields.number()
     time = 0
 
-    static getCurrentStockDataByName = Filter.createCustom<DbCurrentDayStockData[], { stockName: string}>(async ({ stockName }) => {
-        return {
-            stockName: stockName
-        }
-    });
-
 
 
 }

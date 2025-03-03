@@ -138,7 +138,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   startWebsocket() {
     this.unsubscribe = dbCurrentDayStockDataRepo
       .liveQuery({
-        where: DbCurrentDayStockData.getCurrentStockDataByName({ stockName: this.selectedStockName }), orderBy: { time: 'asc' }
+        where: {stockName: this.selectedStockName}, orderBy: { time: 'asc' }
       })
       .subscribe(info => {
         this.chartInfo = info.applyChanges(this.chartInfo);
