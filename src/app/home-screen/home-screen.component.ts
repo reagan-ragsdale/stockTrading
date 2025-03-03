@@ -141,8 +141,6 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         where: {stockName: this.selectedStockName}, orderBy: { time: 'asc' }
       })
       .subscribe(info => {
-        //this.chartInfo = info.applyChanges(this.chartInfo);
-        //this.refreshData();
         this.refreshData(info.items)
       })
   }
