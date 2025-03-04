@@ -33,7 +33,7 @@ import { DbCurrentDayStockData, dbCurrentDayStockDataRepo } from '../../shared/t
 import { MatSelectModule } from '@angular/material/select';
 import { reusedFunctions } from '../services/reusedFunctions';
 import { dbTokenRepo, DbTOkens } from '../../shared/tasks/dbTokens';
-import { WebSocket } from 'ws';
+//import { WebSocket } from 'ws';
 @Component({
   selector: 'app-home-screen',
   imports: [CommonModule, FormsModule, MatSelectModule, MatInputModule, MatMenuModule, MatFormFieldModule, MatIconModule, MatRadioModule, MatProgressSpinnerModule, MatButtonModule, MatButtonToggleModule, TradeComponent],
@@ -170,10 +170,10 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         }
       ]
     }
-    this.schwabWebsocket.on('open', () => {
+    this.schwabWebsocket.onopen = () => {
       this.schwabWebsocket!.send(JSON.stringify(loginMsg))
-    })
-    this.schwabWebsocket.on('message', async (event) => {
+    }
+    this.schwabWebsocket.onmessage = async (event) => {
       let newEvent = JSON.parse(event.toString())
 
 
@@ -203,7 +203,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         console.log(error.message)
       }
 
-    });
+    }
   }
 
   chartData: StockAnalysisDto = {
