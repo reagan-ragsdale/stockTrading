@@ -300,7 +300,7 @@ export class AnalysisService {
                 return {
                     shouldExecuteOrder: true,
                     isBuyOrSell: 'Buy',
-                    stopLossPrice: belowyMax,
+                    stopLossPrice: belowyMax - .1,
                     initialAverage: yMax,
                     tradeHigh: incomingPoint,
                     containsTrendInfo: false
@@ -336,7 +336,7 @@ export class AnalysisService {
                     containsTrendInfo: false,
                 }
             }
-            else if (incomingPoint <= belowyMax) {
+            else if (incomingPoint <= belowyMax - .1) {
                 return {
                     shouldExecuteOrder: true,
                     isBuyOrSell: 'Sell',

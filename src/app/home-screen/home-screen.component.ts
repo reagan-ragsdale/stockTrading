@@ -268,6 +268,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
 
       }
       else {
+        
         if (shouldPlaceOrder.stopLossPrice !== undefined) {
           this.stopLossPrice = shouldPlaceOrder.stopLossPrice
           this.stockChart.options.plugins.annotation.annotations.stopLossLine.yMin = this.stopLossPrice
