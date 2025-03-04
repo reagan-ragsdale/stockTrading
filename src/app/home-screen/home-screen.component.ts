@@ -32,6 +32,8 @@ import { Router } from '@angular/router';
 import { DbCurrentDayStockData, dbCurrentDayStockDataRepo } from '../../shared/tasks/dbCurrentDayStockData';
 import { MatSelectModule } from '@angular/material/select';
 import { reusedFunctions } from '../services/reusedFunctions';
+import { dbTokenRepo, DbTOkens } from '../../shared/tasks/dbTokens';
+import { WebSocket } from 'ws';
 @Component({
   selector: 'app-home-screen',
   imports: [CommonModule, FormsModule, MatSelectModule, MatInputModule, MatMenuModule, MatFormFieldModule, MatIconModule, MatRadioModule, MatProgressSpinnerModule, MatButtonModule, MatButtonToggleModule, TradeComponent],
@@ -110,11 +112,11 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.tradeDialogRef.afterClosed().subscribe(async (result: any) => {
       this.userSimFinData = await SimFinance.getSimFinData()
       console.log(result)
-      await this.getStockData()
+      await this.getStockInfo()
 
     });
   }
-  async getStockData() {
+  async getStockInfo() {
     this.selectedStockTotalNet = 0
     this.stockData = await StockController.getAllStocks()
     let selectedStock = this.stockData.filter(e => e.stockName == this.selectedStockName)
@@ -136,13 +138,73 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
 
   }
   startWebsocket() {
-    this.unsubscribe = dbCurrentDayStockDataRepo
-      .liveQuery({
-        where: {stockName: this.selectedStockName}, orderBy: { time: 'asc' }
-      })
-      .subscribe(info => {
-        this.refreshData(info.items)
-      })
+    const schwabWebsocket = new WebSocket(this.userData.streamerSocketUrl)
+    let hasBeenSent = false
+    const loginMsg = {
+      "requests": [
+        {
+          "service": "ADMIN",
+          "requestid": "0",
+          "command": "LOGIN",
+          "SchwabClientCustomerId": this.userData.schwabClientCustomerId,
+          "SchwabClientCorrelId": this.userData.schwabClientCorrelId,
+          "parameters": {
+            "Authorization": this.userData.accessToken,
+            "SchwabClientChannel": this.userData.schwabClientChannel,
+            "SchwabClientFunctionId": this.userData.schwabClientFunctionId
+          }
+        }
+      ]
+    }
+    const socketSendMsg = {
+      "requests": [
+        {
+          "service": "LEVELONE_EQUITIES",
+          "requestid": "1",
+          "command": "SUBS",
+          "SchwabClientCustomerId": this.userData.schwabClientCustomerId,
+          "SchwabClientCorrelId": this.userData.schwabClientCorrelId,
+          "parameters": {
+            "keys": "AAPL, MSFT, PLTR",
+            "fields": "0,1,2,3,4,5,6,7,8,9,10,33"
+          }
+        }
+      ]
+    }
+    schwabWebsocket.on('open', () => {
+      schwabWebsocket.send(JSON.stringify(loginMsg))
+    })
+    schwabWebsocket.on('message', async (event) => {
+      let newEvent = JSON.parse(event.toString())
+
+
+      if (Object.hasOwn(newEvent, 'response')) {
+        if (newEvent.response[0].requestid == 0 && hasBeenSent == false) {
+          schwabWebsocket.send(JSON.stringify(socketSendMsg))
+          hasBeenSent = true
+        }
+      }
+      try {
+        if (Object.hasOwn(newEvent, 'data') && hasBeenSent == true) {
+          if (newEvent.data[0].service == 'LEVELONE_EQUITIES') {
+            for (let i = 0; i < newEvent.data[0].content.length; i++) {
+              if (Object.hasOwn(newEvent.data[0].content[i], '3') && newEvent.data[0].content[i] == this.selectedStockName) {
+                this.chartInfo.push({
+                  stockName: newEvent.data[0].content[i].key,
+                  stockPrice: newEvent.data[0].content[i]['3'],
+                  time: Number(newEvent.data[0].timestamp)
+                })
+                await this.refreshData()
+              }
+            }
+          }
+        }
+      }
+      catch (error: any) {
+        console.log(error.message)
+      }
+
+    });
   }
 
   chartData: StockAnalysisDto = {
@@ -164,11 +226,11 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     stockPrice: 0,
     time: 0
   }]
-  async refreshData(data: DbCurrentDayStockData[]) {
+  async refreshData() {
 
-    this.chartData.history = data.map(e => e.stockPrice)
-    this.chartData.labels = data.map(e => reusedFunctions.epochToLocalTime(e.time))
-    this.chartData.time = data.map(e => e.time)
+    this.chartData.history = this.chartInfo.map(e => e.stockPrice)
+    this.chartData.labels = this.chartInfo.map(e => reusedFunctions.epochToLocalTime(e.time))
+    this.chartData.time = this.chartInfo.map(e => e.time)
     this.selectedStockCurrent = this.chartData.history[this.chartData.history.length - 1]
     this.selectedStockHigh = Math.max(...this.chartData.history)
     this.selectedStockLow = Math.min(...this.chartData.history)
@@ -182,26 +244,26 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       else {
         shouldPlaceOrder = AnalysisService.trendTrading(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1), this.selectedStockHistoryData, this.stopLossPrice, this.tradeInitialAverage, this.tradeCurrentHigh)
         //console.log(returnVal)
-       /*  this.stockChart.options.plugins.annotation.annotations.trendLine.xMin = returnVal.xMin + this.trendAlgoStartingPoint
-        this.stockChart.options.plugins.annotation.annotations.trendLine.xMax = returnVal.xMax + this.trendAlgoStartingPoint
-        this.stockChart.options.plugins.annotation.annotations.trendLine.yMin = returnVal.yMin
-        this.stockChart.options.plugins.annotation.annotations.trendLine.yMax = returnVal.yMax
-        this.stockChart.options.plugins.annotation.annotations.trendLineAbove.xMin = returnVal.xMin + this.trendAlgoStartingPoint
-        this.stockChart.options.plugins.annotation.annotations.trendLineAbove.xMax = returnVal.xMax + this.trendAlgoStartingPoint
-        this.stockChart.options.plugins.annotation.annotations.trendLineAbove.yMin = returnVal.aboveyMin
-        this.stockChart.options.plugins.annotation.annotations.trendLineAbove.yMax = returnVal.aboveyMax
-        this.stockChart.options.plugins.annotation.annotations.trendLineBelow.xMin = returnVal.xMin + this.trendAlgoStartingPoint
-        this.stockChart.options.plugins.annotation.annotations.trendLineBelow.xMax = returnVal.xMax + this.trendAlgoStartingPoint
-        this.stockChart.options.plugins.annotation.annotations.trendLineBelow.yMin = returnVal.belowyMin
-        this.stockChart.options.plugins.annotation.annotations.trendLineBelow.yMax = returnVal.belowyMax
-        this.stockChart.options.plugins.annotation.annotations.gutterLineAbove.xMin = returnVal.xMin + this.trendAlgoStartingPoint
-        this.stockChart.options.plugins.annotation.annotations.gutterLineAbove.xMax = returnVal.xMax + this.trendAlgoStartingPoint
-        this.stockChart.options.plugins.annotation.annotations.gutterLineAbove.yMin = returnVal.gutterLineAboveMin
-        this.stockChart.options.plugins.annotation.annotations.gutterLineAbove.yMax = returnVal.gutterLineAboveMax
-        this.stockChart.options.plugins.annotation.annotations.gutterLineBelow.xMin = returnVal.xMin + this.trendAlgoStartingPoint
-        this.stockChart.options.plugins.annotation.annotations.gutterLineBelow.xMax = returnVal.xMax + this.trendAlgoStartingPoint
-        this.stockChart.options.plugins.annotation.annotations.gutterLineBelow.yMin = returnVal.gutterLineBelowMin
-        this.stockChart.options.plugins.annotation.annotations.gutterLineBelow.yMax = returnVal.gutterLineBelowMax */
+        /*  this.stockChart.options.plugins.annotation.annotations.trendLine.xMin = returnVal.xMin + this.trendAlgoStartingPoint
+         this.stockChart.options.plugins.annotation.annotations.trendLine.xMax = returnVal.xMax + this.trendAlgoStartingPoint
+         this.stockChart.options.plugins.annotation.annotations.trendLine.yMin = returnVal.yMin
+         this.stockChart.options.plugins.annotation.annotations.trendLine.yMax = returnVal.yMax
+         this.stockChart.options.plugins.annotation.annotations.trendLineAbove.xMin = returnVal.xMin + this.trendAlgoStartingPoint
+         this.stockChart.options.plugins.annotation.annotations.trendLineAbove.xMax = returnVal.xMax + this.trendAlgoStartingPoint
+         this.stockChart.options.plugins.annotation.annotations.trendLineAbove.yMin = returnVal.aboveyMin
+         this.stockChart.options.plugins.annotation.annotations.trendLineAbove.yMax = returnVal.aboveyMax
+         this.stockChart.options.plugins.annotation.annotations.trendLineBelow.xMin = returnVal.xMin + this.trendAlgoStartingPoint
+         this.stockChart.options.plugins.annotation.annotations.trendLineBelow.xMax = returnVal.xMax + this.trendAlgoStartingPoint
+         this.stockChart.options.plugins.annotation.annotations.trendLineBelow.yMin = returnVal.belowyMin
+         this.stockChart.options.plugins.annotation.annotations.trendLineBelow.yMax = returnVal.belowyMax
+         this.stockChart.options.plugins.annotation.annotations.gutterLineAbove.xMin = returnVal.xMin + this.trendAlgoStartingPoint
+         this.stockChart.options.plugins.annotation.annotations.gutterLineAbove.xMax = returnVal.xMax + this.trendAlgoStartingPoint
+         this.stockChart.options.plugins.annotation.annotations.gutterLineAbove.yMin = returnVal.gutterLineAboveMin
+         this.stockChart.options.plugins.annotation.annotations.gutterLineAbove.yMax = returnVal.gutterLineAboveMax
+         this.stockChart.options.plugins.annotation.annotations.gutterLineBelow.xMin = returnVal.xMin + this.trendAlgoStartingPoint
+         this.stockChart.options.plugins.annotation.annotations.gutterLineBelow.xMax = returnVal.xMax + this.trendAlgoStartingPoint
+         this.stockChart.options.plugins.annotation.annotations.gutterLineBelow.yMin = returnVal.gutterLineBelowMin
+         this.stockChart.options.plugins.annotation.annotations.gutterLineBelow.yMax = returnVal.gutterLineBelowMax */
       }
 
       console.log(shouldPlaceOrder)
@@ -567,7 +629,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     }
     await OrderService.executeOrder(order, this.selectedStockHistoryData[0])
     await this.getUserFinanceData()
-    await this.getStockData()
+    await this.getStockInfo()
     this.isOrderPending = false
   }
 
@@ -671,9 +733,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.stockChart.options.plugins.annotation.annotations.trendIndex.xMax = this.tempTrendAlgoStartingPoint
     this.stockChart.update()
   }
-  onStartWebSocket() {
-    this.startWebsocket()
-  }
+  
   navToTestEnv() {
     this.router.navigate(['/testEnv'])
   }
@@ -681,8 +741,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     console.log(event)
     if (event.isUserInput == true) {
       this.selectedStockName = event.source.value
-      await this.getStockData()
-      this.unsubscribe()
+      await this.getStockInfo()
       this.chartData = {
         history: [],
         labels: [],
@@ -691,11 +750,14 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         volume: [],
         volumeTime: []
       }
-      this.onStartWebSocket()
+      await this.getStockData()
     }
 
   }
 
+  async getStockData() {
+    this.chartInfo = await dbCurrentDayStockDataRepo.find({ where: { stockName: this.selectedStockName }, orderBy: { time: 'asc' } })
+  }
 
 
   isLoading: boolean = true;
@@ -709,11 +771,12 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.distinctAvailableStocks = (await dbCurrentDayStockDataRepo.groupBy({ group: ['stockName'], orderBy: { stockName: 'desc' } })).map(e => e.stockName)
     console.log(this.distinctAvailableStocks)
     this.selectedStockName = this.distinctAvailableStocks[0]
-    await this.getStockData()
+    await this.getStockInfo()
+    this.userData = await dbTokenRepo.findFirst({ id: { '!=': '' } }) as DbTOkens
     this.createOrUpdateChart()
     this.createVolumeChart()
-
-    this.onStartWebSocket()
+    await this.getStockData()
+    this.startWebsocket()
 
 
 
