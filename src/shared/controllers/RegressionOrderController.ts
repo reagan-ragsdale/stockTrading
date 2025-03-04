@@ -32,4 +32,5 @@ export class RegressionOrderController {
     return await dbRegressionOrdersRepo.find({where: {userId: remult.context.request!.session!["user"].id}, orderBy: {orderTime: 'desc'}})
     
   }
+  
 }

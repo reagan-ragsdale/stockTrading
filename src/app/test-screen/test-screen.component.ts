@@ -181,6 +181,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
       //add check to see when the last order was placed. Don't want to be placing order every 3 seconds
       //maybe wait 30 seconds
       if (shouldPlaceOrder.shouldExecuteOrder == true && !this.isOrderPending) {
+        console.log(shouldPlaceOrder)
         await this.placeOrder(shouldPlaceOrder.isBuyOrSell!)
         this.stockChart.options.plugins.annotation.annotations.orderLine.yMin = this.selectedStockHistoryData[0]?.stockPrice
         this.stockChart.options.plugins.annotation.annotations.orderLine.yMax = this.selectedStockHistoryData[0]?.stockPrice
