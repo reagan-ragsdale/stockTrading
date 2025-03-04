@@ -51,7 +51,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   accountNum: any = 0
   userPreferenceData: any = {}
   userSimFinData: SimFInance[] = [{ savings: 0, spending: 0, userId: '' }]
-  userData: any = []
+  userData: DbTOkens | null = null
   canShowAddFunds: boolean = true;
   accessToken = ''
   schwabWebsocket: WebSocket | null = null
@@ -138,7 +138,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   }
   schwabWebSocket: any
   startWebsocket() {
-    this.schwabWebsocket = new WebSocket(this.userData.streamerSocketUrl)
+    this.schwabWebsocket = new WebSocket(this.userData!.streamerSocketUrl)
     let hasBeenSent = false
     const loginMsg = {
       "requests": [
@@ -146,12 +146,12 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
           "service": "ADMIN",
           "requestid": "0",
           "command": "LOGIN",
-          "SchwabClientCustomerId": this.userData.schwabClientCustomerId,
-          "SchwabClientCorrelId": this.userData.schwabClientCorrelId,
+          "SchwabClientCustomerId": this.userData!.schwabClientCustomerId,
+          "SchwabClientCorrelId": this.userData!.schwabClientCorrelId,
           "parameters": {
-            "Authorization": this.userData.accessToken,
-            "SchwabClientChannel": this.userData.schwabClientChannel,
-            "SchwabClientFunctionId": this.userData.schwabClientFunctionId
+            "Authorization": this.userData!.accessToken,
+            "SchwabClientChannel": this.userData!.schwabClientChannel,
+            "SchwabClientFunctionId": this.userData!.schwabClientFunctionId
           }
         }
       ]
@@ -162,8 +162,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
           "service": "LEVELONE_EQUITIES",
           "requestid": "1",
           "command": "SUBS",
-          "SchwabClientCustomerId": this.userData.schwabClientCustomerId,
-          "SchwabClientCorrelId": this.userData.schwabClientCorrelId,
+          "SchwabClientCustomerId": this.userData!.schwabClientCustomerId,
+          "SchwabClientCorrelId": this.userData!.schwabClientCorrelId,
           "parameters": {
             "keys": "AAPL, MSFT, PLTR",
             "fields": "0,1,2,3,4,5,6,7,8,9,10,33"
