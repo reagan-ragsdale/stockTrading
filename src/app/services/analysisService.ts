@@ -207,7 +207,7 @@ export class AnalysisService {
     }
 
 
-    static trendTrading(stock: number[], orderHistory: stockOrder[]): buySellDto {
+    static trendTrading(stock: number[], orderHistory: stockOrder[], currentStopLoss: number, currentTradeHigh: number, initialAverage: number): buySellDto {
 
 
         let nextOrderType = 'Buy'
@@ -296,26 +296,79 @@ export class AnalysisService {
         let shouldPlaceTrade = false;
 
         if (nextOrderType == 'Buy') {
-            if (incomingPoint >= gutterLineBelowMax) {
+            if (incomingPoint <= gutterLineBelowMax) {
                 return {
                     shouldExecuteOrder: true,
-                    isBuyOrSell: 'Buy'
+                    isBuyOrSell: 'Buy',
+                    stopLossPrice: belowyMax,
+                    initialAverage: yMax,
+                    tradeHigh: incomingPoint
                 }
             }
             else {
                 return {
                     shouldExecuteOrder: false,
-                    targetPrice: gutterLineBelowMax
+                    targetPrice: gutterLineBelowMax,
+
                 }
             }
         }
         // else sell
         else {
-            if (incomingPoint <= gutterLineAboveMax) {
+            if (incomingPoint >= gutterLineAboveMax) {
                 return{
                     shouldExecuteOrder: true,
                     isBuyOrSell: 'Sell',
 
+                }
+            }
+            else if(incomingPoint <= belowyMax){
+                return{
+                    shouldExecuteOrder: true,
+                    isBuyOrSell: 'Sell',
+                    soldAtStopLoss: true
+                }
+            }
+            else{
+                let newStopLoss = 0
+                let newHigh = 0
+
+                //if the price has not gotten to the average yet
+                if (currentStopLoss < orderHistory[0].stockPrice) {
+                    //check to see if price is at average
+                    if (incomingPoint >= initialAverage) {
+                        //set new stop loss
+                        console.log('here')
+                        newStopLoss = ((initialAverage - orderHistory[0].stockPrice) * .3) + orderHistory[0].stockPrice
+                    }
+                    else {
+                        //keep stop loss
+                        newStopLoss = currentStopLoss
+                    }
+                    if (incomingPoint > currentTradeHigh) {
+                        newHigh = incomingPoint
+                    }
+                    else {
+                        newHigh = currentTradeHigh
+                    }
+                }
+                //if there is a new stop loss
+                else {
+                    if (incomingPoint > currentTradeHigh) {
+                        console.log('here 2')
+                        newStopLoss += (incomingPoint - currentTradeHigh)
+                        newHigh = incomingPoint
+                    }
+                    else {
+                        newStopLoss = currentStopLoss
+                        newHigh = currentTradeHigh
+                    }
+                }
+                return {
+                    shouldExecuteOrder: false,
+                    targetPrice: gutterLineAboveMax,
+                    stopLossPrice: newStopLoss,
+                    tradeHigh: newHigh
                 }
             }
         }

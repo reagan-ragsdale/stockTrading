@@ -166,7 +166,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     this.chartData.time.push(data.time)
     this.selectedStockCurrent = this.chartData.history[this.chartData.history.length - 1]
 
-    if (this.isUserOrBot == 'Bot' && this.isBotAuthorized == true && this.chartData.history.length >= 400) {
+    if (this.isUserOrBot == 'Bot' && this.isBotAuthorized == true) {
       let shouldPlaceOrder: buySellDto = {
         shouldExecuteOrder: false
       }
@@ -174,7 +174,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
         shouldPlaceOrder = AnalysisService.checkIsLowBuyIsHighSell(this.chartData.history.slice(-401), this.selectedStockHistoryData, this.stopLossPrice, this.tradeInitialAverage, this.tradeCurrentHigh)
       }
       else if (this.selectedAlgo == 'trend') {
-        shouldPlaceOrder = AnalysisService.trendTrading(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1), this.selectedStockHistoryData)
+        shouldPlaceOrder = AnalysisService.trendTrading(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1), this.selectedStockHistoryData, this.stopLossPrice, this.tradeInitialAverage, this.tradeCurrentHigh)
       }
 
 
@@ -185,14 +185,14 @@ export class TestScreenComponent implements OnInit, OnDestroy {
         this.stockChart.options.plugins.annotation.annotations.orderLine.yMin = this.selectedStockHistoryData[0]?.stockPrice
         this.stockChart.options.plugins.annotation.annotations.orderLine.yMax = this.selectedStockHistoryData[0]?.stockPrice
       }
-      else {
-        if (shouldPlaceOrder.stopLossPrice !== undefined) {
-          this.stopLossPrice = shouldPlaceOrder.stopLossPrice
-        }
-        if (shouldPlaceOrder.tradeHigh !== undefined) {
-          this.tradeCurrentHigh = shouldPlaceOrder.tradeHigh
-        }
+
+      if (shouldPlaceOrder.stopLossPrice !== undefined) {
+        this.stopLossPrice = shouldPlaceOrder.stopLossPrice
       }
+      if (shouldPlaceOrder.tradeHigh !== undefined) {
+        this.tradeCurrentHigh = shouldPlaceOrder.tradeHigh
+      }
+
       if (shouldPlaceOrder.targetPrice !== undefined) {
         this.targetPrice = shouldPlaceOrder.targetPrice
         this.stockChart.options.plugins.annotation.annotations.targetLine.yMin = this.targetPrice
@@ -507,7 +507,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
       orderType: buyOrSell,
       stockName: this.selectedStockName,
       stockPrice: this.selectedStockCurrent,
-      shareQty: this.userSimFinData[0].spending * this.selectedStockCurrent,
+      shareQty: buyOrSell == 'Buy' ? this.userSimFinData[0].spending / this.selectedStockCurrent : this.selectedStockData.shareQty,
       orderTime: this.chartData.time[this.chartData.time.length - 1]
     }
     await RegressionOrderService.executeOrder(order, this.selectedStockHistoryData[0])
@@ -586,25 +586,10 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     this.router.navigate(['/home'])
   }
 
-  speed = 400
-  async startTestThing() {
-    let allDayStockData = await dbStockHistoryDataRepo.find({ where: { stockName: 'AAPL', date: '19/02/2025' }, orderBy: { time: 'asc' } })
-    console.log(allDayStockData.length)
-    for (let i = 0; i < allDayStockData.length; i++) {
-      let stockData: DbCurrentDayStockData = {
-        stockName: allDayStockData[i].stockName,
-        stockPrice: allDayStockData[i].stockPrice,
-        time: allDayStockData[i].time
-      }
-      await this.refreshData(stockData)
-      await new Promise(resolve => setTimeout(resolve, 100));
-    }
 
-
-  }
   changeSpeed(speed: number) {
     console.log('here in change speed')
-    this.speed = speed
+    //this.speed = speed
   }
   onSelectedDateChange(event: any) {
     if (event.isUserInput == true) {
@@ -632,7 +617,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
         time: this.stockDataForSelectedDay[i].time
       }
       await this.refreshData(stockData)
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise(resolve => setTimeout(resolve, 200));
     }
   }
   endSimulation() {
@@ -668,15 +653,8 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     await this.getStockData()
     this.createOrUpdateChart()
     //this.createVolumeChart()
-    
+
     await this.getStockHistoricalData()
-    //await this.startTestThing()
-    /*  this.unsubscribe = rhRepo
-       .liveQuery({
-         where: Rhkeys.getTokenUpdates({})
-       })
-       .subscribe(info => this.checkData(info.items)) */
-    //this.isLoading = false;
 
   }
 

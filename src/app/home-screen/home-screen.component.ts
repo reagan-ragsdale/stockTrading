@@ -180,8 +180,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         shouldPlaceOrder = AnalysisService.checkIsLowBuyIsHighSell(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1), this.selectedStockHistoryData, this.stopLossPrice, this.tradeInitialAverage, this.tradeCurrentHigh)
       }
       else {
-        let returnVal = AnalysisService.trendTrading(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1), this.selectedStockHistoryData)
-        console.log(returnVal)
+        shouldPlaceOrder = AnalysisService.trendTrading(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1), this.selectedStockHistoryData, this.stopLossPrice, this.tradeInitialAverage, this.tradeCurrentHigh)
+        //console.log(returnVal)
        /*  this.stockChart.options.plugins.annotation.annotations.trendLine.xMin = returnVal.xMin + this.trendAlgoStartingPoint
         this.stockChart.options.plugins.annotation.annotations.trendLine.xMax = returnVal.xMax + this.trendAlgoStartingPoint
         this.stockChart.options.plugins.annotation.annotations.trendLine.yMin = returnVal.yMin
