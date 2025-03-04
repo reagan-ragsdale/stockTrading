@@ -302,13 +302,27 @@ export class AnalysisService {
                     isBuyOrSell: 'Buy',
                     stopLossPrice: belowyMax,
                     initialAverage: yMax,
-                    tradeHigh: incomingPoint
+                    tradeHigh: incomingPoint,
+                    containsTrendInfo: false
                 }
             }
             else {
                 return {
                     shouldExecuteOrder: false,
                     targetPrice: gutterLineBelowMax,
+                    containsTrendInfo: true,
+                    xMin: xMin,
+                    xMax: xMax,
+                    yMin: yMin,
+                    yMax: yMax,
+                    aboveyMin: aboveyMin,
+                    aboveyMax: aboveyMax,
+                    belowyMin: belowyMin,
+                    belowyMax: belowyMax,
+                    gutterLineAboveMin: gutterLineAboveMin,
+                    gutterLineAboveMax: gutterLineAboveMax,
+                    gutterLineBelowMin: gutterLineBelowMin,
+                    gutterLineBelowMax: gutterLineBelowMax,
 
                 }
             }
@@ -316,20 +330,21 @@ export class AnalysisService {
         // else sell
         else {
             if (incomingPoint >= gutterLineAboveMax) {
-                return{
+                return {
                     shouldExecuteOrder: true,
                     isBuyOrSell: 'Sell',
-
+                    containsTrendInfo: false,
                 }
             }
-            else if(incomingPoint <= belowyMax){
-                return{
+            else if (incomingPoint <= belowyMax) {
+                return {
                     shouldExecuteOrder: true,
                     isBuyOrSell: 'Sell',
-                    soldAtStopLoss: true
+                    soldAtStopLoss: true,
+                    containsTrendInfo: false
                 }
             }
-            else{
+            else {
                 let newStopLoss = 0
                 let newHigh = 0
 
@@ -368,29 +383,31 @@ export class AnalysisService {
                     shouldExecuteOrder: false,
                     targetPrice: gutterLineAboveMax,
                     stopLossPrice: newStopLoss,
-                    tradeHigh: newHigh
+                    tradeHigh: newHigh,
+                    containsTrendInfo: true,
+                    xMin: xMin,
+                    xMax: xMax,
+                    yMin: yMin,
+                    yMax: yMax,
+                    aboveyMin: aboveyMin,
+                    aboveyMax: aboveyMax,
+                    belowyMin: belowyMin,
+                    belowyMax: belowyMax,
+                    gutterLineAboveMin: gutterLineAboveMin,
+                    gutterLineAboveMax: gutterLineAboveMax,
+                    gutterLineBelowMin: gutterLineBelowMin,
+                    gutterLineBelowMax: gutterLineBelowMax,
                 }
             }
         }
 
 
         /* return{
-            xMin: xMin,
-            xMax: xMax,
-            yMin: yMin,
-            yMax: yMax,
-            aboveyMin: aboveyMin,
-            aboveyMax: aboveyMax,
-            belowyMin: belowyMin,
-            belowyMax: belowyMax,
-            gutterLineAboveMin: gutterLineAboveMin,
-            gutterLineAboveMax: gutterLineAboveMax,
-            gutterLineBelowMin: gutterLineBelowMin,
-            gutterLineBelowMax: gutterLineBelowMax,
+            
             shouldPlaceTrade: shouldPlaceTrade,
             orderType: nextOrderType
         } */
-       return {shouldExecuteOrder: false}
+        return { shouldExecuteOrder: false }
 
     }
 

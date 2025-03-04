@@ -3,7 +3,20 @@ export type buySellDto = {
     isBuyOrSell?: string;
     targetPrice?: number;
     stopLossPrice?: number;
-    initialAverage?:number;
+    initialAverage?: number;
     tradeHigh?: number;
     soldAtStopLoss?: boolean;
+    containsTrendInfo?: boolean;
+    xMin?: number;
+    xMax?: number;
+    yMin?: number;
+    yMax?: number;
+    aboveyMin?: number;
+    aboveyMax?: number;
+    belowyMin?: number;
+    belowyMax?: number;
+    gutterLineAboveMin?: number;
+    gutterLineAboveMax?: number;
+    gutterLineBelowMin?: number;
+    gutterLineBelowMax?: number;
 }

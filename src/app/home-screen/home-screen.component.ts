@@ -244,26 +244,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       else {
         shouldPlaceOrder = AnalysisService.trendTrading(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1), this.selectedStockHistoryData, this.stopLossPrice, this.tradeInitialAverage, this.tradeCurrentHigh)
         //console.log(returnVal)
-        /*  this.stockChart.options.plugins.annotation.annotations.trendLine.xMin = returnVal.xMin + this.trendAlgoStartingPoint
-         this.stockChart.options.plugins.annotation.annotations.trendLine.xMax = returnVal.xMax + this.trendAlgoStartingPoint
-         this.stockChart.options.plugins.annotation.annotations.trendLine.yMin = returnVal.yMin
-         this.stockChart.options.plugins.annotation.annotations.trendLine.yMax = returnVal.yMax
-         this.stockChart.options.plugins.annotation.annotations.trendLineAbove.xMin = returnVal.xMin + this.trendAlgoStartingPoint
-         this.stockChart.options.plugins.annotation.annotations.trendLineAbove.xMax = returnVal.xMax + this.trendAlgoStartingPoint
-         this.stockChart.options.plugins.annotation.annotations.trendLineAbove.yMin = returnVal.aboveyMin
-         this.stockChart.options.plugins.annotation.annotations.trendLineAbove.yMax = returnVal.aboveyMax
-         this.stockChart.options.plugins.annotation.annotations.trendLineBelow.xMin = returnVal.xMin + this.trendAlgoStartingPoint
-         this.stockChart.options.plugins.annotation.annotations.trendLineBelow.xMax = returnVal.xMax + this.trendAlgoStartingPoint
-         this.stockChart.options.plugins.annotation.annotations.trendLineBelow.yMin = returnVal.belowyMin
-         this.stockChart.options.plugins.annotation.annotations.trendLineBelow.yMax = returnVal.belowyMax
-         this.stockChart.options.plugins.annotation.annotations.gutterLineAbove.xMin = returnVal.xMin + this.trendAlgoStartingPoint
-         this.stockChart.options.plugins.annotation.annotations.gutterLineAbove.xMax = returnVal.xMax + this.trendAlgoStartingPoint
-         this.stockChart.options.plugins.annotation.annotations.gutterLineAbove.yMin = returnVal.gutterLineAboveMin
-         this.stockChart.options.plugins.annotation.annotations.gutterLineAbove.yMax = returnVal.gutterLineAboveMax
-         this.stockChart.options.plugins.annotation.annotations.gutterLineBelow.xMin = returnVal.xMin + this.trendAlgoStartingPoint
-         this.stockChart.options.plugins.annotation.annotations.gutterLineBelow.xMax = returnVal.xMax + this.trendAlgoStartingPoint
-         this.stockChart.options.plugins.annotation.annotations.gutterLineBelow.yMin = returnVal.gutterLineBelowMin
-         this.stockChart.options.plugins.annotation.annotations.gutterLineBelow.yMax = returnVal.gutterLineBelowMax */
+        
       }
 
       console.log(shouldPlaceOrder)
@@ -300,6 +281,28 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         this.stockChart.options.plugins.annotation.annotations.targetLine.yMin = this.targetPrice
         this.stockChart.options.plugins.annotation.annotations.targetLine.yMax = this.targetPrice
       }
+      if(shouldPlaceOrder.containsTrendInfo == true){
+         this.stockChart.options.plugins.annotation.annotations.trendLine.xMin = shouldPlaceOrder.xMin! + this.trendAlgoStartingPoint
+         this.stockChart.options.plugins.annotation.annotations.trendLine.xMax = shouldPlaceOrder.xMax! + this.trendAlgoStartingPoint
+         this.stockChart.options.plugins.annotation.annotations.trendLine.yMin = shouldPlaceOrder.yMin
+         this.stockChart.options.plugins.annotation.annotations.trendLine.yMax = shouldPlaceOrder.yMax
+         this.stockChart.options.plugins.annotation.annotations.trendLineAbove.xMin = shouldPlaceOrder.xMin! + this.trendAlgoStartingPoint
+         this.stockChart.options.plugins.annotation.annotations.trendLineAbove.xMax = shouldPlaceOrder.xMax! + this.trendAlgoStartingPoint
+         this.stockChart.options.plugins.annotation.annotations.trendLineAbove.yMin = shouldPlaceOrder.aboveyMin!
+         this.stockChart.options.plugins.annotation.annotations.trendLineAbove.yMax = shouldPlaceOrder.aboveyMax!
+         this.stockChart.options.plugins.annotation.annotations.trendLineBelow.xMin = shouldPlaceOrder.xMin! + this.trendAlgoStartingPoint
+         this.stockChart.options.plugins.annotation.annotations.trendLineBelow.xMax = shouldPlaceOrder.xMax! + this.trendAlgoStartingPoint
+         this.stockChart.options.plugins.annotation.annotations.trendLineBelow.yMin = shouldPlaceOrder.belowyMin!
+         this.stockChart.options.plugins.annotation.annotations.trendLineBelow.yMax = shouldPlaceOrder.belowyMax!
+         this.stockChart.options.plugins.annotation.annotations.gutterLineAbove.xMin = shouldPlaceOrder.xMin! + this.trendAlgoStartingPoint
+         this.stockChart.options.plugins.annotation.annotations.gutterLineAbove.xMax = shouldPlaceOrder.xMax! + this.trendAlgoStartingPoint
+         this.stockChart.options.plugins.annotation.annotations.gutterLineAbove.yMin = shouldPlaceOrder.gutterLineAboveMin!
+         this.stockChart.options.plugins.annotation.annotations.gutterLineAbove.yMax = shouldPlaceOrder.gutterLineAboveMax!
+         this.stockChart.options.plugins.annotation.annotations.gutterLineBelow.xMin = shouldPlaceOrder.xMin! + this.trendAlgoStartingPoint
+         this.stockChart.options.plugins.annotation.annotations.gutterLineBelow.xMax = shouldPlaceOrder.xMax! + this.trendAlgoStartingPoint
+         this.stockChart.options.plugins.annotation.annotations.gutterLineBelow.yMin = shouldPlaceOrder.gutterLineBelowMin!
+         this.stockChart.options.plugins.annotation.annotations.gutterLineBelow.yMax = shouldPlaceOrder.gutterLineBelowMax! 
+      }
     }
     this.updateChart()
 
@@ -313,9 +316,6 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.stockChart.update()
   }
   updateVolumeChart() {
-
-
-
     const rates = [];
     for (let i = 1; i < this.chartData.volumeTime.length; i++) {
       let rate = (this.chartData.volume[i] - this.chartData.volume[i - 1]) / (this.chartData.volumeTime[i] - this.chartData.volumeTime[i - 1]);
