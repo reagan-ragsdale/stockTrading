@@ -174,6 +174,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       this.schwabWebsocket!.send(JSON.stringify(loginMsg))
     }
     this.schwabWebsocket.onmessage = async (event) => {
+      console.log(event)
       let newEvent = JSON.parse(event.toString())
 
 
