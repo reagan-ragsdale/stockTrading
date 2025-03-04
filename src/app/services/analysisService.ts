@@ -371,7 +371,7 @@ export class AnalysisService {
                     
                 }
                 else{
-                    newStopLoss = belowyMax - .1
+                    newStopLoss = currentStopLoss
                 }
                 return {
                     shouldExecuteOrder: false,
