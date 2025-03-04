@@ -355,7 +355,7 @@ export class AnalysisService {
                 else{
                     newHigh = currentTradeHigh
                 }
-                if(incomingPoint >= yMax){
+                if(incomingPoint >= initialAverage){
                     if(currentStopLoss > orderHistory[0].stockPrice){
                         if(incomingPoint > currentTradeHigh){
                             newStopLoss += (incomingPoint - currentTradeHigh)
