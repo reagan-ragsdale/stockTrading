@@ -194,6 +194,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
                   stockPrice: newEvent.data[0].content[i]['3'],
                   time: Number(newEvent.data[0].timestamp)
                 })
+                console.log(this.chartData)
                 await this.refreshData()
               }
             }
