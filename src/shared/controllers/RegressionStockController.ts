@@ -10,12 +10,12 @@ import { dbRegressionUserStocks, dbRegressionUserStocksRepo } from '../tasks/dbR
 export class RegressionStockController {
 
   @BackendMethod({ allowed: true })
-  static async getAllStocks(): Promise<dbRegressionUserStocks[]> {
+  static async getAllTestStocks(): Promise<dbRegressionUserStocks[]> {
     return await dbRegressionUserStocksRepo.find({where: {userId: remult.context.request!.session!["user"].id}})
   }
 
   @BackendMethod({ allowed: true })
-  static async insertOrUpdateStock(stock: stockOrder) {
+  static async insertOrUpdateTestStock(stock: stockOrder) {
     let stocks = await dbRegressionUserStocksRepo.findFirst({userId: remult.context.request!.session!["user"].id, stockName: stock.stockName})
     if(stocks){
         if(stock.orderType == 'Buy'){

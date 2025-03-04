@@ -8,7 +8,7 @@ export class RegressionOrderService {
 
     static async executeOrder(order: stockOrder, stockHistory: DbRegressionOrders) {
 
-        await RegressionOrderController.placeOrder(order)
+        await RegressionOrderController.placeTestOrder(order)
         if (order.orderType == 'Buy') {
             //if buy then just take the money out of the spending 
             await RegFinanceController.insertOrUpdateAmountReg((order.shareQty * order.stockPrice) * -1)
@@ -26,7 +26,7 @@ export class RegressionOrderService {
             
             
         }
-        await RegressionStockController.insertOrUpdateStock(order)
+        await RegressionStockController.insertOrUpdateTestStock(order)
 
     }
 

@@ -118,13 +118,13 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     });
   }
   async getStockData() {
-    this.stockData = await RegressionStockController.getAllStocks()
+    this.stockData = await RegressionStockController.getAllTestStocks()
     let selectedStock = this.stockData.filter(e => e.stockName == this.selectedStockName)
     this.selectedStockData = {
       stockName: selectedStock.length > 0 ? selectedStock[0].stockName : '',
       shareQty: selectedStock.length > 0 ? selectedStock[0].shareQty : 0
     }
-    this.stockHistoryData = await RegressionOrderController.getAllOrders()
+    this.stockHistoryData = await RegressionOrderController.getAllTestOrders()
     this.selectedStockHistoryData = this.stockHistoryData.filter(e => e.stockName == this.selectedStockName)
 
     //below is most likely not the best wat to find the net but it'll work for now

@@ -10,7 +10,7 @@ import { userRepo } from '../tasks/Users.js';
 export class RegressionOrderController {
 
   @BackendMethod({ allowed: true })
-  static async placeOrder(order: stockOrder) {
+  static async placeTestOrder(order: stockOrder) {
     await dbRegressionOrdersRepo.insert({
         userId: remult.context.request!.session!["user"].id,
         stockName: order.stockName,
@@ -22,13 +22,13 @@ export class RegressionOrderController {
   }
 
   @BackendMethod({ allowed: true })
-  static async getLastOrder(): Promise<DbRegressionOrders> {
+  static async getLastTestOrder(): Promise<DbRegressionOrders> {
     const orders = await dbRegressionOrdersRepo.find({where: {userId: remult.context.request!.session!["user"].id}, orderBy: {orderTime: 'desc'}})
     return orders[0]
   }
 
   @BackendMethod({ allowed: true })
-  static async getAllOrders(): Promise<DbRegressionOrders[]> {
+  static async getAllTestOrders(): Promise<DbRegressionOrders[]> {
     return await dbRegressionOrdersRepo.find({where: {userId: remult.context.request!.session!["user"].id}, orderBy: {orderTime: 'desc'}})
     
   }
