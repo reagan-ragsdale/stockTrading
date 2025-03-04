@@ -188,7 +188,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         if (Object.hasOwn(newEvent, 'data') && hasBeenSent == true) {
           if (newEvent.data[0].service == 'LEVELONE_EQUITIES') {
             for (let i = 0; i < newEvent.data[0].content.length; i++) {
-              if (Object.hasOwn(newEvent.data[0].content[i], '3') && newEvent.data[0].content[i] == this.selectedStockName) {
+              if (Object.hasOwn(newEvent.data[0].content[i], '3') && newEvent.data[0].content[i].key == this.selectedStockName) {
                 this.chartInfo.push({
                   stockName: newEvent.data[0].content[i].key,
                   stockPrice: newEvent.data[0].content[i]['3'],
