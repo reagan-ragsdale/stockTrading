@@ -228,7 +228,6 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     time: 0
   }]
   async refreshData() {
-
     this.chartData.history = this.chartInfo.map(e => e.stockPrice)
     this.chartData.labels = this.chartInfo.map(e => reusedFunctions.epochToLocalTime(e.time))
     this.chartData.time = this.chartInfo.map(e => e.time)
@@ -268,7 +267,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
 
       }
       else {
-        
+
         if (shouldPlaceOrder.stopLossPrice !== undefined) {
           this.stopLossPrice = shouldPlaceOrder.stopLossPrice
           this.stockChart.options.plugins.annotation.annotations.stopLossLine.yMin = this.stopLossPrice
@@ -743,6 +742,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     console.log(event)
     if (event.isUserInput == true) {
       this.selectedStockName = event.source.value
+      this.chartData.name = this.selectedStockName
       await this.getStockInfo()
       this.chartData = {
         history: [],

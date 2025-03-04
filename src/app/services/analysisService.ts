@@ -345,39 +345,33 @@ export class AnalysisService {
                 }
             }
             else {
-                let newStopLoss = 0
-                let newHigh = 0
-
-                //if the price has not gotten to the average yet
-                if (currentStopLoss < orderHistory[0].stockPrice) {
-                    //check to see if price is at average
-                    if (incomingPoint >= initialAverage) {
-                        //set new stop loss
-                        console.log('here')
-                        newStopLoss = ((initialAverage - orderHistory[0].stockPrice) * .3) + orderHistory[0].stockPrice
-                    }
-                    else {
-                        //keep stop loss
-                        newStopLoss = currentStopLoss
-                    }
-                    if (incomingPoint > currentTradeHigh) {
-                        newHigh = incomingPoint
-                    }
-                    else {
-                        newHigh = currentTradeHigh
-                    }
+                //if its not at target or stop loss
+                let newStopLoss = 0;
+                let newHigh = 0;
+                //set new high
+                if(incomingPoint > currentTradeHigh){
+                    newHigh = incomingPoint
                 }
-                //if there is a new stop loss
-                else {
-                    if (incomingPoint > currentTradeHigh) {
-                        console.log('here 2')
-                        newStopLoss += (incomingPoint - currentTradeHigh)
-                        newHigh = incomingPoint
+                else{
+                    newHigh = currentTradeHigh
+                }
+                if(incomingPoint >= yMax){
+                    if(currentStopLoss > orderHistory[0].stockPrice){
+                        if(incomingPoint > currentTradeHigh){
+                            newStopLoss += (incomingPoint - currentTradeHigh)
+                        }
+                        else{
+                            newStopLoss = currentStopLoss
+                            newHigh = currentTradeHigh
+                        }
                     }
-                    else {
-                        newStopLoss = currentStopLoss
-                        newHigh = currentTradeHigh
+                    else{
+                        newStopLoss = orderHistory[0].stockPrice + .1
                     }
+                    
+                }
+                else{
+                    newStopLoss = currentStopLoss
                 }
                 return {
                     shouldExecuteOrder: false,
