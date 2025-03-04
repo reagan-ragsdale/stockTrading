@@ -62,7 +62,6 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   openOrder: boolean = false
   lastOrder: DbOrders | null = null
   isUserOrBot: string = 'User'
-  unsubscribe = () => { }
   selectedStockHigh: number = 0
   selectedStockLow: number = 0
   selectedStockCurrent: number = 0
@@ -137,8 +136,9 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     console.log(this.selectedStockHistoryData)
 
   }
+  schwabWebSocket: any
   startWebsocket() {
-    const schwabWebsocket = new WebSocket(this.userData.streamerSocketUrl)
+    this.schwabWebsocket = new WebSocket(this.userData.streamerSocketUrl)
     let hasBeenSent = false
     const loginMsg = {
       "requests": [
@@ -171,16 +171,16 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         }
       ]
     }
-    schwabWebsocket.on('open', () => {
-      schwabWebsocket.send(JSON.stringify(loginMsg))
+    this.schwabWebsocket.on('open', () => {
+      this.schwabWebsocket!.send(JSON.stringify(loginMsg))
     })
-    schwabWebsocket.on('message', async (event) => {
+    this.schwabWebsocket.on('message', async (event) => {
       let newEvent = JSON.parse(event.toString())
 
 
       if (Object.hasOwn(newEvent, 'response')) {
         if (newEvent.response[0].requestid == 0 && hasBeenSent == false) {
-          schwabWebsocket.send(JSON.stringify(socketSendMsg))
+          this.schwabWebsocket!.send(JSON.stringify(socketSendMsg))
           hasBeenSent = true
         }
       }
@@ -782,17 +782,10 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
 
 
 
-    /*  this.unsubscribe = rhRepo
-       .liveQuery({
-         where: Rhkeys.getTokenUpdates({})
-       })
-       .subscribe(info => this.checkData(info.items)) */
-    //this.isLoading = false;
-
   }
 
   ngOnDestroy() {
-    this.unsubscribe()
+    this.schwabWebSocket!.close()
   }
 
 }
