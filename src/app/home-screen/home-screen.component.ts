@@ -136,9 +136,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     console.log(this.selectedStockHistoryData)
 
   }
-  schwabWebSocket: any
   startWebsocket() {
-    this.schwabWebsocket = new WebSocket(this.userData!.streamerSocketUrl)
+    const schwabWebsocket = new WebSocket(this.userData!.streamerSocketUrl)
     let hasBeenSent = false
     const loginMsg = {
       "requests": [
@@ -171,16 +170,16 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         }
       ]
     }
-    this.schwabWebsocket.on('open', () => {
-      this.schwabWebsocket!.send(JSON.stringify(loginMsg))
+    schwabWebsocket.on('open', () => {
+      schwabWebsocket.send(JSON.stringify(loginMsg))
     })
-    this.schwabWebsocket.on('message', async (event) => {
+    schwabWebsocket.on('message', async (event) => {
       let newEvent = JSON.parse(event.toString())
 
 
       if (Object.hasOwn(newEvent, 'response')) {
         if (newEvent.response[0].requestid == 0 && hasBeenSent == false) {
-          this.schwabWebsocket!.send(JSON.stringify(socketSendMsg))
+          schwabWebsocket.send(JSON.stringify(socketSendMsg))
           hasBeenSent = true
         }
       }
@@ -785,7 +784,6 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.schwabWebSocket!.close()
   }
 
 }
