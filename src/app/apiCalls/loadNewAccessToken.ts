@@ -5,6 +5,7 @@ import { OAuthContoller } from "../../shared/controllers/OAuthController.js"
 export const loadNewToken = async () => {
     console.log('here in token')
     //let token = await OAuthContoller.sendRefreshCall()
+    //let users = await AuthController.
     let token = await refreshCall()
     if(token != ''){
         await AuthController.updateGlobalAccessToken(token)

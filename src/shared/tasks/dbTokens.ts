@@ -7,6 +7,10 @@ export class DbTOkens {
 
     @Fields.cuid()
     id? = ''
+
+    @Fields.string({ includeInApi: true })
+    userId = ''
+
     @Fields.string({ includeInApi: true })
     appKey = ""
 
