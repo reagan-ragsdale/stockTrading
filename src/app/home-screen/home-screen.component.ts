@@ -772,7 +772,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     let user = await remult.initUser()
     console.log(remult.user)
     //await this.getMovers()
-    console.log(remult.context.request!.session!["user"])
+    remult.context.request!.session!["user"] = remult.user;
     await this.getUserFinanceData()
     this.distinctAvailableStocks = (await dbCurrentDayStockDataRepo.groupBy({ group: ['stockName'], orderBy: { stockName: 'desc' } })).map(e => e.stockName)
     console.log(this.distinctAvailableStocks)
