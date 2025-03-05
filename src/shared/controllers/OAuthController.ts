@@ -16,7 +16,7 @@ export class OAuthContoller {
 
   @BackendMethod({ allowed: true })
   static async sendOauthCall(code: string) {
-     OAuthContoller.sendCall(code)
+     await OAuthContoller.sendCall(code)
 
   }
   /* @BackendMethod({ allowed: true })

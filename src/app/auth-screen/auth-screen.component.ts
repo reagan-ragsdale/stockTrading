@@ -23,7 +23,7 @@ export class AuthScreenComponent implements OnInit {
 
   async getTokens() {
     try{
-      let returnCall = await OAuthContoller.sendOauthCall(this.code)
+      await OAuthContoller.sendOauthCall(this.code)
       //await AuthController.updateTokens(returnCall)
       window.close();
     }
