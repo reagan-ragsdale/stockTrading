@@ -21,8 +21,9 @@
                 <mat-radio-group [color]="'accent'" (change)="onAlgoChanged($event)">
                     <mat-radio-button value="highLow">HighLow</mat-radio-button>
                     <mat-radio-button value="trend">Trend</mat-radio-button>
+                    <mat-radio-button value="followUp">Follow Up</mat-radio-button>
                 </mat-radio-group>
-                <div *ngIf="tempSelectedAlgo == 'trend' || tempSelectedAlgo == 'highLow'" style="margin-left:1rem;">
+                <div *ngIf="tempSelectedAlgo == 'trend' || tempSelectedAlgo == 'highLow' || tempSelectedAlgo == 'followUp'" style="margin-left:1rem;">
                     <form class="auth-form">
                         <mat-form-field class="example-full-width">
                             <mat-label>Starting index</mat-label>

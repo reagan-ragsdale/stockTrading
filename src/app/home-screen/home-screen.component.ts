@@ -241,8 +241,11 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       if (this.selectedAlgo == 'highLow') {
         shouldPlaceOrder = AnalysisService.checkIsLowBuyIsHighSell(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1), this.selectedStockHistoryData, this.stopLossPrice, this.tradeInitialAverage, this.tradeCurrentHigh)
       }
-      else {
+      else if(this.selectedAlgo == 'trend'){
         shouldPlaceOrder = AnalysisService.trendTrading(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1), this.selectedStockHistoryData, this.stopLossPrice, this.tradeCurrentHigh, this.tradeInitialAverage)
+      }
+      else if(this.selectedAlgo == 'followUp'){
+        shouldPlaceOrder = AnalysisService.followUp(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1), this.selectedStockHistoryData, this.stopLossPrice, this.tradeCurrentHigh, this.tradeInitialAverage)
       }
 
       console.log(shouldPlaceOrder)
