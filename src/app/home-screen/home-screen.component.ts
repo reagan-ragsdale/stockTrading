@@ -769,7 +769,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     Chart.register(annotationPlugin);
     Chart.register(...registerables)
 
-    //remult.initUser()
+    await remult.initUser()
     //await this.getMovers()
     console.log(remult.context.request!.session!["user"])
     await this.getUserFinanceData()
