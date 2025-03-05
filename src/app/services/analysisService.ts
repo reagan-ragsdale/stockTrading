@@ -514,7 +514,7 @@ export class AnalysisService {
         let incomingPoint = stock[stock.length - 1]
         let tradeLow = Math.min(...stock)
 
-        if(nextOrderType = 'Buy'){
+        if(nextOrderType == 'Buy'){
             return{
                 shouldExecuteOrder: true,
                 isBuyOrSell: 'Buy',
