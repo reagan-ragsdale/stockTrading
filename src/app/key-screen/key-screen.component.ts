@@ -15,6 +15,7 @@ import { CachedData } from '../services/cachedDataService.js';
 import { remult, UserInfo } from 'remult';
 import { Rhkeys, rhRepo } from '../../shared/tasks/rhkeys.js';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { dbTokenRepo } from '../../shared/tasks/dbTokens.js';
 
 @Component({
   selector: 'app-key-screen',
@@ -44,11 +45,13 @@ export class KeyScreenComponent implements OnInit, OnDestroy {
     )?.focus()
     this.isLoadingTokens = true;
     //add livequery to look for the new update to the token table
-    this.unsubscribe = rhRepo
-      .liveQuery({
-        where: Rhkeys.getTokenUpdates({ id: remult.context.request!.session!["user"].id })
-      })
-      .subscribe(info => this.checkData(info.items))
+    this.unsubscribe = dbTokenRepo
+        .liveQuery({
+          where: {
+            userId: this.user!.id
+          }
+        })
+        .subscribe(info => this.checkData(info.items))
 
   }
   checkData(change: any) {
@@ -77,9 +80,11 @@ export class KeyScreenComponent implements OnInit, OnDestroy {
         "_blank"
       )?.focus()
       this.isLoadingTokens = true;
-      this.unsubscribe = rhRepo
+      this.unsubscribe = dbTokenRepo
         .liveQuery({
-          where: Rhkeys.getTokenUpdates({ id: this.user!.id })
+          where: {
+            userId: this.user!.id
+          }
         })
         .subscribe(info => this.checkData(info.items))
     }
