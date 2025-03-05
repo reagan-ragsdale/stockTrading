@@ -501,11 +501,28 @@ export class AnalysisService {
         return val
         //find the outliers of the line
     }
-    //how to find the local maximas and minimas
-    //create trend lines
-    //extrapolate trend lines to find meeting point
+    /* static followUp(stock: number[], orderHistory: stockOrder[], currentStopLoss: number, currentTradeHigh: number, initialAverage: number): buySellDto {
+        let nextOrderType = 'Buy'
+        let lastOrderPrice = 0
+        if (orderHistory.length > 0) {
+            lastOrderPrice = orderHistory[0].stockPrice
+            if (orderHistory[0].orderType == 'Buy') {
+                nextOrderType = 'Sell'
+            }
+        }
 
-    //is at meeting point?
-    //yes? is point above meeting point?
-    //yes? is buy? yes? buy
+        let incomingPoint = stock[stock.length - 1]
+
+        if(nextOrderType = 'Buy'){
+            return{
+                shouldExecuteOrder: true,
+                isBuyOrSell: 'Buy',
+                stopLossPrice: belowyMax - .1,
+                initialAverage: yMax,
+                tradeHigh: incomingPoint,
+                containsTrendInfo: false
+
+            }
+        }
+    } */
 }
