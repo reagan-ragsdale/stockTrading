@@ -117,6 +117,24 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
 
     });
   }
+  async getUserData() {
+    this.sharedCache.currentAccessToken.subscribe(token => this.accessToken = token!)
+    const url = 'https://api.schwabapi.com/trader/v1/userPreference';
+    const options = {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${this.accessToken}`
+      }
+    };
+    try {
+      const response = await fetch(url, options);
+      const result = await response.json();
+      this.userPreferenceData = result
+    }
+    catch (error: any) {
+      console.log(error.message)
+    }
+  }
   async getStockInfo() {
     this.selectedStockTotalNet = 0
     this.stockData = await StockController.getAllStocks()
@@ -777,12 +795,18 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     //await this.getMovers()
     await AuthController.resetUser()
     //setSessionUser(remult.user!)
+    let tokenData = await dbTokenRepo.find({where: {userId: remult.user?.id}})
+    if(tokenData === undefined){
+      await this.getUserData()
+      let rhTokens = await AuthController.getKeyPairs()
+      await AuthController.insertTokenData(this.userPreferenceData, rhTokens)
+    }
     await this.getUserFinanceData()
     this.distinctAvailableStocks = (await dbCurrentDayStockDataRepo.groupBy({ group: ['stockName'], orderBy: { stockName: 'desc' } })).map(e => e.stockName)
     console.log(this.distinctAvailableStocks)
     this.selectedStockName = this.distinctAvailableStocks[0]
     await this.getStockInfo()
-    this.userData = await dbTokenRepo.findFirst({ id: { '!=': '' } }) as DbTOkens
+    this.userData = await dbTokenRepo.findFirst({ userId: remult.user?.id }) as DbTOkens
     this.createOrUpdateChart()
     this.createVolumeChart()
     await this.getStockData()

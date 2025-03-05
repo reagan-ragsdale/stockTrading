@@ -19,11 +19,11 @@ export class OAuthContoller {
     return OAuthContoller.sendCall(code)
 
   }
-  @BackendMethod({ allowed: true })
+  /* @BackendMethod({ allowed: true })
   static async sendRefreshCall(): Promise<string> {
     console.log('here in oauth controller call')
     return OAuthContoller.sendRefresh()
-  }
+  } */
 
 
 }

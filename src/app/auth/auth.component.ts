@@ -18,7 +18,7 @@ import { CachedData } from '../services/cachedDataService';
 @Component({
   selector: 'app-auth',
   standalone: true,
-  imports: [CommonModule, FormsModule,MatProgressSpinnerModule, MatCardModule, MatToolbarModule, MatFormFieldModule, MatSnackBarModule, MatInputModule, MatButtonModule],
+  imports: [CommonModule, FormsModule, MatProgressSpinnerModule, MatCardModule, MatToolbarModule, MatFormFieldModule, MatSnackBarModule, MatInputModule, MatButtonModule],
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.css',
 })
@@ -43,11 +43,18 @@ export class AuthComponent implements OnInit {
 
         remult.user = await AuthController.logIn(this.signInUsername, this.signInPassword)
         if (remult.authenticated()) {
-          this.router.navigate(['/keys'])
+          let user = await AuthController.getTokenUser(remult.user?.id)
+          if (user?.needsNewAuth == false) {
+            this.router.navigate(['/home'])
+          }
+          else {
+            this.router.navigate(['/keys'])
+          }
+
         }
       }
       catch (error: any) {
-        this._snackBar.open(error.message, 'close',{duration: 8000})
+        this._snackBar.open(error.message, 'close', { duration: 8000 })
       }
 
     }
@@ -59,11 +66,11 @@ export class AuthComponent implements OnInit {
           this.router.navigate(['/keys'])
         }
       } catch (error: any) {
-        this._snackBar.open(error.message, 'close',{duration: 8000})
+        this._snackBar.open(error.message, 'close', { duration: 8000 })
       }
-      
+
     }
-    
+
 
 
 
@@ -79,11 +86,21 @@ export class AuthComponent implements OnInit {
   }
 
 
-  
+
   async ngOnInit() {
     await remult.initUser()
-    if(remult.authenticated()){
-      this.router.navigate(['/keys'])
+    if (remult.authenticated()) {
+      await AuthController.resetUser()
+      let user = await AuthController.getTokenUser(remult.user?.id!)
+      if(user){
+        if (user?.needsNewAuth == false) {
+          this.router.navigate(['/home'])
+        }
+        else {
+          this.router.navigate(['/keys'])
+        }
+      }
+      
     }
   }
 }

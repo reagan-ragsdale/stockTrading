@@ -8,7 +8,7 @@ import type { generate, verify } from 'password-hash'
 import { getCurrentUser, setSessionUser } from '../../server/server-session.js'
 import { userRepo } from '../tasks/Users.js'
 import { Rhkeys, rhRepo } from '../tasks/rhkeys.js';
-import { dbTokenRepo } from '../tasks/dbTokens.js';
+import { dbTokenRepo, DbTOkens } from '../tasks/dbTokens.js';
 
 declare module 'remult' {
   export interface RemultContext {
@@ -30,13 +30,13 @@ export class AuthController {
     if (!AuthController.verify(password, user.userPass))
       throw Error("Invalid Credentials")
     remult.user = {
-        id: user.userId,
-        name: user.userName,
-        roles: user.isAdmin ? ["admin"] : [],
-      };
-      console.log(remult.user)
-      remult.context.request!.session!["user"] = remult.user;
-      return remult.user;
+      id: user.userId,
+      name: user.userName,
+      roles: user.isAdmin ? ["admin"] : [],
+    };
+    console.log(remult.user)
+    remult.context.request!.session!["user"] = remult.user;
+    return remult.user;
   }
 
   @BackendMethod({ allowed: true })
@@ -73,68 +73,79 @@ export class AuthController {
   @BackendMethod({ allowed: true })
   static async insertKeyPairs(publicKey: string, privateKey: string) {
     let currentUser = getCurrentUser()
-    let userInfo = await userRepo.findFirst({id: currentUser.id})
-      await rhRepo.insert({
-        userId: userInfo?.userId,
-        appKey: publicKey,
-        appSecret: privateKey,
-        accessToken: '',
-        refreshToken: ''
-      })
+    let userInfo = await userRepo.findFirst({ id: currentUser.id })
+    await rhRepo.insert({
+      userId: userInfo?.userId,
+      appKey: publicKey,
+      appSecret: privateKey,
+      accessToken: '',
+      refreshToken: ''
+    })
 
   }
   @BackendMethod({ allowed: true })
   static async getKeyPairs(): Promise<Rhkeys> {
-    return await rhRepo.findFirst({userId: remult.context.request!.session!["user"].id}) as Rhkeys
+    return await rhRepo.findFirst({ userId: remult.context.request!.session!["user"].id }) as Rhkeys
 
   }
 
   @BackendMethod({ allowed: true })
   static async checkKeyGeneration(): Promise<boolean> {
     console.log(remult.context.request!.session!["user"].id)
-    let userKeyData = await rhRepo.findFirst({userId: remult.context.request!.session!["user"].id})
-    if(userKeyData){
+    let userKeyData = await rhRepo.findFirst({ userId: remult.context.request!.session!["user"].id })
+    if (userKeyData) {
       return true
     }
-    else{
+    else {
       return false
     }
   }
 
   @BackendMethod({ allowed: true })
   static async updateTokens(tokens: string[]) {
-    let keys = await rhRepo.findFirst({userId: remult.context.request!.session!["user"].id})
-    await rhRepo.save({...keys, accessToken: tokens[0], refreshToken: tokens[1]})
-    let tokenRepo = await dbTokenRepo.findFirst({id: {'!=': ''}})
-    await dbTokenRepo.save({...tokenRepo, accessToken: tokens[0], refreshToken: tokens[1]})
+    let keys = await rhRepo.findFirst({ userId: remult.context.request!.session!["user"].id })
+    await rhRepo.save({ ...keys, accessToken: tokens[0], refreshToken: tokens[1] })
+    let tokenRepo = await dbTokenRepo.findFirst({ id: { '!=': '' } })
+    await dbTokenRepo.save({ ...tokenRepo, accessToken: tokens[0], refreshToken: tokens[1] })
 
   }
 
   @BackendMethod({ allowed: true })
   static async updateAccessToken(token: string) {
-    let keys = await rhRepo.findFirst({userId: remult.context.request!.session!["user"].id})
-    await rhRepo.save({...keys, accessToken: token})
+    let keys = await rhRepo.findFirst({ userId: remult.context.request!.session!["user"].id })
+    await rhRepo.save({ ...keys, accessToken: token })
 
   }
 
-  
+
   @BackendMethod({ allowed: true })
-  static async changeUserName(username: string){
+  static async changeUserName(username: string) {
     const currentUser = getCurrentUser()
-    const user = await userRepo.findFirst({id: currentUser.id})
-    await userRepo.save({...user, userName: username})
+    const user = await userRepo.findFirst({ id: currentUser.id })
+    await userRepo.save({ ...user, userName: username })
   }
   @BackendMethod({ allowed: true })
-  static async changePassword(password: string){
+  static async changePassword(password: string) {
     const currentUser = await this.currentUser()
-    const user = await userRepo.findFirst({id: currentUser.id})
-    await userRepo.save({...user, userPass: AuthController.generate(password)})
+    const user = await userRepo.findFirst({ id: currentUser.id })
+    await userRepo.save({ ...user, userPass: AuthController.generate(password) })
   }
   @BackendMethod({ allowed: true })
-  static async updateGlobalAccessToken(accessToken: string){
-    let tokenObj = await dbTokenRepo.findFirst({id: {"!=" : ''}})
-    await dbTokenRepo.save({...tokenObj, accessToken: accessToken})
+  static async updateGlobalAccessToken(accessToken: string, userId: string) {
+    let tokenObj = await dbTokenRepo.findFirst({ userId: userId })
+    await dbTokenRepo.save({ ...tokenObj, accessToken: accessToken,  needsNewAuth: false})
   }
+  @BackendMethod({ allowed: true })
+  static async updateGlobalAccessTokens(accessToken: string, refreshToken: string, userId: string) {
+    let tokenObj = await dbTokenRepo.findFirst({ userId: userId })
+    await dbTokenRepo.save({ ...tokenObj, accessToken: accessToken, refreshToken: refreshToken,  needsNewAuth: false})
+  }
+  @BackendMethod({ allowed: true })
+  static async setNeedsNewTokens(userId: string) {
+    let tokenObj = await dbTokenRepo.findFirst({ userId: userId })
+    await dbTokenRepo.save({ ...tokenObj,  needsNewAuth: true})
+  }
+
 
   /* @BackendMethod({ allowed: true })
   static async getUserPreference(){
@@ -142,16 +153,37 @@ export class AuthController {
     await dbTokenRepo.save({...tokenObj, accessToken: accessToken})
   } */
 
-    @BackendMethod({ allowed: true })
-    static async resetUser(){
-      remult.context.request!.session!["user"] = remult.user;
-    }
+  @BackendMethod({ allowed: true })
+  static async resetUser() {
+    remult.context.request!.session!["user"] = remult.user;
+  }
+
+  @BackendMethod({ allowed: true })
+  static async insertTokenData(userPReference: any, rhTokens: Rhkeys) {
+    await dbTokenRepo.insert({
+      userId: rhTokens.userId, appKey: rhTokens.appKey, appSecret: rhTokens.appSecret,
+      accessToken: rhTokens.accessToken, refreshToken: rhTokens.refreshToken, streamerSocketUrl: userPReference.streamerInfo[0].streamerSocketUrl,
+      schwabClientCustomerId: userPReference.streamerInfo[0].schwabClientCustomerId, schwabClientCorrelId: userPReference.streamerInfo[0].schwabClientCorrelId,
+      schwabClientChannel: userPReference.streamerInfo[0].schwabClientChannel, schwabClientFunctionId: userPReference.streamerInfo[0].schwabClientFunctionId
+    })
+  }
+
+  @BackendMethod({ allowed: true })
+  static async getTokenUsers(): Promise<DbTOkens[]> {
+    return await dbTokenRepo.find({where: {needsNewAuth: false}})
+  }
+  @BackendMethod({ allowed: true })
+  static async getTokenUser(userId: string): Promise<DbTOkens | undefined> {
+    return await dbTokenRepo.findFirst({userId: userId})
+  }
 
 
- 
 
 
-  
+
+
+
+
 
   @BackendMethod({ allowed: true })
   static async currentUser() {

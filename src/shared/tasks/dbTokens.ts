@@ -38,6 +38,9 @@ export class DbTOkens {
     @Fields.string({ includeInApi: true })
     schwabClientFunctionId = ""
 
+    @Fields.boolean({ includeInApi: true })
+    needsNewAuth = true
+
     @Fields.createdAt()
     createdAt?: Date
     
