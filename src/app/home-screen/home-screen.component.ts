@@ -34,6 +34,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { reusedFunctions } from '../services/reusedFunctions';
 import { dbTokenRepo, DbTOkens } from '../../shared/tasks/dbTokens';
 import { setSessionUser } from '../../server/server-session';
+import { AuthController } from '../../shared/controllers/AuthController';
 //import { WebSocket } from 'ws';
 @Component({
   selector: 'app-home-screen',
@@ -771,9 +772,10 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     Chart.register(...registerables)
 
     let user = await remult.initUser()
-    console.log(remult.user)
+    //console.log(remult.user)
     //await this.getMovers()
-    setSessionUser(remult.user!)
+    await AuthController.resetUser()
+    //setSessionUser(remult.user!)
     await this.getUserFinanceData()
     this.distinctAvailableStocks = (await dbCurrentDayStockDataRepo.groupBy({ group: ['stockName'], orderBy: { stockName: 'desc' } })).map(e => e.stockName)
     console.log(this.distinctAvailableStocks)

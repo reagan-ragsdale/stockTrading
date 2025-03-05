@@ -1,4 +1,4 @@
-import { BackendMethod, remult } from 'remult'
+import { BackendMethod, remult, UserInfo } from 'remult'
 import type express from 'express'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type from 'cookie-session' // required to access the session member of the request object
@@ -142,7 +142,10 @@ export class AuthController {
     await dbTokenRepo.save({...tokenObj, accessToken: accessToken})
   } */
 
-  
+    @BackendMethod({ allowed: true })
+    static async resetUser(){
+      remult.context.request!.session!["user"] = remult.user;
+    }
 
 
  
