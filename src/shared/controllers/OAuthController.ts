@@ -15,8 +15,8 @@ export class OAuthContoller {
   static sendRefresh: typeof refreshCall
 
   @BackendMethod({ allowed: true })
-  static async sendOauthCall(code: string): Promise<string[]> {
-    return OAuthContoller.sendCall(code)
+  static async sendOauthCall(code: string) {
+     OAuthContoller.sendCall(code)
 
   }
   /* @BackendMethod({ allowed: true })
