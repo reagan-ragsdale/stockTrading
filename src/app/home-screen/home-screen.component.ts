@@ -234,7 +234,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.selectedStockCurrent = this.chartData.history[this.chartData.history.length - 1]
     this.selectedStockHigh = Math.max(...this.chartData.history)
     this.selectedStockLow = Math.min(...this.chartData.history)
-    if (this.isUserOrBot == 'Bot' && this.isBotAuthorized == true) {
+    if (this.isUserOrBot == 'Bot' && this.isBotAuthorized == true && !this.isOrderPending) {
       let shouldPlaceOrder: buySellDto = {
         shouldExecuteOrder: false
       }
@@ -243,8 +243,6 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       }
       else {
         shouldPlaceOrder = AnalysisService.trendTrading(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1), this.selectedStockHistoryData, this.stopLossPrice, this.tradeInitialAverage, this.tradeCurrentHigh)
-        //console.log(returnVal)
-        
       }
 
       console.log(shouldPlaceOrder)
