@@ -665,6 +665,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       this.targetPrice = 0;
       this.stopLossPrice = 0
       this.tradeCurrentHigh = 0
+      this.tradeInitialAverage = 0
       this.updateChartLines()
     }
   }

@@ -501,7 +501,7 @@ export class AnalysisService {
         return val
         //find the outliers of the line
     }
-    /* static followUp(stock: number[], orderHistory: stockOrder[], currentStopLoss: number, currentTradeHigh: number, initialAverage: number): buySellDto {
+    static followUp(stock: number[], orderHistory: stockOrder[], currentStopLoss: number, currentTradeHigh: number, initialPrice: number): buySellDto {
         let nextOrderType = 'Buy'
         let lastOrderPrice = 0
         if (orderHistory.length > 0) {
@@ -512,17 +512,53 @@ export class AnalysisService {
         }
 
         let incomingPoint = stock[stock.length - 1]
+        let tradeLow = Math.min(...stock)
 
         if(nextOrderType = 'Buy'){
             return{
                 shouldExecuteOrder: true,
                 isBuyOrSell: 'Buy',
-                stopLossPrice: belowyMax - .1,
-                initialAverage: yMax,
+                stopLossPrice: tradeLow,
+                initialAverage: incomingPoint,
                 tradeHigh: incomingPoint,
                 containsTrendInfo: false
 
             }
         }
-    } */
+        //sell
+        else{
+            if(incomingPoint <= currentStopLoss){
+                return{
+                    shouldExecuteOrder: true,
+                    isBuyOrSell: 'Sell',
+                    containsTrendInfo: false,
+                    soldAtStopLoss: true,
+                }
+            }
+            else{
+                let newStopLoss = currentStopLoss
+                let newHigh = currentTradeHigh
+                if(incomingPoint > currentTradeHigh){
+                    newHigh = incomingPoint
+                }
+                if(incomingPoint > initialPrice + .15){
+                    if(currentStopLoss < initialPrice){
+                        newStopLoss = initialPrice
+                    }
+                    else{
+                        if(incomingPoint > currentTradeHigh){
+                            newStopLoss += (incomingPoint - currentTradeHigh)
+                        }
+                    }
+                }
+                return{
+                    shouldExecuteOrder: false,
+                    stopLossPrice: newStopLoss,
+                    tradeHigh: newHigh,
+                    containsTrendInfo: false,
+                }
+            }
+            
+        }
+    }
 }
