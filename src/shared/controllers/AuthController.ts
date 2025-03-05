@@ -176,6 +176,10 @@ export class AuthController {
   static async getTokenUser(userId: string): Promise<DbTOkens | undefined> {
     return await dbTokenRepo.findFirst({userId: userId})
   }
+  @BackendMethod({ allowed: true })
+  static async getTokenUserByRemult(): Promise<DbTOkens | undefined> {
+    return await dbTokenRepo.findFirst({userId: remult.context.request!.session!["user"].id})
+  }
 
 
 

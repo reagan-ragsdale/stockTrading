@@ -26,7 +26,7 @@ export class AuthScreenComponent implements OnInit {
       let returnCall = await OAuthContoller.sendOauthCall(this.code)
       this.sharedCache.changeAccessToken(returnCall[0])
       this.sharedCache.changeRefreshToken(returnCall[1])
-      await AuthController.updateTokens(returnCall)
+      //await AuthController.updateTokens(returnCall)
       window.close();
     }
     catch(error: any){
@@ -48,6 +48,7 @@ export class AuthScreenComponent implements OnInit {
 
   async ngOnInit() {
     let user = await remult.initUser()
+    
     console.log('user info below')
     console.log(remult.authenticated())
     this.url = location.href
