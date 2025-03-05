@@ -659,6 +659,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
 
   async getUserFinanceData() {
     this.userSimFinData = await SimFinance.getSimFinData()
+    console.log(this.userSimFinData)
   }
 
   userBotChange(event: any) {

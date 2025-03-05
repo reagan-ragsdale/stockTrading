@@ -40,6 +40,7 @@ export class SimFinance {
 
     @BackendMethod({ allowed: true })
     static async getSimFinData(): Promise<SimFInance[]> {
+        console.log(remult.context.request!.session!["user"])
         return await simFinRepo.find({where: {userId: remult.context.request!.session!["user"].id}})
     }
 
