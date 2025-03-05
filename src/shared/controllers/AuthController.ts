@@ -160,9 +160,9 @@ export class AuthController {
 
   @BackendMethod({ allowed: true })
   static async insertTokenData(userPReference: any, rhTokens: Rhkeys) {
-    await dbTokenRepo.insert({
-      userId: rhTokens.userId, appKey: rhTokens.appKey, appSecret: rhTokens.appSecret,
-      accessToken: rhTokens.accessToken, refreshToken: rhTokens.refreshToken, streamerSocketUrl: userPReference.streamerInfo[0].streamerSocketUrl,
+    let userToken = await dbTokenRepo.findFirst({userId: rhTokens.userId})
+    await dbTokenRepo.save({...userToken, appKey: rhTokens.appKey, appSecret: rhTokens.appSecret,
+       streamerSocketUrl: userPReference.streamerInfo[0].streamerSocketUrl,
       schwabClientCustomerId: userPReference.streamerInfo[0].schwabClientCustomerId, schwabClientCorrelId: userPReference.streamerInfo[0].schwabClientCorrelId,
       schwabClientChannel: userPReference.streamerInfo[0].schwabClientChannel, schwabClientFunctionId: userPReference.streamerInfo[0].schwabClientFunctionId
     })
@@ -180,7 +180,12 @@ export class AuthController {
   static async getTokenUserByRemult(): Promise<DbTOkens | undefined> {
     return await dbTokenRepo.findFirst({userId: remult.context.request!.session!["user"].id})
   }
+  @BackendMethod({ allowed: true })
+  static async createTokenUser(userId:string) {
+    await dbTokenRepo.insert({userId: userId})
+  }
 
+  
 
 
 

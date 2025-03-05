@@ -795,8 +795,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     //await this.getMovers()
     await AuthController.resetUser()
     //setSessionUser(remult.user!)
-    let tokenData = await dbTokenRepo.find({where: {userId: remult.user?.id}})
-    if(tokenData === undefined){
+    let tokenData = await dbTokenRepo.findFirst({userId: remult.user?.id})
+    if(tokenData?.schwabClientChannel == ''){
       await this.getUserData()
       let rhTokens = await AuthController.getKeyPairs()
       await AuthController.insertTokenData(this.userPreferenceData, rhTokens)

@@ -43,13 +43,21 @@ export class AuthComponent implements OnInit {
 
         remult.user = await AuthController.logIn(this.signInUsername, this.signInPassword)
         if (remult.authenticated()) {
+          
           let user = await AuthController.getTokenUser(remult.user?.id)
-          if (user?.needsNewAuth == false) {
-            this.router.navigate(['/home'])
+          if(user){
+            if (user?.needsNewAuth == false) {
+              this.router.navigate(['/home'])
+            }
+            else {
+              this.router.navigate(['/keys'])
+            }
           }
-          else {
+          else{
+            await AuthController.createTokenUser(remult.user.id)
             this.router.navigate(['/keys'])
           }
+          
 
         }
       }
