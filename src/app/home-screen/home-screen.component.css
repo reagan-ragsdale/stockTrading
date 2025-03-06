@@ -15,3 +15,12 @@
 h1, h2, h3,h4{
     color: #DBD4D1 !important;
 }
+.overlay{
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom: 0;
+    z-index:2;
+    backdrop-filter: blur(2px);
+}

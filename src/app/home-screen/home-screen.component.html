@@ -1,7 +1,9 @@
-<div *ngIf="false" style="height: calc(100vh - 63px); width: 100%; background-color: #1F1E1F; display: flex; align-items: center;">
+
+<ng-container ngIf="isLoading">
     <mat-spinner [mode]="'indeterminate'" style="margin:auto; color:white"></mat-spinner>
-</div>
-<div *ngIf="true" style="display:flex; flex-direction: column; height: calc(100vh - 63px);">
+    <div class="overlay"></div>
+</ng-container>
+<div style="display:flex; flex-direction: column; height: calc(100vh - 63px);">
     <div class="top-bar">
         <div style="margin-left: 1rem;margin-top: auto;margin-bottom: auto; display: flex;align-items: center;">
             <h3>Live Env</h3>

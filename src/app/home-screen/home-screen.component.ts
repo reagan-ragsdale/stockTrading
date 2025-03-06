@@ -787,6 +787,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
 
   isLoading: boolean = true;
   async ngOnInit() {
+    this.isLoading = true
     Chart.register(annotationPlugin);
     Chart.register(...registerables)
 
@@ -812,7 +813,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     await this.getStockData()
     this.startWebsocket()
 
-
+    this.isLoading = false;
 
 
 
