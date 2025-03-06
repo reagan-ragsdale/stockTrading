@@ -14,7 +14,7 @@ export class Users {
     @Fields.string({ includeInApi: false })
     userPass = ""
 
-    @Fields.string({ includeInApi: false })
+    @Fields.string()
     userId = ""
 
     @Fields.boolean()
