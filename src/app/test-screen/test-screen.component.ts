@@ -594,14 +594,18 @@ export class TestScreenComponent implements OnInit, OnDestroy {
   }
   onSelectedDateChange(event: any) {
     if (event.isUserInput == true) {
+      this.isLoading = true;
       this.selectedDate = event.source.value
       this.updateStockChartData()
+      this.isLoading = false
     }
   }
   async onSelectedStockChange(event: any) {
     if (event.isUserInput == true) {
+      this.isLoading = true;
       this.selectedStockName = event.source.value
       await this.getStockHistoricalData()
+      this.isLoading = false
     }
   }
   async beginSimulation() {
@@ -641,9 +645,10 @@ export class TestScreenComponent implements OnInit, OnDestroy {
   stockDataForSelectedDay: DbStockHistoryData[] = []
   allStockDataForSelectedStock: DbStockHistoryData[] = []
   distinctStocks: string[] = []
-  isLoading: boolean = true;
+  isLoading: boolean = false;
 
   async ngOnInit() {
+    this.isLoading = true
     Chart.register(annotationPlugin);
     Chart.register(...registerables)
     let user = await remult.initUser()
@@ -656,6 +661,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     //this.createVolumeChart()
 
     await this.getStockHistoricalData()
+    this.isLoading = false;
 
   }
 
