@@ -39,10 +39,10 @@
                 <button *ngIf="tempSelectedAlgo == 'trend' && tempTrendAlgoStartingPoint > 0" style="width: max-content; margin-top:auto; margin-bottom:auto;" mat-raised-button color="primary" aria-label="Confirm Algorithm" [disabled]="!isChangesToBot" (click)="resetAlgo()">Reset</button>   
             </div>
         </div>
-        <div style="margin-left:auto; margin-right: 2rem; display:flex;">
+        <div style="margin-left:auto; margin-right: 2rem; display:flex; align-items: center; gap: 1rem;">
             <h3>Savings Leaderboard:</h3>
             <div style="display: flex; gap: 5px;" *ngFor="let user of userLeaderBoard; let i = index;">
-                <span style="color: #DBD4D1;">{{i}}</span>
+                <span style="color: #DBD4D1;">{{i + 1}}</span>
                 <span style="color: #DBD4D1;">{{user.userName}}</span>
                 <span style="color: #DBD4D1;">{{user.savings | currency:'USD':'symbol'}}</span>
             </div>       
