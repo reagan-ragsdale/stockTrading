@@ -61,7 +61,7 @@
             <div style="width: 100%;display:flex;">
                 <div class="canvas-container">
                     <canvas style="width:100% !important;" id="stock-chart">{{stockChart}}</canvas>
-                    <canvas style="width:100% !important;" id="volume-chart">{{volumeChart}}</canvas>
+                    <!-- <canvas style="width:100% !important;" id="volume-chart">{{volumeChart}}</canvas> -->
                 </div>
                 <div style="display:flex; flex-direction: column;">
                     <h4>{{selectedStockCurrent}}</h4>
@@ -89,12 +89,46 @@
                             <h3 style="text-align: center;">Total: {{this.selectedStockTotalNet | currency:'USD':'symbol'}}</h3>
                         </div>
                         <div *ngIf="selectedStockHistoryData.length > 0" style="display:flex; justify-content: center; flex-direction: column;overflow-y: scroll;scrollbar-width: none;">
+                            <mat-table [dataSource]="selectedStockHistoryData" class="mat-elevation-z8">
+                                <!-- Position Column -->
+                                <ng-container matColumnDef="Trade">
+                                  <mat-header-cell *matHeaderCellDef> Trade </mat-header-cell>
+                                  <mat-cell *matCellDef="let element"> {{element.orderType}} </mat-cell>
+                                </ng-container>
+                              
+                                <!-- Name Column -->
+                                <ng-container matColumnDef="Stock">
+                                  <mat-header-cell *matHeaderCellDef> Stock </mat-header-cell>
+                                  <mat-cell *matCellDef="let element"> {{element.stockName}} </mat-cell>
+                                </ng-container>
+                              
+                                <!-- Weight Column -->
+                                <ng-container matColumnDef="Shares">
+                                  <mat-header-cell *matHeaderCellDef> Shares </mat-header-cell>
+                                  <mat-cell *matCellDef="let element"> {{element.shareQty}} </mat-cell>
+                                </ng-container>
+                              
+                                <!-- Symbol Column -->
+                                <ng-container matColumnDef="Price">
+                                  <mat-header-cell *matHeaderCellDef> Price </mat-header-cell>
+                                  <mat-cell *matCellDef="let element"> {{element.stockPrice}} </mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="Time">
+                                    <mat-header-cell *matHeaderCellDef> Time </mat-header-cell>
+                                    <mat-cell *matCellDef="let element"> {{element.orderTime | epochToTimePipe}} </mat-cell>
+                                  </ng-container>
+                              
+                                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                              </mat-table>
+                            <!-- 
                             <div *ngFor="let trade of selectedStockHistoryData" style="display: flex;justify-content: space-evenly; ">
                                 <h3>{{trade.orderType}}</h3>
                                 <h3>{{trade.stockName}}</h3>
                                 <h3>{{trade.shareQty | number:'1.2-5'}}</h3>
-                                <h3>{{trade.stockPrice | number:'1.2-3'}}</h3>
-                            </div>
+                                <h3>{{trade.orderTime| number:'1.2-3'}}</h3>
+                            </div> -->
                         </div>
     
                     </div>

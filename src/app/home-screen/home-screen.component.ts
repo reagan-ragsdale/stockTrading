@@ -35,10 +35,12 @@ import { reusedFunctions } from '../services/reusedFunctions';
 import { dbTokenRepo, DbTOkens } from '../../shared/tasks/dbTokens';
 import { setSessionUser } from '../../server/server-session';
 import { AuthController } from '../../shared/controllers/AuthController';
+import {MatTableModule} from '@angular/material/table';
+import { EpochToTimePipe } from "../services/epochToTimePipe.pipe";
 //import { WebSocket } from 'ws';
 @Component({
   selector: 'app-home-screen',
-  imports: [CommonModule, FormsModule, MatSelectModule, MatInputModule, MatMenuModule, MatFormFieldModule, MatIconModule, MatRadioModule, MatProgressSpinnerModule, MatButtonModule, MatButtonToggleModule, TradeComponent],
+  imports: [CommonModule, FormsModule, MatTableModule, MatSelectModule, MatInputModule, MatMenuModule, MatFormFieldModule, MatIconModule, MatRadioModule, MatProgressSpinnerModule, MatButtonModule, MatButtonToggleModule, TradeComponent, EpochToTimePipe],
   templateUrl: './home-screen.component.html',
   styleUrl: './home-screen.component.css'
 })
@@ -91,6 +93,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   isBotAuthorized: boolean = false;
   isChangesToBot: boolean = false;
   distinctAvailableStocks: string[] = []
+
+  displayedColumns: string[] = ["Trade", "Stock","Shares","Price","Time"]
 
   showAddFunds() {
     const dialogRef = this.dialog.open(AddFundsComponent, {
@@ -812,7 +816,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     await this.getStockInfo()
     this.userData = await dbTokenRepo.findFirst({ userId: remult.user?.id }) as DbTOkens
     this.createOrUpdateChart()
-    this.createVolumeChart()
+    //this.createVolumeChart()
     await this.getStockData()
     this.startWebsocket()
 
