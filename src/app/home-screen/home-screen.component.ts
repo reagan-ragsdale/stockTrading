@@ -798,7 +798,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       let userSavings = await SimFinance.getSimFinDataByUser(users[i].userId)
       this.userLeaderBoard.push({
         userName: users[i].userName,
-        savings: userSavings[0].savings
+        savings: userSavings[i].savings
       })
     }
     this.userLeaderBoard.sort((a,b) => a.savings - b.savings)
