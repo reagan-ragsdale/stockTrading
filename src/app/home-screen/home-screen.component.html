@@ -94,12 +94,12 @@
                         <div *ngIf="selectedStockData.shareQty == 0" style="display:flex; justify-content: center;">
                             <h3>No Active Positions</h3>
                         </div>
-                        <h2 style="text-align:center;">Trade History</h2>
-                        <div>
+                        <div style="display:flex; ">
+                            <h2 style="text-align:center;">Trade History</h2>
                             <h3 style="text-align: center;">Total: {{this.selectedStockTotalNet | currency:'USD':'symbol'}}</h3>
                         </div>
                         <div *ngIf="selectedStockHistoryData.length > 0" class="table-div" >
-                            <mat-table [dataSource]="selectedStockHistoryData" class="mat-elevation-z8" style="height:inherit;">
+                            <mat-table [dataSource]="selectedStockHistoryData"  style="height:inherit;">
                                 <!-- Position Column -->
                                 <ng-container matColumnDef="Trade">
                                   <mat-header-cell *matHeaderCellDef> Trade </mat-header-cell>
@@ -129,7 +129,7 @@
                                     <mat-cell *matCellDef="let element"> {{element.orderTime | epochToTimePipe}} </mat-cell>
                                   </ng-container>
                               
-                                <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" style="min-height:fit-content;" ></mat-header-row>
+                                <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" style="min-height:fit-content; background-color:#3C3E3D;" ></mat-header-row>
                                 <mat-row *matRowDef="let row; columns: displayedColumns;" style="min-height:fit-content;"></mat-row>
                               </mat-table>
                             <!-- 
