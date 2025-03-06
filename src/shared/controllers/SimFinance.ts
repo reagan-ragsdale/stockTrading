@@ -43,6 +43,11 @@ export class SimFinance {
         console.log(remult.context.request!.session!["user"])
         return await simFinRepo.find({where: {userId: remult.context.request!.session!["user"].id}})
     }
+    @BackendMethod({ allowed: true })
+    static async getSimFinDataByUser(userId: string): Promise<SimFInance[]> {
+        return await simFinRepo.find({where: {userId: userId}})
+    }
+    
 
     @BackendMethod({ allowed: true })
     static async createNewSimUser() {

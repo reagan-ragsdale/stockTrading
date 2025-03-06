@@ -37,6 +37,7 @@ import { setSessionUser } from '../../server/server-session';
 import { AuthController } from '../../shared/controllers/AuthController';
 import {MatTableModule} from '@angular/material/table';
 import { EpochToTimePipe } from "../services/epochToTimePipe.pipe";
+import { userRepo } from '../../shared/tasks/Users';
 //import { WebSocket } from 'ws';
 @Component({
   selector: 'app-home-screen',
@@ -790,6 +791,18 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   async getStockData() {
     this.chartInfo = await dbCurrentDayStockDataRepo.find({ where: { stockName: this.selectedStockName }, orderBy: { time: 'asc' } })
   }
+  userLeaderBoard: any[] = []
+  async getUserLeaderBoard(){
+    let users = await userRepo.find()
+    for(let i = 0; i < users.length; i++){
+      let userSavings = await SimFinance.getSimFinDataByUser(users[i].userId)
+      this.userLeaderBoard.push({
+        userName: users[i].userName,
+        savings: userSavings[0].savings
+      })
+    }
+    this.userLeaderBoard.sort((a,b) => a.savings - b.savings)
+  }
 
 
   isLoading: boolean = false;
@@ -810,6 +823,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       await AuthController.insertTokenData(this.userPreferenceData)
     }
     await this.getUserFinanceData()
+    await this.getUserLeaderBoard()
     this.distinctAvailableStocks = (await dbCurrentDayStockDataRepo.groupBy({ group: ['stockName'], orderBy: { stockName: 'desc' } })).map(e => e.stockName)
     console.log(this.distinctAvailableStocks)
     this.selectedStockName = this.distinctAvailableStocks[0]
