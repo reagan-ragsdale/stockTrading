@@ -40,7 +40,10 @@ h1, h2, h3,h4{
     color: #DBD4D1 !important;
 }
 ::ng-deep .mat-mdc-table{
-    background-color: none !important;
+    background-color: unset !important;
+}
+::ng-deep mat-header-cell:first-of-type{
+    padding-left: 20px !important;
 }
 .table-div{
     background-color: #3C3E3D !important;
