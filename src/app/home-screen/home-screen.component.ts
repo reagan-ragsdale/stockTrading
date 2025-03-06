@@ -777,6 +777,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         volumeTime: []
       }
       await this.getStockData()
+      this.stockChart.update()
       this.isLoading = false;
     }
 
