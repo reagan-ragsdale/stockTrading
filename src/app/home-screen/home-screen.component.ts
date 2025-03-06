@@ -628,16 +628,14 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
           "service": "ADMIN",
           "requestid": "10",
           "command": "LOGOUT",
-          "SchwabClientCustomerId": this.userPreferenceData.streamerInfo[0].schwabClientCustomerId,
-          "SchwabClientCorrelId": this.userPreferenceData.streamerInfo[0].schwabClientCorrelId,
+          "SchwabClientCustomerId": this.userData!.schwabClientCustomerId,
+          "SchwabClientCorrelId": this.userData!.schwabClientCorrelId,
           "parameters": ''
         }
       ]
     }
     this.schwabWebsocket!.send(JSON.stringify(logoutMsg))
-    console.log(this.schwabWebsocket)
     this.schwabWebsocket!.close()
-    console.log(this.schwabWebsocket)
   }
 
   tradeBuyOrSell = 'Buy'
@@ -782,7 +780,6 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         volumeTime: []
       }
       await this.getStockData()
-      this.stockChart.update()
       this.isLoading = false;
     }
 
@@ -843,7 +840,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.schwabWebsocket?.close()
+    this.endStream()
+    //this.schwabWebsocket?.close()
   }
 
 }

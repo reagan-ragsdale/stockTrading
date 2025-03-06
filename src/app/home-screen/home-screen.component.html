@@ -42,7 +42,7 @@
         <div style="margin-left:auto; margin-right: 2rem; display:flex; align-items: center; gap: 1rem;">
             <h3>Savings Leaderboard:</h3>
             <div style="display: flex; gap: 5px;" *ngFor="let user of userLeaderBoard; let i = index;">
-                <span style="color: #DBD4D1;">{{i + 1}}</span>
+                <span style="color: #DBD4D1;">{{i + 1}}.</span>
                 <span style="color: #DBD4D1;">{{user.userName}}</span>
                 <span style="color: #DBD4D1;">{{user.savings | currency:'USD':'symbol'}}</span>
             </div>       
@@ -99,7 +99,7 @@
                             <h3 style="text-align: center;">Total: {{this.selectedStockTotalNet | currency:'USD':'symbol'}}</h3>
                         </div>
                         <div *ngIf="selectedStockHistoryData.length > 0" class="table-div" >
-                            <mat-table [dataSource]="selectedStockHistoryData" class="mat-elevation-z8">
+                            <mat-table [dataSource]="selectedStockHistoryData" class="mat-elevation-z8" style="height:inherit;">
                                 <!-- Position Column -->
                                 <ng-container matColumnDef="Trade">
                                   <mat-header-cell *matHeaderCellDef> Trade </mat-header-cell>
@@ -129,8 +129,8 @@
                                     <mat-cell *matCellDef="let element"> {{element.orderTime | epochToTimePipe}} </mat-cell>
                                   </ng-container>
                               
-                                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                                <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" style="min-height:fit-content;" ></mat-header-row>
+                                <mat-row *matRowDef="let row; columns: displayedColumns;" style="min-height:fit-content;"></mat-row>
                               </mat-table>
                             <!-- 
                             <div *ngFor="let trade of selectedStockHistoryData" style="display: flex;justify-content: space-evenly; ">
