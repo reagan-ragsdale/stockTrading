@@ -764,6 +764,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   async onSelectedStockChange(event: any) {
     console.log(event)
     if (event.isUserInput == true) {
+      this.isLoading = true;
       this.selectedStockName = event.source.value
       this.chartData.name = this.selectedStockName
       await this.getStockInfo()
@@ -776,6 +777,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         volumeTime: []
       }
       await this.getStockData()
+      this.isLoading = false;
     }
 
   }
@@ -785,7 +787,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   }
 
 
-  isLoading: boolean = true;
+  isLoading: boolean = false;
   async ngOnInit() {
     this.isLoading = true
     Chart.register(annotationPlugin);
