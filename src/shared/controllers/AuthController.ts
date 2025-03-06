@@ -62,7 +62,7 @@ export class AuthController {
       })
 
       return setSessionUser({
-        id: user.id!,
+        id: user.userId!,
         name: user.userName!,
         roles: user.isAdmin ? ['admin'] : []
       })
@@ -72,28 +72,23 @@ export class AuthController {
 
   @BackendMethod({ allowed: true })
   static async insertKeyPairs(publicKey: string, privateKey: string) {
-    let currentUser = getCurrentUser()
-    let userInfo = await userRepo.findFirst({ id: currentUser.id })
-    await rhRepo.insert({
-      userId: userInfo?.userId,
+    let token = await dbTokenRepo.findFirst({userId: remult.context.request!.session!["user"].id})
+    await dbTokenRepo.save({...token,
       appKey: publicKey,
-      appSecret: privateKey,
-      accessToken: '',
-      refreshToken: ''
+      appSecret: privateKey
     })
 
   }
   @BackendMethod({ allowed: true })
-  static async getKeyPairs(): Promise<Rhkeys> {
-    return await rhRepo.findFirst({ userId: remult.context.request!.session!["user"].id }) as Rhkeys
+  static async getKeyPairs(): Promise<DbTOkens> {
+    return await dbTokenRepo.findFirst({ userId: remult.context.request!.session!["user"].id }) as DbTOkens
 
   }
 
   @BackendMethod({ allowed: true })
   static async checkKeyGeneration(): Promise<boolean> {
-    console.log(remult.context.request!.session!["user"].id)
-    let userKeyData = await rhRepo.findFirst({ userId: remult.context.request!.session!["user"].id })
-    if (userKeyData) {
+    let userKeyData = await dbTokenRepo.findFirst({ userId: remult.context.request!.session!["user"].id })
+    if (userKeyData?.appKey !== '') {
       return true
     }
     else {
@@ -159,9 +154,9 @@ export class AuthController {
   }
 
   @BackendMethod({ allowed: true })
-  static async insertTokenData(userPReference: any, rhTokens: Rhkeys) {
-    let userToken = await dbTokenRepo.findFirst({userId: rhTokens.userId})
-    await dbTokenRepo.save({...userToken, appKey: rhTokens.appKey, appSecret: rhTokens.appSecret,
+  static async insertTokenData(userPReference: any) {
+    let userToken = await dbTokenRepo.findFirst({userId: remult.context.request!.session!["user"].id})
+    await dbTokenRepo.save({...userToken, 
        streamerSocketUrl: userPReference.streamerInfo[0].streamerSocketUrl,
       schwabClientCustomerId: userPReference.streamerInfo[0].schwabClientCustomerId, schwabClientCorrelId: userPReference.streamerInfo[0].schwabClientCorrelId,
       schwabClientChannel: userPReference.streamerInfo[0].schwabClientChannel, schwabClientFunctionId: userPReference.streamerInfo[0].schwabClientFunctionId
