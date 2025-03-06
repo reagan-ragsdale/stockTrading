@@ -3,6 +3,7 @@ import { AuthController } from '../shared/controllers/AuthController.js'
 import { URLSearchParams } from 'node:url';
 export const oauthCall = async (code: string) => {
     console.log('here 1')
+    await AuthController.resetUser()
     let userKeys = await AuthController.getTokenUserByRemult()
     let credentials = Buffer.from(`${userKeys!.appKey}:${userKeys!.appSecret}`).toString('base64')
     let payload = new URLSearchParams({
