@@ -45,6 +45,11 @@ h1, h2, h3,h4{
 ::ng-deep mat-header-cell:first-of-type{
     padding-left: 20px !important;
 }
+::ng-deep mat-cell:first-of-type{
+    padding-left: 20px !important;
+}
+
+
 .table-div{
     background-color: #3C3E3D !important;
     border-radius: 8px;
