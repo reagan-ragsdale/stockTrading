@@ -94,7 +94,7 @@
                         <div *ngIf="selectedStockData.shareQty == 0" style="display:flex; justify-content: center;">
                             <h3>No Active Positions</h3>
                         </div>
-                        <div style="display:flex; ">
+                        <div style="display:flex; justify-content: space-between; align-items: baseline; ">
                             <h2 style="text-align:center;">Trade History</h2>
                             <h3 style="text-align: center;">Total: {{this.selectedStockTotalNet | currency:'USD':'symbol'}}</h3>
                         </div>

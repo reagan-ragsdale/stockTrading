@@ -815,12 +815,14 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     //await this.getMovers()
     await AuthController.resetUser()
     //setSessionUser(remult.user!)
-    let tokenData = await dbTokenRepo.findFirst({userId: remult.user?.id})
+
+    //below for new user
+    /* let tokenData = await dbTokenRepo.findFirst({userId: remult.user?.id})
     if(tokenData?.schwabClientChannel == ''){
       await this.getUserData()
       //let rhTokens = await AuthController.getKeyPairs()
       await AuthController.insertTokenData(this.userPreferenceData)
-    }
+    } */
     await this.getUserFinanceData()
     await this.getUserLeaderBoard()
     this.distinctAvailableStocks = (await dbCurrentDayStockDataRepo.groupBy({ group: ['stockName'], orderBy: { stockName: 'desc' } })).map(e => e.stockName)
