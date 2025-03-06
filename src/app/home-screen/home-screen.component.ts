@@ -803,7 +803,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         savings: userSavings[0].savings
       })
     }
-    this.userLeaderBoard.sort((a,b) => a.savings - b.savings)
+    this.userLeaderBoard.sort((a,b) => b.savings - a.savings)
   }
 
 
