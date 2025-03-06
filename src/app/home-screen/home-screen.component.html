@@ -88,7 +88,7 @@
                         <div>
                             <h3 style="text-align: center;">Total: {{this.selectedStockTotalNet | currency:'USD':'symbol'}}</h3>
                         </div>
-                        <div *ngIf="selectedStockHistoryData.length > 0" style="display:flex; justify-content: center; flex-direction: column;overflow-y: scroll;scrollbar-width: none;">
+                        <div *ngIf="selectedStockHistoryData.length > 0" class="table-div" >
                             <mat-table [dataSource]="selectedStockHistoryData" class="mat-elevation-z8">
                                 <!-- Position Column -->
                                 <ng-container matColumnDef="Trade">
@@ -105,13 +105,13 @@
                                 <!-- Weight Column -->
                                 <ng-container matColumnDef="Shares">
                                   <mat-header-cell *matHeaderCellDef> Shares </mat-header-cell>
-                                  <mat-cell *matCellDef="let element"> {{element.shareQty}} </mat-cell>
+                                  <mat-cell *matCellDef="let element"> {{element.shareQty | number:'1.2-5'}} </mat-cell>
                                 </ng-container>
                               
                                 <!-- Symbol Column -->
                                 <ng-container matColumnDef="Price">
                                   <mat-header-cell *matHeaderCellDef> Price </mat-header-cell>
-                                  <mat-cell *matCellDef="let element"> {{element.stockPrice}} </mat-cell>
+                                  <mat-cell *matCellDef="let element"> {{element.stockPrice | currency:'USD':'symbol'}} </mat-cell>
                                 </ng-container>
 
                                 <ng-container matColumnDef="Time">

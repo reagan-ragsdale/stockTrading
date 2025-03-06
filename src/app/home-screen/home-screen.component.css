@@ -31,3 +31,26 @@ h1, h2, h3,h4{
     transform: translate(-50%, -50%);
     z-index: 3;
 }
+::ng-deep .mdc-data-table__header-cell{
+    padding: 0 !important;
+    color: #DBD4D1 !important;
+}
+::ng-deep .mdc-data-table__cell{
+    padding: 0 !important;
+    color: #DBD4D1 !important;
+}
+::ng-deep .mat-mdc-table{
+    background-color: none !important;
+}
+.table-div{
+    background-color: #3C3E3D !important;
+    border-radius: 8px;
+    border: 1px solid hsl(18, 12%, 60%);
+    box-shadow: 0 2px 4px #0000001a;
+    display:flex; 
+    justify-content: center; 
+    flex-direction: column;
+    overflow-y: scroll;
+    scrollbar-width: none;
+}
+
