@@ -337,6 +337,9 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
 
 
   }
+  submitFollowUp(){
+    this.isBotAuthorized = true;
+  }
   updateChart() {
     this.stockChart.data.datasets[0].data = this.chartData.history.slice()
     this.stockChart.data.labels = this.chartData.labels.slice()

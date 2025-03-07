@@ -45,7 +45,7 @@
                             <mat-label>Stop Loss Lag</mat-label>
                             <input matInput type="number" required [(ngModel)]="selectedStopLossAdjustmentAmt" placeholder="0.00" [max]="100" [min]="0">
                         </mat-form-field>
-                        <button mat-raised-button color="primary" type="submit">Save</button>
+                        <button mat-raised-button color="primary" (click)="submitFollowUp()">Save</button>
                     </form>
                 </div>
                 
