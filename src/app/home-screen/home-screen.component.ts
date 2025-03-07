@@ -272,7 +272,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         shouldPlaceOrder = AnalysisService.trendTrading(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1), this.selectedStockHistoryData, this.stopLossPrice, this.tradeCurrentHigh, this.tradeInitialAverage)
       }
       else if(this.selectedAlgo == 'followUp'){
-        shouldPlaceOrder = AnalysisService.followUp(this.chartData.history[this.chartData.history.length - 1], this.selectedStockHistoryData, this.selectedStopLossPrice, this.tradeCurrentHigh, this.tradeInitialAverage, this.selectedStopLossAdjustmentAmt)
+        shouldPlaceOrder = AnalysisService.followUp(this.chartData.history[this.chartData.history.length - 1], this.selectedStockHistoryData, this.stopLossPrice, this.tradeCurrentHigh, this.tradeInitialAverage, this.selectedStopLossAdjustmentAmt)
       }
 
       console.log(shouldPlaceOrder)
@@ -340,6 +340,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   submitFollowUp(){
     this.isBotAuthorized = true;
     this.selectedAlgo = this.tempSelectedAlgo
+    this.stopLossPrice = this.selectedStopLossPrice
   }
   updateChart() {
     this.stockChart.data.datasets[0].data = this.chartData.history.slice()
