@@ -94,6 +94,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   isBotAuthorized: boolean = false;
   isChangesToBot: boolean = false;
   distinctAvailableStocks: string[] = []
+  selectedStopLossPrice: number = 0;
+  selectedStopLossAdjustmentAmt: number = 0
 
   displayedColumns: string[] = ["Trade", "Stock","Shares","Price","Time"]
 
@@ -270,7 +272,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         shouldPlaceOrder = AnalysisService.trendTrading(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1), this.selectedStockHistoryData, this.stopLossPrice, this.tradeCurrentHigh, this.tradeInitialAverage)
       }
       else if(this.selectedAlgo == 'followUp'){
-        shouldPlaceOrder = AnalysisService.followUp(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1), this.selectedStockHistoryData, this.stopLossPrice, this.tradeCurrentHigh, this.tradeInitialAverage)
+        shouldPlaceOrder = AnalysisService.followUp(this.chartData.history[this.chartData.history.length - 1], this.selectedStockHistoryData, this.selectedStopLossPrice, this.tradeCurrentHigh, this.tradeInitialAverage, this.selectedStopLossAdjustmentAmt)
       }
 
       console.log(shouldPlaceOrder)

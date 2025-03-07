@@ -501,7 +501,7 @@ export class AnalysisService {
         return val
         //find the outliers of the line
     }
-    static followUp(stock: number[], orderHistory: stockOrder[], currentStopLoss: number, currentTradeHigh: number, initialPrice: number): buySellDto {
+    static followUp(stock: number, orderHistory: stockOrder[], currentStopLoss: number, currentTradeHigh: number, initialPrice: number, stopLossAdjustment: number): buySellDto {
         let nextOrderType = 'Buy'
         let lastOrderPrice = 0
         if (orderHistory.length > 0) {
@@ -511,23 +511,22 @@ export class AnalysisService {
             }
         }
 
-        let incomingPoint = stock[stock.length - 1]
-        let tradeLow = Math.min(...stock)
+        
 
         if(nextOrderType == 'Buy'){
             return{
                 shouldExecuteOrder: true,
                 isBuyOrSell: 'Buy',
-                stopLossPrice: tradeLow,
-                initialAverage: incomingPoint,
-                tradeHigh: incomingPoint,
+                stopLossPrice: currentStopLoss,
+                initialAverage: stock,
+                tradeHigh: stock,
                 containsTrendInfo: false
 
             }
         }
         //sell
         else{
-            if(incomingPoint <= currentStopLoss){
+            if(stock <= currentStopLoss){
                 return{
                     shouldExecuteOrder: true,
                     isBuyOrSell: 'Sell',
@@ -538,16 +537,16 @@ export class AnalysisService {
             else{
                 let newStopLoss = currentStopLoss
                 let newHigh = currentTradeHigh
-                if(incomingPoint > currentTradeHigh){
-                    newHigh = incomingPoint
+                if(stock > currentTradeHigh){
+                    newHigh = stock
                 }
-                if(incomingPoint > initialPrice + .15){
+                if(stock > initialPrice + stopLossAdjustment){
                     if(currentStopLoss < initialPrice){
                         newStopLoss = initialPrice
                     }
                     else{
-                        if(incomingPoint > currentTradeHigh){
-                            newStopLoss += (incomingPoint - currentTradeHigh)
+                        if(stock > currentTradeHigh){
+                            newStopLoss += (stock - currentTradeHigh)
                         }
                     }
                 }
