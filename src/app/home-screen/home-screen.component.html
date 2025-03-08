@@ -38,7 +38,6 @@
                         <button *ngIf="tempSelectedAlgo == 'trend' && tempTrendAlgoStartingPoint > 0" style="width: max-content; margin-top:auto; margin-bottom:auto;" mat-raised-button color="primary" aria-label="Confirm Algorithm" [disabled]="!isChangesToBot" (click)="resetAlgo()">Reset</button>
                  </div>
                 <div *ngIf="tempSelectedAlgo == 'followUp'" style="margin-left:1rem;">
-                    <form class="auth-form">
                         <mat-form-field class="example-full-width">
                             <mat-label>Stop Loss</mat-label>
                             <input matInput type="number" required [(ngModel)]="selectedStopLossPrice" placeholder="0.00" [max]="chartData.history[chartData.history.length - 1]" [min]="0">
@@ -48,7 +47,6 @@
                             <input matInput type="number" required [(ngModel)]="selectedStopLossAdjustmentAmt" placeholder="0.00" [max]="100" [min]="0" step=".01">
                         </mat-form-field>
                         <button mat-raised-button color="primary" (click)="submitFollowUp()">Save</button>
-                    </form>
                 </div>
                 
                    
