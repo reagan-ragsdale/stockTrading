@@ -207,7 +207,7 @@ export class AnalysisService {
     }
 
 
-    static trendTrading(stock: number[], orderHistory: stockOrder[], currentStopLoss: number, currentTradeHigh: number, initialAverage: number, gutterFactor: number): buySellDto {
+    static trendTrading(stock: number[], orderHistory: stockOrder[], currentStopLoss: number, currentTradeHigh: number, initialAverage: number, gutterFactor: number, stopLossLag: number): buySellDto {
 
 
         let nextOrderType = 'Buy'
@@ -300,7 +300,7 @@ export class AnalysisService {
                 return {
                     shouldExecuteOrder: true,
                     isBuyOrSell: 'Buy',
-                    stopLossPrice: belowyMax - .1,
+                    stopLossPrice: belowyMax - stopLossLag,
                     initialAverage: yMax,
                     tradeHigh: incomingPoint,
                     containsTrendInfo: false
@@ -356,10 +356,10 @@ export class AnalysisService {
                     newHigh = currentTradeHigh
                 }
                 if(incomingPoint >= initialAverage){
-                    if(currentStopLoss > orderHistory[0].stockPrice){
+                    if(currentStopLoss >= orderHistory[0].stockPrice){
                         if(incomingPoint > currentTradeHigh){
                             newStopLoss = currentStopLoss
-                            newStopLoss += (incomingPoint - currentTradeHigh)
+                            newStopLoss = incomingPoint - stopLossLag
                         }
                         else{
                             newStopLoss = currentStopLoss
@@ -367,7 +367,7 @@ export class AnalysisService {
                         }
                     }
                     else{
-                        newStopLoss = orderHistory[0].stockPrice + .1
+                        newStopLoss = orderHistory[0].stockPrice
                     }
                     
                 }

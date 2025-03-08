@@ -98,6 +98,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   selectedStopLossAdjustmentAmt: number = 0
   trendGutterTemp: number = 0.45;
   trendGutterFinal: number = .45;
+  stopLossLagTemp: number = .25;
+  stopLossLagFinal: number = 0
 
   displayedColumns: string[] = ["Trade", "Stock","Shares","Price","Time"]
 
@@ -271,7 +273,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         shouldPlaceOrder = AnalysisService.checkIsLowBuyIsHighSell(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1), this.selectedStockHistoryData, this.stopLossPrice, this.tradeInitialAverage, this.tradeCurrentHigh)
       }
       else if(this.selectedAlgo == 'trend'){
-        shouldPlaceOrder = AnalysisService.trendTrading(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1), this.selectedStockHistoryData, this.stopLossPrice, this.tradeCurrentHigh, this.tradeInitialAverage, this.trendGutterFinal)
+        shouldPlaceOrder = AnalysisService.trendTrading(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1), this.selectedStockHistoryData, this.stopLossPrice, this.tradeCurrentHigh, this.tradeInitialAverage, this.trendGutterFinal, this.stopLossLagFinal)
       }
       else if(this.selectedAlgo == 'followUp'){
         shouldPlaceOrder = AnalysisService.followUp(this.chartData.history[this.chartData.history.length - 1], this.selectedStockHistoryData, this.stopLossPrice, this.tradeCurrentHigh, this.tradeInitialAverage, this.selectedStopLossAdjustmentAmt)
@@ -757,6 +759,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.selectedAlgo = this.tempSelectedAlgo
     this.trendAlgoStartingPoint = this.tempTrendAlgoStartingPoint
     this.trendGutterFinal = this.trendGutterTemp
+    this.stopLossLagFinal = this.stopLossLagTemp
     this.isChangesToBot = false;
   }
   resetAlgo() {
