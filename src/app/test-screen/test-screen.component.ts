@@ -629,14 +629,16 @@ export class TestScreenComponent implements OnInit, OnDestroy {
 
   }
   async getStockHistoricalData() {
-    this.allStockDataForSelectedStock = await dbStockHistoryDataRepo.find({ where: { stockName: this.selectedStockName }, orderBy: { time: 'asc' } })
-    this.distinctDates = this.allStockDataForSelectedStock.map(e => e.date).filter((v, i, a) => a.indexOf(v) === i)
+    //this.allStockDataForSelectedStock = await dbStockHistoryDataRepo.find({ where: { stockName: this.selectedStockName }, orderBy: { time: 'asc' } })
+    this.distinctDates = (await dbStockHistoryDataRepo.groupBy({where: {stockName: this.selectedStockName }, group: ['date'], orderBy: { date: 'desc' } })).map(e => e.date)
+    //this.distinctDates = this.allStockDataForSelectedStock.map(e => e.date).filter((v, i, a) => a.indexOf(v) === i)
     this.selectedDate = this.distinctDates[0]
 
     this.updateStockChartData()
   }
-  updateStockChartData() {
-    this.stockDataForSelectedDay = this.allStockDataForSelectedStock.filter(e => e.date == this.selectedDate)
+  async updateStockChartData() {
+    this.stockDataForSelectedDay =  await dbStockHistoryDataRepo.find({where: {stockName: this.selectedStockName, date: this.selectedDate}})
+    //this.allStockDataForSelectedStock.filter(e => e.date == this.selectedDate)
     this.chartData.history = this.stockDataForSelectedDay.map(e => e.stockPrice)
     this.chartData.labels = this.stockDataForSelectedDay.map(e => reusedFunctions.epochToLocalTime(e.time))
 
@@ -657,10 +659,11 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     this.selectedStockName = this.distinctStocks[0]
     await this.getUserFinanceData()
     await this.getStockData()
-    this.createOrUpdateChart()
+    
     //this.createVolumeChart()
 
     await this.getStockHistoricalData()
+    this.createOrUpdateChart()
     this.isLoading = false;
 
   }
