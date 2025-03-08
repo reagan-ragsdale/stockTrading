@@ -661,9 +661,9 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     await this.getStockData()
     
     //this.createVolumeChart()
-
-    await this.getStockHistoricalData()
     this.createOrUpdateChart()
+    await this.getStockHistoricalData()
+    
     this.isLoading = false;
 
   }
