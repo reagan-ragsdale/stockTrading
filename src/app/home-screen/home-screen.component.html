@@ -25,7 +25,7 @@
                     <mat-radio-button value="trend">Trend</mat-radio-button>
                     <mat-radio-button value="followUp">Follow Up</mat-radio-button>
                 </mat-radio-group>
-                <div *ngIf="tempSelectedAlgo == 'trend' || tempSelectedAlgo == 'highLow'" style="margin-left:1rem;">
+                <div *ngIf="tempSelectedAlgo == 'trend' || tempSelectedAlgo == 'highLow'" style="margin-left:1rem; display:flex; gap:5px;">
                         <mat-form-field class="example-full-width" style="max-width: 110px;">
                             <mat-label>Starting index</mat-label>
                             <input matInput type="number" (ngModelChange)="trendAlgoStartingPointChanged()" [(ngModel)]="tempTrendAlgoStartingPoint" placeholder="0.00" [max]="chartData.history.length - 1" [min]="0">
@@ -41,7 +41,7 @@
                         <button style="width: max-content; margin-top:auto; margin-bottom:auto;" mat-raised-button color="primary" aria-label="Confirm Algorithm" [disabled]="!isChangesToBot" (click)="confirmAlgo()">Save</button> 
                         <button *ngIf="tempSelectedAlgo == 'trend' && tempTrendAlgoStartingPoint > 0" style="width: max-content; margin-top:auto; margin-bottom:auto;" mat-raised-button color="primary" aria-label="Confirm Algorithm" [disabled]="!isChangesToBot" (click)="resetAlgo()">Reset</button>
                  </div>
-                <div *ngIf="tempSelectedAlgo == 'followUp'" style="margin-left:1rem;">
+                <div *ngIf="tempSelectedAlgo == 'followUp'" style="margin-left:1rem; display:flex; gap:5px;">
                         <mat-form-field class="example-full-width" style="max-width: 110px;">
                             <mat-label>Stop Loss</mat-label>
                             <input matInput type="number" required [(ngModel)]="selectedStopLossPrice" placeholder="0.00" [max]="chartData.history[chartData.history.length - 1]" [min]="0">
