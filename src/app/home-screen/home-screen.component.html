@@ -20,11 +20,18 @@
                 <mat-button-toggle value="Bot">Bot</mat-button-toggle>
             </mat-button-toggle-group>
             <div *ngIf="isUserOrBot == 'Bot'" style="margin-left: 1rem; display: flex;align-items: center;">
-                <mat-radio-group [color]="'accent'" (change)="onAlgoChanged($event)" >
+                <mat-form-field>
+                    <mat-label>Algo</mat-label>
+                    <mat-select disableRipple [(value)]="tempSelectedAlgo">
+                        <mat-option (onSelectionChange)="onSelectedStockChange($event)" value="trend">Trend</mat-option>
+                        <mat-option (onSelectionChange)="onSelectedStockChange($event)" value="followUp">Follow Up</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+               <!--  <mat-radio-group [color]="'accent'" (change)="onAlgoChanged($event)" >
                     <mat-radio-button value="highLow">HighLow</mat-radio-button>
                     <mat-radio-button value="trend">Trend</mat-radio-button>
                     <mat-radio-button value="followUp">Follow Up</mat-radio-button>
-                </mat-radio-group>
+                </mat-radio-group> -->
                 <div *ngIf="tempSelectedAlgo == 'trend' || tempSelectedAlgo == 'highLow'" style="margin-left:1rem; display:flex; gap:5px;">
                         <mat-form-field class="example-full-width" style="max-width: 110px;">
                             <mat-label>Starting index</mat-label>
