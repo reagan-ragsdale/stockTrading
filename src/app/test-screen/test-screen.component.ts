@@ -592,11 +592,11 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     console.log('here in change speed')
     //this.speed = speed
   }
-  onSelectedDateChange(event: any) {
+  async onSelectedDateChange(event: any) {
     if (event.isUserInput == true) {
       this.isLoading = true;
       this.selectedDate = event.source.value
-      this.updateStockChartData()
+      await this.updateStockChartData()
       this.isLoading = false
     }
   }
@@ -634,7 +634,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     //this.distinctDates = this.allStockDataForSelectedStock.map(e => e.date).filter((v, i, a) => a.indexOf(v) === i)
     this.selectedDate = this.distinctDates[0]
 
-    this.updateStockChartData()
+    await this.updateStockChartData()
   }
   async updateStockChartData() {
     this.stockDataForSelectedDay =  await dbStockHistoryDataRepo.find({where: {stockName: this.selectedStockName, date: this.selectedDate},orderBy: {time: 'asc'}})
