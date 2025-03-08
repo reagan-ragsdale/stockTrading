@@ -31,6 +31,10 @@
                             <mat-label>Starting index</mat-label>
                             <input matInput type="number" (ngModelChange)="trendAlgoStartingPointChanged()" [(ngModel)]="tempTrendAlgoStartingPoint" placeholder="0.00" [max]="chartData.history.length - 1" [min]="0">
                         </mat-form-field>
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Gutter</mat-label>
+                            <input matInput type="number" [(ngModel)]="trendGutterTemp" placeholder="0.00" [max]=".99" [min]=".01" step=".01">
+                        </mat-form-field>
                         <button type="submit" style="width: max-content; margin-top:auto; margin-bottom:auto;" mat-raised-button color="primary" aria-label="Confirm Algorithm" [disabled]="!isChangesToBot" (click)="confirmAlgo()">Save</button> 
                         <button type="reset" *ngIf="tempSelectedAlgo == 'trend' && tempTrendAlgoStartingPoint > 0" style="width: max-content; margin-top:auto; margin-bottom:auto;" mat-raised-button color="primary" aria-label="Confirm Algorithm" [disabled]="!isChangesToBot" (click)="resetAlgo()">Reset</button>
                     </form>

@@ -207,7 +207,7 @@ export class AnalysisService {
     }
 
 
-    static trendTrading(stock: number[], orderHistory: stockOrder[], currentStopLoss: number, currentTradeHigh: number, initialAverage: number): buySellDto {
+    static trendTrading(stock: number[], orderHistory: stockOrder[], currentStopLoss: number, currentTradeHigh: number, initialAverage: number, gutterFactor: number): buySellDto {
 
 
         let nextOrderType = 'Buy'
@@ -279,7 +279,7 @@ export class AnalysisService {
         const belowyMax = slope * xMax + interceptBelow;
 
 
-        const gutterFactor = .45
+        
 
         const gutterAboveIntercept = interceptAbove - Math.abs(differenceHigh * gutterFactor)
         const gutterBelowIntercept = interceptBelow + Math.abs(differenceLow * gutterFactor)

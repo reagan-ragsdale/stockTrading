@@ -174,7 +174,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
         shouldPlaceOrder = AnalysisService.checkIsLowBuyIsHighSell(this.chartData.history.slice(-401), this.selectedStockHistoryData, this.stopLossPrice, this.tradeInitialAverage, this.tradeCurrentHigh)
       }
       else if (this.selectedAlgo == 'trend') {
-        shouldPlaceOrder = AnalysisService.trendTrading(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1), this.selectedStockHistoryData, this.stopLossPrice, this.tradeInitialAverage, this.tradeCurrentHigh)
+        shouldPlaceOrder = AnalysisService.trendTrading(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1), this.selectedStockHistoryData, this.stopLossPrice, this.tradeInitialAverage, this.tradeCurrentHigh, .45)
       }
 
 
@@ -629,19 +629,14 @@ export class TestScreenComponent implements OnInit, OnDestroy {
 
   }
   async getStockHistoricalData() {
-    //this.allStockDataForSelectedStock = await dbStockHistoryDataRepo.find({ where: { stockName: this.selectedStockName }, orderBy: { time: 'asc' } })
     this.distinctDates = (await dbStockHistoryDataRepo.groupBy({where: {stockName: this.selectedStockName }, group: ['date'], orderBy: { date: 'desc' } })).map(e => e.date)
-    //this.distinctDates = this.allStockDataForSelectedStock.map(e => e.date).filter((v, i, a) => a.indexOf(v) === i)
     this.selectedDate = this.distinctDates[0]
-
     await this.updateStockChartData()
   }
   async updateStockChartData() {
     this.stockDataForSelectedDay =  await dbStockHistoryDataRepo.find({where: {stockName: this.selectedStockName, date: this.selectedDate},orderBy: {time: 'asc'}})
-    //this.allStockDataForSelectedStock.filter(e => e.date == this.selectedDate)
     this.chartData.history = this.stockDataForSelectedDay.map(e => e.stockPrice)
     this.chartData.labels = this.stockDataForSelectedDay.map(e => reusedFunctions.epochToLocalTime(e.time))
-
     this.updateChart()
   }
   stockDataForSelectedDay: DbStockHistoryData[] = []
@@ -654,16 +649,13 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     Chart.register(annotationPlugin);
     Chart.register(...registerables)
     let user = await remult.initUser()
-    //await this.getMovers()
     this.distinctStocks = (await dbStockHistoryDataRepo.groupBy({ group: ['stockName'], orderBy: { stockName: 'desc' } })).map(e => e.stockName)
     this.selectedStockName = this.distinctStocks[0]
     await this.getUserFinanceData()
     await this.getStockData()
-    
     //this.createVolumeChart()
     this.createOrUpdateChart()
     await this.getStockHistoricalData()
-    
     this.isLoading = false;
 
   }
