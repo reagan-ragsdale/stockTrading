@@ -12,4 +12,12 @@ export class reusedFunctions{
         
         return `${month}/${day}/${year}`;
     }
+    static is830AMCT(epochTime: number): boolean {
+        const date = new Date(epochTime);
+        
+        // Convert to America/Chicago time
+        const formattedTime = new Intl.DateTimeFormat('en-US', {timeZone: 'America/Chicago', hour: '2-digit', minute: '2-digit', hour12: false}).format(date);
+    
+        return formattedTime === "08:30";
+    }
 }

@@ -81,6 +81,9 @@
                       <mat-option *ngFor="let stock of distinctAvailableStocks" value="{{stock}}" (onSelectionChange)="onSelectedStockChange($event)">{{stock}}</mat-option>
                     </mat-select>
                   </mat-form-field>
+                  <!-- <button mat-icon-button (click)="toggleStockInfo()">
+                    <mat-icon>info</mat-icon>
+                  </button> -->
                 <h3>Bot: {{isBotAuthorized ? 'On' : 'Off'}}</h3>
             </div>
               <!-- <div>
@@ -88,6 +91,10 @@
             </div> -->
             
             <div style="width: 100%;display:flex;">
+                <div style="display:flex; flex-direction: column;">
+                    <h4>O:{{stockOpenPrice}}</h4>
+                    <h4>V:{{stockVariance}}</h4>
+                </div>
                 <div class="canvas-container">
                     <canvas style="width:100% !important;" id="stock-chart">{{stockChart}}</canvas>
                     <!-- <canvas style="width:100% !important;" id="volume-chart">{{volumeChart}}</canvas> -->
@@ -103,7 +110,7 @@
                 </div>
                 <div style="flex-grow: 1;">
                     <div style="padding: 1rem; display: flex;flex-direction: column;">
-                        <button style="width: max-content; margin: auto;"mat-raised-button color="warn" aria-label="Add more funds" (click)="openTradePopup()">Trade</button>
+                        <button style="width: max-content; margin: auto;"mat-raised-button color="warn" aria-label="Add more funds" (click)="openTradePopup()" [disabled]="isUserOrBot == 'Bot'">Trade</button>
                         <h2 style="text-align:center;">Active Positions</h2>
                         <div *ngIf="selectedStockData.shareQty > 0" style="display:flex; justify-content: center;  gap: 1rem;">
                             <h3>{{selectedStockData.stockName}}</h3>

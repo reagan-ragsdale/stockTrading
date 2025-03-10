@@ -99,7 +99,9 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   trendGutterTemp: number = 0.45;
   trendGutterFinal: number = .45;
   stopLossLagTemp: number = .25;
-  stopLossLagFinal: number = 0
+  stopLossLagFinal: number = 0;
+  stockOpenPrice: number = 0;
+  stockVariance: number = 0;
 
   displayedColumns: string[] = ["Trade", "Stock","Shares","Price","Time"]
 
@@ -800,6 +802,12 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
 
   async getStockData() {
     this.chartInfo = await dbCurrentDayStockDataRepo.find({ where: { stockName: this.selectedStockName }, orderBy: { time: 'asc' } })
+    for(let i = 0; i < this.chartInfo.length; i++){
+      if(reusedFunctions.is830AMCT(this.chartInfo[i].time)){
+        this.stockOpenPrice = this.chartInfo[i].stockPrice;
+        break;
+      }
+    }
   }
   userLeaderBoard: any[] = []
   async getUserLeaderBoard(){
