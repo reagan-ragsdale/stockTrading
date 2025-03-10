@@ -23,8 +23,8 @@
                 <mat-form-field>
                     <mat-label>Algo</mat-label>
                     <mat-select disableRipple [(value)]="tempSelectedAlgo">
-                        <mat-option (onSelectionChange)="onSelectedStockChange($event)" value="trend">Trend</mat-option>
-                        <mat-option (onSelectionChange)="onSelectedStockChange($event)" value="followUp">Follow Up</mat-option>
+                        <mat-option (onSelectionChange)="onAlgoChanged($event)" value="trend">Trend</mat-option>
+                        <mat-option (onSelectionChange)="onAlgoChanged($event)" value="followUp">Follow Up</mat-option>
                     </mat-select>
                   </mat-form-field>
                 <div *ngIf="tempSelectedAlgo == 'trend' || tempSelectedAlgo == 'highLow'" style="margin-left:1rem; display:flex; gap:5px;">
