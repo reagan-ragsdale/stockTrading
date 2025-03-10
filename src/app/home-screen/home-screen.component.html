@@ -46,11 +46,11 @@
                 <div *ngIf="tempSelectedAlgo == 'followUp'" style="margin-left:1rem; display:flex; gap:5px;">
                         <mat-form-field class="example-full-width" style="max-width: 110px;">
                             <mat-label>Stop Loss</mat-label>
-                            <input matInput type="number" required [(ngModel)]="selectedStopLossPrice" placeholder="0.00" [max]="chartData.history[chartData.history.length - 1]" [min]="0">
+                            <input matInput type="number" required (ngModelChange)="updatesToAlgo()" [(ngModel)]="selectedStopLossPrice" placeholder="0.00" [max]="chartData.history[chartData.history.length - 1]" [min]="0">
                         </mat-form-field>
                         <mat-form-field class="example-full-width" style="max-width: 110px;">
                             <mat-label>Stop Loss Lag</mat-label>
-                            <input matInput type="number" required [(ngModel)]="selectedStopLossAdjustmentAmt" placeholder="0.00" [max]="100" [min]="0" step=".01">
+                            <input matInput type="number" required (ngModelChange)="updatesToAlgo()" [(ngModel)]="selectedStopLossAdjustmentAmt" placeholder="0.00" [max]="100" [min]="0" step=".01">
                         </mat-form-field>
                         <button mat-raised-button color="primary" (click)="submitFollowUp()">Save</button>
                 </div>
