@@ -391,7 +391,6 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
             pointBorderColor: '#54C964',
             pointRadius: 0,
             spanGaps: true
-
           }
         ]
       },
@@ -514,7 +513,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
                 xMax: 0,
                 yMin: 0,
                 yMax: 0,
-                borderColor: '#1b8e8d',
+                borderColor: '#5afefc',
                 borderWidth: 2,
                 //grey
               },
@@ -536,7 +535,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
                 xMax: 0,
                 yMin: 0,
                 yMax: 0,
-                borderColor: '#2b88ff',
+                borderColor: '#ff2b2b',
                 borderWidth: 2,
                 //blue
               }
@@ -797,6 +796,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         volume: [],
         volumeTime: []
       }
+      this.stockChart.data.datasets[0].label = this.selectedStockName
       await this.getStockData()
       this.isLoading = false;
     }
