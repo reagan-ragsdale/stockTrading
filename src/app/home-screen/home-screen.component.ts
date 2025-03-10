@@ -756,6 +756,9 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.updateTrendIndexLine()
     this.isChangesToBot = true;
   }
+  updatesToAlgo(){
+    this.isChangesToBot = true
+  }
   confirmAlgo() {
     this.isBotAuthorized = true;
     this.selectedAlgo = this.tempSelectedAlgo
