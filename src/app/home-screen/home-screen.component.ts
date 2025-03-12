@@ -252,10 +252,13 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     volumeTime: []
   }
   refreshVolumeData() {
+    this.chartData.volume.push(this.chartInfo[this.chartInfo.length - 1].volume - this.chartInfo[this.chartInfo.length - 2].volume)
+    this.updateVolumeChart()
+  }
+  getInitialVolumeData(){
     for(let i = 1; i < this.chartInfo.length; i++){
       this.chartData.volume.push(this.chartInfo[i].volume - this.chartInfo[i - 1].volume)
     }
-    this.updateVolumeChart()
   }
   chartInfo: DbCurrentDayStockData[] = [{
     stockName: '',
@@ -814,6 +817,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         break;
       }
     }
+    this.getInitialVolumeData()
   }
   userLeaderBoard: any[] = []
   async getUserLeaderBoard(){
