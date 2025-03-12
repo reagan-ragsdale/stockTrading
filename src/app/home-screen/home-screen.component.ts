@@ -370,7 +370,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     //const rateTime = this.chartData.volumeTime.slice(1);
     this.volumeChart.options.scales.y.max = Math.max(...this.chartData.volume) + 2
     this.volumeChart.data.datasets[0].data = this.chartData.volume.slice()
-    this.volumeChart.data.datasets[0].labels = this.chartData.time.slice()
+    this.volumeChart.data.datasets[0].labels = this.chartData.labels.slice()
     this.volumeChart.update()
   }
 
