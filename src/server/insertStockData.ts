@@ -64,15 +64,11 @@ export const socketCall = async (): Promise<void> => {
                     let insertData: DbCurrentDayStockData[] = []
                     for (let i = 0; i < newEvent.data[0].content.length; i++) {
                         if (Object.hasOwn(newEvent.data[0].content[i], '3')) {
-                            let volume = 0
-                            if(Object.hasOwn(newEvent.data[0].content[i], '8')){
-                                volume = newEvent.data[0].content[i]['8']
-                            }
                             let data: DbCurrentDayStockData = {
                                 stockName: newEvent.data[0].content[i].key,
                                 stockPrice: newEvent.data[0].content[i]['3'],
                                 time: Number(newEvent.data[0].timestamp),
-                                volume: volume == 0 ? undefined : volume
+                                volume: newEvent.data[0].content[i]['8']
                             }
                             insertData.push(data)
                         }

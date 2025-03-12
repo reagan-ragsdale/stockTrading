@@ -222,15 +222,11 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
           if (newEvent.data[0].service == 'LEVELONE_EQUITIES') {
             for (let i = 0; i < newEvent.data[0].content.length; i++) {
               if (Object.hasOwn(newEvent.data[0].content[i], '3') && newEvent.data[0].content[i].key == this.selectedStockName) {
-                let volume = 0
-                if(Object.hasOwn(newEvent.data[0].content[i], '8')){
-                  volume = newEvent.data[0].content[i]['8']
-                }
                 this.chartInfo.push({
                   stockName: newEvent.data[0].content[i].key,
                   stockPrice: newEvent.data[0].content[i]['3'],
                   time: Number(newEvent.data[0].timestamp),
-                  volume: volume
+                  volume: newEvent.data[0].content[i]['8']
                 })
                 console.log(this.chartData)
                 await this.refreshData()
@@ -263,12 +259,14 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   chartInfo: DbCurrentDayStockData[] = [{
     stockName: '',
     stockPrice: 0,
-    time: 0
+    time: 0,
+    volume: 0
   }]
   async refreshData() {
     this.chartData.history = this.chartInfo.map(e => e.stockPrice)
     this.chartData.labels = this.chartInfo.map(e => reusedFunctions.epochToLocalTime(e.time))
     this.chartData.time = this.chartInfo.map(e => e.time)
+    this.chartData.volume = this.chartInfo.map(e => e.volume)
     this.selectedStockCurrent = this.chartData.history[this.chartData.history.length - 1]
     this.selectedStockHigh = Math.max(...this.chartData.history)
     this.selectedStockLow = Math.min(...this.chartData.history)
@@ -345,6 +343,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       }
     }
     this.updateChart()
+    this.updateVolumeChart()
 
 
   }
@@ -361,17 +360,17 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.stockChart.update()
   }
   updateVolumeChart() {
-    const rates = [];
+    /* const rates = [];
     for (let i = 1; i < this.chartData.volumeTime.length; i++) {
       let rate = (this.chartData.volume[i] - this.chartData.volume[i - 1]) / (this.chartData.volumeTime[i] - this.chartData.volumeTime[i - 1]);
       rates.push(rate);
-    }
+    } */
 
     // Adjust time array to match the rates
-    const rateTime = this.chartData.volumeTime.slice(1);
-    this.volumeChart.options.scales.y.max = Math.max(...rates) + 2
-    this.volumeChart.data.datasets[0].data = rates.slice()
-    this.volumeChart.data.datasets[0].labels = rateTime.slice()
+    //const rateTime = this.chartData.volumeTime.slice(1);
+    this.volumeChart.options.scales.y.max = Math.max(...this.chartData.volume) + 2
+    this.volumeChart.data.datasets[0].data = this.chartData.volume.slice()
+    this.volumeChart.data.datasets[0].labels = this.chartData.time.slice()
     this.volumeChart.update()
   }
 
@@ -860,7 +859,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     await this.getStockInfo()
     this.userData = await dbTokenRepo.findFirst({ userId: remult.user?.id }) as DbTOkens
     this.createOrUpdateChart()
-    //this.createVolumeChart()
+    this.createVolumeChart()
     await this.getStockData()
     this.startWebsocket()
 

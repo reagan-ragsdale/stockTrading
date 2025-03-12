@@ -16,7 +16,7 @@ export class DbCurrentDayStockData {
     time = 0
 
     @Fields.number()
-    volume? = 0
+    volume = 0
 
 
 
