@@ -32,4 +32,13 @@ export class OrderController {
     return await dbOrdersRepo.find({where: {userId: remult.context.request!.session!["user"].id}, orderBy: {orderTime: 'desc'}})
     
   }
+  @BackendMethod({ allowed: true })
+  static async getDistinctStocks(): Promise<string[]> {
+    return (await dbOrdersRepo.groupBy({ group: ['stockName'], orderBy: { stockName: 'desc' } })).map(e => e.stockName)
+  }
+  @BackendMethod({ allowed: true })
+  static async getOrdersByStockName(stockName: string): Promise<DbOrders[]> {
+    return await dbOrdersRepo.find({where: {userId: remult.context.request!.session!["user"].id, stockName: stockName}, orderBy: {orderTime: 'desc'}})
+  }
+  
 }

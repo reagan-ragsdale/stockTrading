@@ -1,0 +1,45 @@
+<div style="display:flex; flex-direction: column;">
+    <div class="top-bar" style="display:flex;">
+        <mat-form-field>
+            <mat-label>Stock</mat-label>
+            <mat-select disableRipple [(value)]="selectedStockName">
+              <mat-option *ngFor="let stock of distinctStocks" value="{{stock}}" (onSelectionChange)="onSelectedStockChange($event)">{{stock}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+    </div>
+    <div class="trade-body" style="display:flex;">
+        <mat-table [dataSource]="selectedStockOrders"  style="height:inherit;">
+            <!-- Position Column -->
+            <ng-container matColumnDef="Trade">
+              <mat-header-cell *matHeaderCellDef> Trade </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.orderType}} </mat-cell>
+            </ng-container>
+          
+            <!-- Name Column -->
+            <ng-container matColumnDef="Stock">
+              <mat-header-cell *matHeaderCellDef> Stock </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.stockName}} </mat-cell>
+            </ng-container>
+          
+            <!-- Weight Column -->
+            <ng-container matColumnDef="Shares">
+              <mat-header-cell *matHeaderCellDef> Shares </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.shareQty | number:'1.2-5'}} </mat-cell>
+            </ng-container>
+          
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="Price">
+              <mat-header-cell *matHeaderCellDef> Price </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.stockPrice | currency:'USD':'symbol'}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="Time">
+                <mat-header-cell *matHeaderCellDef> Time </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.orderTime | epochToTimePipe}} </mat-cell>
+              </ng-container>
+          
+            <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" style="min-height:fit-content; background-color:#3C3E3D;" ></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;" style="min-height:fit-content;"></mat-row>
+          </mat-table>
+    </div>
+</div>
