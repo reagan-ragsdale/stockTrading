@@ -600,8 +600,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         scales: {
           y: {
             display: false,
-            max: 10,
-            min: 0,
+            //max: 10,
+            //min: 0,
             grid: {
               color: 'hsl(18, 12%, 60%)'
             },
