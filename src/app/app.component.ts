@@ -27,6 +27,9 @@ export class AppComponent{
     remult.user = undefined;
     this.router.navigate([`/login`])
   }
+  navToOrderHistory(){
+    this.router.navigate([`/orderHistory`])
+  }
 
   ngOnInit(){
     remult.initUser()
