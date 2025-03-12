@@ -256,6 +256,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.updateVolumeChart()
   }
   getInitialVolumeData(){
+    this.chartData.volume = []
     for(let i = 1; i < this.chartInfo.length; i++){
       this.chartData.volume.push(this.chartInfo[i].volume - this.chartInfo[i - 1].volume)
     }
