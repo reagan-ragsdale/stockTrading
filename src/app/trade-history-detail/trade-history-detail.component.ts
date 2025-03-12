@@ -16,28 +16,50 @@ export class TradeHistoryDetailComponent implements OnInit{
 
   selectedStockName: string = ''
   isLoading: boolean = true
-  distinctStocks: string[] = []
+  distinctStocks: string[] = ['All']
   selectedStockOrders: DbOrders[] = []
   displayedColumns: string[] = ["Trade", "Stock","Shares","Price","Time"]
+  dateTypes: string[] = ['All', 'Today', 'Last 7', 'Last Month', 'Choose Date']
+  dateType: string = this.dateTypes[0]
+  allOrders: DbOrders[] = []
 
 
   async onSelectedStockChange(event: any){
     if(event.isUserInput == true){
       this.selectedStockName = event.source.value
-      await this.getStockOrders()
-      this.isLoading = true
+      //await this.getStockOrders()
+      //this.isLoading = true
+    }
+  }
+  onSelectedDateTypeChange(event: any){
+    if(event.isUserInput == true){
+      this.dateType = event.source.value
     }
   }
 
   async getStockOrders(){
     this.selectedStockOrders = await OrderController.getOrdersByStockName(this.selectedStockName)
   }
+  async onSubmitSearch(){
+    if(this.selectedStockName == 'All'){
+      if(this.dateType == 'All'){
+        this.selectedStockOrders = this.allOrders
+      }
+    }
+    else{
+      if(this.dateType == 'All'){
+        this.selectedStockOrders = this.allOrders.filter(e => e.stockName == this.selectedStockName)
+      }
+    }
+  }
 
   async ngOnInit(){
     this.isLoading = true
-    this.distinctStocks = await OrderController.getDistinctStocks()
+    this.allOrders = await OrderController.getAllOrders()
+    this.distinctStocks = this.distinctStocks.concat(this.allOrders.map(e => e.stockName).filter((v,i,a) => a.indexOf(v) === i))
     this.selectedStockName = this.distinctStocks[0]
-    await this.getStockOrders()
+    this.selectedStockOrders = this.allOrders
+    //await this.getStockOrders()
     this.isLoading = false
   }
 

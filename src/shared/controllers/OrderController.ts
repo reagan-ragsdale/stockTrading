@@ -40,5 +40,21 @@ export class OrderController {
   static async getOrdersByStockName(stockName: string): Promise<DbOrders[]> {
     return await dbOrdersRepo.find({where: {userId: remult.context.request!.session!["user"].id, stockName: stockName}, orderBy: {orderTime: 'desc'}})
   }
+  /* @BackendMethod({ allowed: true })
+  static async getStockDetailOrders(stockName: string, dateType: string): Promise<DbOrders[]> {
+    if(stockName == 'All'){
+      if(dateType == 'All'){
+        return await dbOrdersRepo.find({where: {userId: remult.context.request!.session!["user"].id}, orderBy: {orderTime: 'desc'}})
+      }
+      
+    }
+    else{
+      if(dateType == 'All'){
+        return await dbOrdersRepo.find({where: {userId: remult.context.request!.session!["user"].id, stockName: stockName}, orderBy: {orderTime: 'desc'}})
+      }
+    }
+    
+  } */
+  
   
 }

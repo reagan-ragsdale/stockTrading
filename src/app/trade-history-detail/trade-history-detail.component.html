@@ -6,6 +6,13 @@
               <mat-option *ngFor="let stock of distinctStocks" value="{{stock}}" (onSelectionChange)="onSelectedStockChange($event)">{{stock}}</mat-option>
             </mat-select>
           </mat-form-field>
+          <mat-form-field>
+            <mat-label>Date Range</mat-label>
+            <mat-select disableRipple [(value)]="dateType">
+              <mat-option *ngFor="let type of dateTypes" value="{{type}}" (onSelectionChange)="onSelectedDateTypeChange($event)">{{type}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <button style="width: max-content; margin: auto;"mat-raised-button color="primary" aria-label="Search" (click)="onSubmitSearch()">Search</button>
     </div>
     <div class="trade-body" style="display:flex;">
         <mat-table [dataSource]="selectedStockOrders"  style="height:inherit;">

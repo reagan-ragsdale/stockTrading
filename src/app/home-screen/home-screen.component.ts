@@ -197,7 +197,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
           "SchwabClientCustomerId": this.userData!.schwabClientCustomerId,
           "SchwabClientCorrelId": this.userData!.schwabClientCorrelId,
           "parameters": {
-            "keys": "AAPL, MSFT, PLTR, AMD",
+            "keys": "AAPL, MSFT, PLTR, AMD, TSLA",
             "fields": "0,1,2,3,4,5,6,7,8,9,10,33"
           }
         }
