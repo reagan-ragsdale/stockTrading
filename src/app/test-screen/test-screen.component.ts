@@ -157,7 +157,8 @@ export class TestScreenComponent implements OnInit, OnDestroy {
   chartInfo: DbCurrentDayStockData[] = [{
     stockName: '',
     stockPrice: 0,
-    time: 0
+    time: 0,
+    volume: 0
   }]
   async refreshData(data: DbCurrentDayStockData) {
     console.log('hererrerere')
@@ -619,7 +620,8 @@ export class TestScreenComponent implements OnInit, OnDestroy {
       let stockData: DbCurrentDayStockData = {
         stockName: this.stockDataForSelectedDay[i].stockName,
         stockPrice: this.stockDataForSelectedDay[i].stockPrice,
-        time: this.stockDataForSelectedDay[i].time
+        time: this.stockDataForSelectedDay[i].time,
+        volume: 0
       }
       await this.refreshData(stockData)
       await new Promise(resolve => setTimeout(resolve, 200));
