@@ -21,9 +21,10 @@ export class TradeHistoryDetailComponent implements OnInit{
   displayedColumns: string[] = ["Trade", "Stock","Shares","Price","Time"]
 
 
-  onSelectedStockChange(event: any){
+  async onSelectedStockChange(event: any){
     if(event.isUserInput == true){
       this.selectedStockName = event.source.value
+      await this.getStockOrders()
       this.isLoading = true
     }
   }

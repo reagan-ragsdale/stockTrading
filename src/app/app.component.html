@@ -8,8 +8,9 @@
         </a>
     </div>
     <div *ngIf="remult.authenticated()" class="top-button">
+      <button mat-button style=" color: #DBD4D1; height:65%;margin: auto 0; width:auto" (click)="navToOrderHistory()">Order History</button>
         <button mat-button style=" color: #DBD4D1; height:65%;margin: auto 0; width:auto" (click)="logout()">Log Out</button>
-        <button mat-button style=" color: #DBD4D1; height:65%;margin: auto 0; width:auto" (click)="navToOrderHistory()">Order History</button>
+        
         <!-- <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Change info">
             <mat-icon>more_vert</mat-icon>
           </button>

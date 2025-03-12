@@ -38,7 +38,7 @@
                 <mat-cell *matCellDef="let element"> {{element.orderTime | epochToTimePipe}} </mat-cell>
               </ng-container>
           
-            <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" style="min-height:fit-content; background-color:#3C3E3D;" ></mat-header-row>
+            <mat-header-row *matHeaderRowDef="displayedColumns" style="min-height:fit-content;" ></mat-header-row>
             <mat-row *matRowDef="let row; columns: displayedColumns;" style="min-height:fit-content;"></mat-row>
           </mat-table>
     </div>
