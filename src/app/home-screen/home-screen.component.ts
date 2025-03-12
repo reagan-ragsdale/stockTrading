@@ -606,6 +606,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
             },
           },
           x: {
+            display: false,
             grid: {
               display: false,
               color: 'hsl(18, 12%, 60%)'
