@@ -601,6 +601,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         scales: {
           y: {
             display: false,
+            type: 'logarithmic',
             //max: 10,
             //min: 0,
             grid: {
