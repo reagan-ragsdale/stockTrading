@@ -54,6 +54,7 @@ export const socketCall = async (): Promise<void> => {
 
         if (Object.hasOwn(newEvent, 'response')) {
             if (newEvent.response[0].requestid == 0 && hasBeenSent == false) {
+                console.log(newEvent.response[0])
                 schwabWebsocket.send(JSON.stringify(socketSendMsg))
                 hasBeenSent = true
             }
