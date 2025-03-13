@@ -70,6 +70,12 @@ export class TradeHistoryDetailComponent implements OnInit{
   }
 
   claculateOrderDetails(){
+    this.totalProfit = 0
+    this.totalWins = 0
+    this.totalLosses = 0
+    this.averageWinAmt = 0
+    this.averageLossAmt = 0
+
     let totalWinAmt: number = 0
     let totalLossAmt: number = 0
     for (let i = 0; i < this.selectedStockOrders.length - 1; i++) {
