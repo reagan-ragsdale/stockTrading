@@ -53,8 +53,14 @@ export class TradeHistoryDetailComponent implements OnInit{
       }
     }
   }
-  convertEpochToDate(epoch: number): Date{
-    return new Date(epoch)
+  convertEpochToDate(epoch: number): string{
+    const date = new Date(epoch); // Convert to milliseconds if necessary
+
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are 0-based
+    const day = date.getDate().toString().padStart(2, '0');
+    const year = date.getFullYear();
+
+    return `${month}/${day}/${year}`;
   }
 
   async ngOnInit(){
