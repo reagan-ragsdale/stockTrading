@@ -23,6 +23,11 @@ export class TradeHistoryDetailComponent implements OnInit{
   dateTypes: string[] = ['All', 'Today', 'Last 7', 'Last Month', 'Choose Date']
   dateType: string = this.dateTypes[0]
   allOrders: DbOrders[] = []
+  totalProfit: number = 0
+  totalWins: number = 0
+  totalLosses: number = 0
+  averageWinAmt: number = 0
+  averageLossAmt: number = 0
 
 
   async onSelectedStockChange(event: any){
@@ -61,6 +66,28 @@ export class TradeHistoryDetailComponent implements OnInit{
     const year = date.getFullYear();
 
     return `${month}/${day}/${year}`;
+  }
+
+  claculateOrderDetails(){
+    let totalWinAmt: number = 0
+    let totalLossAmt: number = 0
+    for (let i = 0; i < this.selectedStockOrders.length - 1; i++) {
+      //need to find each pair of buy and sells
+      if (this.selectedStockOrders[i].orderType == 'Sell' && this.selectedStockOrders[i + 1].orderType == 'Buy') {
+        let profit = ((this.selectedStockOrders[i].shareQty * this.selectedStockOrders[i].stockPrice) - (this.selectedStockOrders[i + 1].shareQty * this.selectedStockOrders[i + 1].stockPrice))
+        this.totalProfit += profit
+        if(profit > 0){
+          this.totalWins++  
+          totalWinAmt += profit
+        }
+        else{
+          this.totalLosses++  
+          totalLossAmt += profit
+        }
+      }
+    }
+    this.averageWinAmt = this.totalWins == 0 ? 0 : (totalWinAmt / this.totalWins)
+    this.averageLossAmt = this.totalLosses == 0 ? 0 : (totalLossAmt / this.totalLosses)
   }
 
   async ngOnInit(){
