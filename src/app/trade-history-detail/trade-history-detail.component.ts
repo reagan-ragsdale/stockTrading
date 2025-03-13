@@ -57,6 +57,7 @@ export class TradeHistoryDetailComponent implements OnInit{
         this.selectedStockOrders = this.allOrders.filter(e => e.stockName == this.selectedStockName)
       }
     }
+    this.claculateOrderDetails()
   }
   convertEpochToDate(epoch: number): string{
     const date = new Date(epoch); // Convert to milliseconds if necessary
@@ -96,6 +97,7 @@ export class TradeHistoryDetailComponent implements OnInit{
     this.distinctStocks = this.distinctStocks.concat(this.allOrders.map(e => e.stockName).filter((v,i,a) => a.indexOf(v) === i))
     this.selectedStockName = this.distinctStocks[0]
     this.selectedStockOrders = this.allOrders
+    this.claculateOrderDetails()
     //await this.getStockOrders()
     this.isLoading = false
   }
