@@ -21,7 +21,7 @@
             <h3>Average Loss Amt: {{averageLossAmt | currency:'USD':'symbol'}}</h3>
           </div>
     </div>
-    <div class="trade-body" style="display:flex;">
+    <div class="trade-body" style="display:flex; margin-bottom:1rem;">
         <mat-table [dataSource]="selectedStockOrders"  style="height:inherit;">
             <!-- Position Column -->
             <ng-container matColumnDef="Trade">

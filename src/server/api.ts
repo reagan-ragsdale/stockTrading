@@ -59,7 +59,7 @@ export const api = remultExpress({
     })  */ ,
     initRequest
     ,initApi: async () => {
-      //socketCall(),
+      socketCall(),
       //cron.schedule('30 14 * * *', () => insertCall())
       cron.schedule('*/25 * * * *', () => loadNewToken()),
       cron.schedule('0 21 * * * ', () => loadDailyDataIntoHistory())
