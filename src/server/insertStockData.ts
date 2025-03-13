@@ -10,7 +10,7 @@ const { Pool } = pkg;
 export const socketCall = async (): Promise<void> => {
     console.log('here in insert file')
 
-    const userData = await dbTokenRepo.findFirst({ id: { '!=': '' } }) as DbTOkens
+    const userData = await dbTokenRepo.findFirst({ id: 'asdfghjkl' }) as DbTOkens
 
     const schwabWebsocket = new WebSocket(userData.streamerSocketUrl)
     let hasBeenSent = false
