@@ -5,10 +5,11 @@ import { DbOrders } from '../../shared/tasks/dbOrders';
 import { MatTableModule } from '@angular/material/table';
 import { EpochToTimePipe } from "../services/epochToTimePipe.pipe";
 import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-trade-history-detail',
-  imports: [MatSelectModule, MatTableModule, EpochToTimePipe, CommonModule],
+  imports: [MatSelectModule, MatTableModule, EpochToTimePipe, CommonModule, MatButtonModule],
   templateUrl: './trade-history-detail.component.html',
   styleUrl: './trade-history-detail.component.css'
 })
@@ -18,7 +19,7 @@ export class TradeHistoryDetailComponent implements OnInit{
   isLoading: boolean = true
   distinctStocks: string[] = ['All']
   selectedStockOrders: DbOrders[] = []
-  displayedColumns: string[] = ["Trade", "Stock","Shares","Price","Time"]
+  displayedColumns: string[] = ["Trade", "Stock","Shares","Price","Date","Time"]
   dateTypes: string[] = ['All', 'Today', 'Last 7', 'Last Month', 'Choose Date']
   dateType: string = this.dateTypes[0]
   allOrders: DbOrders[] = []
@@ -51,6 +52,9 @@ export class TradeHistoryDetailComponent implements OnInit{
         this.selectedStockOrders = this.allOrders.filter(e => e.stockName == this.selectedStockName)
       }
     }
+  }
+  convertEpochToDate(epoch: number): Date{
+    return new Date(epoch)
   }
 
   async ngOnInit(){

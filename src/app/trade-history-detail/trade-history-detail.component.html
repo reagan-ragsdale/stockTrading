@@ -12,7 +12,7 @@
               <mat-option *ngFor="let type of dateTypes" value="{{type}}" (onSelectionChange)="onSelectedDateTypeChange($event)">{{type}}</mat-option>
             </mat-select>
           </mat-form-field>
-          <button style="width: max-content; margin: auto;"mat-raised-button color="primary" aria-label="Search" (click)="onSubmitSearch()">Search</button>
+          <button style="width: max-content; margin: auto;" mat-raised-button color="primary" aria-label="Search" (click)="onSubmitSearch()">Search</button>
     </div>
     <div class="trade-body" style="display:flex;">
         <mat-table [dataSource]="selectedStockOrders"  style="height:inherit;">
@@ -40,10 +40,15 @@
               <mat-cell *matCellDef="let element"> {{element.stockPrice | currency:'USD':'symbol'}} </mat-cell>
             </ng-container>
 
+            <ng-container matColumnDef="Date">
+              <mat-header-cell *matHeaderCellDef> Date </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{convertEpochToDate(element.orderTime)}} </mat-cell>
+            </ng-container>
+
             <ng-container matColumnDef="Time">
                 <mat-header-cell *matHeaderCellDef> Time </mat-header-cell>
                 <mat-cell *matCellDef="let element"> {{element.orderTime | epochToTimePipe}} </mat-cell>
-              </ng-container>
+            </ng-container>
           
             <mat-header-row *matHeaderRowDef="displayedColumns" style="min-height:fit-content;" ></mat-header-row>
             <mat-row *matRowDef="let row; columns: displayedColumns;" style="min-height:fit-content;"></mat-row>
