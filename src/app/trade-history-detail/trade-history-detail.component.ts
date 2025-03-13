@@ -51,6 +51,9 @@ export class TradeHistoryDetailComponent implements OnInit{
       if(this.dateType == 'All'){
         this.selectedStockOrders = this.allOrders
       }
+      if(this.dateType == 'Today'){
+        this.selectedStockOrders = this.allOrders.filter(e => this.convertEpochToDate(e.orderTime) == this.getCurrentDateFormat())
+      }
     }
     else{
       if(this.dateType == 'All'){
@@ -61,6 +64,15 @@ export class TradeHistoryDetailComponent implements OnInit{
   }
   convertEpochToDate(epoch: number): string{
     const date = new Date(epoch); // Convert to milliseconds if necessary
+
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are 0-based
+    const day = date.getDate().toString().padStart(2, '0');
+    const year = date.getFullYear();
+
+    return `${month}/${day}/${year}`;
+  }
+  getCurrentDateFormat(): string{
+    const date = new Date(); 
 
     const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are 0-based
     const day = date.getDate().toString().padStart(2, '0');
