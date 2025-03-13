@@ -13,14 +13,14 @@ import { MatButtonModule } from '@angular/material/button';
   templateUrl: './trade-history-detail.component.html',
   styleUrl: './trade-history-detail.component.css'
 })
-export class TradeHistoryDetailComponent implements OnInit{
+export class TradeHistoryDetailComponent implements OnInit {
 
   selectedStockName: string = ''
   isLoading: boolean = true
   distinctStocks: string[] = ['All']
   selectedStockOrders: DbOrders[] = []
-  displayedColumns: string[] = ["Trade", "Stock","Shares","Price","Date","Time"]
-  dateTypes: string[] = ['All', 'Today', 'Last 7', 'Last Month', 'Choose Date']
+  displayedColumns: string[] = ["Trade", "Stock", "Shares", "Price", "Date", "Time"]
+  dateTypes: string[] = ['All', 'Today', 'This Week', 'This Month', 'Choose Date']
   dateType: string = this.dateTypes[0]
   allOrders: DbOrders[] = []
   totalProfit: number = 0
@@ -30,39 +30,60 @@ export class TradeHistoryDetailComponent implements OnInit{
   averageLossAmt: number = 0
 
 
-  async onSelectedStockChange(event: any){
-    if(event.isUserInput == true){
+  async onSelectedStockChange(event: any) {
+    if (event.isUserInput == true) {
       this.selectedStockName = event.source.value
       //await this.getStockOrders()
       //this.isLoading = true
     }
   }
-  onSelectedDateTypeChange(event: any){
-    if(event.isUserInput == true){
+  onSelectedDateTypeChange(event: any) {
+    if (event.isUserInput == true) {
       this.dateType = event.source.value
     }
   }
 
-  async getStockOrders(){
+  async getStockOrders() {
     this.selectedStockOrders = await OrderController.getOrdersByStockName(this.selectedStockName)
   }
-  async onSubmitSearch(){
-    if(this.selectedStockName == 'All'){
-      if(this.dateType == 'All'){
+  async onSubmitSearch() {
+    if (this.selectedStockName == 'All') {
+      if (this.dateType == 'All') {
         this.selectedStockOrders = this.allOrders
       }
-      if(this.dateType == 'Today'){
+      else if (this.dateType == 'Today') {
         this.selectedStockOrders = this.allOrders.filter(e => this.convertEpochToDate(e.orderTime) == this.getCurrentDateFormat())
       }
+      else if (this.dateType == 'This Week') {
+        this.selectedStockOrders = this.allOrders.filter(e => this.isSameCalendarWeek(e.orderTime))
+      }
+      else if (this.dateType == 'This Month') {
+
+      }
+      else if (this.dateType == 'Choose Date') {
+
+      }
     }
-    else{
-      if(this.dateType == 'All'){
+    else {
+      if (this.dateType == 'All') {
         this.selectedStockOrders = this.allOrders.filter(e => e.stockName == this.selectedStockName)
+      }
+      else if (this.dateType == 'Today') {
+        this.selectedStockOrders = this.allOrders.filter(e => e.stockName == this.selectedStockName && this.convertEpochToDate(e.orderTime) == this.getCurrentDateFormat())
+      }
+      else if (this.dateType == 'This Week') {
+        this.selectedStockOrders = this.allOrders.filter(e => this.isSameCalendarWeek(e.orderTime) && e.stockName == this.selectedStockName)
+      }
+      else if (this.dateType == 'This Month') {
+
+      }
+      else if (this.dateType == 'Choose Date') {
+
       }
     }
     this.claculateOrderDetails()
   }
-  convertEpochToDate(epoch: number): string{
+  convertEpochToDate(epoch: number): string {
     const date = new Date(epoch); // Convert to milliseconds if necessary
 
     const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are 0-based
@@ -71,8 +92,17 @@ export class TradeHistoryDetailComponent implements OnInit{
 
     return `${month}/${day}/${year}`;
   }
-  getCurrentDateFormat(): string{
-    const date = new Date(); 
+  convertEpochToDateNumber(epoch: number): number {
+    const date = new Date(epoch); // Convert to milliseconds if necessary
+
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are 0-based
+    const day = date.getDate().toString().padStart(2, '0');
+    const year = date.getFullYear();
+
+    return Number(`${month}${day}${year}`);
+  }
+  getCurrentDateFormat(): string {
+    const date = new Date();
 
     const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are 0-based
     const day = date.getDate().toString().padStart(2, '0');
@@ -80,8 +110,25 @@ export class TradeHistoryDetailComponent implements OnInit{
 
     return `${month}/${day}/${year}`;
   }
+  isSameCalendarWeek(epoch: number, referenceDate: Date = new Date()): boolean {
+    const date = new Date(epoch); // Convert if necessary
 
-  claculateOrderDetails(){
+    const referenceYear = referenceDate.getFullYear();
+    const referenceWeek = this.getWeekNumber(referenceDate);
+
+    const dateYear = date.getFullYear();
+    const dateWeek = this.getWeekNumber(date);
+
+    return referenceYear === dateYear && referenceWeek === dateWeek;
+  }
+
+  getWeekNumber(date: Date): number {
+    const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
+    const pastDays = Math.floor((date.getTime() - firstDayOfYear.getTime()) / (1000 * 60 * 60 * 24));
+    return Math.ceil((pastDays + firstDayOfYear.getDay() + 1) / 7);
+  }
+
+  claculateOrderDetails() {
     this.totalProfit = 0
     this.totalWins = 0
     this.totalLosses = 0
@@ -95,12 +142,12 @@ export class TradeHistoryDetailComponent implements OnInit{
       if (this.selectedStockOrders[i].orderType == 'Sell' && this.selectedStockOrders[i + 1].orderType == 'Buy') {
         let profit = ((this.selectedStockOrders[i].shareQty * this.selectedStockOrders[i].stockPrice) - (this.selectedStockOrders[i + 1].shareQty * this.selectedStockOrders[i + 1].stockPrice))
         this.totalProfit += profit
-        if(profit > 0){
-          this.totalWins++  
+        if (profit > 0) {
+          this.totalWins++
           totalWinAmt += profit
         }
-        else{
-          this.totalLosses++  
+        else {
+          this.totalLosses++
           totalLossAmt += profit
         }
       }
@@ -109,10 +156,10 @@ export class TradeHistoryDetailComponent implements OnInit{
     this.averageLossAmt = this.totalLosses == 0 ? 0 : (totalLossAmt / this.totalLosses)
   }
 
-  async ngOnInit(){
+  async ngOnInit() {
     this.isLoading = true
     this.allOrders = await OrderController.getAllOrders()
-    this.distinctStocks = this.distinctStocks.concat(this.allOrders.map(e => e.stockName).filter((v,i,a) => a.indexOf(v) === i))
+    this.distinctStocks = this.distinctStocks.concat(this.allOrders.map(e => e.stockName).filter((v, i, a) => a.indexOf(v) === i))
     this.selectedStockName = this.distinctStocks[0]
     this.selectedStockOrders = this.allOrders
     this.claculateOrderDetails()
