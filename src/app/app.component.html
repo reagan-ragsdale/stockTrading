@@ -8,6 +8,7 @@
         </a>
     </div>
     <div *ngIf="remult.authenticated()" class="top-button">
+        <button mat-button style=" color: #DBD4D1; height:65%;margin: auto 0; width:auto" (click)="navToDashboard()">Dashboard</button>
         <button mat-button style=" color: #DBD4D1; height:65%;margin: auto 0; width:auto" (click)="navToOrderHistory()">Order History</button>
         <button mat-button style=" color: #DBD4D1; height:65%;margin: auto 0; width:auto" (click)="logout()">Log Out</button>
         

@@ -30,6 +30,9 @@ export class AppComponent{
   navToOrderHistory(){
     this.router.navigate([`/orderHistory`])
   }
+  navToDashboard(){
+    this.router.navigate([`/dashboard`])
+  }
 
   ngOnInit(){
     remult.initUser()

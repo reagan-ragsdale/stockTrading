@@ -7,6 +7,7 @@ import { KeyGuard } from './app-key-guard';
 import { AuthScreenComponent } from './auth-screen/auth-screen.component';
 import { TestScreenComponent } from './test-screen/test-screen.component';
 import { TradeHistoryDetailComponent } from './trade-history-detail/trade-history-detail.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full'},
@@ -15,5 +16,6 @@ export const routes: Routes = [
     {path: 'login', component: AuthComponent},
     {path: 'keys', component: KeyScreenComponent},
     {path: 'auth', component: AuthScreenComponent},
-    {path: 'orderHistory', component: TradeHistoryDetailComponent}
+    {path: 'orderHistory', component: TradeHistoryDetailComponent},
+    {path: 'dashboard', component: DashboardComponent}
 ];
