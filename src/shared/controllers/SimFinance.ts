@@ -19,22 +19,18 @@ declare module 'remult' {
 export class SimFinance {
 
     @BackendMethod({ allowed: true })
-    static async insertOrUpdateAmount(spending: number, savings?: number) {
+    static async insertOrUpdateAmount(amnt: number) {
         const simFinUser = await simFinRepo.findFirst({userId: remult.context.request!.session!["user"].id})
         if (!simFinUser){
             await simFinRepo.insert({
                 userId: remult.context.request!.session!["user"].id,
-                spending: spending,
+                spending: amnt,
                 savings: 0
             })
         }
         else{
-            let newAmount = simFinUser.spending + spending
-            let newSavings = simFinUser.savings
-            if(savings !== undefined){
-                newSavings += savings
-            }
-            await simFinRepo.save({...simFinUser, spending: newAmount, savings: newSavings})
+            let newAmount = simFinUser.spending + amnt
+            await simFinRepo.save({...simFinUser, spending: newAmount})
         }
     }
 

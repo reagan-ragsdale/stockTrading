@@ -546,7 +546,7 @@ export class AnalysisService {
                     }
                     else{
                         if(stock > currentTradeHigh){
-                            newStopLoss += (stock - currentTradeHigh)
+                            newStopLoss = stock - stopLossAdjustment
                         }
                     }
                 }

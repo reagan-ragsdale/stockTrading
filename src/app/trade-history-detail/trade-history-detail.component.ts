@@ -140,7 +140,7 @@ export class TradeHistoryDetailComponent implements OnInit {
     for (let i = 0; i < this.selectedStockOrders.length - 1; i++) {
       //need to find each pair of buy and sells
       if (this.selectedStockOrders[i].orderType == 'Sell' && this.selectedStockOrders[i + 1].orderType == 'Buy') {
-        let profit = ((this.selectedStockOrders[i].shareQty * this.selectedStockOrders[i].stockPrice) - (this.selectedStockOrders[i + 1].shareQty * this.selectedStockOrders[i + 1].stockPrice))
+        let profit = (this.selectedStockOrders[i].stockPrice - this.selectedStockOrders[i + 1].stockPrice)
         this.totalProfit += profit
         if (profit > 0) {
           this.totalWins++
