@@ -813,6 +813,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
 
   async getStockData() {
     this.chartInfo = await dbCurrentDayStockDataRepo.find({ where: { stockName: this.selectedStockName }, orderBy: { time: 'asc' } })
+    this.chartData.name = this.selectedStockName
     for(let i = 0; i < this.chartInfo.length; i++){
       if(reusedFunctions.is830AMCT(this.chartInfo[i].time)){
         this.stockOpenPrice = this.chartInfo[i].stockPrice;
