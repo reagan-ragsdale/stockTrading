@@ -25,6 +25,7 @@
                     <mat-select disableRipple [(value)]="tempSelectedAlgo">
                         <mat-option (onSelectionChange)="onAlgoChanged($event)" value="trend">Trend</mat-option>
                         <mat-option (onSelectionChange)="onAlgoChanged($event)" value="followUp">Follow Up</mat-option>
+                        <mat-option (onSelectionChange)="onAlgoChanged($event)" value="highLow">High Low</mat-option>
                     </mat-select>
                   </mat-form-field>
                 <div *ngIf="tempSelectedAlgo == 'trend' || tempSelectedAlgo == 'highLow'" style="margin-left:1rem; display:flex; gap:5px;">
@@ -59,11 +60,11 @@
             </div>
         </div>
         <div style="margin-left:auto; margin-right: 2rem; display:flex; align-items: center; gap: 1rem;">
-            <h3>Savings Leaderboard:</h3>
+            <h3>Leaderboard:</h3>
             <div style="display: flex; gap: 5px;" *ngFor="let user of userLeaderBoard; let i = index;">
                 <span style="color: #DBD4D1;">{{i + 1}}.</span>
                 <span style="color: #DBD4D1;">{{user.userName}}</span>
-                <span style="color: #DBD4D1;">{{user.savings | currency:'USD':'symbol'}}</span>
+                <span style="color: #DBD4D1;">{{user.spending | currency:'USD':'symbol'}}</span>
             </div>       
         </div>
         <button style=" margin-top:auto; margin-bottom:auto;" mat-icon-button aria-label="Add more funds" (click)="showAddFunds()">

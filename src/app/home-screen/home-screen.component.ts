@@ -279,7 +279,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         shouldExecuteOrder: false
       }
       if (this.selectedAlgo == 'highLow') {
-        shouldPlaceOrder = AnalysisService.checkIsLowBuyIsHighSell(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1), this.selectedStockHistoryData, this.stopLossPrice, this.tradeInitialAverage, this.tradeCurrentHigh)
+        shouldPlaceOrder = AnalysisService.checkIsLowBuyIsHighSell(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1), this.selectedStockHistoryData, this.stopLossPrice, this.tradeInitialAverage, this.tradeCurrentHigh, this.trendGutterFinal, this.stopLossLagFinal)
       }
       else if(this.selectedAlgo == 'trend'){
         shouldPlaceOrder = AnalysisService.trendTrading(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1), this.selectedStockHistoryData, this.stopLossPrice, this.tradeCurrentHigh, this.tradeInitialAverage, this.trendGutterFinal, this.stopLossLagFinal)
@@ -827,14 +827,12 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     let users = await userRepo.find()
     for(let i = 0; i < users.length; i++){
       let userSavings = await SimFinance.getSimFinDataByUser(users[i].userId)
-      console.log(users[i])
-      console.log(userSavings)
       this.userLeaderBoard.push({
         userName: users[i].userName,
-        savings: userSavings[0].savings
+        spending: userSavings[0].spending
       })
     }
-    this.userLeaderBoard.sort((a,b) => b.savings - a.savings)
+    this.userLeaderBoard.sort((a,b) => b.spending - a.spending)
   }
 
 

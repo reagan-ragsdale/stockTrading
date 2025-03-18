@@ -5,7 +5,7 @@ import { stockOrder } from "../Dtos/stockOrder";
 import { reusedFunctions } from "./reusedFunctions";
 
 export class AnalysisService {
-    static checkIsLowBuyIsHighSell(stock: number[], orderHistory: stockOrder[], currentStopLoss: number, initialAverage: number, currentTradeHigh: number): buySellDto {
+    static checkIsLowBuyIsHighSell(stock: number[], orderHistory: stockOrder[], currentStopLoss: number, initialAverage: number, currentTradeHigh: number, multiplyFactor: number, stopLossLag: number): buySellDto {
         //currently only taking in the past 400 ticks, would like to find a way to have the entire days ticks to be searched through
 
 
@@ -86,7 +86,7 @@ export class AnalysisService {
         let gutter = 0
 
         //possibly also add a trend indicator and adjust the multiplyFactor based on if its going up and were trying to sell or going up and trying to buy etc
-        let multiplyFactor = 0.45
+        //let multiplyFactor = 0.45
 
         //need to also add a stop loss to set as a saftey net for if a price dips below a certain proint
         //Almost always when you see someone day trading, they'll set a target price which is above where they bought
@@ -123,15 +123,17 @@ export class AnalysisService {
                 return {
                     shouldExecuteOrder: true,
                     isBuyOrSell: 'Buy',
-                    stopLossPrice: recentLow - .25,
+                    stopLossPrice: recentLow - stopLossLag,
                     initialAverage: newAverage,
-                    tradeHigh: incomingPrice
+                    tradeHigh: incomingPrice,
+                    containsTrendInfo: false
                 }
             }
             else {
                 return {
                     shouldExecuteOrder: false,
-                    targetPrice: (recentLow + gutter)
+                    targetPrice: (recentLow + gutter),
+                    containsTrendInfo: false
                 }
             }
         }
@@ -141,7 +143,8 @@ export class AnalysisService {
             if (((incomingPrice > (recentHigh - gutter)) && (incomingPrice > lastOrderPrice))) {
                 return {
                     shouldExecuteOrder: true,
-                    isBuyOrSell: 'Sell'
+                    isBuyOrSell: 'Sell',
+                    containsTrendInfo: false
                 }
             }
             else if (incomingPrice <= currentStopLoss) {
@@ -149,14 +152,16 @@ export class AnalysisService {
                     return {
                         shouldExecuteOrder: true,
                         isBuyOrSell: 'Sell',
-                        soldAtStopLoss: false
+                        soldAtStopLoss: false,
+                        containsTrendInfo: false
                     }
                 }
                 else {
                     return {
                         shouldExecuteOrder: true,
                         isBuyOrSell: 'Sell',
-                        soldAtStopLoss: true
+                        soldAtStopLoss: true,
+                        containsTrendInfo: false
                     }
                 }
 
@@ -200,7 +205,8 @@ export class AnalysisService {
                     shouldExecuteOrder: false,
                     targetPrice: (recentHigh - gutter),
                     stopLossPrice: newStopLoss,
-                    tradeHigh: newHigh
+                    tradeHigh: newHigh,
+                    containsTrendInfo: false
                 }
             }
         }
