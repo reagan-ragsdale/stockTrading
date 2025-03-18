@@ -16,10 +16,11 @@ export const getHistoryStockData = async (stockName: string, time: number): Prom
     try {
       const response = await fetch(url, options);
       const result = await response.json();
+      console.log(result)
       return result
     }
     catch (error: any) {
-      console.log(error.message)
+      console.log('Error' + error.message)
       return []
     }
 }
