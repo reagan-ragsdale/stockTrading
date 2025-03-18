@@ -1,6 +1,6 @@
-import { getHistoryStockData } from "../../server/getHistoryStockData"
-import { DbStockBasicHistory } from "../../shared/tasks/dbStockBasicHistory"
-import { dbStockHistoryDataRepo } from "../../shared/tasks/dbStockHistoryData"
+import { getHistoryStockData } from "../../server/getHistoryStockData.js"
+import { DbStockBasicHistory } from "../../shared/tasks/dbStockBasicHistory.js"
+import { dbStockHistoryDataRepo } from "../../shared/tasks/dbStockHistoryData.js"
 
 export const getDailyStockInfo = async () => {
     //load daily basic stock data
