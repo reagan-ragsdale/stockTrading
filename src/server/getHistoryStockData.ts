@@ -14,7 +14,9 @@ export const getHistoryStockData = async (stockName: string, time: number): Prom
       }
     };
     try {
+        console.log(userData)
       const response = await fetch(url, options);
+      console.log(response)
       const result = await response.json();
       console.log(result)
       return result
