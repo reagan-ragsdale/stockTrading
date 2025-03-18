@@ -1,8 +1,6 @@
-import { last, max } from "rxjs";
 import { buySellDto } from "../Dtos/buySellDto";
 import { StockAnalysisDto } from "../Dtos/stockAnalysisDto";
 import { stockOrder } from "../Dtos/stockOrder";
-import { reusedFunctions } from "./reusedFunctions";
 
 export class AnalysisService {
     static checkIsLowBuyIsHighSell(stock: number[], orderHistory: stockOrder[], currentStopLoss: number, initialAverage: number, currentTradeHigh: number, multiplyFactor: number, stopLossLag: number): buySellDto {
@@ -564,6 +562,13 @@ export class AnalysisService {
                 }
             }
             
+        }
+    }
+
+    static autoFollowUpBot(data: StockAnalysisDto, orderHistory: stockOrder[]): buySellDto{
+        return { 
+            shouldExecuteOrder: false,
+            isBuyOrSell: 'Buy'
         }
     }
 }

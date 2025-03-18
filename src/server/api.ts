@@ -33,6 +33,8 @@ import { loadDailyDataIntoHistory } from '../app/apiCalls/loadDailyDataIntoHisto
 import { DbLevelTwoData } from '../shared/tasks/dbLevelTwoData.js'
 import { socketCall } from './insertStockData.js'
 import { resetTokens } from '../app/apiCalls/resetTokens.js'
+import { DbStockBasicHistory } from '../shared/tasks/dbStockBasicHistory.js'
+import { getDailyStockInfo } from '../app/apiCalls/getDailyStockInfo.js'
 
 //import ev from '../../environmentVariables.json'
 
@@ -46,7 +48,23 @@ OAuthContoller.sendCall = oauthCall;
 
 export const api = remultExpress({
     controllers:[AuthController, SimFinance, OAuthContoller, OrderController,StockController, RegFinanceController, RegressionOrderController, RegressionStockController, StockHistoryController],
-    entities: [Task,Users,Rhkeys, SimFInance, testEnc, DbOrders, UsersStocks,RegressionFinance, DbRegressionOrders, dbRegressionUserStocks, DbTOkens, DbStockHistoryData, DbCurrentDayStockData, DbLevelTwoData],
+    entities: [
+      Task,
+      Users,
+      Rhkeys, 
+      SimFInance, 
+      testEnc, 
+      DbOrders, 
+      UsersStocks,
+      RegressionFinance, 
+      DbRegressionOrders, 
+      dbRegressionUserStocks, 
+      DbTOkens, 
+      DbStockHistoryData, 
+      DbCurrentDayStockData, 
+      DbLevelTwoData,
+      DbStockBasicHistory
+    ],
     admin:true,
     getUser: (req) => req.session!['user'],
     dataProvider: process.env['DATABASE_URL'] ?
@@ -64,6 +82,7 @@ export const api = remultExpress({
       //cron.schedule('30 14 * * *', () => insertCall())
       cron.schedule('0 4 * * 1', () => resetTokens())
       cron.schedule('*/25 * * * *', () => loadNewToken()),
-      cron.schedule('0 21 * * * ', () => loadDailyDataIntoHistory())
+      cron.schedule('0 21 * * * ', () => loadDailyDataIntoHistory()),
+      getDailyStockInfo()
     }
 })

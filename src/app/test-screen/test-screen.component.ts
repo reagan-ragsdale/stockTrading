@@ -639,6 +639,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
     this.stockDataForSelectedDay =  await dbStockHistoryDataRepo.find({where: {stockName: this.selectedStockName, date: this.selectedDate},orderBy: {time: 'asc'}})
     this.chartData.history = this.stockDataForSelectedDay.map(e => e.stockPrice)
     this.chartData.labels = this.stockDataForSelectedDay.map(e => reusedFunctions.epochToLocalTime(e.time))
+    this.chartData.name = this.selectedStockName
     this.updateChart()
   }
   stockDataForSelectedDay: DbStockHistoryData[] = []
