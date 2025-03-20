@@ -42,7 +42,7 @@ import { DashboardComponent } from "../dashboard/dashboard.component";
 //import { WebSocket } from 'ws';
 @Component({
   selector: 'app-home-screen',
-  imports: [CommonModule, FormsModule, MatTableModule, DashboardComponent, MatSelectModule, MatInputModule, MatMenuModule, MatFormFieldModule, MatIconModule, MatRadioModule, MatProgressSpinnerModule, MatButtonModule, MatButtonToggleModule, TradeComponent, EpochToTimePipe, DashboardComponent],
+  imports: [CommonModule, FormsModule, MatTableModule, MatSelectModule, MatInputModule, MatMenuModule, MatFormFieldModule, MatIconModule, MatRadioModule, MatProgressSpinnerModule, MatButtonModule, MatButtonToggleModule, TradeComponent, EpochToTimePipe, DashboardComponent],
   templateUrl: './home-screen.component.html',
   styleUrl: './home-screen.component.css'
 })
