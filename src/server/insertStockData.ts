@@ -84,6 +84,10 @@ export const socketCall = async (): Promise<void> => {
         
     });
 
+    setTimeout(() => {
+        schwabWebsocket.close()
+      }, 36000000);
+
 
 
 
