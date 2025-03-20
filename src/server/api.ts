@@ -35,6 +35,7 @@ import { socketCall } from './insertStockData.js'
 import { resetTokens } from '../app/apiCalls/resetTokens.js'
 import { DbStockBasicHistory } from '../shared/tasks/dbStockBasicHistory.js'
 import { getDailyStockInfo } from '../app/apiCalls/getDailyStockInfo.js'
+import { DbStockDashInfo } from '../shared/tasks/dbStockDashInfo.js'
 
 //import ev from '../../environmentVariables.json'
 
@@ -63,7 +64,8 @@ export const api = remultExpress({
       DbStockHistoryData, 
       DbCurrentDayStockData, 
       DbLevelTwoData,
-      DbStockBasicHistory
+      DbStockBasicHistory,
+      DbStockDashInfo
     ],
     admin:true,
     getUser: (req) => req.session!['user'],
@@ -78,7 +80,7 @@ export const api = remultExpress({
     })  */ ,
     initRequest
     ,initApi: async () => {
-      socketCall(),
+      //socketCall(),
       //cron.schedule('30 14 * * *', () => insertCall())
       cron.schedule('0 4 * * 1', () => resetTokens()),
       cron.schedule('*/25 * * * *', () => loadNewToken()),

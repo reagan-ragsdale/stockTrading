@@ -191,7 +191,7 @@ export class AnalysisService {
                 else {
                     if (incomingPrice > currentTradeHigh) {
                         console.log('here 2')
-                        newStopLoss += (incomingPrice - currentTradeHigh)
+                        newStopLoss = (incomingPrice - stopLossLag)
                         newHigh = incomingPrice
                     }
                     else {

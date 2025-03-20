@@ -38,10 +38,11 @@ import { AuthController } from '../../shared/controllers/AuthController';
 import {MatTableModule} from '@angular/material/table';
 import { EpochToTimePipe } from "../services/epochToTimePipe.pipe";
 import { userRepo } from '../../shared/tasks/Users';
+import { DashboardComponent } from "../dashboard/dashboard.component";
 //import { WebSocket } from 'ws';
 @Component({
   selector: 'app-home-screen',
-  imports: [CommonModule, FormsModule, MatTableModule, MatSelectModule, MatInputModule, MatMenuModule, MatFormFieldModule, MatIconModule, MatRadioModule, MatProgressSpinnerModule, MatButtonModule, MatButtonToggleModule, TradeComponent, EpochToTimePipe],
+  imports: [CommonModule, FormsModule, MatTableModule, DashboardComponent, MatSelectModule, MatInputModule, MatMenuModule, MatFormFieldModule, MatIconModule, MatRadioModule, MatProgressSpinnerModule, MatButtonModule, MatButtonToggleModule, TradeComponent, EpochToTimePipe, DashboardComponent],
   templateUrl: './home-screen.component.html',
   styleUrl: './home-screen.component.css'
 })
@@ -288,7 +289,6 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         shouldPlaceOrder = AnalysisService.followUp(this.chartData.history[this.chartData.history.length - 1], this.selectedStockHistoryData, this.stopLossPrice, this.tradeCurrentHigh, this.tradeInitialAverage, this.selectedStopLossAdjustmentAmt)
       }
 
-      console.log(shouldPlaceOrder)
       //add check to see when the last order was placed. Don't want to be placing order every 3 seconds
       //maybe wait 30 seconds
       if (shouldPlaceOrder.shouldExecuteOrder == true) {
@@ -700,7 +700,6 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
 
   async getUserFinanceData() {
     this.userSimFinData = await SimFinance.getSimFinData()
-    console.log(this.userSimFinData)
   }
 
   userBotChange(event: any) {
@@ -841,24 +840,11 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.isLoading = true
     Chart.register(annotationPlugin);
     Chart.register(...registerables)
-
     let user = await remult.initUser()
-    //console.log(remult.user)
-    //await this.getMovers()
     await AuthController.resetUser()
-    //setSessionUser(remult.user!)
-
-    //below for new user
-    /* let tokenData = await dbTokenRepo.findFirst({userId: remult.user?.id})
-    if(tokenData?.schwabClientChannel == ''){
-      await this.getUserData()
-      //let rhTokens = await AuthController.getKeyPairs()
-      await AuthController.insertTokenData(this.userPreferenceData)
-    } */
     await this.getUserFinanceData()
     await this.getUserLeaderBoard()
     this.distinctAvailableStocks = (await dbCurrentDayStockDataRepo.groupBy({ group: ['stockName'], orderBy: { stockName: 'desc' } })).map(e => e.stockName)
-    console.log(this.distinctAvailableStocks)
     this.selectedStockName = this.distinctAvailableStocks[0]
     await this.getStockInfo()
     this.userData = await dbTokenRepo.findFirst({ userId: remult.user?.id }) as DbTOkens

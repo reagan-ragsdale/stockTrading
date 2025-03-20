@@ -4,6 +4,8 @@ import { DbOrders, dbOrdersRepo } from '../tasks/dbOrders.js';
 import { getCurrentUser, setSessionUser } from '../../server/server-session.js'
 import { userRepo } from '../tasks/Users.js';
 import { UsersStocks, usersStocksRepo } from '../tasks/usersStocks.js';
+import { DbCurrentDayStockData, dbCurrentDayStockDataRepo } from '../tasks/dbCurrentDayStockData';
+import { dbStockDashInfoRepo } from '../tasks/dbStockDashInfo';
 
 
 
@@ -36,5 +38,14 @@ export class StockController {
             shareQty: stock.shareQty
         })
     }
+  }
+
+  @BackendMethod({ allowed: true })
+  static async insertStockData(data: DbCurrentDayStockData[]) {
+    await dbCurrentDayStockDataRepo.insert(data)
+    for(let i = 0; i < data.length; i++){
+      await dbStockDashInfoRepo.upsert({where: {stockName: data[i].stockName}, set: {current: data[i].stockPrice}})
+    }
+    
   }
 }
