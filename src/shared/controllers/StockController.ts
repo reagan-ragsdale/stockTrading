@@ -4,8 +4,8 @@ import { DbOrders, dbOrdersRepo } from '../tasks/dbOrders.js';
 import { getCurrentUser, setSessionUser } from '../../server/server-session.js'
 import { userRepo } from '../tasks/Users.js';
 import { UsersStocks, usersStocksRepo } from '../tasks/usersStocks.js';
-import { DbCurrentDayStockData, dbCurrentDayStockDataRepo } from '../tasks/dbCurrentDayStockData';
-import { dbStockDashInfoRepo } from '../tasks/dbStockDashInfo';
+import { DbCurrentDayStockData, dbCurrentDayStockDataRepo } from '../tasks/dbCurrentDayStockData.js';
+import { dbStockDashInfoRepo } from '../tasks/dbStockDashInfo.js';
 
 
 
