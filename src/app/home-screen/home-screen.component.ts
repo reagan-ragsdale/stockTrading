@@ -842,16 +842,14 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       }
     };
     try {
-      console.log('here above the new call')
+      console.log('here above new call')
       const response = await fetch(url, options);
       console.log(response)
       const result = await response.json();
       console.log(result)
-      //return result
     }
     catch (error: any) {
       console.log('Error' + error.message)
-      //return []
     }
   }
 
