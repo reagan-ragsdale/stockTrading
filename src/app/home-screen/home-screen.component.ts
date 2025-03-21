@@ -836,24 +836,12 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   async tryNewThing(){
     let stockName = 'AAPL'
     let time = 1711046533000
-    const url = `https://api.schwabapi.com/marketdata/v1/priceHistory?symbol=${stockName}&periodType=month&period=1&frequencyType=daily&frequency=1&startDate=${time}&needExtendedHoursData=false&needPreviousClose=true`;
-    let payload = new URLSearchParams({
-            symbol: stockName,
-            periodType: 'month',
-            period: '1',
-            frequencyType: 'daily',
-            frequency: '1',
-            startDate: '1711046533000',
-            needExtendedHoursData: 'false',
-            needPreviousClose: 'true'
-
-        })
+    const url = `https://api.schwabapi.com/marketdata/v1/pricehistory?symbol=AAPL&periodType=month&period=1&frequencyType=daily&frequency=1&startDate=1711046533000&needExtendedHoursData=false&needPreviousClose=false`;
     const options = {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${this.userData!.accessToken}`
-      },
-      body: payload
+      }
     };
     try {
       console.log('here above the new call')
