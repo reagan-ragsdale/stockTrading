@@ -834,7 +834,6 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.userLeaderBoard.sort((a,b) => b.spending - a.spending)
   }
   async tryNewThing(){
-    let stockName = 'AAPL'
     let time = 1711046533000
     const url = `https://api.schwabapi.com/marketdata/v1/pricehistory?symbol=AAPL&periodType=month&period=1&frequencyType=daily&frequency=1&startDate=1711046533000&needExtendedHoursData=false&needPreviousClose=false`;
     const options = {
