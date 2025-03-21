@@ -833,7 +833,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     }
     this.userLeaderBoard.sort((a,b) => b.spending - a.spending)
   }
-  async tryNewThing(){
+  /* async tryNewThing(){
     const url = `https://api.schwabapi.com/marketdata/v1/pricehistory?symbol=AAPL&periodType=month&period=1&frequencyType=daily&frequency=1&startDate=1711046533000&needExtendedHoursData=false&needPreviousClose=false`;
     const options = {
       method: 'GET',
@@ -851,7 +851,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     catch (error: any) {
       console.log('Error' + error.message)
     }
-  }
+  } */
 
 
   isLoading: boolean = false;
@@ -870,7 +870,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.createOrUpdateChart()
     this.createVolumeChart()
     await this.getStockData()
-    await this.tryNewThing()
+    //await this.tryNewThing()
     this.startWebsocket()
     
 
