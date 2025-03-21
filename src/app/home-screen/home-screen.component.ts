@@ -833,6 +833,29 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     }
     this.userLeaderBoard.sort((a,b) => b.spending - a.spending)
   }
+  async tryNewThing(){
+    let stockName = 'AAPL'
+    let time = 1711046533000
+    const url = `https://api.schwabapi.com/marketdata/v1/priceHistory?symbol=${stockName}&periodType=month&period=1&frequencyType=daily&frequency=1&startDate=${time}&needExtendedHoursData=false&needPreviousClose=true`;
+    const options = {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${this.userData!.accessToken}`
+      }
+    };
+    try {
+      console.log('here above the new call')
+      const response = await fetch(url, options);
+      console.log(response)
+      const result = await response.json();
+      console.log(result)
+      //return result
+    }
+    catch (error: any) {
+      console.log('Error' + error.message)
+      //return []
+    }
+  }
 
 
   isLoading: boolean = false;
@@ -851,7 +874,9 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.createOrUpdateChart()
     this.createVolumeChart()
     await this.getStockData()
+    await this.tryNewThing()
     this.startWebsocket()
+    
 
     this.isLoading = false;
 

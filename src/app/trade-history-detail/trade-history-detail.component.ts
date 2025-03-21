@@ -6,6 +6,8 @@ import { MatTableModule } from '@angular/material/table';
 import { EpochToTimePipe } from "../services/epochToTimePipe.pipe";
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
+import { SimFInance } from '../../shared/tasks/simFinance';
+import { SimFinance } from '../../shared/controllers/SimFinance';
 
 @Component({
   selector: 'app-trade-history-detail',
@@ -28,6 +30,8 @@ export class TradeHistoryDetailComponent implements OnInit {
   totalLosses: number = 0
   averageWinAmt: number = 0
   averageLossAmt: number = 0
+  userSimFinData: SimFInance[] = []
+  percentChange: number = 0
 
 
   async onSelectedStockChange(event: any) {
@@ -127,6 +131,9 @@ export class TradeHistoryDetailComponent implements OnInit {
     const pastDays = Math.floor((date.getTime() - firstDayOfYear.getTime()) / (1000 * 60 * 60 * 24));
     return Math.ceil((pastDays + firstDayOfYear.getDay() + 1) / 7);
   }
+  async getUserFinanceData() {
+      this.userSimFinData = await SimFinance.getSimFinData()
+  }
 
   claculateOrderDetails() {
     this.totalProfit = 0
@@ -153,6 +160,7 @@ export class TradeHistoryDetailComponent implements OnInit {
         }
       }
     }
+    this.percentChange = this.totalProfit / (this.userSimFinData[0].spending - this.totalProfit) 
     this.averageWinAmt = this.totalWins == 0 ? 0 : (totalWinAmt / this.totalWins)
     this.averageLossAmt = this.totalLosses == 0 ? 0 : (totalLossAmt / this.totalLosses)
   }
@@ -163,6 +171,7 @@ export class TradeHistoryDetailComponent implements OnInit {
     this.distinctStocks = this.distinctStocks.concat(this.allOrders.map(e => e.stockName).filter((v, i, a) => a.indexOf(v) === i))
     this.selectedStockName = this.distinctStocks[0]
     this.selectedStockOrders = this.allOrders
+    await this.getUserFinanceData()
     this.claculateOrderDetails()
     //await this.getStockOrders()
     this.isLoading = false
