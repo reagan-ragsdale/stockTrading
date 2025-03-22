@@ -1,9 +1,7 @@
 import { Buffer } from 'node:buffer'
-import { AuthController } from '../shared/controllers/AuthController.js'
 import { URLSearchParams } from 'node:url';
 import { dbTokenRepo, DbTOkens } from '../shared/tasks/dbTokens.js';
 export const refreshCall = async (user: DbTOkens): Promise<string> => {
-    console.log('here in before fetch')
     try {
         let credentials = Buffer.from(`${user.appKey}:${user.appSecret}`).toString('base64')
         let payload = new URLSearchParams({
@@ -28,7 +26,7 @@ export const refreshCall = async (user: DbTOkens): Promise<string> => {
         return accessToken
     }
     catch (error: any) {
-        console.log(error.message)
+        console.log('refreshToken server: ' + error.message)
         return ''
     }
 }

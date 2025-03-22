@@ -39,6 +39,7 @@ import {MatTableModule} from '@angular/material/table';
 import { EpochToTimePipe } from "../services/epochToTimePipe.pipe";
 import { userRepo } from '../../shared/tasks/Users';
 import { DashboardComponent } from "../dashboard/dashboard.component";
+import { dbStockBasicHistoryRepo } from '../../shared/tasks/dbStockBasicHistory';
 //import { WebSocket } from 'ws';
 @Component({
   selector: 'app-home-screen',
@@ -103,6 +104,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   stopLossLagFinal: number = 0;
   stockOpenPrice: number = 0;
   stockVariance: number = 0;
+  stockVarianceHigh: number = 0;
+  stockVarianceLow: number = 0;
 
   displayedColumns: string[] = ["Trade", "Stock","Shares","Price","Time"]
 
@@ -275,6 +278,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.selectedStockCurrent = this.chartData.history[this.chartData.history.length - 1]
     this.selectedStockHigh = Math.max(...this.chartData.history)
     this.selectedStockLow = Math.min(...this.chartData.history)
+    this.stockVariance = (this.chartData.history[this.chartData.history.length - 1] - this.stockOpenPrice) / this.stockOpenPrice
     if (this.isUserOrBot == 'Bot' && this.isBotAuthorized == true && !this.isOrderPending) {
       let shouldPlaceOrder: buySellDto = {
         shouldExecuteOrder: false
@@ -789,7 +793,6 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.router.navigate(['/testEnv'])
   }
   async onSelectedStockChange(event: any) {
-    console.log(event)
     if (event.isUserInput == true) {
       this.isLoading = true;
       this.selectedStockName = event.source.value
@@ -833,25 +836,18 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     }
     this.userLeaderBoard.sort((a,b) => b.spending - a.spending)
   }
-  /* async tryNewThing(){
-    const url = `https://api.schwabapi.com/marketdata/v1/pricehistory?symbol=AAPL&periodType=month&period=1&frequencyType=daily&frequency=1&startDate=1711046533000&needExtendedHoursData=false&needPreviousClose=false`;
-    const options = {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${this.userData!.accessToken}`
-      }
-    };
-    try {
-      console.log('here above new call')
-      const response = await fetch(url, options);
-      console.log(response)
-      const result = await response.json();
-      console.log(result)
+  async loadStockVariance(){
+    let stockVarianceData = await dbStockBasicHistoryRepo.find({where: {stockName: this.selectedStockName}})
+    let totalHigh = 0;
+    let totalLow = 0;
+    for(let i = 0; i < stockVarianceData.length; i++){
+      totalHigh += ((stockVarianceData[i].high - stockVarianceData[i].open) / stockVarianceData[i].open)
+      totalLow += ((stockVarianceData[i].low - stockVarianceData[i].open) / stockVarianceData[i].open)
     }
-    catch (error: any) {
-      console.log('Error' + error.message)
-    }
-  } */
+    this.stockVarianceHigh = totalHigh/stockVarianceData.length;
+    this.stockVarianceLow = totalLow/stockVarianceData.length;
+  }
+  
 
 
   isLoading: boolean = false;
@@ -870,7 +866,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.createOrUpdateChart()
     this.createVolumeChart()
     await this.getStockData()
-    //await this.tryNewThing()
+    await this.loadStockVariance()
     this.startWebsocket()
     
 

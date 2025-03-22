@@ -1,11 +1,7 @@
 
 import { DbCurrentDayStockData, dbCurrentDayStockDataRepo } from "../shared/tasks/dbCurrentDayStockData.js"
 import { dbTokenRepo, DbTOkens } from "../shared/tasks/dbTokens.js"
-//import { Worker } from 'node:worker_threads'
 import { WebSocket } from 'ws';
-import pkg from 'pg';
-const { Pool } = pkg;
-
 
 export const socketCall = async (): Promise<void> => {
     console.log('here in insert file')
@@ -79,7 +75,7 @@ export const socketCall = async (): Promise<void> => {
             }
         }
         catch(error: any){
-            console.log(error.message)
+            console.log('insertStockData server call: ' + error.message)
         }
         
     });

@@ -2,7 +2,6 @@ import { Buffer} from 'node:buffer'
 import { AuthController } from '../shared/controllers/AuthController.js'
 import { URLSearchParams } from 'node:url';
 export const oauthCall = async (code: string) => {
-    console.log('here 1')
     await AuthController.resetUser()
     let userKeys = await AuthController.getTokenUserByRemult()
     let credentials = Buffer.from(`${userKeys!.appKey}:${userKeys!.appSecret}`).toString('base64')
@@ -24,13 +23,12 @@ export const oauthCall = async (code: string) => {
     try {
         const response = await fetch(url, options);
         const result = await response.json();
-        console.log(result)
         let refreshToken = result['refresh_token']
         let accessToken = result['access_token']
         await AuthController.updateGlobalAccessTokens(accessToken, refreshToken, userKeys!.userId)
     }
     catch (error: any) {
-        console.log(error.message)
+        console.log('OAuth-server call: ' + error.message)
     }
 }
 
