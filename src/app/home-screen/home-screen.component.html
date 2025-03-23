@@ -94,8 +94,8 @@
                 <div style="display:flex; flex-direction: column;">
                     <h4>O:{{stockOpenPrice}}</h4>
                     <h4>{{stockVariance}}</h4>
-                    <h4>{{stockVarianceHigh}}</h4>
-                    <h4>{{stockVarianceLow}}</h4>
+                    <h4><mat-icon>keyboard_arrow_up</mat-icon>{{stockVarianceHigh}}</h4>
+                    <h4><mat-icon>keyboard_arrow_down</mat-icon>{{stockVarianceLow}}</h4>
                 </div>
                 <div class="canvas-container">
                     <canvas style="width:100% !important;" id="stock-chart">{{stockChart}}</canvas>
