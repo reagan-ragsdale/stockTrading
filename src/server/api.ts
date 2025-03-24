@@ -81,13 +81,12 @@ export const api = remultExpress({
     initRequest
     ,initApi: async () => {
       //socketCall(),
-      loadDailyDataIntoHistory(),
       cron.schedule('0 12 * * 1-5', () => socketCall())
       //cron.schedule('30 14 * * *', () => insertCall())
-      cron.schedule('0 4 * * 1', () => resetTokens()),
+      cron.schedule('0 4 * * 1,4', () => resetTokens()),
       cron.schedule('*/25 * * * *', () => loadNewToken()),
       cron.schedule('0 23 * * 1-5 ', () => loadDailyDataIntoHistory()),
-      cron.schedule('10 23 * * 1-5', () => getDailyStockInfo())
+      cron.schedule('30 23 * * 1-5', () => getDailyStockInfo())
       
     }
 })
