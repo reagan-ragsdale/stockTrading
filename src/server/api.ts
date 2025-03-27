@@ -36,6 +36,7 @@ import { resetTokens } from '../app/apiCalls/resetTokens.js'
 import { DbStockBasicHistory } from '../shared/tasks/dbStockBasicHistory.js'
 import { getDailyStockInfo } from '../app/apiCalls/getDailyStockInfo.js'
 import { DbStockDashInfo } from '../shared/tasks/dbStockDashInfo.js'
+import { DbAlgorithmList } from '../shared/tasks/dbAlgorithmList.js'
 
 //import ev from '../../environmentVariables.json'
 
@@ -65,7 +66,8 @@ export const api = remultExpress({
       DbCurrentDayStockData, 
       DbLevelTwoData,
       DbStockBasicHistory,
-      DbStockDashInfo
+      DbStockDashInfo,
+      DbAlgorithmList
     ],
     admin:true,
     getUser: (req) => req.session!['user'],
@@ -86,7 +88,8 @@ export const api = remultExpress({
       cron.schedule('0 4 * * 1,4', () => resetTokens()),
       cron.schedule('*/25 * * * *', () => loadNewToken()),
       cron.schedule('0 23 * * 1-5 ', () => loadDailyDataIntoHistory()),
-      cron.schedule('30 23 * * 1-5', () => getDailyStockInfo())
+      cron.schedule('30 23 * * 1-5', () => getDailyStockInfo()),
+      getDailyStockInfo()
       
     }
 })

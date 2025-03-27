@@ -8,11 +8,14 @@ export const getDailyStockInfo = async () => {
 
     let stocks = (await dbStockHistoryDataRepo.groupBy({ group: ['stockName'], orderBy: { stockName: 'desc' } })).map(e => e.stockName)
     
-    let startDate = Date.now()
+    let startDate = new Date()
+    startDate.setHours(0, 0, 0, 0)
+    let startTime = startDate.getTime()
+    let tempDate = 1742517206000
 
     let insertData: DbStockBasicHistory[] = []
     for (let i = 0; i < stocks.length; i++) {
-        let stockData = await getHistoryStockData(stocks[i], startDate)
+        let stockData = await getHistoryStockData(stocks[i], tempDate)
         for (let j = 0; j < stockData.candles.length; j++) {
             insertData.push({
                 stockName: stockData.symbol,
