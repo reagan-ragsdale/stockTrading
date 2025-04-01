@@ -20,6 +20,17 @@ export class OrderController {
         orderTime: order.orderTime
     })
   }
+  @BackendMethod({ allowed: true })
+  static async placeServerOrder(order: stockOrder, userId: string) {
+    await dbOrdersRepo.insert({
+        userId: userId,
+        stockName: order.stockName,
+        orderType: order.orderType,
+        stockPrice: order.stockPrice,
+        shareQty: order.shareQty,
+        orderTime: order.orderTime
+    })
+  }
 
   @BackendMethod({ allowed: true })
   static async getLastOrder(): Promise<DbOrders> {

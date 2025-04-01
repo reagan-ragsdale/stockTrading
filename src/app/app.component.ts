@@ -33,6 +33,9 @@ export class AppComponent{
   navToDashboard(){
     this.router.navigate([`/dashboard`])
   }
+  navToServerAlgos(){
+    this.router.navigate([`/serverTradeList`])
+  }
 
   ngOnInit(){
     remult.initUser()

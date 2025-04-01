@@ -165,46 +165,26 @@ export class AnalysisService {
 
             }
             else {
-                let newStopLoss = 0
-                let newHigh = 0
-
-                //if the price has not gotten to the average yet
-                if (currentStopLoss < orderHistory[0].stockPrice) {
-                    //check to see if price is at average
-                    if (incomingPrice >= initialAverage) {
-                        //set new stop loss
-                        console.log('here')
-                        newStopLoss = ((initialAverage - orderHistory[0].stockPrice) * .3) + orderHistory[0].stockPrice
+                let newStopLoss = currentStopLoss
+                let newHigh = currentTradeHigh
+                if(incomingPrice > currentTradeHigh){
+                    newHigh = incomingPrice
+                }
+                if(incomingPrice > lastOrderPrice + stopLossLag){
+                    if(currentStopLoss < lastOrderPrice){
+                        newStopLoss = lastOrderPrice
                     }
-                    else {
-                        //keep stop loss
-                        newStopLoss = currentStopLoss
-                    }
-                    if (incomingPrice > currentTradeHigh) {
-                        newHigh = incomingPrice
-                    }
-                    else {
-                        newHigh = currentTradeHigh
+                    else{
+                        if(incomingPrice > currentTradeHigh){
+                            newStopLoss = incomingPrice - stopLossLag
+                        }
                     }
                 }
-                //if there is a new stop loss
-                else {
-                    if (incomingPrice > currentTradeHigh) {
-                        console.log('here 2')
-                        newStopLoss = (incomingPrice - stopLossLag)
-                        newHigh = incomingPrice
-                    }
-                    else {
-                        newStopLoss = currentStopLoss
-                        newHigh = currentTradeHigh
-                    }
-                }
-                return {
+                return{
                     shouldExecuteOrder: false,
-                    targetPrice: (recentHigh - gutter),
                     stopLossPrice: newStopLoss,
                     tradeHigh: newHigh,
-                    containsTrendInfo: false
+                    containsTrendInfo: false,
                 }
             }
         }

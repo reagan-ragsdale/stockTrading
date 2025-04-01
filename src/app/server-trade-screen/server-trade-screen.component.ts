@@ -1,0 +1,172 @@
+import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { DbAlgorithmList, dbAlgorithmListRepo } from '../../shared/tasks/dbAlgorithmList';
+import { remult } from 'remult';
+import { DbStockBasicHistory, dbStockBasicHistoryRepo } from '../../shared/tasks/dbStockBasicHistory';
+import { Chart, registerables } from 'chart.js';
+import annotationPlugin from 'chartjs-plugin-annotation';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+type serverAlgos = {
+  name: string;
+  isSelected: boolean;
+}
+@Component({
+  selector: 'app-server-trade-screen',
+  imports: [MatCheckboxModule, CommonModule, MatFormFieldModule, MatSelectModule],
+  templateUrl: './server-trade-screen.component.html',
+  styleUrl: './server-trade-screen.component.css'
+})
+
+export class ServerTradeScreenComponent implements OnInit {
+  listOfServerAlgos: serverAlgos[] = []
+  userAlgos: DbAlgorithmList | undefined = undefined
+  listOfLast200Days: DbStockBasicHistory[] = []
+  selectedStockName: string = ''
+  selectedStockLast200: DbStockBasicHistory[] = []
+  selectedStockLast50: DbStockBasicHistory[] = []
+  stockChart: any;
+  distinctStocks: string[] = []
+
+  async saveAlgos() {
+    await dbAlgorithmListRepo.save({ ...this.userAlgos, sma200sma50: this.listOfServerAlgos[0].isSelected })
+  }
+  getStockDisplay() {
+    this.selectedStockLast200 = this.listOfLast200Days.filter(e => e.stockName == this.selectedStockName)
+    this.selectedStockLast50 = this.listOfLast200Days.slice(0, 50).filter(e => e.stockName == this.selectedStockName)
+  }
+  onSelectedStockChange(event: any) {
+    if (event.isUserInput == true) {
+      this.selectedStockName = event.source.value
+      this.getStockDisplay()
+      this.updateChart()
+    }
+  }
+  updateChart() {
+    this.stockChart.data.datasets[0].data = this.selectedStockLast200.map(e => e.close)
+    this.stockChart.data.datasets[1].data = this.selectedStockLast50.map(e => e.close)
+    this.stockChart.data.labels = this.selectedStockLast200.map(e => e.date)
+    this.stockChart.options.scales.y.max = this.getMaxForChart(this.selectedStockLast200)
+    this.stockChart.options.scales.y.min = this.getMinForChart(this.selectedStockLast200)
+    this.stockChart.update()
+  }
+
+  createOrUpdateChart() {
+
+    console.log('create chart')
+    this.stockChart = new Chart("stock-chart", {
+      type: 'line', //this denotes tha type of chart
+
+      data: {// values on X-Axis
+
+        labels: this.selectedStockLast200.map(e => e.date),
+
+        datasets: [
+          {
+            label: '200',
+            data: this.selectedStockLast200.map(e => e.close),
+            backgroundColor: '#54C964',
+            hoverBackgroundColor: '#54C964',
+            borderColor: '#54C964',
+            pointBackgroundColor: '#54C964',
+            pointBorderColor: '#54C964',
+            pointRadius: 0,
+            spanGaps: true
+          },
+          {
+            label: '50',
+            data: this.selectedStockLast50.map(e => e.close),
+            backgroundColor: '#89CFF0',
+            hoverBackgroundColor: '#89CFF0',
+            borderColor: '#89CFF0',
+            pointBackgroundColor: '#89CFF0',
+            pointBorderColor: '#89CFF0',
+            pointRadius: 0,
+            spanGaps: true
+          }
+
+        ]
+      },
+      options: {
+
+        aspectRatio: 2,
+        color: '#DBD4D1',
+        font: {
+          weight: 'bold'
+        },
+        elements: {
+          line: {
+            backgroundColor: '#54C964',
+            borderColor: '#54C964'
+          },
+          point: {
+            radius: 1,
+            hitRadius: 3
+          }
+        },
+        animation: false,
+
+        scales: {
+          y: {
+            max: this.getMaxForChart(this.listOfLast200Days),
+            min: this.getMinForChart(this.listOfLast200Days),
+            grid: {
+              color: 'hsl(18, 12%, 60%)'
+            },
+          },
+          x: {
+            grid: {
+              display: false,
+              color: 'hsl(18, 12%, 60%)'
+            },
+
+          }
+
+        }
+      }
+    })
+
+
+  }
+  getMaxForChart(arr: DbStockBasicHistory[]): number {
+    let max = -1000000000
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i].close > max) {
+        max = arr[i].close
+      }
+    }
+    return max + 2
+
+  }
+  getMinForChart(arr: DbStockBasicHistory[]): number {
+    let min = 1000000000
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i].close < min) {
+        min = arr[i].close
+      }
+    }
+    return min - 2
+
+  }
+  async ngOnInit() {
+    Chart.register(annotationPlugin);
+    Chart.register(...registerables)
+    this.userAlgos = await dbAlgorithmListRepo.findFirst({ userId: remult.user?.id })
+    this.listOfServerAlgos.push({
+      name: 'SMA:50/200',
+      isSelected: this.userAlgos!.sma200sma50
+    })
+    let allHistory = await dbStockBasicHistoryRepo.find({ orderBy: { stockName: 'desc', date: 'desc' } })
+    this.distinctStocks = allHistory.map(e => e.stockName).filter((v, i, a) => a.indexOf(v) === i)
+    this.selectedStockName = this.distinctStocks[0]
+    for (let i = 0; i < this.distinctStocks.length; i++) {
+      let filteredStockLast200 = allHistory.filter(e => e.stockName == this.distinctStocks[i]).slice(0, 200)
+      this.listOfLast200Days.push(...filteredStockLast200)
+    }
+    this.getStockDisplay()
+    this.createOrUpdateChart()
+
+
+  }
+}

@@ -20,4 +20,22 @@ export class reusedFunctions{
     
         return formattedTime === "08:30";
     }
+    static isWithinTradingHours(epochMillis: number): boolean {
+        const date = new Date(epochMillis);
+        const centralOffset = -5; // Central Time (CT) is UTC-5 (Standard), UTC-6 (Daylight Saving Time)
+        const centralHours = date.getUTCHours() + centralOffset;
+        const minutes = date.getUTCMinutes();
+    
+        const startHour = 8;
+        const startMinute = 30;
+        const endHour = 15;
+        const endMinute = 0;
+    
+        // Convert time to total minutes for easy comparison
+        const timeInMinutes = centralHours * 60 + minutes;
+        const startTimeInMinutes = startHour * 60 + startMinute;
+        const endTimeInMinutes = endHour * 60 + endMinute;
+    
+        return timeInMinutes >= startTimeInMinutes && timeInMinutes <= endTimeInMinutes;
+    }
 }

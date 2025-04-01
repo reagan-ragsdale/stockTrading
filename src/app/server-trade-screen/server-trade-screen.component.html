@@ -1,0 +1,16 @@
+<div style="display:flex; flex-direction: column;">
+    <div style="display:flex;">
+        <mat-checkbox *ngFor="let algo of listOfServerAlgos" (change)="algo.isSelected = !algo.isSelected"  [checked]="algo.isSelected" class="example-margin">{{algo.name}}</mat-checkbox>
+        <button mat-raised-button color="primary" (click)="saveAlgos()">Save</button>
+    </div>
+    <div style="display: flex; flex-direction: column;">
+        <mat-form-field>
+            <mat-label>Select a Stock</mat-label>
+            <mat-select disableRipple [(value)]="selectedStockName">
+              <mat-option *ngFor="let stock of distinctStocks" value="{{stock}}" (onSelectionChange)="onSelectedStockChange($event)">{{stock}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        <canvas style="width:100% !important;" id="stock-chart">{{stockChart}}</canvas>
+    </div>
+    
+</div>
