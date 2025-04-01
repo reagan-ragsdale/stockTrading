@@ -12,11 +12,11 @@ export const getDailyStockInfo = async () => {
     startDate.setHours(0, 0, 0, 0)
     let startTime = startDate.getTime()
     startTime = startTime - 86400000
-    //let tempDate = 1742187600000
+    let tempDate = 1680382475000
 
     let insertData: DbStockBasicHistory[] = []
     for (let i = 0; i < stocks.length; i++) {
-        let stockData = await getHistoryStockData(stocks[i], startTime)
+        let stockData = await getHistoryStockData(stocks[i], tempDate)
         for (let j = 0; j < stockData.candles.length; j++) {
             insertData.push({
                 stockName: stockData.symbol,
