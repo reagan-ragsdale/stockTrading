@@ -19,6 +19,9 @@
       <mat-icon>more_vert</mat-icon>
     </button>
     <mat-menu #menu="matMenu">
+      <button (click)="navToHome()" mat-menu-item>
+        <span>Trading Home</span>
+      </button>
       <button (click)="navToServerAlgos()" mat-menu-item>
         <span>Server Algos</span>
       </button>

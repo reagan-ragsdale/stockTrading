@@ -27,6 +27,9 @@ export class AppComponent{
     remult.user = undefined;
     this.router.navigate([`/login`])
   }
+  navToHome(){
+    this.router.navigate([`/home`])
+  }
   navToOrderHistory(){
     this.router.navigate([`/orderHistory`])
   }
