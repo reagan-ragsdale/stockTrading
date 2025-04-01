@@ -8,13 +8,14 @@ import { Chart, registerables } from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
 type serverAlgos = {
   name: string;
   isSelected: boolean;
 }
 @Component({
   selector: 'app-server-trade-screen',
-  imports: [MatCheckboxModule, CommonModule, MatFormFieldModule, MatSelectModule],
+  imports: [MatCheckboxModule, CommonModule, MatFormFieldModule, MatSelectModule, MatButtonModule],
   templateUrl: './server-trade-screen.component.html',
   styleUrl: './server-trade-screen.component.css'
 })

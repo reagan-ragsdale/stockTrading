@@ -4,7 +4,7 @@
         <button mat-raised-button color="primary" (click)="saveAlgos()">Save</button>
     </div>
     <div style="display: flex; flex-direction: column;">
-        <mat-form-field>
+        <mat-form-field style="width:fit-content;">
             <mat-label>Select a Stock</mat-label>
             <mat-select disableRipple [(value)]="selectedStockName">
               <mat-option *ngFor="let stock of distinctStocks" value="{{stock}}" (onSelectionChange)="onSelectedStockChange($event)">{{stock}}</mat-option>
