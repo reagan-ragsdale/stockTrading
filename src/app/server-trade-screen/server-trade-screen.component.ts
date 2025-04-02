@@ -58,6 +58,7 @@ export class ServerTradeScreenComponent implements OnInit {
       this.selectedStockName = event.source.value
       this.getStockDisplay()
       this.updateChart()
+      this.runSimulation()
     }
   }
   updateChart() {
@@ -278,7 +279,8 @@ export class ServerTradeScreenComponent implements OnInit {
         borderWidth: 2,
         label: {
           display: true,
-          content: this.orderLocations[i].buySell + ': ' + this.orderLocations[i].price
+          content: this.orderLocations[i].buySell + ': ' + this.orderLocations[i].price,
+          position: 'end'
         }
       })
     }
