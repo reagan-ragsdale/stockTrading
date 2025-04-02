@@ -288,11 +288,21 @@ export class ServerTradeScreenComponent implements OnInit {
     this.stockChart.options.plugins.annotation.annotations = this.annotationsArray
     this.stockChart.update()
   }
+  totalPofit: number = 0;
+
+  calculateTotalProfit(){
+    for(let i = 0; i < this.orderLocations.length; i++){
+      if(this.orderLocations[i].buySell == 'Sell'){
+        this.totalPofit += this.orderLocations[i + 1].price - this.orderLocations[i].price
+      }
+    }
+  }
   runSimulation() {
     this.bankTotal = 500
     this.orderLocations = []
     this.calculateBuyAndSellPoints()
     this.updateGraphBuyAndSellPoints()
+    this.calculateTotalProfit()
   }
   async ngOnInit() {
     Chart.register(annotationPlugin);

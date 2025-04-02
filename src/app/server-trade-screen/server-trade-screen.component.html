@@ -20,6 +20,7 @@
     </mat-form-field>
     <button style="margin-left:1rem;" mat-raised-button color="primary" (click)="runSimulation()">Run Sim</button>
     <h4 style="margin-left:1rem; color: #DBD4D1;">Total: {{bankTotal | currency:'USD':'symbol'}}</h4>
+    <h4 style="margin-left:1rem; color: #DBD4D1;">Total Profit: {{totalPofit | currency:'USD':'symbol'}}</h4>
   </div>
   <div style="display: flex; flex-direction: column;">
     <mat-form-field style="width:fit-content;">
