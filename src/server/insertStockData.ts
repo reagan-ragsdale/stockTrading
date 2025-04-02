@@ -42,26 +42,31 @@ export const socketCall = async (): Promise<void> => {
         }
     } 
     
-    let stockSmaBuySell: { [key: string]: {Buy: number, Sell: number} } = {
+    let stockSmaBuySell: { [key: string]: {Buy: number, Sell: number, Check200: number} } = {
         'TSLA': {
-            Buy: .10,
-            Sell: .15
+            Buy: .05,
+            Sell: .15,
+            Check200: .10
         },
         'AAPL': {
-            Buy: .04,
-            Sell: .10
+            Buy: .03,
+            Sell: .03,
+            Check200: .11
         },
         'MSFT': {
-            Buy: .045,
-            Sell: .10
+            Buy: .03,
+            Sell: .05,
+            Check200: .10
         },
         AMD': {
             Buy: .1,
-            Sell: .20
+            Sell: .07,
+            Check200: .10
         },
         PLTR': {
-            Buy: .05,
-            Sell: .1
+            Buy: .04,
+            Sell: .15,
+            Check200: .10
         },
     }
     */

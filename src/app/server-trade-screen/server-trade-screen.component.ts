@@ -12,6 +12,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { reusedFunctions } from '../services/reusedFunctions';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { DbStockHistoryData, dbStockHistoryDataRepo } from '../../shared/tasks/dbStockHistoryData';
 type serverAlgos = {
   name: string;
   isSelected: boolean;
@@ -24,7 +26,7 @@ type sma200Array = {
 }
 @Component({
   selector: 'app-server-trade-screen',
-  imports: [MatCheckboxModule, CommonModule, MatFormFieldModule, MatSelectModule, MatButtonModule, MatInputModule, FormsModule],
+  imports: [MatCheckboxModule, CommonModule, MatFormFieldModule, MatSelectModule, MatButtonModule, MatInputModule, FormsModule, MatSlideToggleModule],
   templateUrl: './server-trade-screen.component.html',
   styleUrl: './server-trade-screen.component.css'
 })
@@ -43,6 +45,13 @@ export class ServerTradeScreenComponent implements OnInit {
   stockChart: any;
   distinctStocks: string[] = []
   annotationsArray: any[] = []
+  intraDayChecked: boolean = false;
+  distinctDates: string[] = []
+  selectedDate: string = ''
+  stockDataForSelectedDay: DbStockHistoryData[] = []
+  listOfLastHour: sma200Array[] = []
+  listOfLast30Minutes: sma200Array[] = []
+  listOfLast5Minutes: sma200Array[] = []
 
   async saveAlgos() {
     await dbAlgorithmListRepo.save({ ...this.userAlgos, sma200sma50: this.listOfServerAlgos[0].isSelected })
@@ -56,21 +65,21 @@ export class ServerTradeScreenComponent implements OnInit {
   onSelectedStockChange(event: any) {
     if (event.isUserInput == true) {
       this.selectedStockName = event.source.value
-      this.getStockDisplay()
-      this.updateChart()
-      this.runSimulation()
+      if (!this.intraDayChecked) {
+        this.getStockDisplay()
+        this.updateChart()
+        this.runSimulation()
+      }
+      else {
+
+      }
+
+
     }
   }
-  updateChart() {
-    this.stockChart.data.datasets[0].data = this.selectedStockLast200.map(e => e.close)
-    this.stockChart.data.datasets[1].data = this.selectedStockLast200.map(e => e.avg)
-    this.stockChart.data.datasets[2].data = this.selectedStockLast40.map(e => e.avg)
-    this.stockChart.data.datasets[3].data = this.selectedStockLast5.map(e => e.avg)
-    this.stockChart.data.labels = this.selectedStockLast200.map(e => e.date)
-    this.stockChart.options.scales.y.max = this.getMaxForChart(this.selectedStockLast200)
-    this.stockChart.options.scales.y.min = this.getMinForChart(this.selectedStockLast200)
-    this.stockChart.update()
-  }
+  
+  
+  
 
   createOrUpdateChart() {
 
@@ -197,6 +206,156 @@ export class ServerTradeScreenComponent implements OnInit {
     return min - 2
 
   }
+  
+  buyGutter: number = .05;
+  sellGutter: number = .15;
+  check200Gutter: number = .1;
+  shouldDisplayBuySellLines: boolean = false;
+  
+  bankTotal: number = 500
+  orderLocations: any[] = []
+  executeOrder(arr: sma200Array, buySell: string) {
+    if (buySell == 'Buy') {
+      this.bankTotal -= arr.close
+      this.orderLocations.push({ buySell: 'Buy', date: arr.date, price: arr.close })
+    }
+    else {
+      this.bankTotal += arr.close
+      this.orderLocations.push({ buySell: 'Sell', date: arr.date, price: arr.close })
+    }
+  }
+  
+  totalPofit: number = 0;
+
+  calculateTotalProfit() {
+    for (let i = 0; i < this.orderLocations.length; i++) {
+      if (this.orderLocations[i].buySell == 'Sell') {
+        this.totalPofit += this.orderLocations[i].price - this.orderLocations[i - 1].price
+      }
+    }
+  }
+
+  async changeDayType() {
+    if (this.intraDayChecked) {
+      await this.updateStockChartData()
+      this.calculateIntraDaySma()
+      this.updateChartIntraDay()
+
+    }
+    else {
+      this.getStockDisplay()
+      this.updateChart()
+      this.runSimulation()
+    }
+  }
+  /* Intra Day */
+  async onSelectedDateChange(event: any) {
+    if (event.isUserInput == true) {
+      this.selectedDate = event.source.value
+      await this.updateStockChartData()
+    }
+  }
+  async getStockHistoricalData() {
+    this.distinctDates = (await dbStockHistoryDataRepo.groupBy({ where: { stockName: this.selectedStockName }, group: ['date'], orderBy: { date: 'desc' } })).map(e => e.date)
+    this.selectedDate = this.distinctDates[0]
+    //await this.updateStockChartData()
+  }
+  async updateStockChartData() {
+    this.stockDataForSelectedDay = await dbStockHistoryDataRepo.find({ where: { stockName: this.selectedStockName, date: this.selectedDate }, orderBy: { time: 'asc' } })
+  }
+  calculateIntraDaySma(){
+    this.stockDataForSelectedDay = this.stockDataForSelectedDay.filter(e => reusedFunctions.isWithinTradingHoursLocal(e.time))
+    let tempStockHour: sma200Array[] = []
+      for (let j = 3600; j < this.stockDataForSelectedDay.length; j++) {
+        let lastHourPrice: number = 0;
+        for (let k = 0; k < 3600; k++) {
+          lastHourPrice += this.stockDataForSelectedDay[j - k].stockPrice
+        }
+        let lastHourAvg = lastHourPrice / 3600
+        tempStockHour.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[j].stockPrice, avg: lastHourAvg, date: new Date(this.stockDataForSelectedDay[j].time).toLocaleTimeString() })
+      }
+      let tempStock30Minutes: sma200Array[] = []
+      for (let j = 3600; j < this.stockDataForSelectedDay.length; j++) {
+        let last30MinutesPrice: number = 0;
+        for (let k = 0; k < 1800; k++) {
+          last30MinutesPrice += this.stockDataForSelectedDay[j - k].stockPrice
+        }
+        let last30MinutesAvg = last30MinutesPrice / 1800
+        tempStock30Minutes.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[j].stockPrice, avg: last30MinutesAvg, date: new Date(this.stockDataForSelectedDay[j].time).toLocaleTimeString() })
+      }
+      let tempStock5Minutes: sma200Array[] = []
+      for (let j = 3600; j < this.stockDataForSelectedDay.length; j++) {
+        let last5MinutesPrice: number = 0;
+        for (let k = 0; k < 300; k++) {
+          last5MinutesPrice += this.stockDataForSelectedDay[j - k].stockPrice
+        }
+        let last5MinutesAvg = last5MinutesPrice / 300
+        tempStock5Minutes.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[j].stockPrice, avg: last5MinutesAvg, date: new Date(this.stockDataForSelectedDay[j].time).toLocaleTimeString() })
+      }
+      this.listOfLastHour.push(...tempStockHour)
+      this.listOfLast30Minutes.push(...tempStock30Minutes)
+      this.listOfLast5Minutes.push(...tempStock5Minutes)
+  }
+  updateChartIntraDay(){
+    this.stockChart.data.datasets[0].data = this.listOfLastHour.map(e => e.close)
+    this.stockChart.data.datasets[1].data = this.listOfLastHour.map(e => e.avg)
+    this.stockChart.data.datasets[2].data = this.listOfLast30Minutes.map(e => e.avg)
+    this.stockChart.data.datasets[3].data = this.listOfLast5Minutes.map(e => e.avg)
+    this.stockChart.data.labels = this.listOfLastHour.map(e => e.date)
+    this.stockChart.options.scales.y.max = this.getMaxForChart(this.listOfLastHour)
+    this.stockChart.options.scales.y.min = this.getMinForChart(this.listOfLastHour)
+    this.stockChart.update()
+  }
+
+  /* Inter Day */
+  runSimulation() {
+    this.bankTotal = 500
+    this.orderLocations = []
+    this.totalPofit = 0
+    this.calculateBuyAndSellPoints()
+    this.updateGraphBuyAndSellPoints()
+    this.calculateTotalProfit()
+  }
+  calculateBuyAndSellPoints() {
+    let buyOrSell = 'Buy'
+    for (let i = 0; i < this.selectedStockLast5.length; i++) {
+      if (buyOrSell == 'Buy') {
+        if ((((this.selectedStockLast5[i].avg - this.selectedStockLast40[i].avg) / this.selectedStockLast40[i].avg) < (this.buyGutter * -1)) && ((Math.abs(this.selectedStockLast5[i].avg - this.selectedStockLast200[i].avg) / this.selectedStockLast200[i].avg) < this.check200Gutter)) {
+          this.executeOrder(this.selectedStockLast5[i], 'Buy')
+          buyOrSell = 'Sell'
+        }
+      }
+      else {
+        if ((((this.selectedStockLast5[i].avg - this.selectedStockLast40[i].avg) / this.selectedStockLast40[i].avg) > this.sellGutter) && this.selectedStockLast5[i].close > this.orderLocations[this.orderLocations.length - 1].price) {
+          this.executeOrder(this.selectedStockLast5[i], 'Sell')
+          buyOrSell = 'Buy'
+        }
+      }
+
+    }
+    console.log(this.orderLocations)
+  }
+  updateGraphBuyAndSellPoints() {
+    this.annotationsArray = []
+    for (let i = 0; i < this.orderLocations.length; i++) {
+      this.annotationsArray.push({
+        type: 'line',
+        //display: this.selectedStockHistoryData.length > 0,
+        xMin: this.selectedStockLast200.findIndex(x => x.date == this.orderLocations[i].date),
+        xMax: this.selectedStockLast200.findIndex(x => x.date == this.orderLocations[i].date),
+        borderColor: '#7874ff',
+        borderWidth: 2,
+        label: {
+          display: true,
+          content: this.orderLocations[i].buySell + ': ' + this.orderLocations[i].price,
+          position: 'end'
+        }
+      })
+    }
+    console.log(this.annotationsArray)
+    this.stockChart.options.plugins.annotation.annotations = this.annotationsArray
+    this.stockChart.update()
+  }
   calculateSma() {
     for (let i = 0; i < this.distinctStocks.length; i++) {
       let filteredStock = this.allHistory.filter(e => e.stockName == this.distinctStocks[i])
@@ -232,79 +391,19 @@ export class ServerTradeScreenComponent implements OnInit {
       this.listOfLast5Days.push(...tempStock5)
     }
   }
-  buyGutter: number = .05;
-  sellGutter: number = .15;
-  check200Gutter: number = .1;
-  shouldDisplayBuySellLines: boolean = false;
-  calculateBuyAndSellPoints() {
-    let buyOrSell = 'Buy'
-    for (let i = 0; i < this.selectedStockLast5.length; i++) {
-      if (buyOrSell == 'Buy') {
-        if ((((this.selectedStockLast5[i].avg - this.selectedStockLast40[i].avg) / this.selectedStockLast40[i].avg) < (this.buyGutter * -1)) && ((Math.abs(this.selectedStockLast5[i].avg - this.selectedStockLast200[i].avg) / this.selectedStockLast200[i].avg) < this.check200Gutter)) {
-          this.executeOrder(this.selectedStockLast5[i], 'Buy')
-          buyOrSell = 'Sell'
-        }
-      }
-      else {
-        if ((((this.selectedStockLast5[i].avg - this.selectedStockLast40[i].avg) / this.selectedStockLast40[i].avg) > this.sellGutter) && this.selectedStockLast5[i].close > this.orderLocations[this.orderLocations.length - 1].price) {
-          this.executeOrder(this.selectedStockLast5[i], 'Sell')
-          buyOrSell = 'Buy'
-        }
-      }
-
-    }
-    console.log(this.orderLocations)
-  }
-  bankTotal: number = 500
-  orderLocations: any[] = []
-  executeOrder(arr: sma200Array, buySell: string) {
-    if (buySell == 'Buy') {
-      this.bankTotal -= arr.close
-      this.orderLocations.push({ buySell: 'Buy', date: arr.date, price: arr.close })
-    }
-    else {
-      this.bankTotal += arr.close
-      this.orderLocations.push({ buySell: 'Sell', date: arr.date, price: arr.close })
-    }
-  }
-  updateGraphBuyAndSellPoints() {
-    this.annotationsArray = []
-    for (let i = 0; i < this.orderLocations.length; i++) {
-      this.annotationsArray.push({
-        type: 'line',
-        //display: this.selectedStockHistoryData.length > 0,
-        xMin: this.selectedStockLast200.findIndex(x => x.date == this.orderLocations[i].date),
-        xMax: this.selectedStockLast200.findIndex(x => x.date == this.orderLocations[i].date),
-        borderColor: '#7874ff',
-        borderWidth: 2,
-        label: {
-          display: true,
-          content: this.orderLocations[i].buySell + ': ' + this.orderLocations[i].price,
-          position: 'end'
-        }
-      })
-    }
-    console.log(this.annotationsArray)
-    this.stockChart.options.plugins.annotation.annotations = this.annotationsArray
+  updateChart() {
+    this.stockChart.data.datasets[0].data = this.selectedStockLast200.map(e => e.close)
+    this.stockChart.data.datasets[1].data = this.selectedStockLast200.map(e => e.avg)
+    this.stockChart.data.datasets[2].data = this.selectedStockLast40.map(e => e.avg)
+    this.stockChart.data.datasets[3].data = this.selectedStockLast5.map(e => e.avg)
+    this.stockChart.data.labels = this.selectedStockLast200.map(e => e.date)
+    this.stockChart.options.scales.y.max = this.getMaxForChart(this.selectedStockLast200)
+    this.stockChart.options.scales.y.min = this.getMinForChart(this.selectedStockLast200)
     this.stockChart.update()
   }
-  totalPofit: number = 0;
-
-  calculateTotalProfit(){
-    for(let i = 0; i < this.orderLocations.length; i++){
-      if(this.orderLocations[i].buySell == 'Sell'){
-        this.totalPofit += this.orderLocations[i].price - this.orderLocations[i - 1].price
-      }
-    }
-  }
-  runSimulation() {
-    this.bankTotal = 500
-    this.orderLocations = []
-    this.totalPofit = 0
-    this.calculateBuyAndSellPoints()
-    this.updateGraphBuyAndSellPoints()
-    this.calculateTotalProfit()
-  }
+  
+  
+  
   async ngOnInit() {
     Chart.register(annotationPlugin);
     Chart.register(...registerables)
@@ -320,6 +419,7 @@ export class ServerTradeScreenComponent implements OnInit {
     this.getStockDisplay()
     this.createOrUpdateChart()
     this.runSimulation()
+    await this.getStockHistoricalData()
 
 
   }
