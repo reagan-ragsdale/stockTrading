@@ -10,6 +10,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { reusedFunctions } from '../services/reusedFunctions';
+import { MatInputModule } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
 type serverAlgos = {
   name: string;
   isSelected: boolean;
@@ -22,7 +24,7 @@ type sma200Array = {
 }
 @Component({
   selector: 'app-server-trade-screen',
-  imports: [MatCheckboxModule, CommonModule, MatFormFieldModule, MatSelectModule, MatButtonModule],
+  imports: [MatCheckboxModule, CommonModule, MatFormFieldModule, MatSelectModule, MatButtonModule, MatInputModule, FormsModule],
   templateUrl: './server-trade-screen.component.html',
   styleUrl: './server-trade-screen.component.css'
 })
@@ -222,17 +224,20 @@ export class ServerTradeScreenComponent implements OnInit {
       this.listOfLast5Days.push(...tempStock5)
     }
   }
+  buyGutter: number = .05;
+  sellGutter: number = .15;
+  check200Gutter: number = .1;
   calculateBuyAndSellPoints(){
     let buyOrSell = 'Buy'
     for(let i = 0; i < this.selectedStockLast5.length; i++){
       if(buyOrSell == 'Buy'){
-        if(((Math.abs(this.selectedStockLast5[i].avg - this.selectedStockLast40[i].avg)/ this.selectedStockLast40[i].avg) > .045) && ((Math.abs(this.selectedStockLast5[i].avg - this.selectedStockLast200[i].avg)/ this.selectedStockLast200[i].avg) < .1)){
+        if(((Math.abs(this.selectedStockLast5[i].avg - this.selectedStockLast40[i].avg)/ this.selectedStockLast40[i].avg) > this.buyGutter) && ((Math.abs(this.selectedStockLast5[i].avg - this.selectedStockLast200[i].avg)/ this.selectedStockLast200[i].avg) < this.check200Gutter)){
           this.executeOrder(this.selectedStockLast5[i], 'Buy')
           buyOrSell = 'Sell'
         }
       }
       else{
-        if((((this.selectedStockLast5[i].avg - this.selectedStockLast40[i].avg)/ this.selectedStockLast40[i].avg) > .15) && this.selectedStockLast5[i].close > this.orderLocations[this.orderLocations.length - 1].price){
+        if((((this.selectedStockLast5[i].avg - this.selectedStockLast40[i].avg)/ this.selectedStockLast40[i].avg) > this.sellGutter) && this.selectedStockLast5[i].close > this.orderLocations[this.orderLocations.length - 1].price){
           this.executeOrder(this.selectedStockLast5[i], 'Sell')
           buyOrSell = 'Buy'
         }
@@ -252,6 +257,10 @@ export class ServerTradeScreenComponent implements OnInit {
       this.bankTotal += arr.close
       this.orderLocations.push({buySell: 'Sell', date: arr.date, price: arr.close})
     }
+  }
+  runSimulation(){
+    this.calculateBuyAndSellPoints()
+    //this.updateGraphBuyAndSellPoints()
   }
   async ngOnInit() {
     Chart.register(annotationPlugin);

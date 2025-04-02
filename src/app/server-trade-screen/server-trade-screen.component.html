@@ -1,17 +1,35 @@
 <div style="display:flex; flex-direction: column; gap: 1rem; padding: .5rem; background-color: #3C3E3D;">
-    <div style="display:flex;">
-        <mat-checkbox *ngFor="let algo of listOfServerAlgos" (change)="algo.isSelected = !algo.isSelected"  [checked]="algo.isSelected" class="example-margin">{{algo.name}}</mat-checkbox>
-        <button style="margin-left:1rem;" mat-raised-button color="primary" (click)="saveAlgos()">Save</button>
-        <h4 style="margin-left:1rem; color: #DBD4D1;">Total: {{bankTotal | currency:'USD':'symbol'}}</h4>
-    </div>
-    <div style="display: flex; flex-direction: column;">
-        <mat-form-field style="width:fit-content;">
-            <mat-label>Select a Stock</mat-label>
-            <mat-select disableRipple [(value)]="selectedStockName">
-              <mat-option *ngFor="let stock of distinctStocks" value="{{stock}}" (onSelectionChange)="onSelectedStockChange($event)">{{stock}}</mat-option>
-            </mat-select>
-          </mat-form-field>
-        <canvas style="width:100% !important;" id="stock-chart">{{stockChart}}</canvas>
-    </div>
-    
+  <div style="display:flex;">
+    <mat-checkbox *ngFor="let algo of listOfServerAlgos" (change)="algo.isSelected = !algo.isSelected"
+      [checked]="algo.isSelected" class="example-margin">{{algo.name}}</mat-checkbox>
+    <button style="margin-left:1rem;" mat-raised-button color="primary" (click)="saveAlgos()">Save</button>
+    <mat-form-field class="example-full-width" style="max-width: 110px;">
+      <mat-label>Buy Gutter</mat-label>
+      <input matInput type="number" [(ngModel)]="buyGutter" placeholder="0.00"
+        [min]=".01" step=".01">
+    </mat-form-field>
+    <mat-form-field class="example-full-width" style="max-width: 110px;">
+      <mat-label>Sell Gutter</mat-label>
+      <input matInput type="number" [(ngModel)]="sellGutter" placeholder="0.00"
+        [min]=".01" step=".01">
+    </mat-form-field>
+    <mat-form-field class="example-full-width" style="max-width: 110px;">
+      <mat-label>200 Check Gutter</mat-label>
+      <input matInput type="number" [(ngModel)]="check200Gutter" placeholder="0.00"
+        [min]=".01" step=".01">
+    </mat-form-field>
+    <button style="margin-left:1rem;" mat-raised-button color="primary" (click)="runSimulation()">Run Sim</button>
+    <h4 style="margin-left:1rem; color: #DBD4D1;">Total: {{bankTotal | currency:'USD':'symbol'}}</h4>
+  </div>
+  <div style="display: flex; flex-direction: column;">
+    <mat-form-field style="width:fit-content;">
+      <mat-label>Select a Stock</mat-label>
+      <mat-select disableRipple [(value)]="selectedStockName">
+        <mat-option *ngFor="let stock of distinctStocks" value="{{stock}}"
+          (onSelectionChange)="onSelectedStockChange($event)">{{stock}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <canvas style="width:100% !important;" id="stock-chart">{{stockChart}}</canvas>
+  </div>
+
 </div>
