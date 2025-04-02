@@ -1,5 +1,5 @@
 <div style="display:flex; flex-direction: column; gap: 1rem; padding: .5rem; background-color: #3C3E3D;">
-  <div style="display:flex;">
+  <div style="display:flex; gap: 1rem;">
     <mat-checkbox *ngFor="let algo of listOfServerAlgos" (change)="algo.isSelected = !algo.isSelected"
       [checked]="algo.isSelected" class="example-margin">{{algo.name}}</mat-checkbox>
     <button style="margin-left:1rem;" mat-raised-button color="primary" (click)="saveAlgos()">Save</button>
@@ -13,7 +13,7 @@
       <input matInput type="number" [(ngModel)]="sellGutter" placeholder="0.00"
         [min]=".01" step=".01">
     </mat-form-field>
-    <mat-form-field class="example-full-width" style="max-width: 110px;">
+    <mat-form-field class="example-full-width" style="max-width: 140px;">
       <mat-label>200 Check Gutter</mat-label>
       <input matInput type="number" [(ngModel)]="check200Gutter" placeholder="0.00"
         [min]=".01" step=".01">
