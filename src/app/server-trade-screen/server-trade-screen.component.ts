@@ -42,6 +42,7 @@ export class ServerTradeScreenComponent implements OnInit {
   selectedStockLast5: sma200Array[] = []
   stockChart: any;
   distinctStocks: string[] = []
+  annotationsArray: any[] = []
 
   async saveAlgos() {
     await dbAlgorithmListRepo.save({ ...this.userAlgos, sma200sma50: this.listOfServerAlgos[0].isSelected })
@@ -163,6 +164,12 @@ export class ServerTradeScreenComponent implements OnInit {
 
           }
 
+        },
+        plugins: {
+          annotation: {
+            annotations: this.annotationsArray
+
+          }
         }
       }
     })
@@ -189,35 +196,35 @@ export class ServerTradeScreenComponent implements OnInit {
     return min - 2
 
   }
-  calculateSma(){
+  calculateSma() {
     for (let i = 0; i < this.distinctStocks.length; i++) {
       let filteredStock = this.allHistory.filter(e => e.stockName == this.distinctStocks[i])
       let tempStock200: sma200Array[] = []
-      for(let j = 200; j < filteredStock.length; j++){
+      for (let j = 200; j < filteredStock.length; j++) {
         let last200Price: number = 0;
-        for(let k = 0; k < 200; k++){
+        for (let k = 0; k < 200; k++) {
           last200Price += filteredStock[j - k].close
         }
-        let last200Avg = last200Price/200
-        tempStock200.push({stockName: this.distinctStocks[i], close: filteredStock[j].close, avg: last200Avg, date: new Date(filteredStock[j].date).toLocaleDateString()})
+        let last200Avg = last200Price / 200
+        tempStock200.push({ stockName: this.distinctStocks[i], close: filteredStock[j].close, avg: last200Avg, date: new Date(filteredStock[j].date).toLocaleDateString() })
       }
       let tempStock40: sma200Array[] = []
-      for(let j = 200; j < filteredStock.length; j++){
+      for (let j = 200; j < filteredStock.length; j++) {
         let last50Price: number = 0;
-        for(let k = 0; k < 40; k++){
+        for (let k = 0; k < 40; k++) {
           last50Price += filteredStock[j - k].close
         }
-        let last200Avg = last50Price/40
-        tempStock40.push({stockName: this.distinctStocks[i], close: filteredStock[j].close, avg: last200Avg, date: new Date(filteredStock[j].date).toLocaleDateString()})
+        let last200Avg = last50Price / 40
+        tempStock40.push({ stockName: this.distinctStocks[i], close: filteredStock[j].close, avg: last200Avg, date: new Date(filteredStock[j].date).toLocaleDateString() })
       }
       let tempStock5: sma200Array[] = []
-      for(let j = 200; j < filteredStock.length; j++){
+      for (let j = 200; j < filteredStock.length; j++) {
         let last50Price: number = 0;
-        for(let k = 0; k < 5; k++){
+        for (let k = 0; k < 5; k++) {
           last50Price += filteredStock[j - k].close
         }
-        let last200Avg = last50Price/5
-        tempStock5.push({stockName: this.distinctStocks[i], close: filteredStock[j].close, avg: last200Avg, date: new Date(filteredStock[j].date).toLocaleDateString()})
+        let last200Avg = last50Price / 5
+        tempStock5.push({ stockName: this.distinctStocks[i], close: filteredStock[j].close, avg: last200Avg, date: new Date(filteredStock[j].date).toLocaleDateString() })
       }
       this.listOfLast200Days.push(...tempStock200)
       this.listOfLast40Days.push(...tempStock40)
@@ -227,41 +234,56 @@ export class ServerTradeScreenComponent implements OnInit {
   buyGutter: number = .05;
   sellGutter: number = .15;
   check200Gutter: number = .1;
-  calculateBuyAndSellPoints(){
+  shouldDisplayBuySellLines: boolean = false;
+  calculateBuyAndSellPoints() {
     let buyOrSell = 'Buy'
-    for(let i = 0; i < this.selectedStockLast5.length; i++){
-      if(buyOrSell == 'Buy'){
-        if(((Math.abs(this.selectedStockLast5[i].avg - this.selectedStockLast40[i].avg)/ this.selectedStockLast40[i].avg) > this.buyGutter) && ((Math.abs(this.selectedStockLast5[i].avg - this.selectedStockLast200[i].avg)/ this.selectedStockLast200[i].avg) < this.check200Gutter)){
+    for (let i = 0; i < this.selectedStockLast5.length; i++) {
+      if (buyOrSell == 'Buy') {
+        if (((Math.abs(this.selectedStockLast5[i].avg - this.selectedStockLast40[i].avg) / this.selectedStockLast40[i].avg) > this.buyGutter) && ((Math.abs(this.selectedStockLast5[i].avg - this.selectedStockLast200[i].avg) / this.selectedStockLast200[i].avg) < this.check200Gutter)) {
           this.executeOrder(this.selectedStockLast5[i], 'Buy')
           buyOrSell = 'Sell'
         }
       }
-      else{
-        if((((this.selectedStockLast5[i].avg - this.selectedStockLast40[i].avg)/ this.selectedStockLast40[i].avg) > this.sellGutter) && this.selectedStockLast5[i].close > this.orderLocations[this.orderLocations.length - 1].price){
+      else {
+        if ((((this.selectedStockLast5[i].avg - this.selectedStockLast40[i].avg) / this.selectedStockLast40[i].avg) > this.sellGutter) && this.selectedStockLast5[i].close > this.orderLocations[this.orderLocations.length - 1].price) {
           this.executeOrder(this.selectedStockLast5[i], 'Sell')
           buyOrSell = 'Buy'
         }
       }
-      
+
     }
     console.log(this.orderLocations)
   }
   bankTotal: number = 500
   orderLocations: any[] = []
-  executeOrder(arr: sma200Array, buySell: string){
-    if(buySell == 'Buy'){
+  executeOrder(arr: sma200Array, buySell: string) {
+    if (buySell == 'Buy') {
       this.bankTotal -= arr.close
-      this.orderLocations.push({buySell: 'Buy', date: arr.date, price: arr.close})
+      this.orderLocations.push({ buySell: 'Buy', date: arr.date, price: arr.close })
     }
-    else{
+    else {
       this.bankTotal += arr.close
-      this.orderLocations.push({buySell: 'Sell', date: arr.date, price: arr.close})
+      this.orderLocations.push({ buySell: 'Sell', date: arr.date, price: arr.close })
     }
   }
-  runSimulation(){
+  updateGraphBuyAndSellPoints() {
+    for (let i = 0; i < this.orderLocations.length; i++) {
+      this.annotationsArray.push({
+        type: 'line',
+        //display: this.selectedStockHistoryData.length > 0,
+        xMin: this.selectedStockLast200.findIndex(x => x.date == this.orderLocations[i].date),
+        xMax: this.selectedStockLast200.findIndex(x => x.date == this.orderLocations[i].date),
+        borderColor: '#7874ff',
+        borderWidth: 2
+      })
+    }
+    this.stockChart.options.plugins.annotation.annotations = this.annotationsArray
+    this.updateChart()
+  }
+  runSimulation() {
     this.bankTotal = 500
     this.calculateBuyAndSellPoints()
-    //this.updateGraphBuyAndSellPoints()
+    this.updateGraphBuyAndSellPoints()
   }
   async ngOnInit() {
     Chart.register(annotationPlugin);
@@ -277,7 +299,7 @@ export class ServerTradeScreenComponent implements OnInit {
     this.calculateSma()
     this.getStockDisplay()
     this.createOrUpdateChart()
-    this.calculateBuyAndSellPoints()
+    this.runSimulation()
 
 
   }
