@@ -293,7 +293,7 @@ export class ServerTradeScreenComponent implements OnInit {
   calculateTotalProfit(){
     for(let i = 0; i < this.orderLocations.length; i++){
       if(this.orderLocations[i].buySell == 'Sell'){
-        this.totalPofit += this.orderLocations[i + 1].price - this.orderLocations[i].price
+        this.totalPofit += this.orderLocations[i].price - this.orderLocations[i - 1].price
       }
     }
   }
