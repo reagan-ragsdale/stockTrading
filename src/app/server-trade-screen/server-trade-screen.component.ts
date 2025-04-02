@@ -31,10 +31,12 @@ export class ServerTradeScreenComponent implements OnInit {
   listOfServerAlgos: serverAlgos[] = []
   userAlgos: DbAlgorithmList | undefined = undefined
   listOfLast200Days: sma200Array[] = []
-  listOfLast50Days: sma200Array[] = []
+  listOfLast40Days: sma200Array[] = []
+  listOfLast5Days: sma200Array[] = []
   selectedStockName: string = ''
   selectedStockLast200: sma200Array[] = []
-  selectedStockLast50: sma200Array[] = []
+  selectedStockLast40: sma200Array[] = []
+  selectedStockLast5: sma200Array[] = []
   stockChart: any;
   distinctStocks: string[] = []
 
@@ -56,7 +58,8 @@ export class ServerTradeScreenComponent implements OnInit {
   updateChart() {
     this.stockChart.data.datasets[0].data = this.selectedStockLast200.map(e => e.close)
     this.stockChart.data.datasets[1].data = this.selectedStockLast200.map(e => e.avg)
-    this.stockChart.data.datasets[2].data = this.selectedStockLast50.map(e => e.avg)
+    this.stockChart.data.datasets[2].data = this.selectedStockLast40.map(e => e.avg)
+    this.stockChart.data.datasets[3].data = this.selectedStockLast5.map(e => e.avg)
     this.stockChart.data.labels = this.selectedStockLast200.map(e => e.date)
     this.stockChart.options.scales.y.max = this.getMaxForChart(this.selectedStockLast200)
     this.stockChart.options.scales.y.min = this.getMinForChart(this.selectedStockLast200)
@@ -76,7 +79,7 @@ export class ServerTradeScreenComponent implements OnInit {
         datasets: [
           {
             label: 'Actual',
-            data: this.selectedStockLast50.map(e => e.close),
+            data: this.selectedStockLast200.map(e => e.close),
             backgroundColor: '#54C964',
             hoverBackgroundColor: '#54C964',
             borderColor: '#54C964',
@@ -86,7 +89,7 @@ export class ServerTradeScreenComponent implements OnInit {
             spanGaps: true
           },
           {
-            label: '200',
+            label: '40',
             data: this.selectedStockLast200.map(e => e.avg),
             backgroundColor: '#d82c2c',
             hoverBackgroundColor: '#d82c2c',
@@ -97,8 +100,20 @@ export class ServerTradeScreenComponent implements OnInit {
             spanGaps: true
           },
           {
-            label: '50',
-            data: this.selectedStockLast50.map(e => e.avg),
+            label: '5',
+            data: this.selectedStockLast40.map(e => e.avg),
+            backgroundColor: '#1ca0de',
+            hoverBackgroundColor: '#1ca0de',
+            borderColor: '#1ca0de',
+            pointBackgroundColor: '#1ca0de',
+            pointBorderColor: '#1ca0de',
+            pointRadius: 0,
+            spanGaps: true
+          }
+          ,
+          {
+            label: '200',
+            data: this.selectedStockLast5.map(e => e.avg),
             backgroundColor: '#1ca0de',
             hoverBackgroundColor: '#1ca0de',
             borderColor: '#1ca0de',
@@ -184,25 +199,35 @@ export class ServerTradeScreenComponent implements OnInit {
     for (let i = 0; i < this.distinctStocks.length; i++) {
       let filteredStock = allHistory.filter(e => e.stockName == this.distinctStocks[i])
       let tempStock200: sma200Array[] = []
-      for(let j = 40; j < filteredStock.length; j++){
+      for(let j = 200; j < filteredStock.length; j++){
         let last200Price: number = 0;
-        for(let k = 0; k < 40; k++){
+        for(let k = 0; k < 200; k++){
           last200Price += filteredStock[j - k].close
         }
-        let last200Avg = last200Price/40
+        let last200Avg = last200Price/200
         tempStock200.push({stockName: this.distinctStocks[i], close: filteredStock[j].close, avg: last200Avg, date: new Date(filteredStock[j].date).toLocaleDateString()})
       }
-      let tempStock50: sma200Array[] = []
-      for(let j = 40; j < filteredStock.length; j++){
+      let tempStock40: sma200Array[] = []
+      for(let j = 200; j < filteredStock.length; j++){
+        let last50Price: number = 0;
+        for(let k = 0; k < 40; k++){
+          last50Price += filteredStock[j - k].close
+        }
+        let last200Avg = last50Price/40
+        tempStock40.push({stockName: this.distinctStocks[i], close: filteredStock[j].close, avg: last200Avg, date: new Date(filteredStock[j].date).toLocaleDateString()})
+      }
+      let tempStock5: sma200Array[] = []
+      for(let j = 200; j < filteredStock.length; j++){
         let last50Price: number = 0;
         for(let k = 0; k < 5; k++){
           last50Price += filteredStock[j - k].close
         }
         let last200Avg = last50Price/5
-        tempStock50.push({stockName: this.distinctStocks[i], close: filteredStock[j].close, avg: last200Avg, date: new Date(filteredStock[j].date).toLocaleDateString()})
+        tempStock5.push({stockName: this.distinctStocks[i], close: filteredStock[j].close, avg: last200Avg, date: new Date(filteredStock[j].date).toLocaleDateString()})
       }
       this.listOfLast200Days.push(...tempStock200)
-      this.listOfLast50Days.push(...tempStock50)
+      this.listOfLast40Days.push(...tempStock40)
+      this.listOfLast5Days.push(...tempStock5)
     }
     this.getStockDisplay()
     this.createOrUpdateChart()
