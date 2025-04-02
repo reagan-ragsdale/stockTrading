@@ -90,7 +90,7 @@ export class ServerTradeScreenComponent implements OnInit {
             spanGaps: true
           },
           {
-            label: '40',
+            label: '200',
             data: this.selectedStockLast200.map(e => e.avg),
             backgroundColor: '#d82c2c',
             hoverBackgroundColor: '#d82c2c',
@@ -101,19 +101,19 @@ export class ServerTradeScreenComponent implements OnInit {
             spanGaps: true
           },
           {
-            label: '5',
+            label: '40',
             data: this.selectedStockLast40.map(e => e.avg),
-            backgroundColor: '#1ca0de',
-            hoverBackgroundColor: '#1ca0de',
-            borderColor: '#1ca0de',
-            pointBackgroundColor: '#1ca0de',
-            pointBorderColor: '#1ca0de',
+            backgroundColor: '#eeb528',
+            hoverBackgroundColor: '#eeb528',
+            borderColor: '#eeb528',
+            pointBackgroundColor: '#eeb528',
+            pointBorderColor: '#eeb528',
             pointRadius: 0,
             spanGaps: true
           }
           ,
           {
-            label: '200',
+            label: '5',
             data: this.selectedStockLast5.map(e => e.avg),
             backgroundColor: '#1ca0de',
             hoverBackgroundColor: '#1ca0de',
