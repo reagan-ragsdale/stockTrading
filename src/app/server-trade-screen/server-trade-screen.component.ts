@@ -15,6 +15,7 @@ type serverAlgos = {
 }
 type sma200Array = {
   stockName: string;
+  close: number;
   avg: number;
   date: number;
 }
@@ -74,11 +75,11 @@ export class ServerTradeScreenComponent implements OnInit {
           {
             label: '200',
             data: this.selectedStockLast200.map(e => e.avg),
-            backgroundColor: '#54C964',
-            hoverBackgroundColor: '#54C964',
-            borderColor: '#54C964',
-            pointBackgroundColor: '#54C964',
-            pointBorderColor: '#54C964',
+            backgroundColor: '#feb01f',
+            hoverBackgroundColor: '#feb01f',
+            borderColor: '#feb01f',
+            pointBackgroundColor: '#feb01f',
+            pointBorderColor: '#feb01f',
             pointRadius: 0,
             spanGaps: true
           },
@@ -90,6 +91,18 @@ export class ServerTradeScreenComponent implements OnInit {
             borderColor: '#89CFF0',
             pointBackgroundColor: '#89CFF0',
             pointBorderColor: '#89CFF0',
+            pointRadius: 0,
+            spanGaps: true
+          }
+          ,
+          {
+            label: 'Actual',
+            data: this.selectedStockLast50.map(e => e.close),
+            backgroundColor: '#54C964',
+            hoverBackgroundColor: '#54C964',
+            borderColor: '#54C964',
+            pointBackgroundColor: '#54C964',
+            pointBorderColor: '#54C964',
             pointRadius: 0,
             spanGaps: true
           }
@@ -177,7 +190,7 @@ export class ServerTradeScreenComponent implements OnInit {
           last200Price += filteredStock[j - k].close
         }
         let last200Avg = last200Price/200
-        tempStock200.push({stockName: this.distinctStocks[i], avg: last200Avg, date: filteredStock[j].date})
+        tempStock200.push({stockName: this.distinctStocks[i], close: filteredStock[j].close, avg: last200Avg, date: filteredStock[j].date})
       }
       let tempStock50: sma200Array[] = []
       for(let j = 200; j < filteredStock.length; j++){
@@ -186,7 +199,7 @@ export class ServerTradeScreenComponent implements OnInit {
           last50Price += filteredStock[j - k].close
         }
         let last200Avg = last50Price/50
-        tempStock50.push({stockName: this.distinctStocks[i], avg: last200Avg, date: filteredStock[j].date})
+        tempStock50.push({stockName: this.distinctStocks[i], close: filteredStock[j].close, avg: last200Avg, date: filteredStock[j].date})
       }
       this.listOfLast200Days.push(...tempStock200)
       this.listOfLast50Days.push(...tempStock50)
