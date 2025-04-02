@@ -73,6 +73,17 @@ export class ServerTradeScreenComponent implements OnInit {
 
         datasets: [
           {
+            label: 'Actual',
+            data: this.selectedStockLast50.map(e => e.close),
+            backgroundColor: '#54C964',
+            hoverBackgroundColor: '#54C964',
+            borderColor: '#54C964',
+            pointBackgroundColor: '#54C964',
+            pointBorderColor: '#54C964',
+            pointRadius: 0,
+            spanGaps: true
+          },
+          {
             label: '200',
             data: this.selectedStockLast200.map(e => e.avg),
             backgroundColor: '#feb01f',
@@ -94,19 +105,6 @@ export class ServerTradeScreenComponent implements OnInit {
             pointRadius: 0,
             spanGaps: true
           }
-          ,
-          {
-            label: 'Actual',
-            data: this.selectedStockLast50.map(e => e.close),
-            backgroundColor: '#54C964',
-            hoverBackgroundColor: '#54C964',
-            borderColor: '#54C964',
-            pointBackgroundColor: '#54C964',
-            pointBorderColor: '#54C964',
-            pointRadius: 0,
-            spanGaps: true
-          }
-
         ]
       },
       options: {
@@ -153,8 +151,8 @@ export class ServerTradeScreenComponent implements OnInit {
   getMaxForChart(arr: sma200Array[]): number {
     let max = -1000000000
     for (let i = 0; i < arr.length; i++) {
-      if (arr[i].avg > max) {
-        max = arr[i].avg
+      if (arr[i].close > max) {
+        max = arr[i].close
       }
     }
     return max + 2
@@ -163,8 +161,8 @@ export class ServerTradeScreenComponent implements OnInit {
   getMinForChart(arr: sma200Array[]): number {
     let min = 1000000000
     for (let i = 0; i < arr.length; i++) {
-      if (arr[i].avg < min) {
-        min = arr[i].avg
+      if (arr[i].close < min) {
+        min = arr[i].close
       }
     }
     return min - 2
