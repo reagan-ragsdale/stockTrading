@@ -226,7 +226,7 @@ export class ServerTradeScreenComponent implements OnInit {
     let buyOrSell = 'Buy'
     for(let i = 0; i < this.selectedStockLast5.length; i++){
       if(buyOrSell == 'Buy'){
-        if((Math.abs(this.selectedStockLast5[i].avg - this.selectedStockLast40[i].avg)/ this.selectedStockLast40[i].avg) > .1){
+        if(((Math.abs(this.selectedStockLast5[i].avg - this.selectedStockLast40[i].avg)/ this.selectedStockLast40[i].avg) > .1) && ((Math.abs(this.selectedStockLast5[i].avg - this.selectedStockLast200[i].avg)/ this.selectedStockLast200[i].avg) < .1)){
           this.executeOrder(this.selectedStockLast5[i], 'Buy')
           buyOrSell = 'Sell'
         }
@@ -239,7 +239,7 @@ export class ServerTradeScreenComponent implements OnInit {
       }
       
     }
-    console.log()
+    console.log(this.orderLocations)
   }
   bankTotal: number = 500
   orderLocations: any[] = []
