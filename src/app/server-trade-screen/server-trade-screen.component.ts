@@ -184,21 +184,21 @@ export class ServerTradeScreenComponent implements OnInit {
     for (let i = 0; i < this.distinctStocks.length; i++) {
       let filteredStock = allHistory.filter(e => e.stockName == this.distinctStocks[i])
       let tempStock200: sma200Array[] = []
-      for(let j = 200; j < filteredStock.length; j++){
+      for(let j = 40; j < filteredStock.length; j++){
         let last200Price: number = 0;
-        for(let k = 0; k < 200; k++){
+        for(let k = 0; k < 40; k++){
           last200Price += filteredStock[j - k].close
         }
-        let last200Avg = last200Price/200
+        let last200Avg = last200Price/40
         tempStock200.push({stockName: this.distinctStocks[i], close: filteredStock[j].close, avg: last200Avg, date: new Date(filteredStock[j].date).toLocaleDateString()})
       }
       let tempStock50: sma200Array[] = []
-      for(let j = 200; j < filteredStock.length; j++){
+      for(let j = 40; j < filteredStock.length; j++){
         let last50Price: number = 0;
-        for(let k = 0; k < 50; k++){
+        for(let k = 0; k < 5; k++){
           last50Price += filteredStock[j - k].close
         }
-        let last200Avg = last50Price/50
+        let last200Avg = last50Price/5
         tempStock50.push({stockName: this.distinctStocks[i], close: filteredStock[j].close, avg: last200Avg, date: new Date(filteredStock[j].date).toLocaleDateString()})
       }
       this.listOfLast200Days.push(...tempStock200)
