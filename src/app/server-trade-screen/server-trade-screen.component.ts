@@ -86,22 +86,22 @@ export class ServerTradeScreenComponent implements OnInit {
           {
             label: '200',
             data: this.selectedStockLast200.map(e => e.avg),
-            backgroundColor: '#feb01f',
-            hoverBackgroundColor: '#feb01f',
-            borderColor: '#feb01f',
-            pointBackgroundColor: '#feb01f',
-            pointBorderColor: '#feb01f',
+            backgroundColor: '#fe1f7e',
+            hoverBackgroundColor: '#fe1f7e',
+            borderColor: '#fe1f7e',
+            pointBackgroundColor: '#fe1f7e',
+            pointBorderColor: '#fe1f7e',
             pointRadius: 0,
             spanGaps: true
           },
           {
             label: '50',
             data: this.selectedStockLast50.map(e => e.avg),
-            backgroundColor: '#89CFF0',
-            hoverBackgroundColor: '#89CFF0',
-            borderColor: '#89CFF0',
-            pointBackgroundColor: '#89CFF0',
-            pointBorderColor: '#89CFF0',
+            backgroundColor: '#1ca0de',
+            hoverBackgroundColor: '#1ca0de',
+            borderColor: '#1ca0de',
+            pointBackgroundColor: '#1ca0de',
+            pointBorderColor: '#1ca0de',
             pointRadius: 0,
             spanGaps: true
           }
