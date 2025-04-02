@@ -288,6 +288,7 @@ export class ServerTradeScreenComponent implements OnInit {
   }
   runSimulation() {
     this.bankTotal = 500
+    this.orderLocations = []
     this.calculateBuyAndSellPoints()
     this.updateGraphBuyAndSellPoints()
   }
