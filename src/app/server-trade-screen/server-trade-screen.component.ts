@@ -282,6 +282,7 @@ export class ServerTradeScreenComponent implements OnInit {
         }
       })
     }
+    console.log(this.annotationsArray)
     this.stockChart.options.plugins.annotation.annotations = this.annotationsArray
     this.stockChart.update()
   }
