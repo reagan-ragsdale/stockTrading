@@ -45,7 +45,8 @@ export class ServerTradeScreenComponent implements OnInit {
   }
   getStockDisplay() {
     this.selectedStockLast200 = this.listOfLast200Days.filter(e => e.stockName == this.selectedStockName)
-    this.selectedStockLast50 = this.listOfLast50Days.filter(e => e.stockName == this.selectedStockName)
+    this.selectedStockLast40 = this.listOfLast40Days.filter(e => e.stockName == this.selectedStockName)
+    this.selectedStockLast5 = this.listOfLast5Days.filter(e => e.stockName == this.selectedStockName)
     console.log(this.selectedStockLast200)
   }
   onSelectedStockChange(event: any) {
