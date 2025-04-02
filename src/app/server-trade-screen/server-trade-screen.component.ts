@@ -298,12 +298,64 @@ export class ServerTradeScreenComponent implements OnInit {
   }
   updateChartIntraDay(){
     this.stockChart.data.datasets[0].data = this.listOfLastHour.map(e => e.close)
+    this.stockChart.data.datasets[0].label = 'Actual'
     this.stockChart.data.datasets[1].data = this.listOfLastHour.map(e => e.avg)
+    this.stockChart.data.datasets[1].label = 'Hour'
     this.stockChart.data.datasets[2].data = this.listOfLast30Minutes.map(e => e.avg)
+    this.stockChart.data.datasets[1].label = '30 Minutes'
     this.stockChart.data.datasets[3].data = this.listOfLast5Minutes.map(e => e.avg)
+    this.stockChart.data.datasets[1].label = '5 Minutes'
     this.stockChart.data.labels = this.listOfLastHour.map(e => e.date)
     this.stockChart.options.scales.y.max = this.getMaxForChart(this.listOfLastHour)
     this.stockChart.options.scales.y.min = this.getMinForChart(this.listOfLastHour)
+    this.stockChart.update()
+  }
+  runSimulationIntraDay(){
+    this.bankTotal = 500
+    this.orderLocations = []
+    this.totalPofit = 0
+    this.calculateBuyAndSellPointsIntraDay()
+    this.updateGraphBuyAndSellPointsIntraDay()
+    this.calculateTotalProfit()
+  }
+  calculateBuyAndSellPointsIntraDay() {
+    let buyOrSell = 'Buy'
+    for (let i = 0; i < this.selectedStockLast5.length; i++) {
+      if (buyOrSell == 'Buy') {
+        if ((((this.listOfLast5Minutes[i].avg - this.listOfLast30Minutes[i].avg) / this.listOfLast30Minutes[i].avg) < (this.buyGutter * -1)) && ((Math.abs(this.listOfLast5Minutes[i].avg - this.listOfLastHour[i].avg) / this.listOfLastHour[i].avg) < this.check200Gutter)) {
+          this.executeOrder(this.listOfLast5Minutes[i], 'Buy')
+          buyOrSell = 'Sell'
+        }
+      }
+      else {
+        if ((((this.listOfLast5Minutes[i].avg - this.listOfLast30Minutes[i].avg) / this.listOfLast30Minutes[i].avg) > this.sellGutter) && this.listOfLast5Minutes[i].close > this.orderLocations[this.orderLocations.length - 1].price) {
+          this.executeOrder(this.listOfLast5Minutes[i], 'Sell')
+          buyOrSell = 'Buy'
+        }
+      }
+
+    }
+    console.log(this.orderLocations)
+  }
+  updateGraphBuyAndSellPointsIntraDay() {
+    this.annotationsArray = []
+    for (let i = 0; i < this.orderLocations.length; i++) {
+      this.annotationsArray.push({
+        type: 'line',
+        //display: this.selectedStockHistoryData.length > 0,
+        xMin: this.listOfLastHour.findIndex(x => x.date == this.orderLocations[i].date),
+        xMax: this.listOfLastHour.findIndex(x => x.date == this.orderLocations[i].date),
+        borderColor: '#7874ff',
+        borderWidth: 2,
+        label: {
+          display: true,
+          content: this.orderLocations[i].buySell + ': ' + this.orderLocations[i].price,
+          position: 'end'
+        }
+      })
+    }
+    console.log(this.annotationsArray)
+    this.stockChart.options.plugins.annotation.annotations = this.annotationsArray
     this.stockChart.update()
   }
 
@@ -393,9 +445,13 @@ export class ServerTradeScreenComponent implements OnInit {
   }
   updateChart() {
     this.stockChart.data.datasets[0].data = this.selectedStockLast200.map(e => e.close)
+    this.stockChart.data.datasets[0].label = 'Actual'
     this.stockChart.data.datasets[1].data = this.selectedStockLast200.map(e => e.avg)
+    this.stockChart.data.datasets[0].label = '200'
     this.stockChart.data.datasets[2].data = this.selectedStockLast40.map(e => e.avg)
+    this.stockChart.data.datasets[0].label = '40'
     this.stockChart.data.datasets[3].data = this.selectedStockLast5.map(e => e.avg)
+    this.stockChart.data.datasets[0].label = '5'
     this.stockChart.data.labels = this.selectedStockLast200.map(e => e.date)
     this.stockChart.options.scales.y.max = this.getMaxForChart(this.selectedStockLast200)
     this.stockChart.options.scales.y.min = this.getMinForChart(this.selectedStockLast200)

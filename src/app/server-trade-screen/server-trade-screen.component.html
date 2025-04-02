@@ -3,41 +3,41 @@
     <!-- <mat-checkbox *ngFor="let algo of listOfServerAlgos" (change)="algo.isSelected = !algo.isSelected"
       [checked]="algo.isSelected" class="example-margin">{{algo.name}}</mat-checkbox>
     <button style="margin-left:1rem;" mat-raised-button color="primary" (click)="saveAlgos()">Save</button> -->
-    <mat-slide-toggle [(ngModel)]="intraDayChecked" (ngModelChange)="changeDayType()">Intra Dat</mat-slide-toggle>
+    <mat-slide-toggle [(ngModel)]="intraDayChecked" (ngModelChange)="changeDayType()">Intra Day</mat-slide-toggle>
     <mat-form-field class="example-full-width" style="max-width: 110px;">
       <mat-label>Buy Gutter</mat-label>
-      <input matInput type="number" [(ngModel)]="buyGutter" placeholder="0.00"
-        [min]=".01" step=".01">
+      <input matInput type="number" [(ngModel)]="buyGutter" placeholder="0.00" [min]=".01" step=".01">
     </mat-form-field>
     <mat-form-field class="example-full-width" style="max-width: 110px;">
       <mat-label>Sell Gutter</mat-label>
-      <input matInput type="number" [(ngModel)]="sellGutter" placeholder="0.00"
-        [min]=".01" step=".01">
+      <input matInput type="number" [(ngModel)]="sellGutter" placeholder="0.00" [min]=".01" step=".01">
     </mat-form-field>
     <mat-form-field class="example-full-width" style="max-width: 140px;">
       <mat-label>200 Check Gutter</mat-label>
-      <input matInput type="number" [(ngModel)]="check200Gutter" placeholder="0.00"
-        [min]=".01" step=".01">
+      <input matInput type="number" [(ngModel)]="check200Gutter" placeholder="0.00" [min]=".01" step=".01">
     </mat-form-field>
     <button style="margin-left:1rem;" mat-raised-button color="primary" (click)="runSimulation()">Run Sim</button>
     <h4 style="margin-left:1rem; color: #DBD4D1;">Total: {{bankTotal | currency:'USD':'symbol'}}</h4>
     <h4 style="margin-left:1rem; color: #DBD4D1;">Total Profit: {{totalPofit | currency:'USD':'symbol'}}</h4>
   </div>
   <div style="display: flex; flex-direction: column;">
-    <mat-form-field style="width:fit-content;">
-      <mat-label>Select a Stock</mat-label>
-      <mat-select disableRipple [(value)]="selectedStockName">
-        <mat-option *ngFor="let stock of distinctStocks" value="{{stock}}"
-          (onSelectionChange)="onSelectedStockChange($event)">{{stock}}</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field *ngIf="intraDayChecked" style="width:fit-content;">
-      <mat-label>Select a Date</mat-label>
-      <mat-select disableRipple [(value)]="selectedDate">
-        <mat-option *ngFor="let date of distinctDates" value="{{date}}"
-          (onSelectionChange)="onSelectedDateChange($event)">{{date}}</mat-option>
-      </mat-select>
-    </mat-form-field>
+    <div style="display:flex; gap: 1rem;">
+      <mat-form-field style="width:fit-content;">
+        <mat-label>Select a Stock</mat-label>
+        <mat-select disableRipple [(value)]="selectedStockName">
+          <mat-option *ngFor="let stock of distinctStocks" value="{{stock}}"
+            (onSelectionChange)="onSelectedStockChange($event)">{{stock}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field *ngIf="intraDayChecked" style="width:fit-content;">
+        <mat-label>Select a Date</mat-label>
+        <mat-select disableRipple [(value)]="selectedDate">
+          <mat-option *ngFor="let date of distinctDates" value="{{date}}"
+            (onSelectionChange)="onSelectedDateChange($event)">{{date}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
     <canvas style="width:100% !important;" id="stock-chart">{{stockChart}}</canvas>
   </div>
 
