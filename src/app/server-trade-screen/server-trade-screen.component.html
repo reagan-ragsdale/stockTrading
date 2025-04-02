@@ -6,15 +6,15 @@
     <mat-slide-toggle [(ngModel)]="intraDayChecked" (ngModelChange)="changeDayType()">Intra Day</mat-slide-toggle>
     <mat-form-field class="example-full-width" style="max-width: 110px;">
       <mat-label>Buy Gutter</mat-label>
-      <input matInput type="number" [(ngModel)]="buyGutter" placeholder="0.00" [min]=".01" step=".01">
+      <input matInput type="number" [(ngModel)]="buyGutter" placeholder="0.00" [min]=".001" step=".01">
     </mat-form-field>
     <mat-form-field class="example-full-width" style="max-width: 110px;">
       <mat-label>Sell Gutter</mat-label>
-      <input matInput type="number" [(ngModel)]="sellGutter" placeholder="0.00" [min]=".01" step=".01">
+      <input matInput type="number" [(ngModel)]="sellGutter" placeholder="0.00" [min]=".001" step=".01">
     </mat-form-field>
     <mat-form-field class="example-full-width" style="max-width: 140px;">
       <mat-label>200 Check Gutter</mat-label>
-      <input matInput type="number" [(ngModel)]="check200Gutter" placeholder="0.00" [min]=".01" step=".01">
+      <input matInput type="number" [(ngModel)]="check200Gutter" placeholder="0.00" [min]=".001" step=".01">
     </mat-form-field>
     <button style="margin-left:1rem;" mat-raised-button color="primary" (click)="onRunSimulation()">Run Sim</button>
     <h4 style="margin-left:1rem; color: #DBD4D1;">Total: {{bankTotal | currency:'USD':'symbol'}}</h4>
