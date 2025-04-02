@@ -232,7 +232,7 @@ export class ServerTradeScreenComponent implements OnInit {
         }
       }
       else{
-        if((((this.selectedStockLast5[i].avg - this.selectedStockLast40[i].avg)/ this.selectedStockLast40[i].avg) < -.1) && this.selectedStockLast5[i].close > this.orderLocations[this.orderLocations.length - 1].price){
+        if((((this.selectedStockLast5[i].avg - this.selectedStockLast40[i].avg)/ this.selectedStockLast40[i].avg) > .15) && this.selectedStockLast5[i].close > this.orderLocations[this.orderLocations.length - 1].price){
           this.executeOrder(this.selectedStockLast5[i], 'Sell')
           buyOrSell = 'Buy'
         }
