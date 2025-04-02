@@ -42,6 +42,7 @@ export class ServerTradeScreenComponent implements OnInit {
   getStockDisplay() {
     this.selectedStockLast200 = this.listOfLast200Days.filter(e => e.stockName == this.selectedStockName)
     this.selectedStockLast50 = this.listOfLast50Days.filter(e => e.stockName == this.selectedStockName)
+    console.log(this.selectedStockLast200)
   }
   onSelectedStockChange(event: any) {
     if (event.isUserInput == true) {
@@ -178,7 +179,6 @@ export class ServerTradeScreenComponent implements OnInit {
         let last200Avg = last200Price/200
         tempStock200.push({stockName: this.distinctStocks[i], avg: last200Avg, date: filteredStock[j].date})
       }
-      this.listOfLast200Days.push(...tempStock200)
       let tempStock50: sma200Array[] = []
       for(let j = 200; j < filteredStock.length; j++){
         let last50Price: number = 0;
@@ -188,7 +188,7 @@ export class ServerTradeScreenComponent implements OnInit {
         let last200Avg = last50Price/50
         tempStock50.push({stockName: this.distinctStocks[i], avg: last200Avg, date: filteredStock[j].date})
       }
-      this.listOfLast200Days.push(...tempStock50)
+      this.listOfLast200Days.push(...tempStock200)
       this.listOfLast50Days.push(...tempStock50)
     }
     this.getStockDisplay()
