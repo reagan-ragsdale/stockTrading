@@ -240,7 +240,7 @@ export class ServerTradeScreenComponent implements OnInit {
     let buyOrSell = 'Buy'
     for (let i = 0; i < this.selectedStockLast5.length; i++) {
       if (buyOrSell == 'Buy') {
-        if (((Math.abs(this.selectedStockLast5[i].avg - this.selectedStockLast40[i].avg) / this.selectedStockLast40[i].avg) > this.buyGutter) && ((Math.abs(this.selectedStockLast5[i].avg - this.selectedStockLast200[i].avg) / this.selectedStockLast200[i].avg) < this.check200Gutter)) {
+        if ((((this.selectedStockLast5[i].avg - this.selectedStockLast40[i].avg) / this.selectedStockLast40[i].avg) < (this.buyGutter * -1)) && ((Math.abs(this.selectedStockLast5[i].avg - this.selectedStockLast200[i].avg) / this.selectedStockLast200[i].avg) < this.check200Gutter)) {
           this.executeOrder(this.selectedStockLast5[i], 'Buy')
           buyOrSell = 'Sell'
         }
