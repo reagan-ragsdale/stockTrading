@@ -185,7 +185,7 @@ export class ServerTradeScreenComponent implements OnInit {
       let tempStock200: sma200Array[] = []
       for(let j = 200; j < filteredStock.length; j++){
         let last200Price: number = 0;
-        for(let k = 1; k < 200; k++){
+        for(let k = 0; k < 200; k++){
           last200Price += filteredStock[j - k].close
         }
         let last200Avg = last200Price/200
@@ -194,7 +194,7 @@ export class ServerTradeScreenComponent implements OnInit {
       let tempStock50: sma200Array[] = []
       for(let j = 200; j < filteredStock.length; j++){
         let last50Price: number = 0;
-        for(let k = 1; k < 50; k++){
+        for(let k = 0; k < 50; k++){
           last50Price += filteredStock[j - k].close
         }
         let last200Avg = last50Price/50
