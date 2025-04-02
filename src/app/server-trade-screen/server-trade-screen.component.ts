@@ -14,6 +14,8 @@ import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { DbStockHistoryData, dbStockHistoryDataRepo } from '../../shared/tasks/dbStockHistoryData';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
 type serverAlgos = {
   name: string;
   isSelected: boolean;
@@ -26,12 +28,13 @@ type sma200Array = {
 }
 @Component({
   selector: 'app-server-trade-screen',
-  imports: [MatCheckboxModule, CommonModule, MatFormFieldModule, MatSelectModule, MatButtonModule, MatInputModule, FormsModule, MatSlideToggleModule],
+  imports: [MatCheckboxModule, CommonModule, MatProgressSpinnerModule, MatFormFieldModule, MatSelectModule, MatButtonModule, MatInputModule, FormsModule, MatSlideToggleModule],
   templateUrl: './server-trade-screen.component.html',
   styleUrl: './server-trade-screen.component.css'
 })
 
 export class ServerTradeScreenComponent implements OnInit {
+  isLoading: boolean = false;
   listOfServerAlgos: serverAlgos[] = []
   userAlgos: DbAlgorithmList | undefined = undefined
   allHistory: DbStockBasicHistory[] = []
@@ -62,16 +65,24 @@ export class ServerTradeScreenComponent implements OnInit {
     this.selectedStockLast5 = this.listOfLast5Days.filter(e => e.stockName == this.selectedStockName)
     console.log(this.selectedStockLast200)
   }
-  onSelectedStockChange(event: any) {
+  async onSelectedStockChange(event: any) {
     if (event.isUserInput == true) {
       this.selectedStockName = event.source.value
       if (!this.intraDayChecked) {
+        this.isLoading = true
         this.getStockDisplay()
         this.updateChart()
         this.runSimulation()
+        this.isLoading = false
       }
       else {
-
+        this.isLoading = true
+        await this.getStockHistoricalData()
+        await this.updateStockChartData()
+        this.calculateIntraDaySma()
+        this.updateChartIntraDay()
+        this.runSimulationIntraDay()
+        this.isLoading = false
       }
 
 
@@ -237,24 +248,31 @@ export class ServerTradeScreenComponent implements OnInit {
 
   async changeDayType() {
     if (this.intraDayChecked) {
+      this.isLoading = true
       await this.updateStockChartData()
       this.calculateIntraDaySma()
       this.updateChartIntraDay()
       this.runSimulationIntraDay()
-
+      this.isLoading = false
     }
     else {
+      this.isLoading = true
       this.getStockDisplay()
       this.updateChart()
       this.runSimulation()
+      this.isLoading = false
     }
   }
   onRunSimulation(){
     if(this.intraDayChecked){
+      this.isLoading = true
       this.runSimulationIntraDay()
+      this.isLoading = false
     }
     else{
+      this.isLoading = true
       this.runSimulation()
+      this.isLoading = false
     }
   }
   /* Intra Day */
@@ -478,6 +496,7 @@ export class ServerTradeScreenComponent implements OnInit {
   async ngOnInit() {
     Chart.register(annotationPlugin);
     Chart.register(...registerables)
+    this.isLoading = true
     this.userAlgos = await dbAlgorithmListRepo.findFirst({ userId: remult.user?.id })
     this.listOfServerAlgos.push({
       name: 'SMA:50/200',
@@ -491,7 +510,7 @@ export class ServerTradeScreenComponent implements OnInit {
     this.createOrUpdateChart()
     this.runSimulation()
     await this.getStockHistoricalData()
-
+    this.isLoading = false;
 
   }
 }
