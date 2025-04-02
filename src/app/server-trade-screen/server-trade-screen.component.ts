@@ -111,7 +111,7 @@ export class ServerTradeScreenComponent implements OnInit {
       },
       options: {
 
-        aspectRatio: 2,
+        aspectRatio: 2.5,
         color: '#DBD4D1',
         font: {
           weight: 'bold'
