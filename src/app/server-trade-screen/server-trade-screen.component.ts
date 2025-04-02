@@ -267,6 +267,7 @@ export class ServerTradeScreenComponent implements OnInit {
     }
   }
   updateGraphBuyAndSellPoints() {
+    this.annotationsArray = []
     for (let i = 0; i < this.orderLocations.length; i++) {
       this.annotationsArray.push({
         type: 'line',
@@ -274,7 +275,11 @@ export class ServerTradeScreenComponent implements OnInit {
         xMin: this.selectedStockLast200.findIndex(x => x.date == this.orderLocations[i].date),
         xMax: this.selectedStockLast200.findIndex(x => x.date == this.orderLocations[i].date),
         borderColor: '#7874ff',
-        borderWidth: 2
+        borderWidth: 2,
+        label: {
+          display: true,
+          content: this.orderLocations[i].buySell + ': ' + this.orderLocations[i].price
+        }
       })
     }
     this.stockChart.options.plugins.annotation.annotations = this.annotationsArray
