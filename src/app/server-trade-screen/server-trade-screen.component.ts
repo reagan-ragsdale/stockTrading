@@ -9,6 +9,7 @@ import annotationPlugin from 'chartjs-plugin-annotation';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
+import { reusedFunctions } from '../services/reusedFunctions';
 type serverAlgos = {
   name: string;
   isSelected: boolean;
@@ -17,7 +18,7 @@ type sma200Array = {
   stockName: string;
   close: number;
   avg: number;
-  date: number;
+  date: string;
 }
 @Component({
   selector: 'app-server-trade-screen',
@@ -188,7 +189,7 @@ export class ServerTradeScreenComponent implements OnInit {
           last200Price += filteredStock[j - k].close
         }
         let last200Avg = last200Price/200
-        tempStock200.push({stockName: this.distinctStocks[i], close: filteredStock[j].close, avg: last200Avg, date: filteredStock[j].date})
+        tempStock200.push({stockName: this.distinctStocks[i], close: filteredStock[j].close, avg: last200Avg, date: reusedFunctions.epochToLocalTime(filteredStock[j].date)})
       }
       let tempStock50: sma200Array[] = []
       for(let j = 200; j < filteredStock.length; j++){
@@ -197,7 +198,7 @@ export class ServerTradeScreenComponent implements OnInit {
           last50Price += filteredStock[j - k].close
         }
         let last200Avg = last50Price/50
-        tempStock50.push({stockName: this.distinctStocks[i], close: filteredStock[j].close, avg: last200Avg, date: filteredStock[j].date})
+        tempStock50.push({stockName: this.distinctStocks[i], close: filteredStock[j].close, avg: last200Avg, date: reusedFunctions.epochToLocalTime(filteredStock[j].date)})
       }
       this.listOfLast200Days.push(...tempStock200)
       this.listOfLast50Days.push(...tempStock50)
