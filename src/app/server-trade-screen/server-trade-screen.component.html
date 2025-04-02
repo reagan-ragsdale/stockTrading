@@ -1,4 +1,4 @@
-<div style="display:flex; flex-direction: column; gap: 1rem; padding: .5rem;">
+<div style="display:flex; flex-direction: column; gap: 1rem; padding: .5rem; background-color: #3C3E3D;">
     <div style="display:flex;">
         <mat-checkbox *ngFor="let algo of listOfServerAlgos" (change)="algo.isSelected = !algo.isSelected"  [checked]="algo.isSelected" class="example-margin">{{algo.name}}</mat-checkbox>
         <button style="margin-left:1rem;" mat-raised-button color="primary" (click)="saveAlgos()">Save</button>
