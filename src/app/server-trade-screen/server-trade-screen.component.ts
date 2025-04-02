@@ -249,6 +249,9 @@ export class ServerTradeScreenComponent implements OnInit {
   async changeDayType() {
     if (this.intraDayChecked) {
       this.isLoading = true
+      this.buyGutter = .008
+      this.sellGutter = .008
+      this.check200Gutter = .01
       await this.updateStockChartData()
       this.calculateIntraDaySma()
       this.updateChartIntraDay()
@@ -278,11 +281,13 @@ export class ServerTradeScreenComponent implements OnInit {
   /* Intra Day */
   async onSelectedDateChange(event: any) {
     if (event.isUserInput == true) {
+      this.isLoading = true
       this.selectedDate = event.source.value
       await this.updateStockChartData()
       this.calculateIntraDaySma()
       this.updateChartIntraDay()
       this.runSimulationIntraDay()
+      this.isLoading = false
     }
   }
   async getStockHistoricalData() {
