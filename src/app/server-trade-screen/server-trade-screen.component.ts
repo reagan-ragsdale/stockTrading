@@ -240,6 +240,7 @@ export class ServerTradeScreenComponent implements OnInit {
       await this.updateStockChartData()
       this.calculateIntraDaySma()
       this.updateChartIntraDay()
+      this.runSimulationIntraDay()
 
     }
     else {
@@ -302,9 +303,9 @@ export class ServerTradeScreenComponent implements OnInit {
     this.stockChart.data.datasets[1].data = this.listOfLastHour.map(e => e.avg)
     this.stockChart.data.datasets[1].label = 'Hour'
     this.stockChart.data.datasets[2].data = this.listOfLast30Minutes.map(e => e.avg)
-    this.stockChart.data.datasets[1].label = '30 Minutes'
+    this.stockChart.data.datasets[2].label = '30 Minutes'
     this.stockChart.data.datasets[3].data = this.listOfLast5Minutes.map(e => e.avg)
-    this.stockChart.data.datasets[1].label = '5 Minutes'
+    this.stockChart.data.datasets[3].label = '5 Minutes'
     this.stockChart.data.labels = this.listOfLastHour.map(e => e.date)
     this.stockChart.options.scales.y.max = this.getMaxForChart(this.listOfLastHour)
     this.stockChart.options.scales.y.min = this.getMinForChart(this.listOfLastHour)
