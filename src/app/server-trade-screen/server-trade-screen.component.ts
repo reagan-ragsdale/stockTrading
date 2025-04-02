@@ -165,7 +165,7 @@ export class ServerTradeScreenComponent implements OnInit {
       name: 'SMA:50/200',
       isSelected: this.userAlgos!.sma200sma50
     })
-    let allHistory = await dbStockBasicHistoryRepo.find({ orderBy: { stockName: 'desc', date: 'desc' } })
+    let allHistory = await dbStockBasicHistoryRepo.find({ orderBy: { stockName: 'desc', date: 'asc' } })
     this.distinctStocks = allHistory.map(e => e.stockName).filter((v, i, a) => a.indexOf(v) === i)
     this.selectedStockName = this.distinctStocks[0]
     for (let i = 0; i < this.distinctStocks.length; i++) {
