@@ -249,6 +249,14 @@ export class ServerTradeScreenComponent implements OnInit {
       this.runSimulation()
     }
   }
+  onRunSimulation(){
+    if(this.intraDayChecked){
+      this.runSimulationIntraDay()
+    }
+    else{
+      this.runSimulation()
+    }
+  }
   /* Intra Day */
   async onSelectedDateChange(event: any) {
     if (event.isUserInput == true) {
