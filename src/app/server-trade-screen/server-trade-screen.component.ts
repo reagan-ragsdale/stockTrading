@@ -260,6 +260,9 @@ export class ServerTradeScreenComponent implements OnInit {
     }
     else {
       this.isLoading = true
+      this.buyGutter = .05
+      this.sellGutter = .01
+      this.check200Gutter = .1
       this.getStockDisplay()
       this.updateChart()
       this.runSimulation()
