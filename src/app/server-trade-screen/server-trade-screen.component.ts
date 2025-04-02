@@ -30,6 +30,7 @@ type sma200Array = {
 export class ServerTradeScreenComponent implements OnInit {
   listOfServerAlgos: serverAlgos[] = []
   userAlgos: DbAlgorithmList | undefined = undefined
+  allHistory: DbStockBasicHistory[] = []
   listOfLast200Days: sma200Array[] = []
   listOfLast40Days: sma200Array[] = []
   listOfLast5Days: sma200Array[] = []
@@ -186,19 +187,9 @@ export class ServerTradeScreenComponent implements OnInit {
     return min - 2
 
   }
-  async ngOnInit() {
-    Chart.register(annotationPlugin);
-    Chart.register(...registerables)
-    this.userAlgos = await dbAlgorithmListRepo.findFirst({ userId: remult.user?.id })
-    this.listOfServerAlgos.push({
-      name: 'SMA:50/200',
-      isSelected: this.userAlgos!.sma200sma50
-    })
-    let allHistory = await dbStockBasicHistoryRepo.find({ orderBy: { stockName: 'desc', date: 'asc' } })
-    this.distinctStocks = allHistory.map(e => e.stockName).filter((v, i, a) => a.indexOf(v) === i)
-    this.selectedStockName = this.distinctStocks[0]
+  calculateSma(){
     for (let i = 0; i < this.distinctStocks.length; i++) {
-      let filteredStock = allHistory.filter(e => e.stockName == this.distinctStocks[i])
+      let filteredStock = this.allHistory.filter(e => e.stockName == this.distinctStocks[i])
       let tempStock200: sma200Array[] = []
       for(let j = 200; j < filteredStock.length; j++){
         let last200Price: number = 0;
@@ -230,8 +221,53 @@ export class ServerTradeScreenComponent implements OnInit {
       this.listOfLast40Days.push(...tempStock40)
       this.listOfLast5Days.push(...tempStock5)
     }
+  }
+  calculateBuyAndSellPoints(){
+    let buyOrSell = 'Buy'
+    for(let i = 0; i < this.selectedStockLast5.length; i++){
+      if(buyOrSell == 'Buy'){
+        if((Math.abs(this.selectedStockLast5[i].avg - this.selectedStockLast40[i].avg)/ this.selectedStockLast40[i].avg) > .1){
+          this.executeOrder(this.selectedStockLast5[i], 'Buy')
+          buyOrSell = 'Sell'
+        }
+      }
+      else{
+        if(((Math.abs(this.selectedStockLast5[i].avg - this.selectedStockLast40[i].avg)/ this.selectedStockLast40[i].avg) > .1) && this.selectedStockLast5[i].close > this.orderLocations[this.orderLocations.length - 1].price){
+          this.executeOrder(this.selectedStockLast5[i], 'Sell')
+          buyOrSell = 'Buy'
+        }
+      }
+      
+    }
+    console.log()
+  }
+  bankTotal: number = 500
+  orderLocations: any[] = []
+  executeOrder(arr: sma200Array, buySell: string){
+    if(buySell == 'Buy'){
+      this.bankTotal -= arr.close
+      this.orderLocations.push({buySell: 'Buy', date: arr.date, price: arr.close})
+    }
+    else{
+      this.bankTotal += arr.close
+      this.orderLocations.push({buySell: 'Sell', date: arr.date, price: arr.close})
+    }
+  }
+  async ngOnInit() {
+    Chart.register(annotationPlugin);
+    Chart.register(...registerables)
+    this.userAlgos = await dbAlgorithmListRepo.findFirst({ userId: remult.user?.id })
+    this.listOfServerAlgos.push({
+      name: 'SMA:50/200',
+      isSelected: this.userAlgos!.sma200sma50
+    })
+    this.allHistory = await dbStockBasicHistoryRepo.find({ orderBy: { stockName: 'desc', date: 'asc' } })
+    this.distinctStocks = this.allHistory.map(e => e.stockName).filter((v, i, a) => a.indexOf(v) === i)
+    this.selectedStockName = this.distinctStocks[0]
+    this.calculateSma()
     this.getStockDisplay()
     this.createOrUpdateChart()
+    this.calculateBuyAndSellPoints()
 
 
   }

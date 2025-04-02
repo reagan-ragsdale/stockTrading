@@ -2,6 +2,7 @@
     <div style="display:flex;">
         <mat-checkbox *ngFor="let algo of listOfServerAlgos" (change)="algo.isSelected = !algo.isSelected"  [checked]="algo.isSelected" class="example-margin">{{algo.name}}</mat-checkbox>
         <button style="margin-left:1rem;" mat-raised-button color="primary" (click)="saveAlgos()">Save</button>
+        <h4 style="margin-left:1rem; color: #DBD4D1;">Total: {{bankTotal | currency:'USD':'symbol'}}</h4>
     </div>
     <div style="display: flex; flex-direction: column;">
         <mat-form-field style="width:fit-content;">
