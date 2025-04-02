@@ -56,7 +56,7 @@ export class ServerTradeScreenComponent implements OnInit {
   updateChart() {
     this.stockChart.data.datasets[0].data = this.selectedStockLast200.map(e => e.close)
     this.stockChart.data.datasets[1].data = this.selectedStockLast200.map(e => e.avg)
-    this.stockChart.data.datasets[1].data = this.selectedStockLast50.map(e => e.avg)
+    this.stockChart.data.datasets[2].data = this.selectedStockLast50.map(e => e.avg)
     this.stockChart.data.labels = this.selectedStockLast200.map(e => e.date)
     this.stockChart.options.scales.y.max = this.getMaxForChart(this.selectedStockLast200)
     this.stockChart.options.scales.y.min = this.getMinForChart(this.selectedStockLast200)
