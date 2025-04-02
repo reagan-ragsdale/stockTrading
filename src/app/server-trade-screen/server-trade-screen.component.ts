@@ -262,6 +262,9 @@ export class ServerTradeScreenComponent implements OnInit {
     if (event.isUserInput == true) {
       this.selectedDate = event.source.value
       await this.updateStockChartData()
+      this.calculateIntraDaySma()
+      this.updateChartIntraDay()
+      this.runSimulationIntraDay()
     }
   }
   async getStockHistoricalData() {
@@ -273,6 +276,9 @@ export class ServerTradeScreenComponent implements OnInit {
     this.stockDataForSelectedDay = await dbStockHistoryDataRepo.find({ where: { stockName: this.selectedStockName, date: this.selectedDate }, orderBy: { time: 'asc' } })
   }
   calculateIntraDaySma(){
+    this.listOfLastHour = []
+    this.listOfLast30Minutes = []
+    this.listOfLast5Minutes = []
     this.stockDataForSelectedDay = this.stockDataForSelectedDay.filter(e => reusedFunctions.isWithinTradingHoursLocal(e.time))
     let tempStockHour: sma200Array[] = []
       for (let j = 3600; j < this.stockDataForSelectedDay.length; j++) {
