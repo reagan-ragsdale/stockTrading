@@ -283,7 +283,7 @@ export class ServerTradeScreenComponent implements OnInit {
       })
     }
     this.stockChart.options.plugins.annotation.annotations = this.annotationsArray
-    this.updateChart()
+    this.stockChart.update()
   }
   runSimulation() {
     this.bankTotal = 500
