@@ -7,16 +7,16 @@
     <!-- <mat-checkbox *ngFor="let algo of listOfServerAlgos" (change)="algo.isSelected = !algo.isSelected"
       [checked]="algo.isSelected" class="example-margin">{{algo.name}}</mat-checkbox>
     <button style="margin-left:1rem;" mat-raised-button color="primary" (click)="saveAlgos()">Save</button> -->
-    <mat-slide-toggle [(ngModel)]="intraDayChecked" (ngModelChange)="changeDayType()">Intra Day</mat-slide-toggle>
-    <mat-form-field class="example-full-width" style="max-width: 110px;">
+    <mat-slide-toggle style="height: fit-content;" [(ngModel)]="intraDayChecked" (ngModelChange)="changeDayType()">Intra Day</mat-slide-toggle>
+    <mat-form-field class="example-full-width" style="max-width: 110px; height: fit-content;">
       <mat-label>Buy Gutter</mat-label>
       <input matInput type="number" [(ngModel)]="buyGutter" placeholder="0.00" [min]=".001" step=".01">
     </mat-form-field>
-    <mat-form-field class="example-full-width" style="max-width: 110px;">
+    <mat-form-field class="example-full-width" style="max-width: 110px; height: fit-content;">
       <mat-label>Sell Gutter</mat-label>
       <input matInput type="number" [(ngModel)]="sellGutter" placeholder="0.00" [min]=".001" step=".01">
     </mat-form-field>
-    <mat-form-field class="example-full-width" style="max-width: 140px;">
+    <mat-form-field class="example-full-width" style="max-width: 140px; height: fit-content;">
       <mat-label>200 Check Gutter</mat-label>
       <input matInput type="number" [(ngModel)]="check200Gutter" placeholder="0.00" [min]=".001" step=".01">
     </mat-form-field>
@@ -24,7 +24,7 @@
     <h4 style="margin-left:1rem; color: #DBD4D1;">Total: {{bankTotal | currency:'USD':'symbol'}}</h4>
     <h4 style="margin-left:1rem; color: #DBD4D1;">Total Profit: {{totalPofit | currency:'USD':'symbol'}}</h4>
     <button *ngIf="intraDayChecked" style="margin-left:1rem;" mat-raised-button color="primary" (click)="runEntireSimulationIntraDay()">Run Full Sim</button>
-    <div *ngIf="topAlgos.length > 0" style="background-color:#3C3E3D;" >
+    <div *ngIf="topAlgos.length > 0 && intraDayChecked" style="background-color:#3C3E3D;" >
       <mat-table [dataSource]="topAlgos"  style="height:inherit;">
           <!-- Position Column -->
           <ng-container matColumnDef="Profit">
