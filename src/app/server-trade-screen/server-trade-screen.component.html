@@ -23,7 +23,7 @@
     <button style="margin-left:1rem;" mat-raised-button color="primary" (click)="onRunSimulation()">Run Sim</button>
     <h4 style="margin-left:1rem; color: #DBD4D1;">Total: {{bankTotal | currency:'USD':'symbol'}}</h4>
     <h4 style="margin-left:1rem; color: #DBD4D1;">Total Profit: {{totalPofit | currency:'USD':'symbol'}}</h4>
-    <button *ngIf="intraDayChecked" style="margin-left:1rem;" mat-raised-button color="primary" (click)="runEntireSimulationIntraDay()">Run Full Sim</button>
+    <button *ngIf="intraDayChecked" style="margin-left:1rem;" mat-raised-button color="primary" (click)="onRunEntireSimulationIntraDay()">Run Full Sim</button>
     <div *ngIf="topAlgos.length > 0 && intraDayChecked" style="background-color:#3C3E3D;" >
       <mat-table [dataSource]="topAlgos"  style="height:inherit; background-color:#3C3E3D; border-radius: 8px; border: 1px solid #DBD4D1;">
           <!-- Position Column -->

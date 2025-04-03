@@ -306,6 +306,7 @@ export class ServerTradeScreenComponent implements OnInit {
       this.calculateIntraDaySma()
       this.updateChartIntraDay()
       this.runSimulationIntraDay()
+      this.topAlgos = []
       this.isLoading = false
     }
   }
@@ -377,8 +378,12 @@ export class ServerTradeScreenComponent implements OnInit {
     this.updateGraphBuyAndSellPointsIntraDay()
     this.calculateTotalProfit() 
   }
+  onRunEntireSimulationIntraDay(){
+    this.isLoading = true;
+    this.runEntireSimulationIntraDay()
+    this.isLoading = false
+  }
   runEntireSimulationIntraDay(){
-    this.isLoading = true
     this.listOfProfits = []
     for(let i = 1; i < 20; i++){
       this.buyGutter = i * .001
@@ -406,7 +411,65 @@ export class ServerTradeScreenComponent implements OnInit {
     this.buyGutter = this.topAlgos[0].buyBuffer
     this.sellGutter = this.topAlgos[0].sellBuffer
     this.runSimulationIntraDay()
+
+  }
+  async onRunEntireSimulationIntraDayAllDays(){
+    this.isLoading = true;
+    await this.runEntireSimulationIntraDayAllDays()
     this.isLoading = false
+  }
+  async runEntireSimulationIntraDayAllDays(){
+    this.listOfProfits = []
+    for(let k = 0; k < this.distinctDates.length; k++){
+      this.selectedDate = this.distinctDates[k]
+      await this.updateStockChartData()
+      this.calculateIntraDaySma()
+      for(let i = 1; i < 20; i++){
+        this.buyGutter = i * .001
+        this.buyGutter = Number(this.buyGutter.toPrecision(3))
+        for(let j = 1; j < 20; j++){
+          this.sellGutter = j * .001
+          this.sellGutter = Number(this.sellGutter.toPrecision(3))
+          this.bankTotal = 500
+          this.orderLocations = []
+          this.totalPofit = 0
+          this.calculateBuyAndSellPointsIntraDay()
+          this.updateGraphBuyAndSellPointsIntraDay()
+          this.calculateTotalProfit()
+          this.listOfProfits.push({
+            buyBuffer: this.buyGutter,
+            sellBuffer: this.sellGutter,
+            profit: this.totalPofit,
+            numberOfTrades: this.orderLocations.length,
+            listOfTrades: this.orderLocations
+          })
+        }
+      }
+    }
+    
+    console.log(this.listOfProfits)
+    let distinctBuys = this.listOfProfits.map(e => e.buyBuffer).filter((v,i,a) => a.indexOf(v) === i)
+    let distinctSells = this.listOfProfits.map(e => e.sellBuffer).filter((v,i,a) => a.indexOf(v) === i)
+    let listOfAverages: bufferAlgo[] = []
+    for(let i = 0; i < distinctBuys.length; i++){
+      let performers: bufferAlgo[] = []
+      for(let j = 0; j < distinctSells.length; j++){
+        performers.push(...this.listOfProfits.filter(e => e.buyBuffer == distinctBuys[i] && e.sellBuffer == distinctSells[j]))
+        let avgProfit = performers.reduce((sum, val) => sum + val.profit, 0) / performers.length
+        let avgNumTrades = performers.reduce((sum, val) => sum + val.numberOfTrades, 0) / performers.length
+        listOfAverages.push({
+          buyBuffer: distinctBuys[i],
+          sellBuffer: distinctSells[j],
+          profit: avgProfit,
+          numberOfTrades: avgNumTrades,
+          listOfTrades: []
+        })
+      }
+    }
+    this.topAlgos = listOfAverages.sort((a, b) => b.profit - a.profit).slice(0,5)
+    //this.buyGutter = this.topAlgos[0].buyBuffer
+    //this.sellGutter = this.topAlgos[0].sellBuffer
+    //this.runSimulationIntraDay()
 
   }
   calculateBuyAndSellPointsIntraDay() {
