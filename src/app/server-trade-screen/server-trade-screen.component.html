@@ -28,25 +28,25 @@
           <!-- Position Column -->
           <ng-container matColumnDef="Profit">
             <mat-header-cell *matHeaderCellDef> Profit </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.orderType}} </mat-cell>
+            <mat-cell *matCellDef="let element"> {{element.profit | currency:'USD':'symbol'}} </mat-cell>
           </ng-container>
         
           <!-- Name Column -->
           <ng-container matColumnDef="Stock">
             <mat-header-cell *matHeaderCellDef> No. Trades </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.stockName}} </mat-cell>
+            <mat-cell *matCellDef="let element"> {{element.numberOfTrades}} </mat-cell>
           </ng-container>
         
           <!-- Weight Column -->
           <ng-container matColumnDef="Shares">
             <mat-header-cell *matHeaderCellDef> Buy Gutter </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.shareQty | number:'1.2-5'}} </mat-cell>
+            <mat-cell *matCellDef="let element"> {{element.buyBuffer | number:'1.2-5'}} </mat-cell>
           </ng-container>
         
           <!-- Symbol Column -->
           <ng-container matColumnDef="Price">
             <mat-header-cell *matHeaderCellDef> Sell Gutter </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.stockPrice | currency:'USD':'symbol'}} </mat-cell>
+            <mat-cell *matCellDef="let element"> {{element.sellBuffer | number:'1.2-5'}} </mat-cell>
           </ng-container>
 
         
