@@ -195,13 +195,14 @@ export const socketCall = async (): Promise<void> => {
                                     let isBuy = filteredOrderOnUserAndStock.orderType == 'Sell' ? true : false;
 
                                     if (isBuy && (((stockData[data.stockName].last300sma - stockData[data.stockName].last1800sma) / stockData[data.stockName].last1800sma) < (stockDayTradeValues[data.stockName].Buy * -1)) && ((Math.abs(stockData[data.stockName].last300sma - stockData[data.stockName].last3600sma) / stockData[data.stockName].last3600sma) < stockDayTradeValues[data.stockName].Buy)) {
+                                        console.log('Placing a buy order')
                                         await dbOrdersRepo.insert({
                                             userId: userServerAlgos!.userId,
                                             //userServerAlgos[i].userId,
                                             stockName: data.stockName,
                                             orderType: 'Buy',
                                             stockPrice: data.stockPrice,
-                                            shareQty: 20 / data.stockPrice,
+                                            shareQty: 1,
                                             orderTime: data.time
                                         })
                                         userOrders = await dbOrdersRepo.find({ where: { userId: userServerAlgos!.userId }, orderBy: { orderTime: 'desc' } })
@@ -213,6 +214,7 @@ export const socketCall = async (): Promise<void> => {
                                         await usersStocksRepo.save({ ...stockUser, shareQty: newStockAmnt }) */
                                     }
                                     else if (!isBuy && (((stockData[data.stockName].last300sma - stockData[data.stockName].last1800sma) / stockData[data.stockName].last1800sma) > stockDayTradeValues[data.stockName].Sell) && data.stockPrice > filteredOrderOnUserAndStock.stockPrice) {
+                                        console.log('Placing a sell order')
                                         await dbOrdersRepo.insert({
                                             userId: userServerAlgos!.userId,
                                             //userServerAlgos[i].userId,
