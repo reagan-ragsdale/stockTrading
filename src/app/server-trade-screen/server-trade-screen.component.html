@@ -25,7 +25,7 @@
     <h4 style="margin-left:1rem; color: #DBD4D1;">Total Profit: {{totalPofit | currency:'USD':'symbol'}}</h4>
     <button style="margin-left:1rem;" mat-raised-button color="primary" (click)="onRunEntireSimulation()">Run Full Sim</button>
     <button *ngIf="intraDayChecked" style="margin-left:1rem;" mat-raised-button color="primary" (click)="onRunEntireSimulationIntraDayAllDays()">Run Full Sim All Days</button>
-    <div *ngIf="topAlgos.length > 0 && intraDayChecked" style="background-color:#3C3E3D;" >
+    <div *ngIf="topAlgos.length > 0" style="background-color:#3C3E3D;" >
       <mat-table [dataSource]="topAlgos"  style="height:inherit; background-color:#3C3E3D; border-radius: 8px; border: 1px solid #DBD4D1;">
           <!-- Position Column -->
           <ng-container matColumnDef="Profit">
