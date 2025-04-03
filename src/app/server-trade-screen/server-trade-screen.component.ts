@@ -370,6 +370,14 @@ export class ServerTradeScreenComponent implements OnInit {
   listOfProfits: bufferAlgo[] = []
   topAlgos: bufferAlgo[] = []
   runSimulationIntraDay(){
+    this.bankTotal = 500
+    this.orderLocations = []
+    this.totalPofit = 0
+    this.calculateBuyAndSellPointsIntraDay()
+    this.updateGraphBuyAndSellPointsIntraDay()
+    this.calculateTotalProfit() 
+  }
+  runEntireSimulationIntraDay(){
     this.listOfProfits = []
     for(let i = 1; i < 20; i++){
       this.buyGutter = i * .001
@@ -392,12 +400,6 @@ export class ServerTradeScreenComponent implements OnInit {
         })
       }
     }
-    /* this.bankTotal = 500
-    this.orderLocations = []
-    this.totalPofit = 0
-    this.calculateBuyAndSellPointsIntraDay()
-    this.updateGraphBuyAndSellPointsIntraDay()
-    this.calculateTotalProfit() */
     console.log(this.listOfProfits)
     this.topAlgos = this.listOfProfits.sort((a, b) => b.profit - a.profit).slice(0,5)
 
