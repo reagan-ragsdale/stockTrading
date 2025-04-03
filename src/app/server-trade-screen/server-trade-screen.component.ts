@@ -15,6 +15,7 @@ import { FormsModule } from '@angular/forms';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { DbStockHistoryData, dbStockHistoryDataRepo } from '../../shared/tasks/dbStockHistoryData';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { TradeHistoryDetailComponent } from '../trade-history-detail/trade-history-detail.component';
 
 type serverAlgos = {
   name: string;
@@ -25,6 +26,18 @@ type sma200Array = {
   close: number;
   avg: number;
   date: string;
+}
+type bufferAlgo = {
+  buyBuffer: number;
+  sellBuffer: number;
+  profit: number;
+  numberOfTrades: number;
+  listOfTrades: orderLocation[];
+}
+type orderLocation = {
+  buySell: string; 
+  date: string; 
+  price: number;
 }
 @Component({
   selector: 'app-server-trade-screen',
@@ -224,7 +237,7 @@ export class ServerTradeScreenComponent implements OnInit {
   shouldDisplayBuySellLines: boolean = false;
   
   bankTotal: number = 500
-  orderLocations: any[] = []
+  orderLocations: orderLocation[] = []
   executeOrder(arr: sma200Array, buySell: string) {
     if (buySell == 'Buy') {
       this.bankTotal -= arr.close
@@ -249,13 +262,14 @@ export class ServerTradeScreenComponent implements OnInit {
   async changeDayType() {
     if (this.intraDayChecked) {
       this.isLoading = true
-      this.buyGutter = .008
-      this.sellGutter = .008
+      this.buyGutter = .001
+      this.sellGutter = .001
       this.check200Gutter = .01
+      
       await this.updateStockChartData()
       this.calculateIntraDaySma()
       this.updateChartIntraDay()
-      this.runSimulationIntraDay()
+      this.runSimulationIntraDay() 
       this.isLoading = false
     }
     else {
@@ -351,13 +365,35 @@ export class ServerTradeScreenComponent implements OnInit {
     this.stockChart.options.scales.y.min = this.getMinForChart(this.listOfLastHour)
     this.stockChart.update()
   }
+  listOfProfits: bufferAlgo[] = []
   runSimulationIntraDay(){
-    this.bankTotal = 500
+    for(let i = 0; i < 20; i++){
+      this.buyGutter = i * .001
+      for(let j = 0; j < 20; j++){
+        this.sellGutter = j * .001
+        this.bankTotal = 500
+        this.orderLocations = []
+        this.totalPofit = 0
+        this.calculateBuyAndSellPointsIntraDay()
+        this.updateGraphBuyAndSellPointsIntraDay()
+        this.calculateTotalProfit()
+        this.listOfProfits.push({
+          buyBuffer: this.buyGutter,
+          sellBuffer: this.sellGutter,
+          profit: this.totalPofit,
+          numberOfTrades: this.orderLocations.length,
+          listOfTrades: this.orderLocations
+        })
+      }
+    }
+    /* this.bankTotal = 500
     this.orderLocations = []
     this.totalPofit = 0
     this.calculateBuyAndSellPointsIntraDay()
     this.updateGraphBuyAndSellPointsIntraDay()
-    this.calculateTotalProfit()
+    this.calculateTotalProfit() */
+    console.log(this.listOfProfits)
+
   }
   calculateBuyAndSellPointsIntraDay() {
     let buyOrSell = 'Buy'
