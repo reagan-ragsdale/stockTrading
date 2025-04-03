@@ -379,9 +379,15 @@ export class ServerTradeScreenComponent implements OnInit {
     this.updateGraphBuyAndSellPointsIntraDay()
     this.calculateTotalProfit() 
   }
-  onRunEntireSimulationIntraDay(){
+  onRunEntireSimulation(){
     this.isLoading = true;
-    this.runEntireSimulationIntraDay()
+    if(this.intraDayChecked){
+      this.runEntireSimulationIntraDay()
+    }
+    else{
+      this.runEntireSimulationInterDay()
+    }
+    
     this.isLoading = false
   }
   runEntireSimulationIntraDay(){
@@ -522,6 +528,35 @@ export class ServerTradeScreenComponent implements OnInit {
     this.calculateBuyAndSellPoints()
     this.updateGraphBuyAndSellPoints()
     this.calculateTotalProfit()
+  }
+  runEntireSimulationInterDay(){
+    this.listOfProfits = []
+    for(let i = 1; i < 20; i++){
+      this.buyGutter = i * .01
+      this.buyGutter = Number(this.buyGutter.toPrecision(3))
+      for(let j = 1; j < 20; j++){
+        this.sellGutter = j * .01
+        this.sellGutter = Number(this.sellGutter.toPrecision(3))
+        this.bankTotal = 500
+        this.orderLocations = []
+        this.totalPofit = 0
+        this.calculateBuyAndSellPoints()
+        //this.updateGraphBuyAndSellPointsIntraDay()
+        this.calculateTotalProfit()
+        this.listOfProfits.push({
+          buyBuffer: this.buyGutter,
+          sellBuffer: this.sellGutter,
+          profit: this.totalPofit,
+          numberOfTrades: this.orderLocations.length,
+          listOfTrades: this.orderLocations
+        })
+      }
+    }
+    console.log(this.listOfProfits)
+    this.topAlgos = this.listOfProfits.filter(e => e.numberOfTrades % 2 === 0).sort((a, b) => b.profit - a.profit).slice(0,5)
+    this.buyGutter = this.topAlgos[0].buyBuffer
+    this.sellGutter = this.topAlgos[0].sellBuffer
+    this.runSimulationIntraDay()
   }
   calculateBuyAndSellPoints() {
     let buyOrSell = 'Buy'
