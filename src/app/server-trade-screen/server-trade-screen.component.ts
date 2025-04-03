@@ -395,7 +395,7 @@ export class ServerTradeScreenComponent implements OnInit {
         this.orderLocations = []
         this.totalPofit = 0
         this.calculateBuyAndSellPointsIntraDay()
-        this.updateGraphBuyAndSellPointsIntraDay()
+        //this.updateGraphBuyAndSellPointsIntraDay()
         this.calculateTotalProfit()
         this.listOfProfits.push({
           buyBuffer: this.buyGutter,
@@ -434,7 +434,7 @@ export class ServerTradeScreenComponent implements OnInit {
           this.orderLocations = []
           this.totalPofit = 0
           this.calculateBuyAndSellPointsIntraDay()
-          this.updateGraphBuyAndSellPointsIntraDay()
+          //this.updateGraphBuyAndSellPointsIntraDay()
           this.calculateTotalProfit()
           this.listOfProfits.push({
             buyBuffer: this.buyGutter,
