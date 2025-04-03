@@ -16,6 +16,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { DbStockHistoryData, dbStockHistoryDataRepo } from '../../shared/tasks/dbStockHistoryData';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TradeHistoryDetailComponent } from '../trade-history-detail/trade-history-detail.component';
+import { MatTableModule } from '@angular/material/table';
 
 type serverAlgos = {
   name: string;
@@ -41,7 +42,7 @@ type orderLocation = {
 }
 @Component({
   selector: 'app-server-trade-screen',
-  imports: [MatCheckboxModule, CommonModule, MatProgressSpinnerModule, MatFormFieldModule, MatSelectModule, MatButtonModule, MatInputModule, FormsModule, MatSlideToggleModule],
+  imports: [MatCheckboxModule, CommonModule, MatTableModule, MatProgressSpinnerModule, MatFormFieldModule, MatSelectModule, MatButtonModule, MatInputModule, FormsModule, MatSlideToggleModule],
   templateUrl: './server-trade-screen.component.html',
   styleUrl: './server-trade-screen.component.css'
 })
@@ -68,6 +69,7 @@ export class ServerTradeScreenComponent implements OnInit {
   listOfLastHour: sma200Array[] = []
   listOfLast30Minutes: sma200Array[] = []
   listOfLast5Minutes: sma200Array[] = []
+  displayedColumns: string[] = ['Profit', 'No. Trades', 'Buy Gutter', 'Sell Gutter']
 
   async saveAlgos() {
     await dbAlgorithmListRepo.save({ ...this.userAlgos, sma200sma50: this.listOfServerAlgos[0].isSelected })
@@ -366,11 +368,15 @@ export class ServerTradeScreenComponent implements OnInit {
     this.stockChart.update()
   }
   listOfProfits: bufferAlgo[] = []
+  topAlgos: bufferAlgo[] = []
   runSimulationIntraDay(){
+    this.listOfProfits = []
     for(let i = 1; i < 20; i++){
       this.buyGutter = i * .001
+      this.buyGutter = Number(this.buyGutter.toPrecision(3))
       for(let j = 1; j < 20; j++){
         this.sellGutter = j * .001
+        this.sellGutter = Number(this.sellGutter.toPrecision(3))
         this.bankTotal = 500
         this.orderLocations = []
         this.totalPofit = 0
@@ -393,6 +399,7 @@ export class ServerTradeScreenComponent implements OnInit {
     this.updateGraphBuyAndSellPointsIntraDay()
     this.calculateTotalProfit() */
     console.log(this.listOfProfits)
+    this.topAlgos = this.listOfProfits.sort((a, b) => b.profit - a.profit).slice(0,5)
 
   }
   calculateBuyAndSellPointsIntraDay() {

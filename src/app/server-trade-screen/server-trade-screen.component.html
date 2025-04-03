@@ -23,6 +23,38 @@
     <button style="margin-left:1rem;" mat-raised-button color="primary" (click)="onRunSimulation()">Run Sim</button>
     <h4 style="margin-left:1rem; color: #DBD4D1;">Total: {{bankTotal | currency:'USD':'symbol'}}</h4>
     <h4 style="margin-left:1rem; color: #DBD4D1;">Total Profit: {{totalPofit | currency:'USD':'symbol'}}</h4>
+    <div *ngIf="topAlgos.length > 0" class="table-div" >
+      <mat-table [dataSource]="topAlgos"  style="height:inherit;">
+          <!-- Position Column -->
+          <ng-container matColumnDef="Profit">
+            <mat-header-cell *matHeaderCellDef> Profit </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.orderType}} </mat-cell>
+          </ng-container>
+        
+          <!-- Name Column -->
+          <ng-container matColumnDef="Stock">
+            <mat-header-cell *matHeaderCellDef> No. Trades </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.stockName}} </mat-cell>
+          </ng-container>
+        
+          <!-- Weight Column -->
+          <ng-container matColumnDef="Shares">
+            <mat-header-cell *matHeaderCellDef> Buy Gutter </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.shareQty | number:'1.2-5'}} </mat-cell>
+          </ng-container>
+        
+          <!-- Symbol Column -->
+          <ng-container matColumnDef="Price">
+            <mat-header-cell *matHeaderCellDef> Sell Gutter </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.stockPrice | currency:'USD':'symbol'}} </mat-cell>
+          </ng-container>
+
+        
+          <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" style="min-height:fit-content; background-color:#3C3E3D;" ></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;" style="min-height:fit-content;"></mat-row>
+        </mat-table>
+      
+  </div>
   </div>
   <div style="display: flex; flex-direction: column;">
     <div style="display:flex; gap: 1rem;">
