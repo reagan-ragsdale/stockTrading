@@ -25,7 +25,7 @@
     <h4 style="margin-left:1rem; color: #DBD4D1;">Total Profit: {{totalPofit | currency:'USD':'symbol'}}</h4>
     <button *ngIf="intraDayChecked" style="margin-left:1rem;" mat-raised-button color="primary" (click)="runEntireSimulationIntraDay()">Run Full Sim</button>
     <div *ngIf="topAlgos.length > 0 && intraDayChecked" style="background-color:#3C3E3D;" >
-      <mat-table [dataSource]="topAlgos"  style="height:inherit; background-color:#3C3E3D;">
+      <mat-table [dataSource]="topAlgos"  style="height:inherit; background-color:#3C3E3D; border-radius: 8px; border: 1px solid #DBD4D1;">
           <!-- Position Column -->
           <ng-container matColumnDef="Profit">
             <mat-header-cell *matHeaderCellDef> Profit </mat-header-cell>
@@ -51,8 +51,8 @@
           </ng-container>
 
         
-          <mat-header-row *matHeaderRowDef="displayedColumns;" style="min-height:fit-content; background-color:#3C3E3D;" ></mat-header-row>
-          <mat-row *matRowDef="let row; columns: displayedColumns;" style="min-height:fit-content; background-color:#3C3E3D;"></mat-row>
+          <mat-header-row *matHeaderRowDef="displayedColumns;" style="min-height:fit-content; background-color:#3C3E3D; color: #DBD4D1;" ></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;" style="min-height:fit-content; background-color:#3C3E3D; color: #DBD4D1;"></mat-row>
         </mat-table>
       
   </div>
