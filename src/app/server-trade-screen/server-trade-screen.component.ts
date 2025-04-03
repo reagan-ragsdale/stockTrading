@@ -367,9 +367,9 @@ export class ServerTradeScreenComponent implements OnInit {
   }
   listOfProfits: bufferAlgo[] = []
   runSimulationIntraDay(){
-    for(let i = 0; i < 20; i++){
+    for(let i = 1; i < 20; i++){
       this.buyGutter = i * .001
-      for(let j = 0; j < 20; j++){
+      for(let j = 1; j < 20; j++){
         this.sellGutter = j * .001
         this.bankTotal = 500
         this.orderLocations = []

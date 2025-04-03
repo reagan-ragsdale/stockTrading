@@ -90,7 +90,7 @@ export const api = remultExpress({
       cron.schedule('*/25 * * * *', () => loadNewToken()),
       cron.schedule('0 23 * * 1-5 ', () => loadDailyDataIntoHistory())
       
-      getDailyStockInfo()
+      //getDailyStockInfo()
       
     }
 })
