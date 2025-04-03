@@ -68,7 +68,7 @@
         <!-- Name Column -->
         <ng-container matColumnDef="NoTrades">
           <mat-header-cell *matHeaderCellDef> No. Trades </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.numberOfTrades}} </mat-cell>
+          <mat-cell *matCellDef="let element"> {{element.numberOfTrades | number:'1.2-2'}} </mat-cell>
         </ng-container>
       
         <!-- Weight Column -->

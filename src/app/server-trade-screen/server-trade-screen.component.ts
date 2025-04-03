@@ -263,6 +263,7 @@ export class ServerTradeScreenComponent implements OnInit {
 
   async changeDayType() {
     this.topAlgos = []
+    this.topAlgosAllDays = []
     if (this.intraDayChecked) {
       this.isLoading = true
       this.buyGutter = .001
@@ -640,11 +641,11 @@ export class ServerTradeScreenComponent implements OnInit {
     this.stockChart.data.datasets[0].data = this.selectedStockLast200.map(e => e.close)
     this.stockChart.data.datasets[0].label = 'Actual'
     this.stockChart.data.datasets[1].data = this.selectedStockLast200.map(e => e.avg)
-    this.stockChart.data.datasets[0].label = '200'
+    this.stockChart.data.datasets[1].label = '200'
     this.stockChart.data.datasets[2].data = this.selectedStockLast40.map(e => e.avg)
-    this.stockChart.data.datasets[0].label = '40'
+    this.stockChart.data.datasets[2].label = '40'
     this.stockChart.data.datasets[3].data = this.selectedStockLast5.map(e => e.avg)
-    this.stockChart.data.datasets[0].label = '5'
+    this.stockChart.data.datasets[3].label = '5'
     this.stockChart.data.labels = this.selectedStockLast200.map(e => e.date)
     this.stockChart.options.scales.y.max = this.getMaxForChart(this.selectedStockLast200)
     this.stockChart.options.scales.y.min = this.getMinForChart(this.selectedStockLast200)
