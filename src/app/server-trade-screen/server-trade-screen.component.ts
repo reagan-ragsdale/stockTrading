@@ -69,7 +69,7 @@ export class ServerTradeScreenComponent implements OnInit {
   listOfLastHour: sma200Array[] = []
   listOfLast30Minutes: sma200Array[] = []
   listOfLast5Minutes: sma200Array[] = []
-  displayedColumns: string[] = ['Profit', 'No. Trades', 'Buy Gutter', 'Sell Gutter']
+  displayedColumns: string[] = ['Profit', 'NoTrades', 'BuyGutter', 'SellGutter']
 
   async saveAlgos() {
     await dbAlgorithmListRepo.save({ ...this.userAlgos, sma200sma50: this.listOfServerAlgos[0].isSelected })

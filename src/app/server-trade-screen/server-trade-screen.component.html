@@ -32,19 +32,19 @@
           </ng-container>
         
           <!-- Name Column -->
-          <ng-container matColumnDef="Stock">
+          <ng-container matColumnDef="NoTrades">
             <mat-header-cell *matHeaderCellDef> No. Trades </mat-header-cell>
             <mat-cell *matCellDef="let element"> {{element.numberOfTrades}} </mat-cell>
           </ng-container>
         
           <!-- Weight Column -->
-          <ng-container matColumnDef="Shares">
+          <ng-container matColumnDef="BuyGutter">
             <mat-header-cell *matHeaderCellDef> Buy Gutter </mat-header-cell>
             <mat-cell *matCellDef="let element"> {{element.buyBuffer | number:'1.2-5'}} </mat-cell>
           </ng-container>
         
           <!-- Symbol Column -->
-          <ng-container matColumnDef="Price">
+          <ng-container matColumnDef="SellGutter">
             <mat-header-cell *matHeaderCellDef> Sell Gutter </mat-header-cell>
             <mat-cell *matCellDef="let element"> {{element.sellBuffer | number:'1.2-5'}} </mat-cell>
           </ng-container>
