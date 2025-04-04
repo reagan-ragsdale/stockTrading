@@ -431,7 +431,7 @@ export class ServerTradeScreenComponent implements OnInit {
                 this.bankTotal = 500
                 this.orderLocations = []
                 this.totalPofit = 0
-                this.calculateIntraDaySma()
+                //this.calculateIntraDaySma()
                 this.calculateBuyAndSellPointsIntraDay()
                 this.calculateTotalProfit()
                 this.listOfProfits.push({
