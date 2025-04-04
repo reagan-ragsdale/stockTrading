@@ -413,7 +413,7 @@ export class ServerTradeScreenComponent implements OnInit {
     this.isLoading = false
   }
   async runEntireSimulationIntraDay() {
-    //await dbListOfProfitsRepo.deleteMany({where: {sellBuffer: {$gte: 0}}})
+    await dbListOfProfitsRepo.deleteMany({where: {sellBuffer: {$gte: 0}}})
     this.listOfProfits = []
     for (let i = 1; i <= 20; i++) {
       this.buyGutter = i * .001
@@ -436,7 +436,7 @@ export class ServerTradeScreenComponent implements OnInit {
                 this.calculateIntraDaySma()
                 this.calculateBuyAndSellPointsIntraDay()
                 this.calculateTotalProfit()
-                /* await dbListOfProfitsRepo.insert({
+                await dbListOfProfitsRepo.insert({
                   buyBuffer: this.buyGutter,
                   sellBuffer: this.sellGutter,
                   checkBuffer: this.check200Gutter,
@@ -445,8 +445,8 @@ export class ServerTradeScreenComponent implements OnInit {
                   smaShort: this.intraDayShortSma,
                   profit: this.totalPofit,
                   numberOfTrades: this.orderLocations.length
-                }) */
-               this.listOfProfits.push({
+                }) 
+               /* this.listOfProfits.push({
                 buyBuffer: this.buyGutter,
                 sellBuffer: this.sellGutter,
                 checkBuffer: this.check200Gutter,
@@ -456,7 +456,7 @@ export class ServerTradeScreenComponent implements OnInit {
                 profit: this.totalPofit,
                 numberOfTrades: this.orderLocations.length
                 //listOfTrades: this.orderLocations  
-              })
+              }) */
               }
             }
           }
@@ -465,7 +465,9 @@ export class ServerTradeScreenComponent implements OnInit {
 
       }
     }
-    this.topAlgos = this.listOfProfits.filter(e => e.numberOfTrades % 2 === 0).sort((a, b) => b.profit - a.profit).slice(0, 5)
+    
+    this.listOfProfits = await dbListOfProfitsRepo.find({orderBy: {profit: 'desc'}})
+    this.topAlgos = this.listOfProfits.filter(e => e.numberOfTrades % 2 === 0).slice(0, 5)
     this.buyGutter = this.topAlgos[0].buyBuffer
     this.sellGutter = this.topAlgos[0].sellBuffer
     this.check200Gutter = this.topAlgos[0].checkBuffer
