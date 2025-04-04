@@ -92,6 +92,9 @@ export class ServerTradeScreenComponent implements OnInit {
       this.selectedStockName = event.source.value
       if (!this.intraDayChecked) {
         this.isLoading = true
+        this.intraDayLongSma = 3600;
+        this.intraDayMediumSma = 1800;
+        this.intraDayShortSma = 300
         this.getStockDisplay()
         this.updateChart()
         this.runSimulation()
@@ -278,7 +281,9 @@ export class ServerTradeScreenComponent implements OnInit {
       this.buyGutter = .001
       this.sellGutter = .001
       this.check200Gutter = .01
-
+      this.intraDayLongSma = 3600;
+      this.intraDayMediumSma = 1800;
+      this.intraDayShortSma = 300
       await this.updateStockChartData()
       this.calculateIntraDaySma()
       this.updateChartIntraDay()
