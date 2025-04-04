@@ -444,7 +444,7 @@ export class ServerTradeScreenComponent implements OnInit {
       }
     }
     console.log(this.listOfProfits)
-    this.topAlgos = this.listOfProfits.sort((a, b) => b.profit - a.profit).slice(0, 5)
+    this.topAlgos = this.listOfProfits.filter(e => e.numberOfTrades % 2 === 0).sort((a, b) => b.profit - a.profit).slice(0, 5)
     this.buyGutter = this.topAlgos[0].buyBuffer
     this.sellGutter = this.topAlgos[0].sellBuffer
     this.runSimulationIntraDay()
