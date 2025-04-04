@@ -422,12 +422,12 @@ export class ServerTradeScreenComponent implements OnInit {
         for (let k = 1; k <= 30; k++) {
           this.check200Gutter = k * .001;
           this.check200Gutter = Number(this.check200Gutter.toPrecision(3))
-          for (let m = 1; m <= 10; m++) {
-            this.intraDayShortSma = (m * 60)
-            for (let n = 20; n <= 40; n += 5) {
-              this.intraDayMediumSma = (n * 60)
-              for (let p = 60; p <= 90; p += 5) {
-                this.intraDayLongSma = (p * 60)
+          //for (let m = 1; m <= 10; m++) {
+            //this.intraDayShortSma = (m * 60)
+            //for (let n = 20; n <= 40; n += 5) {
+             // this.intraDayMediumSma = (n * 60)
+              //for (let p = 60; p <= 90; p += 5) {
+              //  this.intraDayLongSma = (p * 60)
                 this.bankTotal = 500
                 this.orderLocations = []
                 this.totalPofit = 0
@@ -446,14 +446,13 @@ export class ServerTradeScreenComponent implements OnInit {
                   listOfTrades: this.orderLocations
                 })
               }
-            }
-          }
+          //  }
+         // }
 
-        }
+       // }
 
       }
     }
-    console.log(this.listOfProfits)
     this.topAlgos = this.listOfProfits.filter(e => e.numberOfTrades % 2 === 0).sort((a, b) => b.profit - a.profit).slice(0, 5)
     this.buyGutter = this.topAlgos[0].buyBuffer
     this.sellGutter = this.topAlgos[0].sellBuffer
@@ -494,7 +493,6 @@ export class ServerTradeScreenComponent implements OnInit {
       }
     }
 
-    console.log(this.listOfProfits)
     let distinctBuys = this.listOfProfits.map(e => e.buyBuffer).filter((v, i, a) => a.indexOf(v) === i)
     let distinctSells = this.listOfProfits.map(e => e.sellBuffer).filter((v, i, a) => a.indexOf(v) === i)
     let listOfAverages: bufferAlgo[] = []
@@ -528,8 +526,6 @@ export class ServerTradeScreenComponent implements OnInit {
     for (let i = 0; i < this.listOfLast5Minutes.length; i++) {
       if (buyOrSell == 'Buy') {
         if ((((this.listOfLast5Minutes[i].avg - this.listOfLast30Minutes[i].avg) / this.listOfLast30Minutes[i].avg) < (this.buyGutter * -1)) && (((this.listOfLast5Minutes[i].avg - this.listOfLastHour[i].avg) / this.listOfLastHour[i].avg) < this.check200Gutter)) {
-          console.log(this.listOfLast5Minutes[i])
-          console.log(this.listOfLast30Minutes[i])
           this.executeOrder(this.listOfLast5Minutes[i], 'Buy')
           buyOrSell = 'Sell'
         }
@@ -542,7 +538,6 @@ export class ServerTradeScreenComponent implements OnInit {
       }
 
     }
-    console.log(this.orderLocations)
   }
   updateGraphBuyAndSellPointsIntraDay() {
     this.annotationsArray = []
@@ -561,7 +556,6 @@ export class ServerTradeScreenComponent implements OnInit {
         }
       })
     }
-    console.log(this.annotationsArray)
     this.stockChart.options.plugins.annotation.annotations = this.annotationsArray
     this.stockChart.update()
   }
@@ -602,7 +596,6 @@ export class ServerTradeScreenComponent implements OnInit {
         })
       }
     }
-    console.log(this.listOfProfits)
     this.topAlgos = this.listOfProfits.sort((a, b) => b.profit - a.profit).slice(0, 5)
     this.buyGutter = this.topAlgos[0].buyBuffer
     this.sellGutter = this.topAlgos[0].sellBuffer
@@ -625,7 +618,6 @@ export class ServerTradeScreenComponent implements OnInit {
       }
 
     }
-    console.log(this.orderLocations)
   }
   updateGraphBuyAndSellPoints() {
     this.annotationsArray = []
@@ -644,7 +636,6 @@ export class ServerTradeScreenComponent implements OnInit {
         }
       })
     }
-    console.log(this.annotationsArray)
     this.stockChart.options.plugins.annotation.annotations = this.annotationsArray
     this.stockChart.update()
   }
