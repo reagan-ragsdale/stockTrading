@@ -177,6 +177,7 @@ export const socketCall = async (): Promise<void> => {
                                 if (data.stockName == 'TSLA') {
                                     stockData[data.stockName].previousPrice = data.stockPrice
                                     stockData[data.stockName].history.push(data.stockPrice)
+                                    console.log(stockData[data.stockName].history.length)
                                     if (stockData[data.stockName].history.length == 3600) {
                                         stockData[data.stockName].last3600 = stockData[data.stockName].history
                                         stockData[data.stockName].last3600sma = stockData[data.stockName].last3600.reduce((sum, val) => sum + val, 0) / 3600
@@ -193,8 +194,8 @@ export const socketCall = async (): Promise<void> => {
                                     //for (let i = 0; i < userServerAlgos.length; i++) {
                                     let filteredOrderOnUserAndStock = userOrders.filter(e => e.userId == userServerAlgos!.userId && e.stockName == data.stockName)[0]
                                     let isBuy = filteredOrderOnUserAndStock.orderType == 'Sell' ? true : false;
-
-                                    if (isBuy && (((stockData[data.stockName].last300sma - stockData[data.stockName].last1800sma) / stockData[data.stockName].last1800sma) < (stockDayTradeValues[data.stockName].Buy * -1)) && ((Math.abs(stockData[data.stockName].last300sma - stockData[data.stockName].last3600sma) / stockData[data.stockName].last3600sma) < stockDayTradeValues[data.stockName].Buy)) {
+                                    console.log(isBuy)
+                                    if (isBuy && (((stockData[data.stockName].last300sma - stockData[data.stockName].last1800sma) / stockData[data.stockName].last1800sma) < (stockDayTradeValues[data.stockName].Buy * -1)) && (((stockData[data.stockName].last300sma - stockData[data.stockName].last3600sma) / stockData[data.stockName].last3600sma) < stockDayTradeValues[data.stockName].Check200)) {
                                         console.log('Placing a buy order')
                                         await dbOrdersRepo.insert({
                                             userId: userServerAlgos!.userId,
