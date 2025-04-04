@@ -335,9 +335,6 @@ export class ServerTradeScreenComponent implements OnInit {
     this.stockDataForSelectedDay = await dbStockHistoryDataRepo.find({ where: { stockName: this.selectedStockName, date: this.selectedDate }, orderBy: { time: 'asc' } })
   }
   calculateIntraDaySma() {
-    this.intraDayLongSma = 3600
-    this.intraDayMediumSma = 1800
-    this.intraDayShortSma = 300
     this.listOfLastHour = []
     this.listOfLast30Minutes = []
     this.listOfLast5Minutes = []
@@ -417,37 +414,37 @@ export class ServerTradeScreenComponent implements OnInit {
       for (let j = 1; j <= 20; j++) {
         this.sellGutter = j * .001
         this.sellGutter = Number(this.sellGutter.toPrecision(3))
-        //for (let k = 1; k <= 30; k++) {
-        //this.check200Gutter = k * .001;
-        //this.check200Gutter = Number(this.check200Gutter.toPrecision(3))
-        /* for (let m = 1; m <= 10; m++) {
-          this.intraDayShortSma = (m * 60)
-          for (let n = 20; n <= 40; n += 5) {
-            this.intraDayMediumSma = (n * 60)
-            for (let p = 60; p <= 90; p += 5) {
-              this.intraDayLongSma = (p * 60) */
-              this.bankTotal = 500
-              this.orderLocations = []
-              this.totalPofit = 0
-              //this.calculateIntraDaySma()
-              this.calculateBuyAndSellPointsIntraDay()
-              this.calculateTotalProfit()
-              this.listOfProfits.push({
-                buyBuffer: this.buyGutter,
-                sellBuffer: this.sellGutter,
-                checkBuffer: this.check200Gutter,
-                smaLong: this.intraDayLongSma,
-                smaMedium: this.intraDayMediumSma,
-                smaShort: this.intraDayShortSma,
-                profit: this.totalPofit,
-                numberOfTrades: this.orderLocations.length,
-                listOfTrades: this.orderLocations
-              })
-            /* }
+        for (let k = 1; k <= 30; k++) {
+          this.check200Gutter = k * .001;
+          this.check200Gutter = Number(this.check200Gutter.toPrecision(3))
+          for (let m = 1; m <= 10; m++) {
+            this.intraDayShortSma = (m * 60)
+            for (let n = 20; n <= 40; n += 5) {
+              this.intraDayMediumSma = (n * 60)
+              for (let p = 60; p <= 90; p += 5) {
+                this.intraDayLongSma = (p * 60)
+                this.bankTotal = 500
+                this.orderLocations = []
+                this.totalPofit = 0
+                this.calculateIntraDaySma()
+                this.calculateBuyAndSellPointsIntraDay()
+                this.calculateTotalProfit()
+                this.listOfProfits.push({
+                  buyBuffer: this.buyGutter,
+                  sellBuffer: this.sellGutter,
+                  checkBuffer: this.check200Gutter,
+                  smaLong: this.intraDayLongSma,
+                  smaMedium: this.intraDayMediumSma,
+                  smaShort: this.intraDayShortSma,
+                  profit: this.totalPofit,
+                  numberOfTrades: this.orderLocations.length,
+                  listOfTrades: this.orderLocations
+                })
+              }
+            }
           }
+
         }
- */
-        //}
 
       }
     }
