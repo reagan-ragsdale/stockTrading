@@ -17,7 +17,7 @@ import { DbStockHistoryData, dbStockHistoryDataRepo } from '../../shared/tasks/d
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TradeHistoryDetailComponent } from '../trade-history-detail/trade-history-detail.component';
 import { MatTableModule } from '@angular/material/table';
-import { dbListOfProfitsRepo } from '../../shared/tasks/dbListOfProfits';
+import { DbListOfProfits, dbListOfProfitsRepo } from '../../shared/tasks/dbListOfProfits';
 
 type serverAlgos = {
   name: string;
@@ -428,6 +428,7 @@ export class ServerTradeScreenComponent implements OnInit {
             this.intraDayShortSma = (m * 60)
             for (let n = 20; n <= 40; n += 5) {
               this.intraDayMediumSma = (n * 60)
+              let listOfProfitsInserts: DbListOfProfits[] = []
               for (let p = 60; p <= 90; p += 5) {
                 this.intraDayLongSma = (p * 60)
                 this.bankTotal = 500
@@ -436,17 +437,8 @@ export class ServerTradeScreenComponent implements OnInit {
                 this.calculateIntraDaySma()
                 this.calculateBuyAndSellPointsIntraDay()
                 this.calculateTotalProfit()
-                await dbListOfProfitsRepo.insert({
-                  buyBuffer: this.buyGutter,
-                  sellBuffer: this.sellGutter,
-                  checkBuffer: this.check200Gutter,
-                  smaLong: this.intraDayLongSma,
-                  smaMedium: this.intraDayMediumSma,
-                  smaShort: this.intraDayShortSma,
-                  profit: this.totalPofit,
-                  numberOfTrades: this.orderLocations.length
-                }) 
-               /* this.listOfProfits.push({
+                
+                listOfProfitsInserts.push({
                 buyBuffer: this.buyGutter,
                 sellBuffer: this.sellGutter,
                 checkBuffer: this.check200Gutter,
@@ -456,8 +448,9 @@ export class ServerTradeScreenComponent implements OnInit {
                 profit: this.totalPofit,
                 numberOfTrades: this.orderLocations.length
                 //listOfTrades: this.orderLocations  
-              }) */
+              }) 
               }
+              await dbListOfProfitsRepo.insert(listOfProfitsInserts) 
             }
           }
 
@@ -465,7 +458,7 @@ export class ServerTradeScreenComponent implements OnInit {
 
       }
     }
-    
+
     this.listOfProfits = await dbListOfProfitsRepo.find({orderBy: {profit: 'desc'}})
     this.topAlgos = this.listOfProfits.filter(e => e.numberOfTrades % 2 === 0).slice(0, 5)
     this.buyGutter = this.topAlgos[0].buyBuffer
