@@ -17,6 +17,7 @@ import { DbStockHistoryData, dbStockHistoryDataRepo } from '../../shared/tasks/d
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TradeHistoryDetailComponent } from '../trade-history-detail/trade-history-detail.component';
 import { MatTableModule } from '@angular/material/table';
+import { dbListOfProfitsRepo } from '../../shared/tasks/dbListOfProfits';
 
 type serverAlgos = {
   name: string;
@@ -400,10 +401,10 @@ export class ServerTradeScreenComponent implements OnInit {
     this.updateGraphBuyAndSellPointsIntraDay()
     this.calculateTotalProfit()
   }
-  onRunEntireSimulation() {
+  async onRunEntireSimulation() {
     this.isLoading = true;
     if (this.intraDayChecked) {
-      this.runEntireSimulationIntraDay()
+      await this.runEntireSimulationIntraDay()
     }
     else {
       this.runEntireSimulationInterDay()
@@ -411,7 +412,7 @@ export class ServerTradeScreenComponent implements OnInit {
 
     this.isLoading = false
   }
-  runEntireSimulationIntraDay() {
+  async runEntireSimulationIntraDay() {
     this.listOfProfits = []
     for (let i = 1; i <= 20; i++) {
       this.buyGutter = i * .001
@@ -423,18 +424,18 @@ export class ServerTradeScreenComponent implements OnInit {
           this.check200Gutter = k * .001;
           this.check200Gutter = Number(this.check200Gutter.toPrecision(3))
           for (let m = 1; m <= 10; m++) {
-            //this.intraDayShortSma = (m * 60)
-            //for (let n = 20; n <= 40; n += 5) {
-             // this.intraDayMediumSma = (n * 60)
-              //for (let p = 60; p <= 90; p += 5) {
-              //  this.intraDayLongSma = (p * 60)
+            this.intraDayShortSma = (m * 60)
+            for (let n = 20; n <= 40; n += 5) {
+              this.intraDayMediumSma = (n * 60)
+              for (let p = 60; p <= 90; p += 5) {
+                this.intraDayLongSma = (p * 60)
                 this.bankTotal = 500
                 this.orderLocations = []
                 this.totalPofit = 0
                 this.calculateIntraDaySma()
                 this.calculateBuyAndSellPointsIntraDay()
                 this.calculateTotalProfit()
-                this.listOfProfits.push({
+                /* await dbListOfProfitsRepo.insert({
                   buyBuffer: this.buyGutter,
                   sellBuffer: this.sellGutter,
                   checkBuffer: this.check200Gutter,
@@ -442,14 +443,24 @@ export class ServerTradeScreenComponent implements OnInit {
                   smaMedium: this.intraDayMediumSma,
                   smaShort: this.intraDayShortSma,
                   profit: this.totalPofit,
-                  numberOfTrades: this.orderLocations.length,
-                  listOfTrades: this.orderLocations
-                })
+                  numberOfTrades: this.orderLocations.length
+                }) */
+               this.listOfProfits.push({
+                buyBuffer: this.buyGutter,
+                sellBuffer: this.sellGutter,
+                checkBuffer: this.check200Gutter,
+                smaLong: this.intraDayLongSma,
+                smaMedium: this.intraDayMediumSma,
+                smaShort: this.intraDayShortSma,
+                profit: this.totalPofit,
+                numberOfTrades: this.orderLocations.length,
+                listOfTrades: this.orderLocations  
+              )
               }
             }
-         // }
+          }
 
-       // }
+        }
 
       }
     }
@@ -457,7 +468,7 @@ export class ServerTradeScreenComponent implements OnInit {
     this.buyGutter = this.topAlgos[0].buyBuffer
     this.sellGutter = this.topAlgos[0].sellBuffer
     this.check200Gutter = this.topAlgos[0].checkBuffer
-    
+
     this.runSimulationIntraDay()
 
   }
@@ -524,6 +535,7 @@ export class ServerTradeScreenComponent implements OnInit {
 
   }
   calculateBuyAndSellPointsIntraDay() {
+    this.orderLocations = []
     let buyOrSell = 'Buy'
     for (let i = 0; i < this.listOfLast5Minutes.length; i++) {
       if (buyOrSell == 'Buy') {

@@ -37,6 +37,7 @@ import { DbStockBasicHistory } from '../shared/tasks/dbStockBasicHistory.js'
 import { getDailyStockInfo } from '../app/apiCalls/getDailyStockInfo.js'
 import { DbStockDashInfo } from '../shared/tasks/dbStockDashInfo.js'
 import { DbAlgorithmList } from '../shared/tasks/dbAlgorithmList.js'
+import { DbListOfProfits } from '../shared/tasks/dbListOfProfits.js'
 
 //import ev from '../../environmentVariables.json'
 
@@ -67,7 +68,8 @@ export const api = remultExpress({
       DbLevelTwoData,
       DbStockBasicHistory,
       DbStockDashInfo,
-      DbAlgorithmList
+      DbAlgorithmList,
+      DbListOfProfits
     ],
     admin:true,
     getUser: (req) => req.session!['user'],
