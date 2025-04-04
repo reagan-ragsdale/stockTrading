@@ -455,7 +455,7 @@ export class ServerTradeScreenComponent implements OnInit {
                 profit: this.totalPofit,
                 numberOfTrades: this.orderLocations.length,
                 listOfTrades: this.orderLocations  
-              )
+              })
               }
             }
           }
