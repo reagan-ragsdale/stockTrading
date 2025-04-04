@@ -422,7 +422,7 @@ export class ServerTradeScreenComponent implements OnInit {
         for (let k = 1; k <= 30; k++) {
           this.check200Gutter = k * .001;
           this.check200Gutter = Number(this.check200Gutter.toPrecision(3))
-          //for (let m = 1; m <= 10; m++) {
+          for (let m = 1; m <= 10; m++) {
             //this.intraDayShortSma = (m * 60)
             //for (let n = 20; n <= 40; n += 5) {
              // this.intraDayMediumSma = (n * 60)
@@ -431,7 +431,7 @@ export class ServerTradeScreenComponent implements OnInit {
                 this.bankTotal = 500
                 this.orderLocations = []
                 this.totalPofit = 0
-                //this.calculateIntraDaySma()
+                this.calculateIntraDaySma()
                 this.calculateBuyAndSellPointsIntraDay()
                 this.calculateTotalProfit()
                 this.listOfProfits.push({
@@ -446,7 +446,7 @@ export class ServerTradeScreenComponent implements OnInit {
                   listOfTrades: this.orderLocations
                 })
               }
-          //  }
+            }
          // }
 
        // }
@@ -456,6 +456,8 @@ export class ServerTradeScreenComponent implements OnInit {
     this.topAlgos = this.listOfProfits.filter(e => e.numberOfTrades % 2 === 0).sort((a, b) => b.profit - a.profit).slice(0, 5)
     this.buyGutter = this.topAlgos[0].buyBuffer
     this.sellGutter = this.topAlgos[0].sellBuffer
+    this.check200Gutter = this.topAlgos[0].checkBuffer
+    
     this.runSimulationIntraDay()
 
   }
