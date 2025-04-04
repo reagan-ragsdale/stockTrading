@@ -31,6 +31,10 @@ type sma200Array = {
 type bufferAlgo = {
   buyBuffer: number;
   sellBuffer: number;
+  checkBuffer: number;
+  smaLong: number;
+  smaMedium: number;
+  smaShort: number;
   profit: number;
   numberOfTrades: number;
   listOfTrades: orderLocation[];
@@ -69,7 +73,7 @@ export class ServerTradeScreenComponent implements OnInit {
   listOfLastHour: sma200Array[] = []
   listOfLast30Minutes: sma200Array[] = []
   listOfLast5Minutes: sma200Array[] = []
-  displayedColumns: string[] = ['Profit', 'NoTrades', 'BuyGutter', 'SellGutter']
+  displayedColumns: string[] = ['Profit', 'NoTrades', 'BuyGutter', 'SellGutter', 'CheckGutter', 'smaLong', 'smaMedium', 'smaShort']
   intraDayLongSma: number = 0
   intraDayMediumSma: number = 0
   intraDayShortSma: number = 0
@@ -431,6 +435,10 @@ export class ServerTradeScreenComponent implements OnInit {
               this.listOfProfits.push({
                 buyBuffer: this.buyGutter,
                 sellBuffer: this.sellGutter,
+                checkBuffer: this.check200Gutter,
+                smaLong: this.intraDayLongSma,
+                smaMedium: this.intraDayMediumSma,
+                smaShort: this.intraDayShortSma,
                 profit: this.totalPofit,
                 numberOfTrades: this.orderLocations.length,
                 listOfTrades: this.orderLocations
@@ -472,6 +480,10 @@ export class ServerTradeScreenComponent implements OnInit {
           this.listOfProfits.push({
             buyBuffer: this.buyGutter,
             sellBuffer: this.sellGutter,
+            checkBuffer: this.check200Gutter,
+            smaLong: this.intraDayLongSma,
+            smaMedium: this.intraDayMediumSma,
+            smaShort: this.intraDayShortSma,
             profit: this.totalPofit,
             numberOfTrades: this.orderLocations.length,
             listOfTrades: this.orderLocations
@@ -493,6 +505,10 @@ export class ServerTradeScreenComponent implements OnInit {
         listOfAverages.push({
           buyBuffer: distinctBuys[i],
           sellBuffer: distinctSells[j],
+          checkBuffer: 0,
+          smaLong: 0,
+          smaMedium: 0,
+          smaShort: 0,
           profit: avgProfit,
           numberOfTrades: avgNumTrades,
           listOfTrades: []
@@ -574,6 +590,10 @@ export class ServerTradeScreenComponent implements OnInit {
         this.listOfProfits.push({
           buyBuffer: this.buyGutter,
           sellBuffer: this.sellGutter,
+          checkBuffer: 0,
+          smaLong: 0,
+          smaMedium: 0,
+          smaShort: 0,
           profit: this.totalPofit,
           numberOfTrades: this.orderLocations.length,
           listOfTrades: this.orderLocations

@@ -51,6 +51,26 @@
             <mat-cell *matCellDef="let element"> {{element.sellBuffer | number:'1.2-5'}} </mat-cell>
           </ng-container>
 
+          <ng-container matColumnDef="CheckGutter">
+            <mat-header-cell *matHeaderCellDef> Check Gutter </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.checkBuffer | number:'1.2-5'}} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="smaLong">
+            <mat-header-cell *matHeaderCellDef> Long Sma </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.smaLong | number:'1.2-5'}} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="smaMedium">
+            <mat-header-cell *matHeaderCellDef> Medium Sma </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.smaMedium | number:'1.2-5'}} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="smaShort">
+            <mat-header-cell *matHeaderCellDef> Short Sma </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.smaShort | number:'1.2-5'}} </mat-cell>
+          </ng-container>
+
         
           <mat-header-row *matHeaderRowDef="displayedColumns;" style="min-height:fit-content; background-color:#3C3E3D; color: #DBD4D1;" ></mat-header-row>
           <mat-row *matRowDef="let row; columns: displayedColumns;" style="min-height:fit-content; background-color:#3C3E3D; color: #DBD4D1;"></mat-row>
