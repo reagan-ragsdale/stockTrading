@@ -38,7 +38,7 @@ type bufferAlgo = {
   smaShort: number;
   profit: number;
   numberOfTrades: number;
-  listOfTrades: orderLocation[];
+  //listOfTrades: orderLocation[];
 }
 type orderLocation = {
   buySell: string;
@@ -413,6 +413,7 @@ export class ServerTradeScreenComponent implements OnInit {
     this.isLoading = false
   }
   async runEntireSimulationIntraDay() {
+    //await dbListOfProfitsRepo.deleteMany({where: {sellBuffer: {$gte: 0}}})
     this.listOfProfits = []
     for (let i = 1; i <= 20; i++) {
       this.buyGutter = i * .001
@@ -453,8 +454,8 @@ export class ServerTradeScreenComponent implements OnInit {
                 smaMedium: this.intraDayMediumSma,
                 smaShort: this.intraDayShortSma,
                 profit: this.totalPofit,
-                numberOfTrades: this.orderLocations.length,
-                listOfTrades: this.orderLocations  
+                numberOfTrades: this.orderLocations.length
+                //listOfTrades: this.orderLocations  
               })
               }
             }
@@ -468,7 +469,10 @@ export class ServerTradeScreenComponent implements OnInit {
     this.buyGutter = this.topAlgos[0].buyBuffer
     this.sellGutter = this.topAlgos[0].sellBuffer
     this.check200Gutter = this.topAlgos[0].checkBuffer
-
+    this.intraDayLongSma = this.topAlgos[0].smaLong
+    this.intraDayMediumSma = this.topAlgos[0].smaMedium
+    this.intraDayShortSma = this.topAlgos[0].smaShort
+    this.calculateIntraDaySma()
     this.runSimulationIntraDay()
 
   }
@@ -499,8 +503,8 @@ export class ServerTradeScreenComponent implements OnInit {
             smaMedium: this.intraDayMediumSma,
             smaShort: this.intraDayShortSma,
             profit: this.totalPofit,
-            numberOfTrades: this.orderLocations.length,
-            listOfTrades: this.orderLocations
+            numberOfTrades: this.orderLocations.length
+            //listOfTrades: this.orderLocations
           })
         }
       }
@@ -523,8 +527,8 @@ export class ServerTradeScreenComponent implements OnInit {
           smaMedium: 0,
           smaShort: 0,
           profit: avgProfit,
-          numberOfTrades: avgNumTrades,
-          listOfTrades: []
+          numberOfTrades: avgNumTrades
+          //listOfTrades: []
         })
       }
     }
@@ -605,8 +609,8 @@ export class ServerTradeScreenComponent implements OnInit {
           smaMedium: 0,
           smaShort: 0,
           profit: this.totalPofit,
-          numberOfTrades: this.orderLocations.length,
-          listOfTrades: this.orderLocations
+          numberOfTrades: this.orderLocations.length
+          //listOfTrades: this.orderLocations
         })
       }
     }
