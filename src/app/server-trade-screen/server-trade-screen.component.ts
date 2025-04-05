@@ -477,10 +477,11 @@ export class ServerTradeScreenComponent implements OnInit {
       for (let j = 1; j <= 20; j++) {
         this.sellGutter = j * .001
         this.sellGutter = Number(this.sellGutter.toPrecision(3))
+        let listOfProfitsInserts: DbListOfProfits[] = []
         for (let k = 1; k <= 30; k++) {
           this.check200Gutter = k * .001;
           this.check200Gutter = Number(this.check200Gutter.toPrecision(3))
-          let listOfProfitsInserts: DbListOfProfits[] = []
+          
           for (let m = 60; m <= 90; m += 5) {
             this.intraDayLongSma = (m * 60)
             let filteredLongSmaList = this.listOfLongSmaValues.filter(e => e.value == this.intraDayLongSma)
@@ -552,11 +553,11 @@ export class ServerTradeScreenComponent implements OnInit {
             
             this.listOfLastHour.length = 0
           }
-          await dbListOfProfitsRepo.insert(listOfProfitsInserts)
-          listOfProfitsInserts.length = 0
+          
 
         }
-
+        await dbListOfProfitsRepo.insert(listOfProfitsInserts)
+        listOfProfitsInserts.length = 0
       }
     }
 
