@@ -387,7 +387,7 @@ export class ServerTradeScreenComponent implements OnInit {
     this.listOfLast5Minutes.push(...tempStock5Minutes)
   }
   calculateIntraDayShortSma() {
-    this.listOfLast5Minutes = []
+    this.listOfLast5Minutes.length = 0
     //let tempStock5Minutes: sma200Array[] = []
     for (let j = this.intraDayLongSma; j < this.stockDataForSelectedDay.length; j++) {
       let last5MinutesPrice: number = 0;
@@ -401,7 +401,7 @@ export class ServerTradeScreenComponent implements OnInit {
     //this.listOfLast5Minutes.push(...tempStock5Minutes)
   }
   calculateIntraDayMediumSma() {
-    this.listOfLast30Minutes = []
+    this.listOfLast30Minutes.length = 0
     //let tempStock30Minutes: sma200Array[] = []
     for (let j = this.intraDayLongSma; j < this.stockDataForSelectedDay.length; j++) {
       let last30MinutesPrice: number = 0;
@@ -415,7 +415,7 @@ export class ServerTradeScreenComponent implements OnInit {
     //this.listOfLast30Minutes.push(...tempStock30Minutes)
   }
   calculateIntraDayLongSma() {
-    this.listOfLastHour = []
+    this.listOfLastHour.length = 0
     //let tempStockHour: sma200Array[] = []
     for (let j = this.intraDayLongSma; j < this.stockDataForSelectedDay.length; j++) {
       let lastHourPrice: number = 0;
@@ -569,15 +569,15 @@ export class ServerTradeScreenComponent implements OnInit {
   }
 
   async runEntireSimulationIntraDayAllDays() {
-    this.listOfProfits = []
+    this.listOfProfits.length = 0
     let filteredLongSmaList: smaLists[] = []
     let filteredMediumSmaList: smaChildLists[] = []
     let filteredShortSmaValue: smaChildLists[] = []
     for (let k = 0; k < this.distinctDates.length; k++) {
       this.selectedDate = this.distinctDates[k]
       await this.updateStockChartData()
-      this.listOfChildSmaValues = []
-      this.listOfLongSmaValues = []
+      this.listOfChildSmaValues.length = 0
+      this.listOfLongSmaValues.length = 0
       for (let i = 1; i <= 20; i++) {
         this.buyGutter = i * .001
         this.buyGutter = Number(this.buyGutter.toPrecision(3))
@@ -623,7 +623,7 @@ export class ServerTradeScreenComponent implements OnInit {
                 for (let p = 1; p <= 10; p++) {
                   this.intraDayShortSma = (p * 60)
                   this.bankTotal = 500
-                  this.orderLocations = []
+                  this.orderLocations.length = 0
                   this.totalPofit = 0
                   filteredShortSmaValue = this.listOfChildSmaValues.filter(e => e.type == 'Short' && e.longValue == this.intraDayLongSma && e.value == this.intraDayShortSma)
                   if (filteredShortSmaValue.length == 0) {
@@ -668,7 +668,10 @@ export class ServerTradeScreenComponent implements OnInit {
       this.stockDataForSelectedDay.length = 0
       this.listOfChildSmaValues.length = 0
       this.listOfLongSmaValues.length = 0
+      await dbListOfProfitsRepo.insert(this.listOfProfits)
+      this.listOfProfits.length = 0
     }
+    this.listOfProfits = await dbListOfProfitsRepo.find()
     console.log(this.listOfProfits.length)
     console.log('here starting getting distincts')
     let distinctBuys = this.listOfProfits.map(e => e.buyBuffer).filter((v, i, a) => a.indexOf(v) === i)
@@ -732,7 +735,6 @@ export class ServerTradeScreenComponent implements OnInit {
 
   }
   calculateBuyAndSellPointsIntraDay() {
-    this.orderLocations = []
     let buyOrSell = 'Buy'
     for (let i = 0; i < this.listOfLast5Minutes.length; i++) {
       if (buyOrSell == 'Buy') {
