@@ -339,12 +339,12 @@ export class ServerTradeScreenComponent implements OnInit {
   }
   async updateStockChartData() {
     this.stockDataForSelectedDay = await dbStockHistoryDataRepo.find({ where: { stockName: this.selectedStockName, date: this.selectedDate }, orderBy: { time: 'asc' } })
+    this.stockDataForSelectedDay = this.stockDataForSelectedDay.filter(e => reusedFunctions.isWithinTradingHoursLocal(e.time))
   }
   calculateIntraDaySma() {
     this.listOfLastHour = []
     this.listOfLast30Minutes = []
     this.listOfLast5Minutes = []
-    this.stockDataForSelectedDay = this.stockDataForSelectedDay.filter(e => reusedFunctions.isWithinTradingHoursLocal(e.time))
     let tempStockHour: sma200Array[] = []
     for (let j = this.intraDayLongSma; j < this.stockDataForSelectedDay.length; j++) {
       let lastHourPrice: number = 0;
@@ -375,6 +375,45 @@ export class ServerTradeScreenComponent implements OnInit {
     this.listOfLastHour.push(...tempStockHour)
     this.listOfLast30Minutes.push(...tempStock30Minutes)
     this.listOfLast5Minutes.push(...tempStock5Minutes)
+  }
+  calculateIntraDayShortSma() {
+    this.listOfLast5Minutes = []
+    let tempStock5Minutes: sma200Array[] = []
+    for (let j = this.intraDayLongSma; j < this.stockDataForSelectedDay.length; j++) {
+      let last5MinutesPrice: number = 0;
+      for (let k = 0; k < this.intraDayShortSma; k++) {
+        last5MinutesPrice += this.stockDataForSelectedDay[j - k].stockPrice
+      }
+      let last5MinutesAvg = last5MinutesPrice / this.intraDayShortSma
+      tempStock5Minutes.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[j].stockPrice, avg: last5MinutesAvg, date: new Date(this.stockDataForSelectedDay[j].time).toLocaleTimeString() })
+    }
+    this.listOfLast5Minutes.push(...tempStock5Minutes)
+  }
+  calculateIntraDayMediumSma() {
+    this.listOfLast30Minutes = []
+    let tempStock30Minutes: sma200Array[] = []
+    for (let j = this.intraDayLongSma; j < this.stockDataForSelectedDay.length; j++) {
+      let last30MinutesPrice: number = 0;
+      for (let k = 0; k < this.intraDayMediumSma; k++) {
+        last30MinutesPrice += this.stockDataForSelectedDay[j - k].stockPrice
+      }
+      let last30MinutesAvg = last30MinutesPrice / this.intraDayMediumSma
+      tempStock30Minutes.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[j].stockPrice, avg: last30MinutesAvg, date: new Date(this.stockDataForSelectedDay[j].time).toLocaleTimeString() })
+    }
+    this.listOfLast30Minutes.push(...tempStock30Minutes)
+  }
+  calculateIntraDayLongSma() {
+    this.listOfLastHour = []
+    let tempStockHour: sma200Array[] = []
+    for (let j = this.intraDayLongSma; j < this.stockDataForSelectedDay.length; j++) {
+      let lastHourPrice: number = 0;
+      for (let k = 0; k < this.intraDayLongSma; k++) {
+        lastHourPrice += this.stockDataForSelectedDay[j - k].stockPrice
+      }
+      let lastHourAvg = lastHourPrice / this.intraDayLongSma
+      tempStockHour.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[j].stockPrice, avg: lastHourAvg, date: new Date(this.stockDataForSelectedDay[j].time).toLocaleTimeString() })
+    }
+    this.listOfLastHour.push(...tempStockHour)
   }
   updateChartIntraDay() {
     this.stockChart.data.datasets[0].data = this.listOfLastHour.map(e => e.close)
@@ -413,7 +452,7 @@ export class ServerTradeScreenComponent implements OnInit {
     this.isLoading = false
   }
   async runEntireSimulationIntraDay() {
-    await dbListOfProfitsRepo.deleteMany({where: {sellBuffer: {$gte: 0}}})
+    await dbListOfProfitsRepo.deleteMany({ where: { sellBuffer: { $gte: 0 } } })
     this.listOfProfits = []
     for (let i = 1; i <= 20; i++) {
       this.buyGutter = i * .001
@@ -424,33 +463,35 @@ export class ServerTradeScreenComponent implements OnInit {
         for (let k = 1; k <= 30; k++) {
           this.check200Gutter = k * .001;
           this.check200Gutter = Number(this.check200Gutter.toPrecision(3))
-          for (let m = 1; m <= 10; m++) {
-            this.intraDayShortSma = (m * 60)
+          for (let m = 60; m <= 90; m += 5) {
+            this.intraDayLongSma = (m * 60)
+            this.calculateIntraDayLongSma()
             for (let n = 20; n <= 40; n += 5) {
               this.intraDayMediumSma = (n * 60)
+              this.calculateIntraDayMediumSma()
               let listOfProfitsInserts: DbListOfProfits[] = []
-              for (let p = 60; p <= 90; p += 5) {
-                this.intraDayLongSma = (p * 60)
+              for (let p = 1; p <= 10; p++) {
+                this.intraDayShortSma = (p * 60)
                 this.bankTotal = 500
                 this.orderLocations = []
                 this.totalPofit = 0
-                this.calculateIntraDaySma()
+                this.calculateIntraDayShortSma()
                 this.calculateBuyAndSellPointsIntraDay()
                 this.calculateTotalProfit()
-                
+
                 listOfProfitsInserts.push({
-                buyBuffer: this.buyGutter,
-                sellBuffer: this.sellGutter,
-                checkBuffer: this.check200Gutter,
-                smaLong: this.intraDayLongSma,
-                smaMedium: this.intraDayMediumSma,
-                smaShort: this.intraDayShortSma,
-                profit: this.totalPofit,
-                numberOfTrades: this.orderLocations.length
-                //listOfTrades: this.orderLocations  
-              }) 
+                  buyBuffer: this.buyGutter,
+                  sellBuffer: this.sellGutter,
+                  checkBuffer: this.check200Gutter,
+                  smaLong: this.intraDayLongSma,
+                  smaMedium: this.intraDayMediumSma,
+                  smaShort: this.intraDayShortSma,
+                  profit: this.totalPofit,
+                  numberOfTrades: this.orderLocations.length
+                  //listOfTrades: this.orderLocations  
+                })
               }
-              await dbListOfProfitsRepo.insert(listOfProfitsInserts) 
+              await dbListOfProfitsRepo.insert(listOfProfitsInserts)
             }
           }
 
@@ -459,7 +500,7 @@ export class ServerTradeScreenComponent implements OnInit {
       }
     }
 
-    this.listOfProfits = await dbListOfProfitsRepo.find({orderBy: {profit: 'desc'}})
+    this.listOfProfits = await dbListOfProfitsRepo.find({ orderBy: { profit: 'desc' } })
     this.topAlgos = this.listOfProfits.filter(e => e.numberOfTrades % 2 === 0).slice(0, 5)
     this.buyGutter = this.topAlgos[0].buyBuffer
     this.sellGutter = this.topAlgos[0].sellBuffer
