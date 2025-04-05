@@ -567,14 +567,15 @@ export class ServerTradeScreenComponent implements OnInit {
     this.runSimulationIntraDay()
 
   }
-
+  
   async runEntireSimulationIntraDayAllDays() {
+    //let listOfProfitIntraDayAllDays: bufferAlgo[] = new Array(this.distinctDates.length * 4200000)
     this.listOfProfits.length = 0
     let filteredLongSmaList: smaLists[] = []
     let filteredMediumSmaList: smaChildLists[] = []
     let filteredShortSmaValue: smaChildLists[] = []
-    for (let k = 0; k < this.distinctDates.length; k++) {
-      this.selectedDate = this.distinctDates[k]
+    for (let h = 0; h < this.distinctDates.length; h++) {
+      this.selectedDate = this.distinctDates[h]
       await this.updateStockChartData()
       this.listOfChildSmaValues.length = 0
       this.listOfLongSmaValues.length = 0
@@ -642,6 +643,7 @@ export class ServerTradeScreenComponent implements OnInit {
 
                   this.calculateBuyAndSellPointsIntraDay()
                   this.calculateTotalProfit()
+                  //listOfProfitIntraDayAllDays[]
                   this.listOfProfits.push({
                     buyBuffer: this.buyGutter,
                     sellBuffer: this.sellGutter,
