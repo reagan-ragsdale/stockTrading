@@ -570,7 +570,8 @@ export class ServerTradeScreenComponent implements OnInit {
     }
 
     //this.listOfProfits = await dbListOfProfitsRepo.find({ orderBy: { profit: 'desc' } })
-    this.topAlgos = this.listOfProfits.filter(e => e.numberOfTrades % 2 === 0).sort((a,b) => b.profit - a.profit).slice(0, 5)
+    console.log(this.listOfProfits.length)
+    this.topAlgos = this.listOfProfits.filter(e => e.numberOfTrades != 0 && e.numberOfTrades % 2 == 0).sort((a,b) => b.profit - a.profit).slice(0, 5)
     this.buyGutter = this.topAlgos[0].buyBuffer
     this.sellGutter = this.topAlgos[0].sellBuffer
     this.check200Gutter = this.topAlgos[0].checkBuffer
