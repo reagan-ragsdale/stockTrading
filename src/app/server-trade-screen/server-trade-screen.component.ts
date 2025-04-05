@@ -466,10 +466,11 @@ export class ServerTradeScreenComponent implements OnInit {
           for (let m = 60; m <= 90; m += 5) {
             this.intraDayLongSma = (m * 60)
             this.calculateIntraDayLongSma()
+            let listOfProfitsInserts: DbListOfProfits[] = []
             for (let n = 20; n <= 40; n += 5) {
               this.intraDayMediumSma = (n * 60)
               this.calculateIntraDayMediumSma()
-              let listOfProfitsInserts: DbListOfProfits[] = []
+
               for (let p = 1; p <= 10; p++) {
                 this.intraDayShortSma = (p * 60)
                 this.bankTotal = 500
@@ -491,8 +492,9 @@ export class ServerTradeScreenComponent implements OnInit {
                   //listOfTrades: this.orderLocations  
                 })
               }
-              await dbListOfProfitsRepo.insert(listOfProfitsInserts)
+
             }
+            await dbListOfProfitsRepo.insert(listOfProfitsInserts)
           }
 
         }
