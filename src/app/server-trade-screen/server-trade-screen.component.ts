@@ -668,10 +668,10 @@ export class ServerTradeScreenComponent implements OnInit {
       this.stockDataForSelectedDay.length = 0
       this.listOfChildSmaValues.length = 0
       this.listOfLongSmaValues.length = 0
-      await dbListOfProfitsRepo.insert(this.listOfProfits)
-      this.listOfProfits.length = 0
+      //await dbListOfProfitsRepo.insert(this.listOfProfits)
+      //this.listOfProfits.length = 0
     }
-    this.listOfProfits = await dbListOfProfitsRepo.find()
+    //this.listOfProfits = await dbListOfProfitsRepo.find()
     console.log(this.listOfProfits.length)
     console.log('here starting getting distincts')
     let distinctBuys = this.listOfProfits.map(e => e.buyBuffer).filter((v, i, a) => a.indexOf(v) === i)
