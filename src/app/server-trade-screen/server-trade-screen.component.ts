@@ -469,7 +469,7 @@ export class ServerTradeScreenComponent implements OnInit {
   async runEntireSimulationIntraDay() {
     this.listOfChildSmaValues = []
     this.listOfLongSmaValues = []
-    await dbListOfProfitsRepo.deleteMany({ where: { sellBuffer: { $gte: 0 } } })
+    //await dbListOfProfitsRepo.deleteMany({ where: { sellBuffer: { $gte: 0 } } })
     this.listOfProfits = []
     for (let i = 1; i <= 20; i++) {
       this.buyGutter = i * .001
@@ -571,6 +571,7 @@ export class ServerTradeScreenComponent implements OnInit {
 
     //this.listOfProfits = await dbListOfProfitsRepo.find({ orderBy: { profit: 'desc' } })
     console.log(this.listOfProfits.length)
+    console.log(this.listOfProfits[0])
     this.topAlgos = this.listOfProfits.filter(e => e.numberOfTrades != 0 && e.numberOfTrades % 2 == 0).sort((a,b) => b.profit - a.profit).slice(0, 5)
     this.buyGutter = this.topAlgos[0].buyBuffer
     this.sellGutter = this.topAlgos[0].sellBuffer
