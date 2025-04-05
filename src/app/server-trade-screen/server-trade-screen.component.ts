@@ -27,7 +27,7 @@ type sma200Array = {
   stockName: string;
   close: number;
   avg: number;
-  date: string;
+  //date: string;
 }
 type bufferAlgo = {
   buyBuffer: number;
@@ -136,7 +136,7 @@ export class ServerTradeScreenComponent implements OnInit {
 
       data: {// values on X-Axis
 
-        labels: this.selectedStockLast200.map(e => e.date),
+        labels: this.selectedStockLast200.map(e => ''),
 
         datasets: [
           {
@@ -264,11 +264,11 @@ export class ServerTradeScreenComponent implements OnInit {
   executeOrder(arr: sma200Array, buySell: string) {
     if (buySell == 'Buy') {
       this.bankTotal -= arr.close
-      this.orderLocations.push({ buySell: 'Buy', date: arr.date, price: arr.close })
+      this.orderLocations.push({ buySell: 'Buy', date: '', price: arr.close })
     }
     else {
       this.bankTotal += arr.close
-      this.orderLocations.push({ buySell: 'Sell', date: arr.date, price: arr.close })
+      this.orderLocations.push({ buySell: 'Sell', date: '', price: arr.close })
     }
   }
 
@@ -362,7 +362,8 @@ export class ServerTradeScreenComponent implements OnInit {
         lastHourPrice += this.stockDataForSelectedDay[j - k].stockPrice
       }
       let lastHourAvg = lastHourPrice / this.intraDayLongSma
-      tempStockHour.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[j].stockPrice, avg: lastHourAvg, date: new Date(this.stockDataForSelectedDay[j].time).toLocaleTimeString() })
+      //, date: new Date(this.stockDataForSelectedDay[j].time).toLocaleTimeString()
+      tempStockHour.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[j].stockPrice, avg: lastHourAvg })
     }
     let tempStock30Minutes: sma200Array[] = []
     for (let j = this.intraDayLongSma; j < this.stockDataForSelectedDay.length; j++) {
@@ -371,7 +372,7 @@ export class ServerTradeScreenComponent implements OnInit {
         last30MinutesPrice += this.stockDataForSelectedDay[j - k].stockPrice
       }
       let last30MinutesAvg = last30MinutesPrice / this.intraDayMediumSma
-      tempStock30Minutes.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[j].stockPrice, avg: last30MinutesAvg, date: new Date(this.stockDataForSelectedDay[j].time).toLocaleTimeString() })
+      tempStock30Minutes.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[j].stockPrice, avg: last30MinutesAvg })
     }
     let tempStock5Minutes: sma200Array[] = []
     for (let j = this.intraDayLongSma; j < this.stockDataForSelectedDay.length; j++) {
@@ -380,7 +381,7 @@ export class ServerTradeScreenComponent implements OnInit {
         last5MinutesPrice += this.stockDataForSelectedDay[j - k].stockPrice
       }
       let last5MinutesAvg = last5MinutesPrice / this.intraDayShortSma
-      tempStock5Minutes.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[j].stockPrice, avg: last5MinutesAvg, date: new Date(this.stockDataForSelectedDay[j].time).toLocaleTimeString() })
+      tempStock5Minutes.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[j].stockPrice, avg: last5MinutesAvg })
     }
     this.listOfLastHour.push(...tempStockHour)
     this.listOfLast30Minutes.push(...tempStock30Minutes)
@@ -395,7 +396,7 @@ export class ServerTradeScreenComponent implements OnInit {
         last5MinutesPrice += this.stockDataForSelectedDay[j - k].stockPrice
       }
       //let last5MinutesAvg = last5MinutesPrice / this.intraDayShortSma
-      this.listOfLast5Minutes.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[j].stockPrice, avg: (last5MinutesPrice / this.intraDayShortSma), date: new Date(this.stockDataForSelectedDay[j].time).toLocaleTimeString() })
+      this.listOfLast5Minutes.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[j].stockPrice, avg: (last5MinutesPrice / this.intraDayShortSma) })
       //tempStock5Minutes.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[j].stockPrice, avg: last5MinutesAvg, date: new Date(this.stockDataForSelectedDay[j].time).toLocaleTimeString() })
     }
     //this.listOfLast5Minutes.push(...tempStock5Minutes)
@@ -409,7 +410,7 @@ export class ServerTradeScreenComponent implements OnInit {
         last30MinutesPrice += this.stockDataForSelectedDay[j - k].stockPrice
       }
       //let last30MinutesAvg = last30MinutesPrice / this.intraDayMediumSma
-      this.listOfLast30Minutes.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[j].stockPrice, avg: (last30MinutesPrice / this.intraDayMediumSma), date: new Date(this.stockDataForSelectedDay[j].time).toLocaleTimeString() })
+      this.listOfLast30Minutes.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[j].stockPrice, avg: (last30MinutesPrice / this.intraDayMediumSma) })
       //tempStock30Minutes.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[j].stockPrice, avg: last30MinutesAvg, date: new Date(this.stockDataForSelectedDay[j].time).toLocaleTimeString() })
     }
     //this.listOfLast30Minutes.push(...tempStock30Minutes)
@@ -423,7 +424,7 @@ export class ServerTradeScreenComponent implements OnInit {
         lastHourPrice += this.stockDataForSelectedDay[j - k].stockPrice
       }
       //let lastHourAvg = lastHourPrice / this.intraDayLongSma
-      this.listOfLastHour.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[j].stockPrice, avg: (lastHourPrice / this.intraDayLongSma), date: new Date(this.stockDataForSelectedDay[j].time).toLocaleTimeString() })
+      this.listOfLastHour.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[j].stockPrice, avg: (lastHourPrice / this.intraDayLongSma)})
       //tempStockHour.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[j].stockPrice, avg: lastHourAvg, date: new Date(this.stockDataForSelectedDay[j].time).toLocaleTimeString() })
     }
     //this.listOfLastHour.push(...tempStockHour)
@@ -437,7 +438,7 @@ export class ServerTradeScreenComponent implements OnInit {
     this.stockChart.data.datasets[2].label = '30 Minutes'
     this.stockChart.data.datasets[3].data = this.listOfLast5Minutes.map(e => e.avg)
     this.stockChart.data.datasets[3].label = '5 Minutes'
-    this.stockChart.data.labels = this.listOfLastHour.map(e => e.date)
+    this.stockChart.data.labels = this.listOfLastHour.map(e => 'e.date')
     this.stockChart.options.scales.y.max = this.getMaxForChart(this.listOfLastHour)
     this.stockChart.options.scales.y.min = this.getMinForChart(this.listOfLastHour)
     this.stockChart.update()
@@ -643,7 +644,7 @@ export class ServerTradeScreenComponent implements OnInit {
 
                   this.calculateBuyAndSellPointsIntraDay()
                   this.calculateTotalProfit()
-                  //listOfProfitIntraDayAllDays[]
+                  //listOfProfitIntraDayAllDays[((h + 1) * i * j * k * m * n * p) - 1]
                   this.listOfProfits.push({
                     buyBuffer: this.buyGutter,
                     sellBuffer: this.sellGutter,
@@ -760,8 +761,9 @@ export class ServerTradeScreenComponent implements OnInit {
       this.annotationsArray.push({
         type: 'line',
         //display: this.selectedStockHistoryData.length > 0,
-        xMin: this.listOfLastHour.findIndex(x => x.date == this.orderLocations[i].date),
-        xMax: this.listOfLastHour.findIndex(x => x.date == this.orderLocations[i].date),
+        //this.listOfLastHour.findIndex(x => x.date == this.orderLocations[i].date)
+        xMin: 0,
+        xMax: 0,
         borderColor: '#7874ff',
         borderWidth: 2,
         label: {
@@ -844,8 +846,8 @@ export class ServerTradeScreenComponent implements OnInit {
       this.annotationsArray.push({
         type: 'line',
         //display: this.selectedStockHistoryData.length > 0,
-        xMin: this.selectedStockLast200.findIndex(x => x.date == this.orderLocations[i].date),
-        xMax: this.selectedStockLast200.findIndex(x => x.date == this.orderLocations[i].date),
+        xMin: 0,
+        xMax: 0,
         borderColor: '#7874ff',
         borderWidth: 2,
         label: {
@@ -868,7 +870,7 @@ export class ServerTradeScreenComponent implements OnInit {
           last200Price += filteredStock[j - k].close
         }
         let last200Avg = last200Price / 200
-        tempStock200.push({ stockName: this.distinctStocks[i], close: filteredStock[j].close, avg: last200Avg, date: new Date(filteredStock[j].date).toLocaleDateString() })
+        tempStock200.push({ stockName: this.distinctStocks[i], close: filteredStock[j].close, avg: last200Avg })
       }
       let tempStock40: sma200Array[] = []
       for (let j = 200; j < filteredStock.length; j++) {
@@ -877,7 +879,7 @@ export class ServerTradeScreenComponent implements OnInit {
           last50Price += filteredStock[j - k].close
         }
         let last200Avg = last50Price / 40
-        tempStock40.push({ stockName: this.distinctStocks[i], close: filteredStock[j].close, avg: last200Avg, date: new Date(filteredStock[j].date).toLocaleDateString() })
+        tempStock40.push({ stockName: this.distinctStocks[i], close: filteredStock[j].close, avg: last200Avg})
       }
       let tempStock5: sma200Array[] = []
       for (let j = 200; j < filteredStock.length; j++) {
@@ -886,7 +888,7 @@ export class ServerTradeScreenComponent implements OnInit {
           last50Price += filteredStock[j - k].close
         }
         let last200Avg = last50Price / 5
-        tempStock5.push({ stockName: this.distinctStocks[i], close: filteredStock[j].close, avg: last200Avg, date: new Date(filteredStock[j].date).toLocaleDateString() })
+        tempStock5.push({ stockName: this.distinctStocks[i], close: filteredStock[j].close, avg: last200Avg })
       }
       this.listOfLast200Days.push(...tempStock200)
       this.listOfLast40Days.push(...tempStock40)
@@ -902,7 +904,7 @@ export class ServerTradeScreenComponent implements OnInit {
     this.stockChart.data.datasets[2].label = '40'
     this.stockChart.data.datasets[3].data = this.selectedStockLast5.map(e => e.avg)
     this.stockChart.data.datasets[3].label = '5'
-    this.stockChart.data.labels = this.selectedStockLast200.map(e => e.date)
+    this.stockChart.data.labels = this.selectedStockLast200.map(e => 'e.date')
     this.stockChart.options.scales.y.max = this.getMaxForChart(this.selectedStockLast200)
     this.stockChart.options.scales.y.min = this.getMinForChart(this.selectedStockLast200)
     this.stockChart.update()
