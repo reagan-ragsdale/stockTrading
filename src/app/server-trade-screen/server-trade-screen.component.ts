@@ -480,7 +480,7 @@ export class ServerTradeScreenComponent implements OnInit {
         for (let k = 1; k <= 30; k++) {
           this.check200Gutter = k * .001;
           this.check200Gutter = Number(this.check200Gutter.toPrecision(3))
-          let listOfProfitsInserts: DbListOfProfits[] = []
+          //let listOfProfitsInserts: DbListOfProfits[] = []
           for (let m = 60; m <= 90; m += 5) {
             this.intraDayLongSma = (m * 60)
             let filteredLongSmaList = this.listOfLongSmaValues.filter(e => e.value == this.intraDayLongSma)
@@ -534,7 +534,7 @@ export class ServerTradeScreenComponent implements OnInit {
                 this.calculateBuyAndSellPointsIntraDay()
                 this.calculateTotalProfit()
 
-                listOfProfitsInserts.push({
+                /* listOfProfitsInserts.push({
                   buyBuffer: this.buyGutter,
                   sellBuffer: this.sellGutter,
                   checkBuffer: this.check200Gutter,
@@ -544,7 +544,15 @@ export class ServerTradeScreenComponent implements OnInit {
                   profit: this.totalPofit,
                   numberOfTrades: this.orderLocations.length
                   //listOfTrades: this.orderLocations  
-                })
+                }) */
+                this.listOfProfits.push({buyBuffer: this.buyGutter,
+                  sellBuffer: this.sellGutter,
+                  checkBuffer: this.check200Gutter,
+                  smaLong: this.intraDayLongSma,
+                  smaMedium: this.intraDayMediumSma,
+                  smaShort: this.intraDayShortSma,
+                  profit: this.totalPofit,
+                  numberOfTrades: this.orderLocations.length})
                 this.listOfLast5Minutes.length = 0
               }
               this.listOfLast30Minutes.length = 0
@@ -552,16 +560,17 @@ export class ServerTradeScreenComponent implements OnInit {
             
             this.listOfLastHour.length = 0
           }
-          await dbListOfProfitsRepo.insert(listOfProfitsInserts)
-          listOfProfitsInserts.length = 0
+          //await dbListOfProfitsRepo.insert(listOfProfitsInserts)
+          //listOfProfitsInserts.length = 0
 
         }
 
       }
+      console.log('finished outer loop iteration')
     }
 
-    this.listOfProfits = await dbListOfProfitsRepo.find({ orderBy: { profit: 'desc' } })
-    this.topAlgos = this.listOfProfits.filter(e => e.numberOfTrades % 2 === 0).slice(0, 5)
+    //this.listOfProfits = await dbListOfProfitsRepo.find({ orderBy: { profit: 'desc' } })
+    this.topAlgos = this.listOfProfits.filter(e => e.numberOfTrades % 2 === 0).sort((a,b) => b.profit - a.profit).slice(0, 5)
     this.buyGutter = this.topAlgos[0].buyBuffer
     this.sellGutter = this.topAlgos[0].sellBuffer
     this.check200Gutter = this.topAlgos[0].checkBuffer
