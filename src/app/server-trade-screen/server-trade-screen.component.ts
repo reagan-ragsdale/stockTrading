@@ -409,7 +409,7 @@ export class ServerTradeScreenComponent implements OnInit {
         last30MinutesPrice += this.stockDataForSelectedDay[j - k].stockPrice
       }
       //let last30MinutesAvg = last30MinutesPrice / this.intraDayMediumSma
-      this.listOfLast30Minutes.push({stockName: this.selectedStockName, close: this.stockDataForSelectedDay[j].stockPrice, avg: (last30MinutesPrice / this.intraDayMediumSma), date: new Date(this.stockDataForSelectedDay[j].time).toLocaleTimeString() })
+      this.listOfLast30Minutes.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[j].stockPrice, avg: (last30MinutesPrice / this.intraDayMediumSma), date: new Date(this.stockDataForSelectedDay[j].time).toLocaleTimeString() })
       //tempStock30Minutes.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[j].stockPrice, avg: last30MinutesAvg, date: new Date(this.stockDataForSelectedDay[j].time).toLocaleTimeString() })
     }
     //this.listOfLast30Minutes.push(...tempStock30Minutes)
@@ -469,7 +469,6 @@ export class ServerTradeScreenComponent implements OnInit {
   async runEntireSimulationIntraDay() {
     this.listOfChildSmaValues = []
     this.listOfLongSmaValues = []
-    //await dbListOfProfitsRepo.deleteMany({ where: { sellBuffer: { $gte: 0 } } })
     this.listOfProfits = []
     for (let i = 1; i <= 20; i++) {
       this.buyGutter = i * .001
@@ -480,25 +479,24 @@ export class ServerTradeScreenComponent implements OnInit {
         for (let k = 1; k <= 30; k++) {
           this.check200Gutter = k * .001;
           this.check200Gutter = Number(this.check200Gutter.toPrecision(3))
-          //let listOfProfitsInserts: DbListOfProfits[] = []
           for (let m = 60; m <= 90; m += 5) {
             this.intraDayLongSma = (m * 60)
             let filteredLongSmaList = this.listOfLongSmaValues.filter(e => e.value == this.intraDayLongSma)
-            if(filteredLongSmaList.length == 0){
+            if (filteredLongSmaList.length == 0) {
               this.calculateIntraDayLongSma()
               this.listOfLongSmaValues.push({
                 value: this.intraDayLongSma,
                 sma: this.listOfLastHour
               })
             }
-            else{
+            else {
               this.listOfLastHour = filteredLongSmaList[0].sma
             }
-            
+
             for (let n = 20; n <= 40; n += 5) {
               this.intraDayMediumSma = (n * 60)
               let filteredMediumSmaList = this.listOfChildSmaValues.filter(e => e.type == 'Medium' && e.longValue == this.intraDayLongSma && e.value == this.intraDayMediumSma)
-              if(filteredMediumSmaList.length == 0){
+              if (filteredMediumSmaList.length == 0) {
                 this.calculateIntraDayMediumSma()
                 this.listOfChildSmaValues.push({
                   longValue: this.intraDayLongSma,
@@ -507,10 +505,10 @@ export class ServerTradeScreenComponent implements OnInit {
                   sma: this.listOfLast30Minutes
                 })
               }
-              else{
+              else {
                 this.listOfLast30Minutes = filteredMediumSmaList[0].sma
               }
-              
+
 
               for (let p = 1; p <= 10; p++) {
                 this.intraDayShortSma = (p * 60)
@@ -518,7 +516,7 @@ export class ServerTradeScreenComponent implements OnInit {
                 this.orderLocations = []
                 this.totalPofit = 0
                 let filteredShortSmaValue = this.listOfChildSmaValues.filter(e => e.type == 'Short' && e.longValue == this.intraDayLongSma && e.value == this.intraDayShortSma)
-                if(filteredShortSmaValue.length == 0){
+                if (filteredShortSmaValue.length == 0) {
                   this.calculateIntraDayShortSma()
                   this.listOfChildSmaValues.push({
                     type: 'Short',
@@ -527,14 +525,13 @@ export class ServerTradeScreenComponent implements OnInit {
                     sma: this.listOfLast5Minutes
                   })
                 }
-                else{
+                else {
                   this.listOfLast5Minutes = filteredShortSmaValue[0].sma
                 }
-                
+
                 this.calculateBuyAndSellPointsIntraDay()
                 this.calculateTotalProfit()
-
-                /* listOfProfitsInserts.push({
+                this.listOfProfits.push({
                   buyBuffer: this.buyGutter,
                   sellBuffer: this.sellGutter,
                   checkBuffer: this.check200Gutter,
@@ -543,36 +540,23 @@ export class ServerTradeScreenComponent implements OnInit {
                   smaShort: this.intraDayShortSma,
                   profit: this.totalPofit,
                   numberOfTrades: this.orderLocations.length
-                  //listOfTrades: this.orderLocations  
-                }) */
-                this.listOfProfits.push({buyBuffer: this.buyGutter,
-                  sellBuffer: this.sellGutter,
-                  checkBuffer: this.check200Gutter,
-                  smaLong: this.intraDayLongSma,
-                  smaMedium: this.intraDayMediumSma,
-                  smaShort: this.intraDayShortSma,
-                  profit: this.totalPofit,
-                  numberOfTrades: this.orderLocations.length})
+                })
                 this.listOfLast5Minutes.length = 0
               }
               this.listOfLast30Minutes.length = 0
             }
-            
+
             this.listOfLastHour.length = 0
           }
-          //await dbListOfProfitsRepo.insert(listOfProfitsInserts)
-          //listOfProfitsInserts.length = 0
 
         }
 
       }
       console.log('finished outer loop iteration')
     }
-
-    //this.listOfProfits = await dbListOfProfitsRepo.find({ orderBy: { profit: 'desc' } })
     console.log(this.listOfProfits.length)
     console.log(this.listOfProfits[0])
-    this.topAlgos = this.listOfProfits.sort((a,b) => b.profit - a.profit).slice(0, 5)
+    this.topAlgos = this.listOfProfits.sort((a, b) => b.profit - a.profit).slice(0, 5)
     this.buyGutter = this.topAlgos[0].buyBuffer
     this.sellGutter = this.topAlgos[0].sellBuffer
     this.check200Gutter = this.topAlgos[0].checkBuffer
@@ -589,57 +573,150 @@ export class ServerTradeScreenComponent implements OnInit {
     for (let k = 0; k < this.distinctDates.length; k++) {
       this.selectedDate = this.distinctDates[k]
       await this.updateStockChartData()
-      this.calculateIntraDaySma()
-      for (let i = 1; i < 20; i++) {
+      this.listOfChildSmaValues = []
+      this.listOfLongSmaValues = []
+      this.listOfProfits = []
+      for (let i = 1; i <= 20; i++) {
         this.buyGutter = i * .001
         this.buyGutter = Number(this.buyGutter.toPrecision(3))
-        for (let j = 1; j < 20; j++) {
+        for (let j = 1; j <= 20; j++) {
           this.sellGutter = j * .001
           this.sellGutter = Number(this.sellGutter.toPrecision(3))
-          this.bankTotal = 500
-          this.orderLocations = []
-          this.totalPofit = 0
-          this.calculateBuyAndSellPointsIntraDay()
-          //this.updateGraphBuyAndSellPointsIntraDay()
-          this.calculateTotalProfit()
-          this.listOfProfits.push({
-            buyBuffer: this.buyGutter,
-            sellBuffer: this.sellGutter,
-            checkBuffer: this.check200Gutter,
-            smaLong: this.intraDayLongSma,
-            smaMedium: this.intraDayMediumSma,
-            smaShort: this.intraDayShortSma,
-            profit: this.totalPofit,
-            numberOfTrades: this.orderLocations.length
-            //listOfTrades: this.orderLocations
-          })
+          for (let k = 1; k <= 30; k++) {
+            this.check200Gutter = k * .001;
+            this.check200Gutter = Number(this.check200Gutter.toPrecision(3))
+            for (let m = 60; m <= 90; m += 5) {
+              this.intraDayLongSma = (m * 60)
+              let filteredLongSmaList = this.listOfLongSmaValues.filter(e => e.value == this.intraDayLongSma)
+              if (filteredLongSmaList.length == 0) {
+                this.calculateIntraDayLongSma()
+                this.listOfLongSmaValues.push({
+                  value: this.intraDayLongSma,
+                  sma: this.listOfLastHour
+                })
+              }
+              else {
+                this.listOfLastHour = filteredLongSmaList[0].sma
+              }
+
+              for (let n = 20; n <= 40; n += 5) {
+                this.intraDayMediumSma = (n * 60)
+                let filteredMediumSmaList = this.listOfChildSmaValues.filter(e => e.type == 'Medium' && e.longValue == this.intraDayLongSma && e.value == this.intraDayMediumSma)
+                if (filteredMediumSmaList.length == 0) {
+                  this.calculateIntraDayMediumSma()
+                  this.listOfChildSmaValues.push({
+                    longValue: this.intraDayLongSma,
+                    value: this.intraDayMediumSma,
+                    type: 'Medium',
+                    sma: this.listOfLast30Minutes
+                  })
+                }
+                else {
+                  this.listOfLast30Minutes = filteredMediumSmaList[0].sma
+                }
+
+
+                for (let p = 1; p <= 10; p++) {
+                  this.intraDayShortSma = (p * 60)
+                  this.bankTotal = 500
+                  this.orderLocations = []
+                  this.totalPofit = 0
+                  let filteredShortSmaValue = this.listOfChildSmaValues.filter(e => e.type == 'Short' && e.longValue == this.intraDayLongSma && e.value == this.intraDayShortSma)
+                  if (filteredShortSmaValue.length == 0) {
+                    this.calculateIntraDayShortSma()
+                    this.listOfChildSmaValues.push({
+                      type: 'Short',
+                      longValue: this.intraDayLongSma,
+                      value: this.intraDayShortSma,
+                      sma: this.listOfLast5Minutes
+                    })
+                  }
+                  else {
+                    this.listOfLast5Minutes = filteredShortSmaValue[0].sma
+                  }
+
+                  this.calculateBuyAndSellPointsIntraDay()
+                  this.calculateTotalProfit()
+                  this.listOfProfits.push({
+                    buyBuffer: this.buyGutter,
+                    sellBuffer: this.sellGutter,
+                    checkBuffer: this.check200Gutter,
+                    smaLong: this.intraDayLongSma,
+                    smaMedium: this.intraDayMediumSma,
+                    smaShort: this.intraDayShortSma,
+                    profit: this.totalPofit,
+                    numberOfTrades: this.orderLocations.length
+                  })
+                  this.listOfLast5Minutes.length = 0
+                }
+                this.listOfLast30Minutes.length = 0
+              }
+
+              this.listOfLastHour.length = 0
+            }
+
+          }
+
         }
+        console.log('finished outer loop iteration')
       }
     }
 
     let distinctBuys = this.listOfProfits.map(e => e.buyBuffer).filter((v, i, a) => a.indexOf(v) === i)
     let distinctSells = this.listOfProfits.map(e => e.sellBuffer).filter((v, i, a) => a.indexOf(v) === i)
+    let distinctChecks = this.listOfProfits.map(e => e.checkBuffer).filter((v, i, a) => a.indexOf(v) === i)
+    let distinctLongSma = this.listOfProfits.map(e => e.smaLong).filter((v, i, a) => a.indexOf(v) === i)
+    let distinctMediumSma = this.listOfProfits.map(e => e.smaMedium).filter((v, i, a) => a.indexOf(v) === i)
+    let distinctShortSma = this.listOfProfits.map(e => e.smaShort).filter((v, i, a) => a.indexOf(v) === i)
+
+    let distinctBuysLength = distinctBuys.length
+    let distinctSellsLength = distinctSells.length
+    let distinctChecksLength = distinctChecks.length
+    let distinctLongSmaLength = distinctLongSma.length
+    let distinctMediumSmaLength = distinctMediumSma.length
+    let distinctShortSmaLength = distinctShortSma.length
+
+
     let listOfAverages: bufferAlgo[] = []
-    for (let i = 0; i < distinctBuys.length; i++) {
-      let performers: bufferAlgo[] = []
-      for (let j = 0; j < distinctSells.length; j++) {
-        performers.push(...this.listOfProfits.filter(e => e.buyBuffer == distinctBuys[i] && e.sellBuffer == distinctSells[j]))
-        let avgProfit = performers.reduce((sum, val) => sum + val.profit, 0) / performers.length
-        let avgNumTrades = performers.reduce((sum, val) => sum + val.numberOfTrades, 0) / performers.length
-        listOfAverages.push({
-          buyBuffer: distinctBuys[i],
-          sellBuffer: distinctSells[j],
-          checkBuffer: 0,
-          smaLong: 0,
-          smaMedium: 0,
-          smaShort: 0,
-          profit: avgProfit,
-          numberOfTrades: avgNumTrades
-          //listOfTrades: []
-        })
+    let performers: bufferAlgo[] = []
+    console.log('starting filtering')
+    for (let i = 0; i < distinctBuysLength; i++) {
+      let filteredBuys = this.listOfProfits.filter(e => e.buyBuffer == distinctBuys[i])
+      for (let j = 0; j < distinctSellsLength; j++) {
+        let filteredSell = filteredBuys.filter(e => e.sellBuffer == distinctSells[j])
+        for(let k = 0; k < distinctChecksLength; k++){
+          let filteredCheck =  filteredSell.filter(e => e.checkBuffer == distinctChecks[k])
+          for(let m = 0; m < distinctLongSmaLength; m++){
+            let filteredLongSma = filteredCheck.filter(e => e.smaLong == distinctLongSma[m])
+            for(let n = 0; n < distinctMediumSmaLength; n++){
+              let filteredMediumSma = filteredLongSma.filter(e => e.smaMedium == distinctMediumSma[n])
+              for(let p = 0; p < distinctShortSmaLength; p++){
+                let filteredShortSma = filteredMediumSma.filter(e => e.smaShort == distinctShortSma[p])
+                //performers.push(...this.listOfProfits.filter(e => e.buyBuffer == distinctBuys[i] && e.sellBuffer == distinctSells[j] && e.checkBuffer == distinctChecks[k]))
+                performers.push(...filteredShortSma)
+                let avgProfit = performers.reduce((sum, val) => sum + val.profit, 0) / performers.length
+                let avgNumTrades = performers.reduce((sum, val) => sum + val.numberOfTrades, 0) / performers.length
+                listOfAverages.push({
+                  buyBuffer: filteredShortSma[0].buyBuffer,
+                  sellBuffer: filteredShortSma[0].sellBuffer,
+                  checkBuffer: filteredShortSma[0].checkBuffer,
+                  smaLong: filteredShortSma[0].smaLong,
+                  smaMedium: filteredShortSma[0].smaMedium,
+                  smaShort: filteredShortSma[0].smaShort,
+                  profit: avgProfit,
+                  numberOfTrades: avgNumTrades
+                })
+                performers.length = 0
+              }
+            }
+          }
+        }
+        
       }
     }
     this.topAlgosAllDays = listOfAverages.sort((a, b) => b.profit - a.profit).slice(0, 5)
+    console.log('done')
+    console.log(this.topAlgosAllDays)
     //this.buyGutter = this.topAlgos[0].buyBuffer
     //this.sellGutter = this.topAlgos[0].sellBuffer
     //this.runSimulationIntraDay()
@@ -702,28 +779,32 @@ export class ServerTradeScreenComponent implements OnInit {
       for (let j = 1; j < 20; j++) {
         this.sellGutter = j * .01
         this.sellGutter = Number(this.sellGutter.toPrecision(3))
-        this.bankTotal = 500
-        this.orderLocations = []
-        this.totalPofit = 0
-        this.calculateBuyAndSellPoints()
-        //this.updateGraphBuyAndSellPointsIntraDay()
-        this.calculateTotalProfit()
-        this.listOfProfits.push({
-          buyBuffer: this.buyGutter,
-          sellBuffer: this.sellGutter,
-          checkBuffer: 0,
-          smaLong: 0,
-          smaMedium: 0,
-          smaShort: 0,
-          profit: this.totalPofit,
-          numberOfTrades: this.orderLocations.length
-          //listOfTrades: this.orderLocations
-        })
+        for (let k = 1; k < 30; k++) {
+          this.check200Gutter = .01 + (k * .001)
+          this.check200Gutter = Number(this.check200Gutter.toPrecision(3))
+          this.bankTotal = 500
+          this.orderLocations = []
+          this.totalPofit = 0
+          this.calculateBuyAndSellPoints()
+          this.calculateTotalProfit()
+          this.listOfProfits.push({
+            buyBuffer: this.buyGutter,
+            sellBuffer: this.sellGutter,
+            checkBuffer: 0,
+            smaLong: 0,
+            smaMedium: 0,
+            smaShort: 0,
+            profit: this.totalPofit,
+            numberOfTrades: this.orderLocations.length
+          })
+        }
+
       }
     }
     this.topAlgos = this.listOfProfits.sort((a, b) => b.profit - a.profit).slice(0, 5)
     this.buyGutter = this.topAlgos[0].buyBuffer
     this.sellGutter = this.topAlgos[0].sellBuffer
+    this.check200Gutter = this.topAlgos[0].checkBuffer
     this.runSimulation()
   }
   calculateBuyAndSellPoints() {
