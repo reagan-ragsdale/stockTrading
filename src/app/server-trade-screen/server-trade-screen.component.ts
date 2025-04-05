@@ -575,7 +575,6 @@ export class ServerTradeScreenComponent implements OnInit {
       await this.updateStockChartData()
       this.listOfChildSmaValues = []
       this.listOfLongSmaValues = []
-      this.listOfProfits = []
       for (let i = 1; i <= 20; i++) {
         this.buyGutter = i * .001
         this.buyGutter = Number(this.buyGutter.toPrecision(3))
@@ -660,8 +659,11 @@ export class ServerTradeScreenComponent implements OnInit {
         }
         console.log('finished outer loop iteration')
       }
+      this.listOfChildSmaValues.length = 0
+      this.listOfLongSmaValues.length = 0
     }
 
+    console.log('here starting getting distincts')
     let distinctBuys = this.listOfProfits.map(e => e.buyBuffer).filter((v, i, a) => a.indexOf(v) === i)
     let distinctSells = this.listOfProfits.map(e => e.sellBuffer).filter((v, i, a) => a.indexOf(v) === i)
     let distinctChecks = this.listOfProfits.map(e => e.checkBuffer).filter((v, i, a) => a.indexOf(v) === i)
