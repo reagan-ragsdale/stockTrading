@@ -659,10 +659,11 @@ export class ServerTradeScreenComponent implements OnInit {
         }
         console.log('finished outer loop iteration')
       }
+      this.stockDataForSelectedDay.length = 0
       this.listOfChildSmaValues.length = 0
       this.listOfLongSmaValues.length = 0
     }
-
+    console.log(this.listOfProfits.length)
     console.log('here starting getting distincts')
     let distinctBuys = this.listOfProfits.map(e => e.buyBuffer).filter((v, i, a) => a.indexOf(v) === i)
     let distinctSells = this.listOfProfits.map(e => e.sellBuffer).filter((v, i, a) => a.indexOf(v) === i)
