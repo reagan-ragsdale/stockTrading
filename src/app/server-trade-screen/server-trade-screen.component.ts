@@ -622,9 +622,10 @@ export class ServerTradeScreenComponent implements OnInit {
     this.listOfProfits.length = 0
     let mapOfLongSmaValues = new Map<number, sma200Array[]>()
     let mapOfMediumSmaValues = new Map<smaListLookup, sma200Array[]>()
+    let mapOfShortSmaValues = new Map<smaListLookup, sma200Array[]>()
     let filteredLongSmaList: sma200Array[] | undefined = []
-    let filteredMediumSmaList: smaChildLists[] = []
-    let filteredShortSmaValue: smaChildLists[] = []
+    let filteredMediumSmaList: sma200Array[] | undefined = []
+    let filteredShortSmaValue: sma200Array[] | undefined = []
     for (let h = 0; h < this.distinctDates.length; h++) {
       this.selectedDate = this.distinctDates[h]
       await this.updateStockChartData()
@@ -639,7 +640,6 @@ export class ServerTradeScreenComponent implements OnInit {
             for (let m = 60; m <= 90; m += 5) {
               this.intraDayLongSma = (m * 60)
               filteredLongSmaList = mapOfLongSmaValues.get(this.intraDayLongSma)
-              //filteredLongSmaList = this.listOfLongSmaValues.filter(e => e.value == this.intraDayLongSma)
               if (filteredLongSmaList == undefined) {
                 this.calculateIntraDayLongSma()
                 mapOfLongSmaValues.set(
@@ -655,20 +655,16 @@ export class ServerTradeScreenComponent implements OnInit {
 
               for (let n = 20; n <= 40; n += 5) {
                 this.intraDayMediumSma = (n * 60)
-                filteredMediumSmaList = this.listOfChildSmaValues.filter(e => e.type == 'Medium' && e.longValue == this.intraDayLongSma && e.value == this.intraDayMediumSma)
-                if (filteredMediumSmaList.length == 0) {
+                filteredMediumSmaList = mapOfMediumSmaValues.get({long: this.intraDayLongSma, value: this.intraDayMediumSma})
+                if (filteredMediumSmaList == undefined) {
                   this.calculateIntraDayMediumSma()
-                  this.listOfChildSmaValues.push({
-                    longValue: this.intraDayLongSma,
-                    value: this.intraDayMediumSma,
-                    type: 'Medium',
-                    sma: this.listOfLast30Minutes
-                  })
+                  mapOfMediumSmaValues.set({long: this.intraDayLongSma, value: this.intraDayMediumSma}, this.listOfLast30Minutes)
                 }
                 else {
-                  this.listOfLast30Minutes = filteredMediumSmaList[0].sma
+                  this.listOfLast30Minutes = filteredMediumSmaList
+                  filteredMediumSmaList.length = 0
                 }
-                filteredMediumSmaList.length = 0
+                
 
 
                 for (let p = 1; p <= 10; p++) {
@@ -676,24 +672,19 @@ export class ServerTradeScreenComponent implements OnInit {
                   this.bankTotal = 500
                   this.orderLocations.length = 0
                   this.totalPofit = 0
-                  filteredShortSmaValue = this.listOfChildSmaValues.filter(e => e.type == 'Short' && e.longValue == this.intraDayLongSma && e.value == this.intraDayShortSma)
-                  if (filteredShortSmaValue.length == 0) {
+                  filteredShortSmaValue = mapOfShortSmaValues.get({long: this.intraDayLongSma, value: this.intraDayShortSma})
+                  if (filteredShortSmaValue == undefined) {
                     this.calculateIntraDayShortSma()
-                    this.listOfChildSmaValues.push({
-                      type: 'Short',
-                      longValue: this.intraDayLongSma,
-                      value: this.intraDayShortSma,
-                      sma: this.listOfLast5Minutes
-                    })
+                    mapOfShortSmaValues.set({long: this.intraDayLongSma, value: this.intraDayShortSma}, this.listOfLast5Minutes)
                   }
                   else {
-                    this.listOfLast5Minutes = filteredShortSmaValue[0].sma
+                    this.listOfLast5Minutes = filteredShortSmaValue
+                    filteredShortSmaValue.length = 0
                   }
-                  filteredShortSmaValue.length = 0
+                  
 
                   this.calculateBuyAndSellPointsIntraDay()
                   this.calculateTotalProfit()
-                  //listOfProfitIntraDayAllDays[((h + 1) * i * j * k * m * n * p) - 1]
                   this.listOfProfits.push({
                     buyBuffer: this.buyGutter,
                     sellBuffer: this.sellGutter,
