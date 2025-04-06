@@ -402,24 +402,12 @@ export class ServerTradeScreenComponent implements OnInit {
   }
   calculateIntraDayShortSma() {
     this.listOfLast5Minutes.length = 0
-    //let tempStock5Minutes: sma200Array[] = []
-    /*  for (let j = this.intraDayLongSma; j < this.stockDataForSelectedDay.length; j++) {
-       let last5MinutesPrice: number = 0;
-       for (let k = 0; k < this.intraDayShortSma; k++) {
-         last5MinutesPrice += this.stockDataForSelectedDay[j - k].stockPrice
-       }
-       //let last5MinutesAvg = last5MinutesPrice / this.intraDayShortSma
-       this.listOfLast5Minutes.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[j].stockPrice, avg: (last5MinutesPrice / this.intraDayShortSma) })
-       //tempStock5Minutes.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[j].stockPrice, avg: last5MinutesAvg, date: new Date(this.stockDataForSelectedDay[j].time).toLocaleTimeString() })
-     } */
-    //this.listOfLast5Minutes.push(...tempStock5Minutes)
     let windowSum: number = 0;
     for (let i = this.intraDayLongSma - this.intraDayShortSma; i < this.intraDayLongSma; i++) {
       windowSum += this.stockDataForSelectedDay[i].stockPrice;
     }
     this.listOfLast5Minutes.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[this.intraDayLongSma].stockPrice, avg: (windowSum / this.intraDayShortSma) }); // Push the average of the first window
 
-    // Step 3: Slide the window across the array
     for (let i = this.intraDayLongSma; i < this.stockDataForSelectedDay.length; i++) {
       windowSum += this.stockDataForSelectedDay[i].stockPrice - this.stockDataForSelectedDay[i - this.intraDayShortSma].stockPrice; // Add new element, remove old element
       this.listOfLast5Minutes.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[i].stockPrice, avg: (windowSum / this.intraDayShortSma) }); // Push the new average
@@ -427,17 +415,6 @@ export class ServerTradeScreenComponent implements OnInit {
   }
   calculateIntraDayMediumSma() {
     this.listOfLast30Minutes.length = 0
-    //let tempStock30Minutes: sma200Array[] = []
-    /* for (let j = this.intraDayLongSma; j < this.stockDataForSelectedDay.length; j++) {
-      let last30MinutesPrice: number = 0;
-      for (let k = 0; k < this.intraDayMediumSma; k++) {
-        last30MinutesPrice += this.stockDataForSelectedDay[j - k].stockPrice
-      }
-      //let last30MinutesAvg = last30MinutesPrice / this.intraDayMediumSma
-      this.listOfLast30Minutes.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[j].stockPrice, avg: (last30MinutesPrice / this.intraDayMediumSma) })
-      //tempStock30Minutes.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[j].stockPrice, avg: last30MinutesAvg, date: new Date(this.stockDataForSelectedDay[j].time).toLocaleTimeString() })
-    } */
-
 
     let windowSum: number = 0;
     for (let i = this.intraDayLongSma - this.intraDayMediumSma; i < this.intraDayLongSma; i++) {
@@ -445,37 +422,23 @@ export class ServerTradeScreenComponent implements OnInit {
     }
     this.listOfLast30Minutes.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[this.intraDayLongSma].stockPrice, avg: (windowSum / this.intraDayMediumSma) }); // Push the average of the first window
 
-    // Step 3: Slide the window across the array
     for (let i = this.intraDayLongSma; i < this.stockDataForSelectedDay.length; i++) {
       windowSum += this.stockDataForSelectedDay[i].stockPrice - this.stockDataForSelectedDay[i - this.intraDayMediumSma].stockPrice; // Add new element, remove old element
       this.listOfLast30Minutes.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[i].stockPrice, avg: (windowSum / this.intraDayMediumSma) }); // Push the new average
     }
-    //this.listOfLast30Minutes.push(...tempStock30Minutes)
   }
   calculateIntraDayLongSma() {
     this.listOfLastHour.length = 0
-    //let tempStockHour: sma200Array[] = []
-    /* for (let j = this.intraDayLongSma; j < this.stockDataForSelectedDay.length; j++) {
-      let lastHourPrice: number = 0;
-      for (let k = 0; k < this.intraDayLongSma; k++) {
-        lastHourPrice += this.stockDataForSelectedDay[j - k].stockPrice
-      }
-      //let lastHourAvg = lastHourPrice / this.intraDayLongSma
-      this.listOfLastHour.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[j].stockPrice, avg: (lastHourPrice / this.intraDayLongSma) })
-      //tempStockHour.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[j].stockPrice, avg: lastHourAvg, date: new Date(this.stockDataForSelectedDay[j].time).toLocaleTimeString() })
-    } */
     let windowSum: number = 0;
     for (let i = 0; i < this.intraDayLongSma; i++) {
       windowSum += this.stockDataForSelectedDay[i].stockPrice;
     }
-    this.listOfLastHour.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[this.intraDayLongSma].stockPrice, avg: (windowSum / this.intraDayLongSma) }); // Push the average of the first window
+    this.listOfLastHour.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[this.intraDayLongSma].stockPrice, avg: (windowSum / this.intraDayLongSma) }); 
 
-    // Step 3: Slide the window across the array
     for (let i = this.intraDayLongSma; i < this.stockDataForSelectedDay.length; i++) {
-      windowSum += this.stockDataForSelectedDay[i].stockPrice - this.stockDataForSelectedDay[i - this.intraDayLongSma].stockPrice; // Add new element, remove old element
-      this.listOfLastHour.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[i].stockPrice, avg: (windowSum / this.intraDayLongSma) }); // Push the new average
+      windowSum += this.stockDataForSelectedDay[i].stockPrice - this.stockDataForSelectedDay[i - this.intraDayLongSma].stockPrice; 
+      this.listOfLastHour.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[i].stockPrice, avg: (windowSum / this.intraDayLongSma) }); 
     }
-    //this.listOfLastHour.push(...tempStockHour)
   }
   updateChartIntraDay() {
     this.stockChart.data.datasets[0].data = this.listOfLastHour.map(e => e.close)
@@ -515,7 +478,7 @@ export class ServerTradeScreenComponent implements OnInit {
   }
   listOfChildSmaValues: smaChildLists[] = []
   listOfLongSmaValues: smaLists[] = []
-  async runEntireSimulationIntraDay() {
+  runEntireSimulationIntraDay() {
     this.listOfChildSmaValues = []
     this.listOfLongSmaValues = []
     this.listOfProfits = []
@@ -526,14 +489,11 @@ export class ServerTradeScreenComponent implements OnInit {
     let filteredMediumSmaList: sma200Array[] | undefined = []
     let filteredShortSmaValue: sma200Array[] | undefined = []
     for (let i = 1; i <= 20; i++) {
-      this.buyGutter = i * .001
-      this.buyGutter = Number(this.buyGutter.toPrecision(3))
+      this.buyGutter = Number((i * .001).toPrecision(3))
       for (let j = 1; j <= 20; j++) {
-        this.sellGutter = j * .001
-        this.sellGutter = Number(this.sellGutter.toPrecision(3))
+        this.sellGutter = Number((j * .001).toPrecision(3))
         for (let k = 1; k <= 30; k++) {
-          this.check200Gutter = k * .001;
-          this.check200Gutter = Number(this.check200Gutter.toPrecision(3))
+          this.check200Gutter = Number((k * .001).toPrecision(3))
           for (let m = 60; m <= 90; m += 5) {
             this.intraDayLongSma = (m * 60)
             filteredLongSmaList = mapOfLongSmaValues.get(this.intraDayLongSma)
