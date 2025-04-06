@@ -822,6 +822,7 @@ export class ServerTradeScreenComponent implements OnInit {
                 for (let h = 0; h < this.distinctDates.length; h++) {
                   console.log('here in seventh loop')
                   this.stockDataForSelectedDay = mapOfEachDayStockData.get(this.distinctDates[h])!
+                  console.log(this.distinctDates[h])
                   console.log(this.stockDataForSelectedDay.length)
                   this.bankTotal = 500
                   this.orderLocations.length = 0
