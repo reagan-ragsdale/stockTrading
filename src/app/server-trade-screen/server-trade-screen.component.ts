@@ -557,7 +557,7 @@ export class ServerTradeScreenComponent implements OnInit {
               //this.listOfLast30Minutes.length = 0
             }
 
-            //this.listOfLastHour.length = 0
+            this.listOfLastHour.length = 0
           }
 
         }
