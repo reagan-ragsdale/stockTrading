@@ -485,9 +485,9 @@ export class ServerTradeScreenComponent implements OnInit {
     let mapOfLongSmaValues = new Map<number, sma200Array[]>()
     let mapOfMediumSmaValues = new Map<smaListLookup, sma200Array[]>()
     let mapOfShortSmaValues = new Map<smaListLookup, sma200Array[]>()
-    let filteredLongSmaList: sma200Array[] | undefined = []
-    let filteredMediumSmaList: sma200Array[] | undefined = []
-    let filteredShortSmaValue: sma200Array[] | undefined = []
+    //let filteredLongSmaList: sma200Array[] | undefined = []
+    //let filteredMediumSmaList: sma200Array[] | undefined = []
+    //let filteredShortSmaValue: sma200Array[] | undefined = []
     for (let i = 1; i <= 20; i++) {
       this.buyGutter = Number((i * .001).toPrecision(3))
       for (let j = 1; j <= 20; j++) {
@@ -496,8 +496,9 @@ export class ServerTradeScreenComponent implements OnInit {
           this.check200Gutter = Number((k * .001).toPrecision(3))
           for (let m = 60; m <= 90; m += 5) {
             this.intraDayLongSma = (m * 60)
-            this.listOfLastHour.length = 0
-            filteredLongSmaList = mapOfLongSmaValues.get(this.intraDayLongSma)
+            //this.listOfLastHour.length = 0
+            let filteredLongSmaList = mapOfLongSmaValues.get(this.intraDayLongSma)
+            console.log(filteredLongSmaList)
             if (filteredLongSmaList === undefined) {
               this.calculateIntraDayLongSma()
               mapOfLongSmaValues.set(
@@ -511,7 +512,7 @@ export class ServerTradeScreenComponent implements OnInit {
 
             for (let n = 20; n <= 40; n += 5) {
               this.intraDayMediumSma = (n * 60)
-              filteredMediumSmaList = mapOfMediumSmaValues.get({long: this.intraDayLongSma, value: this.intraDayMediumSma})
+              let filteredMediumSmaList = mapOfMediumSmaValues.get({long: this.intraDayLongSma, value: this.intraDayMediumSma})
               if (filteredMediumSmaList === undefined) {
                 this.calculateIntraDayMediumSma()
                 mapOfMediumSmaValues.set(
@@ -529,7 +530,7 @@ export class ServerTradeScreenComponent implements OnInit {
                 this.bankTotal = 500
                 this.orderLocations = []
                 this.totalPofit = 0
-                filteredShortSmaValue = mapOfShortSmaValues.get({long: this.intraDayLongSma, value: this.intraDayShortSma})
+                let filteredShortSmaValue = mapOfShortSmaValues.get({long: this.intraDayLongSma, value: this.intraDayShortSma})
                 if (filteredShortSmaValue === undefined) {
                   this.calculateIntraDayShortSma()
                   mapOfShortSmaValues.set(
