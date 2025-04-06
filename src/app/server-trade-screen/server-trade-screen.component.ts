@@ -681,8 +681,9 @@ export class ServerTradeScreenComponent implements OnInit {
                     this.listOfLast5Minutes = filteredShortSmaValue
                     filteredShortSmaValue.length = 0
                   }
-                  
-
+                  console.log(this.listOfLastHour.length)
+                  console.log(this.listOfLast30Minutes.length)
+                  console.log(this.listOfLast5Minutes.length)
                   this.calculateBuyAndSellPointsIntraDay()
                   this.calculateTotalProfit()
                   this.listOfProfits.push({
