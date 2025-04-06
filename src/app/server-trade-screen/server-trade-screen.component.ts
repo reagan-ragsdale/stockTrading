@@ -836,7 +836,7 @@ export class ServerTradeScreenComponent implements OnInit {
                   
                 }
                 //calc avg here
-                
+                console.log('done with days calculating its averages')
                 let avgProfit = listOfSingleComboAllDaysResults.reduce((sum, val) => sum + val.profit, 0) / listOfSingleComboAllDaysResults.length
                 let avgNumTrades = listOfSingleComboAllDaysResults.reduce((sum, val) => sum + val.numberOfTrades, 0) / listOfSingleComboAllDaysResults.length
                 if(this.listOfProfits.length < 10){
