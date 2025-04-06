@@ -401,7 +401,7 @@ export class ServerTradeScreenComponent implements OnInit {
     this.listOfLast5Minutes.push(...tempStock5Minutes)
   }
   calculateIntraDayShortSma() {
-    this.listOfLast5Minutes = []
+    this.listOfLast5Minutes.length = 0
     //let tempStock5Minutes: sma200Array[] = []
     /*  for (let j = this.intraDayLongSma; j < this.stockDataForSelectedDay.length; j++) {
        let last5MinutesPrice: number = 0;
@@ -426,7 +426,7 @@ export class ServerTradeScreenComponent implements OnInit {
     }
   }
   calculateIntraDayMediumSma() {
-    this.listOfLast30Minutes = []
+    this.listOfLast30Minutes.length = 0
     //let tempStock30Minutes: sma200Array[] = []
     /* for (let j = this.intraDayLongSma; j < this.stockDataForSelectedDay.length; j++) {
       let last30MinutesPrice: number = 0;
@@ -453,7 +453,7 @@ export class ServerTradeScreenComponent implements OnInit {
     //this.listOfLast30Minutes.push(...tempStock30Minutes)
   }
   calculateIntraDayLongSma() {
-    this.listOfLastHour = []
+    this.listOfLastHour.length = 0
     //let tempStockHour: sma200Array[] = []
     /* for (let j = this.intraDayLongSma; j < this.stockDataForSelectedDay.length; j++) {
       let lastHourPrice: number = 0;
