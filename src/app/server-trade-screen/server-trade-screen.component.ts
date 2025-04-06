@@ -802,19 +802,27 @@ export class ServerTradeScreenComponent implements OnInit {
     }
     let listOfSingleComboAllDaysResults: bufferAlgo[] = []
     for (let i = 1; i <= 20; i++) {
+      console.log('here in first loop')
       this.buyGutter = Number((i * .001).toPrecision(3))
       for (let j = 1; j <= 20; j++) {
+        console.log('here in second loop')
         this.sellGutter = Number((j * .001).toPrecision(3))
         for (let k = 1; k <= 30; k++) {
+          console.log('here in third loop')
           this.check200Gutter = Number((k * .001).toPrecision(3))
           for (let m = 60; m <= 90; m += 5) {
+            console.log('here in fourth loop')
             this.intraDayLongSma = (m * 60)
             for (let n = 20; n <= 40; n += 5) {
+              console.log('here in fifth loop')
               this.intraDayMediumSma = (n * 60)
               for (let p = 1; p <= 10; p++) {
+                console.log('here in sixth loop')
                 this.intraDayShortSma = (p * 60)
                 for (let h = 0; h < this.distinctDates.length; h++) {
+                  console.log('here in seventh loop')
                   this.stockDataForSelectedDay = mapOfEachDayStockData.get(this.distinctDates[h])!
+                  console.log(this.stockDataForSelectedDay.length)
                   this.bankTotal = 500
                   this.orderLocations.length = 0
                   this.totalPofit = 0
