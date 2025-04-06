@@ -504,7 +504,7 @@ export class ServerTradeScreenComponent implements OnInit {
               this.calculateIntraDayLongSma()
               mapOfLongSmaValues.set(
                 this.intraDayLongSma,
-                this.listOfLastHour
+                JSON.parse(JSON.stringify(this.listOfLastHour))
               )
             }
             else {
