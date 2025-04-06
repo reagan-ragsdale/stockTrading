@@ -545,7 +545,7 @@ export class ServerTradeScreenComponent implements OnInit {
               )
             }
             else {
-              this.listOfLastHour = filteredLongSmaList.slice()
+              this.listOfLastHour = filteredLongSmaList
             }
 
             for (let n = 20; n <= 40; n += 5) {
@@ -559,7 +559,7 @@ export class ServerTradeScreenComponent implements OnInit {
                 )
               }
               else {
-                this.listOfLast30Minutes = filteredMediumSmaList.slice()
+                this.listOfLast30Minutes = filteredMediumSmaList
               }
 
 
@@ -577,7 +577,7 @@ export class ServerTradeScreenComponent implements OnInit {
                   )
                 }
                 else {
-                  this.listOfLast5Minutes = filteredShortSmaValue.slice()
+                  this.listOfLast5Minutes = filteredShortSmaValue
                 }
 
                 this.calculateBuyAndSellPointsIntraDay()
