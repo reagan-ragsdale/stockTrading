@@ -649,7 +649,7 @@ export class ServerTradeScreenComponent implements OnInit {
               }
               else {
                 this.listOfLastHour = filteredLongSmaList
-                filteredLongSmaList.length = 0
+                //filteredLongSmaList.length = 0
               }
 
 
@@ -662,7 +662,7 @@ export class ServerTradeScreenComponent implements OnInit {
                 }
                 else {
                   this.listOfLast30Minutes = filteredMediumSmaList
-                  filteredMediumSmaList.length = 0
+                  //filteredMediumSmaList.length = 0
                 }
                 
 
@@ -679,7 +679,7 @@ export class ServerTradeScreenComponent implements OnInit {
                   }
                   else {
                     this.listOfLast5Minutes = filteredShortSmaValue
-                    filteredShortSmaValue.length = 0
+                    //filteredShortSmaValue.length = 0
                   }
                   console.log(this.intraDayLongSma)
                   console.log(mapOfLongSmaValues)
