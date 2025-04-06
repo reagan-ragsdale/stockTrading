@@ -590,12 +590,12 @@ export class ServerTradeScreenComponent implements OnInit {
                   profit: this.totalPofit,
                   numberOfTrades: this.orderLocations.length
                 })
-                this.listOfLast5Minutes.length = 0
+                //this.listOfLast5Minutes.length = 0
               }
-              this.listOfLast30Minutes.length = 0
+              //this.listOfLast30Minutes.length = 0
             }
 
-            this.listOfLastHour.length = 0
+            //this.listOfLastHour.length = 0
           }
 
         }
