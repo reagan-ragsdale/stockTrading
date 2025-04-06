@@ -904,7 +904,6 @@ export class ServerTradeScreenComponent implements OnInit {
   }
   calculateBuyAndSellPointsIntraDay() {
     let buyOrSell = 'Buy'
-    console.log(this.listOfLast5Minutes)
     for (let i = 0; i < this.listOfLast5Minutes.length; i++) {
       if (buyOrSell == 'Buy' && (((this.listOfLast5Minutes[i].avg - this.listOfLast30Minutes[i].avg) / this.listOfLast30Minutes[i].avg) < (this.buyGutter * -1)) && (((this.listOfLast5Minutes[i].avg - this.listOfLastHour[i].avg) / this.listOfLastHour[i].avg) < this.check200Gutter)) {
         this.executeOrder(this.listOfLast5Minutes[i], 'Buy')
