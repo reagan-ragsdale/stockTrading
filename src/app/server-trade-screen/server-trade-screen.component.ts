@@ -414,7 +414,7 @@ export class ServerTradeScreenComponent implements OnInit {
      } */
     //this.listOfLast5Minutes.push(...tempStock5Minutes)
     let windowSum: number = 0;
-    for (let i = this.intraDayLongSma - this.intraDayShortSma; i < this.intraDayShortSma; i++) {
+    for (let i = this.intraDayLongSma - this.intraDayShortSma; i < this.intraDayLongSma; i++) {
       windowSum += this.stockDataForSelectedDay[i].stockPrice;
     }
     this.listOfLast5Minutes.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[this.intraDayLongSma].stockPrice, avg: (windowSum / this.intraDayShortSma) }); // Push the average of the first window
