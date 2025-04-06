@@ -326,7 +326,7 @@ export class ServerTradeScreenComponent implements OnInit {
   }
   async onRunEntireSimulationIntraDayAllDays() {
     this.isLoading = true;
-    await this.runEntireSimulationIntraDayAllDays()
+    await this.runEntireSimulationIntraDayAllDays2()
     this.isLoading = false
   }
   /* Intra Day */
