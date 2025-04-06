@@ -498,6 +498,7 @@ export class ServerTradeScreenComponent implements OnInit {
             this.intraDayLongSma = (m * 60)
             //this.listOfLastHour.length = 0
             let filteredLongSmaList = mapOfLongSmaValues.get(this.intraDayLongSma)
+            console.log(this.intraDayLongSma)
             console.log(filteredLongSmaList)
             if (filteredLongSmaList === undefined) {
               this.calculateIntraDayLongSma()
