@@ -496,6 +496,7 @@ export class ServerTradeScreenComponent implements OnInit {
           this.check200Gutter = Number((k * .001).toPrecision(3))
           for (let m = 60; m <= 90; m += 5) {
             this.intraDayLongSma = (m * 60)
+            this.listOfLastHour.length = 0
             filteredLongSmaList = mapOfLongSmaValues.get(this.intraDayLongSma)
             if (filteredLongSmaList === undefined) {
               this.calculateIntraDayLongSma()
@@ -557,7 +558,7 @@ export class ServerTradeScreenComponent implements OnInit {
               //this.listOfLast30Minutes.length = 0
             }
 
-            this.listOfLastHour.length = 0
+            //this.listOfLastHour.length = 0
           }
 
         }
