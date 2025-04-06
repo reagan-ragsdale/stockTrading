@@ -682,6 +682,7 @@ export class ServerTradeScreenComponent implements OnInit {
                     filteredShortSmaValue.length = 0
                   }
                   console.log(this.intraDayLongSma)
+                  console.log(mapOfLongSmaValues)
                   console.log(this.listOfLastHour.length)
                   console.log(this.listOfLast30Minutes.length)
                   console.log(this.listOfLast5Minutes.length)
