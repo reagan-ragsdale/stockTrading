@@ -96,12 +96,12 @@ export const socketCall = async (): Promise<void> => {
             Check200: .10
         }
     }
-    let stockData: { [key: string]: { previousPrice: number, history: number[], last3600: number[], last3600sma: number, last1800sma: number, last300sma: number } } = {
-        'AAPL': { previousPrice: 0, history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0 },
-        'MSFT': { previousPrice: 0, history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0 },
-        'PLTR': { previousPrice: 0, history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0 },
-        'AMD': { previousPrice: 0, history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0 },
-        'TSLA': { previousPrice: 0, history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0 }
+    let stockData: { [key: string]: { history: number[], last3600: number[], last3600sma: number, last1800sma: number, last300sma: number } } = {
+        'AAPL': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0 },
+        'MSFT': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0 },
+        'PLTR': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0 },
+        'AMD': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0 },
+        'TSLA': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0 }
     }
 
 
@@ -167,79 +167,72 @@ export const socketCall = async (): Promise<void> => {
                             //insertData.push(data)
                             //check to see if its an outlier
                             //add if it's within trading hours
-                            if (stockData[data.stockName].previousPrice == 0) {
-                                insertData.push(data)
-                                stockData[data.stockName].previousPrice = data.stockPrice
+
+                            stockData[data.stockName].history.push(data.stockPrice)
+                            insertData.push(data)
+                            if (data.stockName == 'TSLA') {
                                 stockData[data.stockName].history.push(data.stockPrice)
-                            }
-                            else if (Math.abs((stockData[data.stockName].previousPrice - data.stockPrice) / stockData[data.stockName].previousPrice) < .015) {
-                                insertData.push(data)
-                                if (data.stockName == 'TSLA') {
-                                    stockData[data.stockName].previousPrice = data.stockPrice
-                                    stockData[data.stockName].history.push(data.stockPrice)
-                                    console.log(stockData[data.stockName].history.length)
-                                    if (stockData[data.stockName].history.length == 3600) {
-                                        stockData[data.stockName].last3600 = stockData[data.stockName].history
-                                        stockData[data.stockName].last3600sma = stockData[data.stockName].last3600.reduce((sum, val) => sum + val, 0) / 3600
-                                        stockData[data.stockName].last1800sma = stockData[data.stockName].last3600.slice(-1800).reduce((sum, val) => sum + val, 0) / 1800
-                                        stockData[data.stockName].last300sma = stockData[data.stockName].last3600.slice(-300).reduce((sum, val) => sum + val, 0) / 300
-                                    }
-                                    else if (stockData[data.stockName].history.length > 3600) {
-                                        stockData[data.stockName].last3600.shift()
-                                        stockData[data.stockName].last3600.push(data.stockPrice)
-                                        stockData[data.stockName].last3600sma = stockData[data.stockName].last3600.reduce((sum, val) => sum + val, 0) / 3600
-                                        stockData[data.stockName].last1800sma = stockData[data.stockName].last3600.slice(-1800).reduce((sum, val) => sum + val, 0) / 1800
-                                        stockData[data.stockName].last300sma = stockData[data.stockName].last3600.slice(-300).reduce((sum, val) => sum + val, 0) / 300
-                                    }
-                                    //for (let i = 0; i < userServerAlgos.length; i++) {
-                                    let filteredOrderOnUserAndStock = userOrders.filter(e => e.userId == userServerAlgos!.userId && e.stockName == data.stockName)[0]
-                                    let isBuy = filteredOrderOnUserAndStock.orderType == 'Sell' ? true : false;
-                                    console.log(isBuy)
-                                    if (isBuy && (((stockData[data.stockName].last300sma - stockData[data.stockName].last1800sma) / stockData[data.stockName].last1800sma) < (stockDayTradeValues[data.stockName].Buy * -1)) && (((stockData[data.stockName].last300sma - stockData[data.stockName].last3600sma) / stockData[data.stockName].last3600sma) < stockDayTradeValues[data.stockName].Check200)) {
-                                        console.log('Placing a buy order')
-                                        await dbOrdersRepo.insert({
-                                            userId: userServerAlgos!.userId,
-                                            //userServerAlgos[i].userId,
-                                            stockName: data.stockName,
-                                            orderType: 'Buy',
-                                            stockPrice: data.stockPrice,
-                                            shareQty: 1,
-                                            orderTime: data.time
-                                        })
-                                        userOrders = await dbOrdersRepo.find({ where: { userId: userServerAlgos!.userId }, orderBy: { orderTime: 'desc' } })
-                                        /* const simUser = simFinUser.filter(e => e.userId == userServerAlgos[i].userId)[0]
-                                        let newAmount = simUser!.spending - 20
-                                        await simFinRepo.save({ ...simUser, spending: newAmount })
-                                        let stockUser = stocks.filter(e => e.userId == userServerAlgos[i].userId && e.stockName == data.stockName)[0]
-                                        let newStockAmnt = stockUser.shareQty + (20 / data.stockPrice)
-                                        await usersStocksRepo.save({ ...stockUser, shareQty: newStockAmnt }) */
-                                    }
-                                    else if (!isBuy && (((stockData[data.stockName].last300sma - stockData[data.stockName].last1800sma) / stockData[data.stockName].last1800sma) > stockDayTradeValues[data.stockName].Sell) && data.stockPrice > filteredOrderOnUserAndStock.stockPrice) {
-                                        console.log('Placing a sell order')
-                                        await dbOrdersRepo.insert({
-                                            userId: userServerAlgos!.userId,
-                                            //userServerAlgos[i].userId,
-                                            stockName: data.stockName,
-                                            orderType: 'Sell',
-                                            stockPrice: data.stockPrice,
-                                            shareQty: filteredOrderOnUserAndStock.shareQty,
-                                            orderTime: data.time
-                                        })
-                                        userOrders = await dbOrdersRepo.find({ where: { userId: userServerAlgos!.userId }, orderBy: { orderTime: 'desc' } })
-                                        /* const simUser = simFinUser.filter(e => e.userId == userServerAlgos[i].userId)[0]
-                                        let newAmount = simUser!.spending + (filteredOrderOnUserAndStock.shareQty * data.stockPrice)
-                                        await simFinRepo.save({ ...simUser, spending: newAmount })
-                                        let stockUser = stocks.filter(e => e.userId == userServerAlgos[i].userId && e.stockName == data.stockName)[0]
-                                        let newStockAmnt = stockUser.shareQty - filteredOrderOnUserAndStock.shareQty
-                                        await usersStocksRepo.save({ ...stockUser, shareQty: newStockAmnt }) */
-                                    }
-                                    //}
+                                console.log(stockData[data.stockName].history.length)
+                                if (stockData[data.stockName].history.length == 3600) {
+                                    stockData[data.stockName].last3600 = stockData[data.stockName].history
+                                    stockData[data.stockName].last3600sma = stockData[data.stockName].last3600.reduce((sum, val) => sum + val, 0) / 3600
+                                    stockData[data.stockName].last1800sma = stockData[data.stockName].last3600.slice(-1800).reduce((sum, val) => sum + val, 0) / 1800
+                                    stockData[data.stockName].last300sma = stockData[data.stockName].last3600.slice(-300).reduce((sum, val) => sum + val, 0) / 300
                                 }
-
-
-
-
+                                else if (stockData[data.stockName].history.length > 3600) {
+                                    stockData[data.stockName].last3600.shift()
+                                    stockData[data.stockName].last3600.push(data.stockPrice)
+                                    stockData[data.stockName].last3600sma = stockData[data.stockName].last3600.reduce((sum, val) => sum + val, 0) / 3600
+                                    stockData[data.stockName].last1800sma = stockData[data.stockName].last3600.slice(-1800).reduce((sum, val) => sum + val, 0) / 1800
+                                    stockData[data.stockName].last300sma = stockData[data.stockName].last3600.slice(-300).reduce((sum, val) => sum + val, 0) / 300
+                                }
+                                //for (let i = 0; i < userServerAlgos.length; i++) {
+                                let filteredOrderOnUserAndStock = userOrders.filter(e => e.userId == userServerAlgos!.userId && e.stockName == data.stockName)[0]
+                                let isBuy = filteredOrderOnUserAndStock.orderType == 'Sell' ? true : false;
+                                console.log(isBuy)
+                                if (isBuy && (((stockData[data.stockName].last300sma - stockData[data.stockName].last1800sma) / stockData[data.stockName].last1800sma) < (stockDayTradeValues[data.stockName].Buy * -1)) && (((stockData[data.stockName].last300sma - stockData[data.stockName].last3600sma) / stockData[data.stockName].last3600sma) < stockDayTradeValues[data.stockName].Check200)) {
+                                    console.log('Placing a buy order')
+                                    await dbOrdersRepo.insert({
+                                        userId: userServerAlgos!.userId,
+                                        //userServerAlgos[i].userId,
+                                        stockName: data.stockName,
+                                        orderType: 'Buy',
+                                        stockPrice: data.stockPrice,
+                                        shareQty: 1,
+                                        orderTime: data.time
+                                    })
+                                    userOrders = await dbOrdersRepo.find({ where: { userId: userServerAlgos!.userId }, orderBy: { orderTime: 'desc' } })
+                                    /* const simUser = simFinUser.filter(e => e.userId == userServerAlgos[i].userId)[0]
+                                    let newAmount = simUser!.spending - 20
+                                    await simFinRepo.save({ ...simUser, spending: newAmount })
+                                    let stockUser = stocks.filter(e => e.userId == userServerAlgos[i].userId && e.stockName == data.stockName)[0]
+                                    let newStockAmnt = stockUser.shareQty + (20 / data.stockPrice)
+                                    await usersStocksRepo.save({ ...stockUser, shareQty: newStockAmnt }) */
+                                }
+                                else if (!isBuy && (((stockData[data.stockName].last300sma - stockData[data.stockName].last1800sma) / stockData[data.stockName].last1800sma) > stockDayTradeValues[data.stockName].Sell) && data.stockPrice > filteredOrderOnUserAndStock.stockPrice) {
+                                    console.log('Placing a sell order')
+                                    await dbOrdersRepo.insert({
+                                        userId: userServerAlgos!.userId,
+                                        //userServerAlgos[i].userId,
+                                        stockName: data.stockName,
+                                        orderType: 'Sell',
+                                        stockPrice: data.stockPrice,
+                                        shareQty: filteredOrderOnUserAndStock.shareQty,
+                                        orderTime: data.time
+                                    })
+                                    userOrders = await dbOrdersRepo.find({ where: { userId: userServerAlgos!.userId }, orderBy: { orderTime: 'desc' } })
+                                    /* const simUser = simFinUser.filter(e => e.userId == userServerAlgos[i].userId)[0]
+                                    let newAmount = simUser!.spending + (filteredOrderOnUserAndStock.shareQty * data.stockPrice)
+                                    await simFinRepo.save({ ...simUser, spending: newAmount })
+                                    let stockUser = stocks.filter(e => e.userId == userServerAlgos[i].userId && e.stockName == data.stockName)[0]
+                                    let newStockAmnt = stockUser.shareQty - filteredOrderOnUserAndStock.shareQty
+                                    await usersStocksRepo.save({ ...stockUser, shareQty: newStockAmnt }) */
+                                }
+                                //}
                             }
+
+
+
 
                         }
                     }

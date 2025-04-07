@@ -546,8 +546,8 @@ export class ServerTradeScreenComponent implements OnInit {
       console.log('finished outer loop iteration')
     }
     console.log(listOfProfits.length)
-    console.log(listOfProfits.sort((a, b) => a.profit - b.profit).slice(0, 50))
-    this.topAlgos = listOfProfits.sort((a, b) => a.profit - b.profit).slice(0, 5)
+    console.log(listOfProfits.sort((a, b) => b.profit - a.profit).slice(0, 50))
+    this.topAlgos = listOfProfits.sort((a, b) => b.profit - a.profit).slice(0, 5)
     this.buyGutter = this.topAlgos[0].buyBuffer
     this.sellGutter = this.topAlgos[0].sellBuffer
     this.check200Gutter = this.topAlgos[0].checkBuffer
