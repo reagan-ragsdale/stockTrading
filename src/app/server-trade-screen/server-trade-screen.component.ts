@@ -410,6 +410,7 @@ export class ServerTradeScreenComponent implements OnInit {
     this.listOfLast5Minutes.push(...tempStock5Minutes)
   }
   calculateIntraDayShortSma(longValue: number, shortValue: number) {
+    console.time('shortSma')
     let returnArray: sma200Array[] = []
     let windowSum: number = 0;
     for (let i = longValue - shortValue; i < longValue; i++) {
@@ -421,11 +422,12 @@ export class ServerTradeScreenComponent implements OnInit {
       windowSum += this.stockDataForSelectedDay[i].stockPrice - this.stockDataForSelectedDay[i - shortValue].stockPrice; // Add new element, remove old element
       returnArray.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[i].stockPrice, avg: (windowSum / shortValue) }); // Push the new average
     }
+    console.timeEnd('shortSma')
     return returnArray
   }
   calculateIntraDayMediumSma(longValue: number, mediumValue: number) {
+    console.time('mediumSma')
     let returnArray: sma200Array[] = []
-
     let windowSum: number = 0;
     for (let i = longValue - mediumValue; i < longValue; i++) {
       windowSum += this.stockDataForSelectedDay[i].stockPrice;
@@ -436,9 +438,11 @@ export class ServerTradeScreenComponent implements OnInit {
       windowSum += this.stockDataForSelectedDay[i].stockPrice - this.stockDataForSelectedDay[i - mediumValue].stockPrice; // Add new element, remove old element
       returnArray.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[i].stockPrice, avg: (windowSum / mediumValue) }); // Push the new average
     }
+    console.timeEnd('mediumSma')
     return returnArray
   }
   calculateIntraDayLongSma(longValue: number): sma200Array[] {
+    console.time('longSma')
     let returnArray: sma200Array[] = []
     let windowSum: number = 0;
     for (let i = 0; i < longValue; i++) {
@@ -450,6 +454,7 @@ export class ServerTradeScreenComponent implements OnInit {
       windowSum += this.stockDataForSelectedDay[i].stockPrice - this.stockDataForSelectedDay[i - longValue].stockPrice; 
       returnArray.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[i].stockPrice, avg: (windowSum / longValue) }); 
     }
+    console.timeEnd('longSma')
     return returnArray
   }
   updateChartIntraDay() {
@@ -536,7 +541,9 @@ export class ServerTradeScreenComponent implements OnInit {
                     listOfLastShortResult
                   )
                 }
+                console.time('calculateBuyAndSellPointsIntraDayNew')
                 this.calculateBuyAndSellPointsIntraDayNew(mapOfLongSmaValues.get(intraDayLongSma)!, mapOfMediumSmaValues.get(JSON.stringify({long: intraDayLongSma, value: intraDayMediumSma}))!, mapOfShortSmaValues.get(JSON.stringify({long: intraDayLongSma, value: intraDayShortSma}))!, buyGutter, sellGutter, check200Gutter)
+                console.time('calculateBuyAndSellPointsIntraDayNew')
                 let totalProfit = this.calculateTotalProfitNew()
                 listOfProfits.push({
                   buyBuffer: buyGutter,
