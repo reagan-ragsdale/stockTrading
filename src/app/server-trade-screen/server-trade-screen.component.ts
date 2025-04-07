@@ -536,9 +536,6 @@ export class ServerTradeScreenComponent implements OnInit {
                     listOfLastShortResult
                   )
                 }
-                console.log(mapOfShortSmaValues)
-                console.log(mapOfShortSmaValues.get(JSON.stringify({long: intraDayLongSma, value: intraDayShortSma}))!)
-                console.log([intraDayLongSma, intraDayShortSma])
                 this.calculateBuyAndSellPointsIntraDayNew(mapOfLongSmaValues.get(intraDayLongSma)!, mapOfMediumSmaValues.get(JSON.stringify({long: intraDayLongSma, value: intraDayMediumSma}))!, mapOfShortSmaValues.get(JSON.stringify({long: intraDayLongSma, value: intraDayShortSma}))!, buyGutter, sellGutter, check200Gutter)
                 let totalProfit = this.calculateTotalProfitNew()
                 listOfProfits.push({
