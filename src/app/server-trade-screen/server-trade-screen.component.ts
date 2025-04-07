@@ -502,7 +502,7 @@ export class ServerTradeScreenComponent implements OnInit {
               this.calculateIntraDayLongSma()
               mapOfLongSmaValues.set(
                 this.intraDayLongSma,
-                JSON.parse(JSON.stringify(this.listOfLastHour))
+                this.listOfLastHour
               )
             }
             else {
@@ -516,7 +516,7 @@ export class ServerTradeScreenComponent implements OnInit {
                 this.calculateIntraDayMediumSma()
                 mapOfMediumSmaValues.set(
                  {long: this.intraDayLongSma, value: this.intraDayMediumSma},
-                 JSON.parse(JSON.stringify(this.listOfLast30Minutes))
+                 this.listOfLast30Minutes
                 )
               }
               else {
@@ -538,7 +538,7 @@ export class ServerTradeScreenComponent implements OnInit {
                   )
                 }
                 else {
-                  this.listOfLast5Minutes = JSON.parse(JSON.stringify(filteredShortSmaValue))
+                  this.listOfLast5Minutes = filteredShortSmaValue
                 }
 
                 this.calculateBuyAndSellPointsIntraDay()
