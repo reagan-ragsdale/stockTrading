@@ -277,10 +277,10 @@ export class ServerTradeScreenComponent implements OnInit {
   executeOrder(arr: sma200Array, buySell: string) {
     let orderLocations: orderLocation[] = []
     if (buySell == 'Buy') {
-      this.orderLocations.push({ buySell: 'Buy', date: '', price: arr.close })
+      this.orderLocations.push({ buySell: 'Buy', date: arr.date, price: arr.close })
     }
     else {
-      this.orderLocations.push({ buySell: 'Sell', date: '', price: arr.close })
+      this.orderLocations.push({ buySell: 'Sell', date: arr.date, price: arr.close })
     }
   }
 
@@ -459,7 +459,7 @@ export class ServerTradeScreenComponent implements OnInit {
     this.stockChart.data.datasets[2].label = '30 Minutes'
     this.stockChart.data.datasets[3].data = this.listOfLast5Minutes.map(e => e.avg)
     this.stockChart.data.datasets[3].label = '5 Minutes'
-    this.stockChart.data.labels = this.listOfLastHour.map(e => 'e.date')
+    this.stockChart.data.labels = this.listOfLastHour.map(e => e.date)
     this.stockChart.options.scales.y.max = this.getMaxForChart(this.listOfLastHour)
     this.stockChart.options.scales.y.min = this.getMinForChart(this.listOfLastHour)
     this.stockChart.update()
@@ -969,8 +969,8 @@ export class ServerTradeScreenComponent implements OnInit {
       this.annotationsArray.push({
         type: 'line',
         //display: this.selectedStockHistoryData.length > 0,
-        xMin: 0,
-        xMax: 0,
+        xMin: this.listOfLast200Days.findIndex(x => x.date == this.orderLocations[i].date),
+        xMax: this.listOfLast200Days.findIndex(x => x.date == this.orderLocations[i].date),
         borderColor: '#7874ff',
         borderWidth: 2,
         label: {
