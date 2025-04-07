@@ -277,12 +277,11 @@ export class ServerTradeScreenComponent implements OnInit {
   executeOrder(arr: sma200Array, buySell: string) {
     let orderLocations: orderLocation[] = []
     if (buySell == 'Buy') {
-      orderLocations.push({ buySell: 'Buy', date: '', price: arr.close })
+      this.orderLocations.push({ buySell: 'Buy', date: '', price: arr.close })
     }
     else {
-      orderLocations.push({ buySell: 'Sell', date: '', price: arr.close })
+      this.orderLocations.push({ buySell: 'Sell', date: '', price: arr.close })
     }
-    return orderLocations
   }
 
   totalPofit: number = 0;
