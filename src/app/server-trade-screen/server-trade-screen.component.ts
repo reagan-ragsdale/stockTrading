@@ -413,7 +413,49 @@ export class ServerTradeScreenComponent implements OnInit {
     this.listOfLast30Minutes.push(...tempStock30Minutes)
     this.listOfLast5Minutes.push(...tempStock5Minutes)
   }
-  calculateIntraDayShortSma(longValue: number, shortValue: number, selectedStockData: DbStockHistoryData[]) {
+  calculateIntraDayShortSma(longValue: number, shortValue: number) {
+    let returnArray: sma200Array[] = []
+    let windowSum: number = 0;
+    for (let i = longValue - shortValue; i < longValue; i++) {
+      windowSum += this.stockDataForSelectedDay[i].stockPrice;
+    }
+    returnArray.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[longValue].stockPrice, avg: (windowSum / shortValue), date: new Date(this.stockDataForSelectedDay[longValue].time).toLocaleTimeString() }); // Push the average of the first window
+
+    for (let i = longValue; i < this.stockDataForSelectedDay.length; i++) {
+      windowSum += this.stockDataForSelectedDay[i].stockPrice - this.stockDataForSelectedDay[i - shortValue].stockPrice; // Add new element, remove old element
+      returnArray.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[i].stockPrice, avg: (windowSum / shortValue), date: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString() }); // Push the new average
+    }
+    return returnArray
+  }
+  calculateIntraDayMediumSma(longValue: number, mediumValue: number) {
+    let returnArray: sma200Array[] = []
+    let windowSum: number = 0;
+    for (let i = longValue - mediumValue; i < longValue; i++) {
+      windowSum += this.stockDataForSelectedDay[i].stockPrice;
+    }
+    returnArray.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[longValue].stockPrice, avg: (windowSum / mediumValue), date: new Date(this.stockDataForSelectedDay[longValue].time).toLocaleTimeString() }); // Push the average of the first window
+
+    for (let i = longValue; i < this.stockDataForSelectedDay.length; i++) {
+      windowSum += this.stockDataForSelectedDay[i].stockPrice - this.stockDataForSelectedDay[i - mediumValue].stockPrice; // Add new element, remove old element
+      returnArray.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[i].stockPrice, avg: (windowSum / mediumValue), date: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString() }); // Push the new average
+    }
+    return returnArray
+  }
+  calculateIntraDayLongSma(longValue: number): sma200Array[] {
+    let returnArray: sma200Array[] = []
+    let windowSum: number = 0;
+    for (let i = 0; i < longValue; i++) {
+      windowSum += this.stockDataForSelectedDay[i].stockPrice;
+    }
+    returnArray.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[longValue].stockPrice, avg: (windowSum / longValue), date: new Date(this.stockDataForSelectedDay[longValue].time).toLocaleTimeString() });
+
+    for (let i = longValue; i < this.stockDataForSelectedDay.length; i++) {
+      windowSum += this.stockDataForSelectedDay[i].stockPrice - this.stockDataForSelectedDay[i - longValue].stockPrice;
+      returnArray.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[i].stockPrice, avg: (windowSum / longValue), date: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString() });
+    }
+    return returnArray
+  }
+  calculateIntraDayShortSmaAllDays(longValue: number, shortValue: number, selectedStockData: DbStockHistoryData[]) {
     let returnArray: sma200Array[] = []
     let windowSum: number = 0;
     for (let i = longValue - shortValue; i < longValue; i++) {
@@ -427,7 +469,7 @@ export class ServerTradeScreenComponent implements OnInit {
     }
     return returnArray
   }
-  calculateIntraDayMediumSma(longValue: number, mediumValue: number, selectedStockData: DbStockHistoryData[]) {
+  calculateIntraDayMediumSmaAllDays(longValue: number, mediumValue: number, selectedStockData: DbStockHistoryData[]) {
     let returnArray: sma200Array[] = []
     let windowSum: number = 0;
     for (let i = longValue - mediumValue; i < longValue; i++) {
@@ -441,7 +483,7 @@ export class ServerTradeScreenComponent implements OnInit {
     }
     return returnArray
   }
-  calculateIntraDayLongSma(longValue: number, selectedStockData: DbStockHistoryData[]): sma200Array[] {
+  calculateIntraDayLongSmaAllDays(longValue: number, selectedStockData: DbStockHistoryData[]): sma200Array[] {
     let returnArray: sma200Array[] = []
     let windowSum: number = 0;
     for (let i = 0; i < longValue; i++) {
@@ -504,7 +546,7 @@ export class ServerTradeScreenComponent implements OnInit {
         for (let k = 1; k <= 30; k++) {
           for (let m = 60; m <= 90; m += 5) {
             if (mapOfLongSmaValues.get(m * 60) === undefined) {
-              let listOfLastHourResult = this.calculateIntraDayLongSma(m * 60, this.stockDataForSelectedDay)
+              let listOfLastHourResult = this.calculateIntraDayLongSma(m * 60)
               mapOfLongSmaValues.set(
                 m * 60,
                 listOfLastHourResult
@@ -513,7 +555,7 @@ export class ServerTradeScreenComponent implements OnInit {
 
             for (let n = 20; n <= 40; n += 5) {
               if (mapOfMediumSmaValues.get(JSON.stringify({ long: m * 60, value: n * 60 })) === undefined) {
-                let listOfLastMediumResult = this.calculateIntraDayMediumSma(m * 60, n * 60, this.stockDataForSelectedDay)
+                let listOfLastMediumResult = this.calculateIntraDayMediumSma(m * 60, n * 60)
                 mapOfMediumSmaValues.set(
                   JSON.stringify({ long: m * 60, value: n * 60 }),
                   listOfLastMediumResult
@@ -521,7 +563,7 @@ export class ServerTradeScreenComponent implements OnInit {
               }
               for (let p = 1; p <= 10; p++) {
                 if (mapOfShortSmaValues.get(JSON.stringify({ long: m * 60, value: p * 60 })) === undefined) {
-                  let listOfLastShortResult = this.calculateIntraDayShortSma(m * 60, p * 60, this.stockDataForSelectedDay)
+                  let listOfLastShortResult = this.calculateIntraDayShortSma(m * 60, p * 60)
                   mapOfShortSmaValues.set(
                     JSON.stringify({ long: m * 60, value: p * 60 }),
                     listOfLastShortResult
@@ -727,7 +769,7 @@ export class ServerTradeScreenComponent implements OnInit {
     let mapOfLongSmaValues = new Map<string, sma200Array[]>()
     let mapOfMediumSmaValues = new Map<string, sma200Array[]>()
     let mapOfShortSmaValues = new Map<string, sma200Array[]>()
-    for (let h = 0; h < this.distinctDates.length; h++) {
+    for (let h = 0; h < 6; h++) {
       let selectedDate = this.distinctDates[h]
       let selectedStockData = await this.updateStockChartDataNew(selectedDate)
       for (let i = 1; i <= 20; i++) {
@@ -736,7 +778,7 @@ export class ServerTradeScreenComponent implements OnInit {
           for (let k = 1; k <= 30; k++) {
             for (let m = 60; m <= 90; m += 5) {
               if (mapOfLongSmaValues.get(JSON.stringify({date: selectedDate, long: (m * 60)})) === undefined) {
-                let listOfLastHourResult = this.calculateIntraDayLongSma(m * 60, selectedStockData)
+                let listOfLastHourResult = this.calculateIntraDayLongSmaAllDays(m * 60, selectedStockData)
                 mapOfLongSmaValues.set(
                   JSON.stringify({date: selectedDate, long: (m * 60)}),
                   listOfLastHourResult
@@ -745,7 +787,7 @@ export class ServerTradeScreenComponent implements OnInit {
 
               for (let n = 20; n <= 40; n += 5) {
                 if (mapOfMediumSmaValues.get(JSON.stringify({ date: selectedDate, long: m * 60, value: n * 60 })) === undefined) {
-                  let listOfLastMediumResult = this.calculateIntraDayMediumSma(m * 60, n * 60, selectedStockData)
+                  let listOfLastMediumResult = this.calculateIntraDayMediumSmaAllDays(m * 60, n * 60, selectedStockData)
                   mapOfMediumSmaValues.set(
                     JSON.stringify({ date: selectedDate, long: m * 60, value: n * 60 }),
                     listOfLastMediumResult
@@ -753,7 +795,7 @@ export class ServerTradeScreenComponent implements OnInit {
                 }
                 for (let p = 1; p <= 10; p++) {
                   if (mapOfShortSmaValues.get(JSON.stringify({ date: selectedDate, long: m * 60, value: p * 60 })) === undefined) {
-                    let listOfLastShortResult = this.calculateIntraDayShortSma(m * 60, p * 60, selectedStockData)
+                    let listOfLastShortResult = this.calculateIntraDayShortSmaAllDays(m * 60, p * 60, selectedStockData)
                     mapOfShortSmaValues.set(
                       JSON.stringify({ date: selectedDate, long: m * 60, value: p * 60 }),
                       listOfLastShortResult
