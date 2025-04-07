@@ -514,7 +514,7 @@ export class ServerTradeScreenComponent implements OnInit {
 
             for (let n = 20; n <= 40; n += 5) {
               let intraDayMediumSma = (n * 60)
-              let filteredMediumSmaList = mapOfMediumSmaValues.get(JSON.stringify({long: this.intraDayLongSma, value: this.intraDayMediumSma}))
+              let filteredMediumSmaList = mapOfMediumSmaValues.get(JSON.stringify({long: intraDayLongSma, value: intraDayMediumSma}))
               if (filteredMediumSmaList === undefined) {
                 let listOfLastMediumResult = this.calculateIntraDayMediumSma(intraDayLongSma, intraDayMediumSma)
                 mapOfMediumSmaValues.set(
@@ -528,7 +528,7 @@ export class ServerTradeScreenComponent implements OnInit {
                 let intraDayShortSma = (p * 60)
                 this.bankTotal = 500
                 this.orderLocations = []
-                let filteredShortSmaValue = mapOfShortSmaValues.get(JSON.stringify({long: this.intraDayLongSma, value: this.intraDayShortSma}))
+                let filteredShortSmaValue = mapOfShortSmaValues.get(JSON.stringify({long: intraDayLongSma, value: intraDayShortSma}))
                 if (filteredShortSmaValue === undefined) {
                   let listOfLastShortResult = this.calculateIntraDayShortSma(intraDayLongSma, intraDayShortSma)
                   mapOfShortSmaValues.set(
@@ -539,7 +539,7 @@ export class ServerTradeScreenComponent implements OnInit {
                 console.log(mapOfShortSmaValues)
                 console.log(mapOfShortSmaValues.get(JSON.stringify({long: intraDayLongSma, value: intraDayShortSma}))!)
                 console.log([intraDayLongSma, intraDayShortSma])
-                this.calculateBuyAndSellPointsIntraDayNew(mapOfLongSmaValues.get(intraDayLongSma)!, mapOfMediumSmaValues.get(JSON.stringify({long: intraDayLongSma, value: intraDayMediumSma}))!, mapOfShortSmaValues.get(JSON.stringify({long: intraDayLongSma, value: intraDayShortSma}))!)
+                this.calculateBuyAndSellPointsIntraDayNew(mapOfLongSmaValues.get(intraDayLongSma)!, mapOfMediumSmaValues.get(JSON.stringify({long: intraDayLongSma, value: intraDayMediumSma}))!, mapOfShortSmaValues.get(JSON.stringify({long: intraDayLongSma, value: intraDayShortSma}))!, buyGutter, sellGutter, check200Gutter)
                 let totalProfit = this.calculateTotalProfitNew()
                 listOfProfits.push({
                   buyBuffer: buyGutter,
@@ -860,14 +860,14 @@ export class ServerTradeScreenComponent implements OnInit {
     console.log(this.listOfProfits)
 
   }
-  calculateBuyAndSellPointsIntraDayNew(longArray: sma200Array[], mediumArray: sma200Array[], shortArray: sma200Array[]) {
+  calculateBuyAndSellPointsIntraDayNew(longArray: sma200Array[], mediumArray: sma200Array[], shortArray: sma200Array[], buyGutter: number, sellGutter: number, checkGutter: number) {
     let buyOrSell = 'Buy'
     for (let i = 0; i < shortArray.length; i++) {
-      if (buyOrSell == 'Buy' && (((shortArray[i].avg - mediumArray[i].avg) / mediumArray[i].avg) < (this.buyGutter * -1)) && (((shortArray[i].avg - longArray[i].avg) / longArray[i].avg) < this.check200Gutter)) {
+      if (buyOrSell == 'Buy' && (((shortArray[i].avg - mediumArray[i].avg) / mediumArray[i].avg) < (buyGutter * -1)) && (((shortArray[i].avg - longArray[i].avg) / longArray[i].avg) < checkGutter)) {
         this.executeOrder(shortArray[i], 'Buy')
         buyOrSell = 'Sell'
       }
-      else if (buyOrSell == 'Sell' && (((shortArray[i].avg - mediumArray[i].avg) / mediumArray[i].avg) > this.sellGutter) && shortArray[i].close > this.orderLocations[this.orderLocations.length - 1].price) {
+      else if (buyOrSell == 'Sell' && (((shortArray[i].avg - mediumArray[i].avg) / mediumArray[i].avg) > sellGutter) && shortArray[i].close > this.orderLocations[this.orderLocations.length - 1].price) {
         this.executeOrder(shortArray[i], 'Sell')
         buyOrSell = 'Buy'
       }
