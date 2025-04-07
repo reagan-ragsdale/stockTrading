@@ -597,7 +597,7 @@ export class ServerTradeScreenComponent implements OnInit {
               this.intraDayLongSma = (m * 60)
               filteredLongSmaList = mapOfLongSmaValues.get(this.intraDayLongSma)
               if (filteredLongSmaList == undefined) {
-                this.calculateIntraDayLongSma()
+                //this.calculateIntraDayLongSma()
                 mapOfLongSmaValues.set(
                   this.intraDayLongSma,
                   this.listOfLastHour
@@ -613,7 +613,7 @@ export class ServerTradeScreenComponent implements OnInit {
                 this.intraDayMediumSma = (n * 60)
                 filteredMediumSmaList = mapOfMediumSmaValues.get({ long: this.intraDayLongSma, value: this.intraDayMediumSma })
                 if (filteredMediumSmaList == undefined) {
-                  this.calculateIntraDayMediumSma()
+                  //this.calculateIntraDayMediumSma()
                   mapOfMediumSmaValues.set({ long: this.intraDayLongSma, value: this.intraDayMediumSma }, this.listOfLast30Minutes)
                 }
                 else {
@@ -630,7 +630,7 @@ export class ServerTradeScreenComponent implements OnInit {
                   this.totalPofit = 0
                   filteredShortSmaValue = mapOfShortSmaValues.get({ long: this.intraDayLongSma, value: this.intraDayShortSma })
                   if (filteredShortSmaValue == undefined) {
-                    this.calculateIntraDayShortSma()
+                    //this.calculateIntraDayShortSma()
                     mapOfShortSmaValues.set({ long: this.intraDayLongSma, value: this.intraDayShortSma }, this.listOfLast5Minutes)
                   }
                   else {
@@ -765,7 +765,7 @@ export class ServerTradeScreenComponent implements OnInit {
                   this.totalPofit = 0
                   filteredLongSmaList = mapOfLongSmaValues.get({ day: this.distinctDates[h], longValue: this.intraDayLongSma })
                   if (filteredLongSmaList == undefined) {
-                    this.calculateIntraDayLongSma()
+                    //this.calculateIntraDayLongSma()
                     mapOfLongSmaValues.set({ day: this.distinctDates[h], longValue: this.intraDayLongSma }, this.listOfLastHour)
                   }
                   else {
@@ -773,7 +773,7 @@ export class ServerTradeScreenComponent implements OnInit {
                   }
                   filteredMediumSmaList = mapOfMediumSmaValues.get({ day: this.distinctDates[h], longValue: this.intraDayLongSma, value: this.intraDayMediumSma })
                   if (filteredMediumSmaList == undefined) {
-                    this.calculateIntraDayMediumSma()
+                    //this.calculateIntraDayMediumSma()
                     mapOfMediumSmaValues.set({ day: this.distinctDates[h], longValue: this.intraDayLongSma, value: this.intraDayMediumSma }, this.listOfLast30Minutes)
                   }
                   else {
@@ -781,7 +781,7 @@ export class ServerTradeScreenComponent implements OnInit {
                   }
                   filteredShortSmaList = mapOfShortSmaValues.get({ day: this.distinctDates[h], longValue: this.intraDayLongSma, value: this.intraDayShortSma })
                   if (filteredShortSmaList == undefined) {
-                    this.calculateIntraDayShortSma()
+                    //this.calculateIntraDayShortSma()
                     mapOfShortSmaValues.set({ day: this.distinctDates[h], longValue: this.intraDayLongSma, value: this.intraDayShortSma }, this.listOfLast5Minutes)
                   }
                   else {
