@@ -495,8 +495,8 @@ export class ServerTradeScreenComponent implements OnInit {
     let mapOfShortSmaValues = new Map<string, sma200Array[]>()
     for (let i = 1; i <= 20; i++) {
       for (let j = 1; j <= 20; j++) {
+        console.time('sell')
         for (let k = 1; k <= 30; k++) {
-          console.time('check')
           for (let m = 60; m <= 90; m += 5) {
             let intraDayLongSma = (m * 60)
             let filteredLongSmaList = mapOfLongSmaValues.get(intraDayLongSma)
@@ -549,9 +549,9 @@ export class ServerTradeScreenComponent implements OnInit {
             }
 
           }
-          console.timeEnd('check')
+          
         }
-
+        console.timeEnd('sell')
       }
       console.log('finished outer loop iteration')
     }
