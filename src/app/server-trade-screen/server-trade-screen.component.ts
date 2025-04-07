@@ -537,9 +537,9 @@ export class ServerTradeScreenComponent implements OnInit {
                     listOfLastShortResult
                   )
                 }
-                console.log(mapOfLongSmaValues.get(this.intraDayLongSma))
-                console.log(mapOfMediumSmaValues.get({long: this.intraDayLongSma, value: this.intraDayMediumSma}))
-                console.log(mapOfShortSmaValues.get({long: this.intraDayLongSma, value: this.intraDayShortSma}))
+                console.log(mapOfLongSmaValues)
+                console.log(mapOfMediumSmaValues)
+                console.log(mapOfShortSmaValues)
                 this.calculateBuyAndSellPointsIntraDayNew(mapOfLongSmaValues.get(this.intraDayLongSma)!, mapOfMediumSmaValues.get({long: this.intraDayLongSma, value: this.intraDayMediumSma})!, mapOfShortSmaValues.get({long: this.intraDayLongSma, value: this.intraDayShortSma})!)
                 let totalProfit = this.calculateTotalProfitNew()
                 this.listOfProfits.push({
