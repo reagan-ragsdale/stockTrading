@@ -294,6 +294,15 @@ export class ServerTradeScreenComponent implements OnInit {
       }
     }
   }
+  calculateTotalProfitNew(): number {
+    let returnPofit: number = 0;
+    for (let i = 0; i < this.orderLocations.length; i++) {
+      if (this.orderLocations[i].buySell == 'Sell') {
+        returnPofit += this.orderLocations[i].price - this.orderLocations[i - 1].price
+      }
+    }
+    return returnPofit
+  }
 
   /* Buttons */
 
@@ -494,7 +503,6 @@ export class ServerTradeScreenComponent implements OnInit {
           this.check200Gutter = Number((k * .001).toPrecision(3))
           for (let m = 60; m <= 90; m += 5) {
             this.intraDayLongSma = (m * 60)
-            //this.listOfLastHour.length = 0
             let filteredLongSmaList = mapOfLongSmaValues.get(this.intraDayLongSma)
             if (filteredLongSmaList === undefined) {
               let listOfLastHourResult = this.calculateIntraDayLongSma()
@@ -531,7 +539,7 @@ export class ServerTradeScreenComponent implements OnInit {
                 }
 
                 this.calculateBuyAndSellPointsIntraDayNew(mapOfLongSmaValues.get(this.intraDayLongSma)!, mapOfMediumSmaValues.get({long: this.intraDayLongSma, value: this.intraDayMediumSma})!, mapOfShortSmaValues.get({long: this.intraDayLongSma, value: this.intraDayShortSma})!)
-                this.calculateTotalProfit()
+                let totalProfit = this.calculateTotalProfitNew()
                 this.listOfProfits.push({
                   buyBuffer: this.buyGutter,
                   sellBuffer: this.sellGutter,
@@ -539,7 +547,7 @@ export class ServerTradeScreenComponent implements OnInit {
                   smaLong: this.intraDayLongSma,
                   smaMedium: this.intraDayMediumSma,
                   smaShort: this.intraDayShortSma,
-                  profit: this.totalPofit,
+                  profit: totalProfit,
                   numberOfTrades: this.orderLocations.length
                 })
                 this.listOfLast5Minutes.length = 0
