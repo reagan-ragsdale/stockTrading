@@ -187,7 +187,7 @@ export const socketCall = async (): Promise<void> => {
                                         console.log('Placing a buy order')
 
                                         await dbOrdersRepo.insert({
-                                            userId: userServerAlgos[i].userId,
+                                            userId: userServerAlgos[j].userId,
                                             stockName: data.stockName,
                                             orderType: 'Buy',
                                             stockPrice: data.stockPrice,
