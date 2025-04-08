@@ -769,6 +769,12 @@ export class ServerTradeScreenComponent implements OnInit {
     let mapOfLongSmaValues = new Map<string, sma200Array[]>()
     let mapOfMediumSmaValues = new Map<string, sma200Array[]>()
     let mapOfShortSmaValues = new Map<string, sma200Array[]>()
+    let mapOfStockDayData = new Map<string, DbStockHistoryData[]>()
+    let allOfStockData = await dbStockHistoryDataRepo.find({where:{stockName: this.selectedStockName}, orderBy: {time: 'asc'}})
+    for(let g = 0; g < this.distinctDates.length; g++){
+      let filteredData = allOfStockData.filter(e => e.date == this.distinctDates[g])
+      mapOfStockDayData.set(this.distinctDates[g], filteredData)
+    }
     for (let h = 0; h < 6; h++) {
       let selectedDate = this.distinctDates[h]
       let selectedStockData = await this.updateStockChartDataNew(selectedDate)
@@ -777,23 +783,25 @@ export class ServerTradeScreenComponent implements OnInit {
           console.time('sell')
           for (let k = 1; k <= 30; k++) {
             for (let m = 60; m <= 90; m += 5) {
-              if (mapOfLongSmaValues.get(JSON.stringify({date: selectedDate, long: (m * 60)})) === undefined) {
-                let listOfLastHourResult = this.calculateIntraDayLongSmaAllDays(m * 60, selectedStockData)
-                mapOfLongSmaValues.set(
-                  JSON.stringify({date: selectedDate, long: (m * 60)}),
-                  listOfLastHourResult
-                )
-              }
-
               for (let n = 20; n <= 40; n += 5) {
-                if (mapOfMediumSmaValues.get(JSON.stringify({ date: selectedDate, long: m * 60, value: n * 60 })) === undefined) {
-                  let listOfLastMediumResult = this.calculateIntraDayMediumSmaAllDays(m * 60, n * 60, selectedStockData)
-                  mapOfMediumSmaValues.set(
-                    JSON.stringify({ date: selectedDate, long: m * 60, value: n * 60 }),
-                    listOfLastMediumResult
-                  )
-                }
                 for (let p = 1; p <= 10; p++) {
+                  for(let x = 0; x < this.distinctDates.length; x++){
+
+                  }
+                  if (mapOfLongSmaValues.get(JSON.stringify({date: selectedDate, long: (m * 60)})) === undefined) {
+                    let listOfLastHourResult = this.calculateIntraDayLongSmaAllDays(m * 60, selectedStockData)
+                    mapOfLongSmaValues.set(
+                      JSON.stringify({date: selectedDate, long: (m * 60)}),
+                      listOfLastHourResult
+                    )
+                  }
+                  if (mapOfMediumSmaValues.get(JSON.stringify({ date: selectedDate, long: m * 60, value: n * 60 })) === undefined) {
+                    let listOfLastMediumResult = this.calculateIntraDayMediumSmaAllDays(m * 60, n * 60, selectedStockData)
+                    mapOfMediumSmaValues.set(
+                      JSON.stringify({ date: selectedDate, long: m * 60, value: n * 60 }),
+                      listOfLastMediumResult
+                    )
+                  }
                   if (mapOfShortSmaValues.get(JSON.stringify({ date: selectedDate, long: m * 60, value: p * 60 })) === undefined) {
                     let listOfLastShortResult = this.calculateIntraDayShortSmaAllDays(m * 60, p * 60, selectedStockData)
                     mapOfShortSmaValues.set(
@@ -826,6 +834,19 @@ export class ServerTradeScreenComponent implements OnInit {
       }
       console.log('finsihed date')
     }
+    /* let distinctBuys = [.001,.002,.003,.004,.005,.006,.007,.008,.009,.010,.011,.012,.013,.014,.015,.016,.017,.018,.019,.020]
+    let distinctSells = [.001,.002,.003,.004,.005,.006,.007,.008,.009,.010,.011,.012,.013,.014,.015,.016,.017,.018,.019,.020]
+    let distinctChecks = [.001,.002,.003,.004,.005,.006,.007,.008,.009,.010,.011,.012,.013,.014,.015,.016,.017,.018,.019,.020,.021,.022,.023,.024,.025,.026,.027,.028,.029,.030]
+    let distinctLongs = [60, 65, 70, 75, 80, 85, 90]
+    let distinctMediums = [20, 25, 30, 35, 40]
+    let distinctShorts = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    for(let i = 0; i < distinctBuys.length; i++){
+      for(let j = 0; j < distinctSells.length; j++){
+        for(let k = 0; k < distinctChecks.length; k++){
+          for(let)
+        }
+      }
+    } */
     console.log(listOfProfits.length)
   }
   calculateBuyAndSellPointsIntraDayNew(longArray: sma200Array[], mediumArray: sma200Array[], shortArray: sma200Array[], buyGutter: number, sellGutter: number, checkGutter: number) {

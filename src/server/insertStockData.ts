@@ -18,17 +18,10 @@ export const socketCall = async (): Promise<void> => {
     //admin user to start websocket
     const userData = await dbTokenRepo.findFirst({ id: 'asdfghjkl' }) as DbTOkens
     //get list of users signed up for the sma200
-    const userServerAlgos = await dbAlgorithmListRepo.findFirst({ sma200sma50: true })
+    const userServerAlgos = await dbAlgorithmListRepo.find({ where: { sma200sma50: true } })
     //get all orders for each above user
 
-    let userOrders = await dbOrdersRepo.find({ where: { userId: userServerAlgos!.userId }, orderBy: { orderTime: 'desc' } })
-
-    //get all fincances for users
-    //const simFinUser = await simFinRepo.find({ where: { userId: userServerAlgos.map(e => e.userId) } })
-
-    //get all stocks for users
-    //const stocks = await usersStocksRepo.find({ where: { userId: userServerAlgos.map(e => e.userId) } })
-
+    let userOrders = await dbOrdersRepo.find({ where: { userId: userServerAlgos!.map(e => e.userId) }, orderBy: { orderTime: 'desc' } })
 
 
     /* const stockHistoryData = await dbStockBasicHistoryRepo.find({ orderBy: { date: 'desc' } })
@@ -170,7 +163,7 @@ export const socketCall = async (): Promise<void> => {
 
                             stockData[data.stockName].history.push(data.stockPrice)
                             insertData.push(data)
-                            if (data.stockName == 'TSLA') {
+                            if (data.stockName == 'TSLA' || data.stockName == 'AAPL') {
                                 stockData[data.stockName].history.push(data.stockPrice)
                                 console.log(stockData[data.stockName].history.length)
                                 if (stockData[data.stockName].history.length == 3600) {
@@ -186,49 +179,52 @@ export const socketCall = async (): Promise<void> => {
                                     stockData[data.stockName].last1800sma = stockData[data.stockName].last3600.slice(-1800).reduce((sum, val) => sum + val, 0) / 1800
                                     stockData[data.stockName].last300sma = stockData[data.stockName].last3600.slice(-300).reduce((sum, val) => sum + val, 0) / 300
                                 }
-                                //for (let i = 0; i < userServerAlgos.length; i++) {
-                                let filteredOrderOnUserAndStock = userOrders.filter(e => e.userId == userServerAlgos!.userId && e.stockName == data.stockName)[0]
-                                let isBuy = filteredOrderOnUserAndStock.orderType == 'Sell' ? true : false;
-                                console.log(isBuy)
-                                if (isBuy && (((stockData[data.stockName].last300sma - stockData[data.stockName].last1800sma) / stockData[data.stockName].last1800sma) < (stockDayTradeValues[data.stockName].Buy * -1)) && (((stockData[data.stockName].last300sma - stockData[data.stockName].last3600sma) / stockData[data.stockName].last3600sma) < stockDayTradeValues[data.stockName].Check200)) {
-                                    console.log('Placing a buy order')
-                                    await dbOrdersRepo.insert({
-                                        userId: userServerAlgos!.userId,
-                                        //userServerAlgos[i].userId,
-                                        stockName: data.stockName,
-                                        orderType: 'Buy',
-                                        stockPrice: data.stockPrice,
-                                        shareQty: 1,
-                                        orderTime: data.time
-                                    })
-                                    userOrders = await dbOrdersRepo.find({ where: { userId: userServerAlgos!.userId }, orderBy: { orderTime: 'desc' } })
-                                    /* const simUser = simFinUser.filter(e => e.userId == userServerAlgos[i].userId)[0]
-                                    let newAmount = simUser!.spending - 20
-                                    await simFinRepo.save({ ...simUser, spending: newAmount })
-                                    let stockUser = stocks.filter(e => e.userId == userServerAlgos[i].userId && e.stockName == data.stockName)[0]
-                                    let newStockAmnt = stockUser.shareQty + (20 / data.stockPrice)
-                                    await usersStocksRepo.save({ ...stockUser, shareQty: newStockAmnt }) */
+                                for (let j = 0; j < userServerAlgos.length; j++) {
+                                    let filteredOrderOnUserAndStock = userOrders.filter(e => e.userId == userServerAlgos![j].userId && e.stockName == data.stockName)[0]
+                                    let isBuy = filteredOrderOnUserAndStock.orderType == 'Sell' ? true : false;
+                                    console.log(isBuy)
+                                    if (isBuy && (((stockData[data.stockName].last300sma - stockData[data.stockName].last1800sma) / stockData[data.stockName].last1800sma) < (stockDayTradeValues[data.stockName].Buy * -1)) && (((stockData[data.stockName].last300sma - stockData[data.stockName].last3600sma) / stockData[data.stockName].last3600sma) < stockDayTradeValues[data.stockName].Check200)) {
+                                        console.log('Placing a buy order')
+
+                                        await dbOrdersRepo.insert({
+                                            userId: userServerAlgos[i].userId,
+                                            stockName: data.stockName,
+                                            orderType: 'Buy',
+                                            stockPrice: data.stockPrice,
+                                            shareQty: 1,
+                                            orderTime: data.time
+                                        })
+
+
+                                        //userOrders = await dbOrdersRepo.find({ where: { userId: userServerAlgos!.map(e => e.userId) }, orderBy: { orderTime: 'desc' } })
+                                        /* const simUser = simFinUser.filter(e => e.userId == userServerAlgos[i].userId)[0]
+                                        let newAmount = simUser!.spending - 20
+                                        await simFinRepo.save({ ...simUser, spending: newAmount })
+                                        let stockUser = stocks.filter(e => e.userId == userServerAlgos[i].userId && e.stockName == data.stockName)[0]
+                                        let newStockAmnt = stockUser.shareQty + (20 / data.stockPrice)
+                                        await usersStocksRepo.save({ ...stockUser, shareQty: newStockAmnt }) */
+                                    }
+                                    else if (!isBuy && (((stockData[data.stockName].last300sma - stockData[data.stockName].last1800sma) / stockData[data.stockName].last1800sma) > stockDayTradeValues[data.stockName].Sell) && data.stockPrice > filteredOrderOnUserAndStock.stockPrice) {
+                                        console.log('Placing a sell order')
+                                        await dbOrdersRepo.insert({
+                                            userId: userServerAlgos[j].userId,
+                                            stockName: data.stockName,
+                                            orderType: 'Sell',
+                                            stockPrice: data.stockPrice,
+                                            shareQty: filteredOrderOnUserAndStock.shareQty,
+                                            orderTime: data.time
+                                        })
+                                        //userOrders = await dbOrdersRepo.find({ where: { userId: userServerAlgos!.userId }, orderBy: { orderTime: 'desc' } })
+                                        /* const simUser = simFinUser.filter(e => e.userId == userServerAlgos[i].userId)[0]
+                                        let newAmount = simUser!.spending + (filteredOrderOnUserAndStock.shareQty * data.stockPrice)
+                                        await simFinRepo.save({ ...simUser, spending: newAmount })
+                                        let stockUser = stocks.filter(e => e.userId == userServerAlgos[i].userId && e.stockName == data.stockName)[0]
+                                        let newStockAmnt = stockUser.shareQty - filteredOrderOnUserAndStock.shareQty
+                                        await usersStocksRepo.save({ ...stockUser, shareQty: newStockAmnt }) */
+                                    }
                                 }
-                                else if (!isBuy && (((stockData[data.stockName].last300sma - stockData[data.stockName].last1800sma) / stockData[data.stockName].last1800sma) > stockDayTradeValues[data.stockName].Sell) && data.stockPrice > filteredOrderOnUserAndStock.stockPrice) {
-                                    console.log('Placing a sell order')
-                                    await dbOrdersRepo.insert({
-                                        userId: userServerAlgos!.userId,
-                                        //userServerAlgos[i].userId,
-                                        stockName: data.stockName,
-                                        orderType: 'Sell',
-                                        stockPrice: data.stockPrice,
-                                        shareQty: filteredOrderOnUserAndStock.shareQty,
-                                        orderTime: data.time
-                                    })
-                                    userOrders = await dbOrdersRepo.find({ where: { userId: userServerAlgos!.userId }, orderBy: { orderTime: 'desc' } })
-                                    /* const simUser = simFinUser.filter(e => e.userId == userServerAlgos[i].userId)[0]
-                                    let newAmount = simUser!.spending + (filteredOrderOnUserAndStock.shareQty * data.stockPrice)
-                                    await simFinRepo.save({ ...simUser, spending: newAmount })
-                                    let stockUser = stocks.filter(e => e.userId == userServerAlgos[i].userId && e.stockName == data.stockName)[0]
-                                    let newStockAmnt = stockUser.shareQty - filteredOrderOnUserAndStock.shareQty
-                                    await usersStocksRepo.save({ ...stockUser, shareQty: newStockAmnt }) */
-                                }
-                                //}
+                                userOrders = await dbOrdersRepo.find({ where: { userId: userServerAlgos!.map(e => e.userId) }, orderBy: { orderTime: 'desc' } })
+
                             }
 
 
