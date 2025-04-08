@@ -161,7 +161,7 @@ export const socketCall = async (): Promise<void> => {
                             //check to see if its an outlier
                             //add if it's within trading hours
 
-                            stockData[data.stockName].history.push(data.stockPrice)
+                            //stockData[data.stockName].history.push(data.stockPrice)
                             insertData.push(data)
                             if (data.stockName == 'TSLA' || data.stockName == 'AAPL') {
                                 stockData[data.stockName].history.push(data.stockPrice)
