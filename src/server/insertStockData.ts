@@ -157,15 +157,10 @@ export const socketCall = async (): Promise<void> => {
                                 time: Number(newEvent.data[0].timestamp),
                                 volume: newEvent.data[0].content[i]['8']
                             }
-                            //insertData.push(data)
-                            //check to see if its an outlier
-                            //add if it's within trading hours
-
-                            //stockData[data.stockName].history.push(data.stockPrice)
+                            
                             insertData.push(data)
                             if (data.stockName == 'TSLA' || data.stockName == 'AAPL') {
                                 stockData[data.stockName].history.push(data.stockPrice)
-                                console.log(stockData[data.stockName].history.length)
                                 if (stockData[data.stockName].history.length == 3600) {
                                     stockData[data.stockName].last3600 = stockData[data.stockName].history
                                     stockData[data.stockName].last3600sma = stockData[data.stockName].last3600.reduce((sum, val) => sum + val, 0) / 3600
@@ -182,7 +177,7 @@ export const socketCall = async (): Promise<void> => {
                                 for (let j = 0; j < userServerAlgos.length; j++) {
                                     let filteredOrderOnUserAndStock = userOrders.filter(e => e.userId == userServerAlgos![j].userId && e.stockName == data.stockName)[0]
                                     let isBuy = filteredOrderOnUserAndStock.orderType == 'Sell' ? true : false;
-                                    console.log(isBuy)
+
                                     if (isBuy && (((stockData[data.stockName].last300sma - stockData[data.stockName].last1800sma) / stockData[data.stockName].last1800sma) < (stockDayTradeValues[data.stockName].Buy * -1)) && (((stockData[data.stockName].last300sma - stockData[data.stockName].last3600sma) / stockData[data.stockName].last3600sma) < stockDayTradeValues[data.stockName].Check200)) {
                                         console.log('Placing a buy order')
 
