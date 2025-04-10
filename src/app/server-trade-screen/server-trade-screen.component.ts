@@ -545,7 +545,7 @@ export class ServerTradeScreenComponent implements OnInit {
   
    runWorker(data: any) {
     return new Promise((resolve, reject) => {
-      const worker = new Worker('./worker.js', { type: 'module' });
+      const worker = new Worker('Workers/intraDaySimulationWorker.js', { type: 'module' });
   
       worker.onmessage = (e) => {
         resolve(e.data);
