@@ -970,9 +970,9 @@ export class ServerTradeScreenComponent implements OnInit {
                   buyBuffer: Number((i * .001).toPrecision(3)),
                   sellBuffer: Number((j * .001).toPrecision(3)),
                   checkBuffer: Number((k * .001).toPrecision(3)),
-                  smaLong: m * 60,
-                  smaMedium: n * 60,
-                  smaShort: p * 60,
+                  smaLong: m,
+                  smaMedium: n,
+                  smaShort: p,
                   profit: totalProfit,
                   numberOfTrades: orderLocations.length
                 })
@@ -984,6 +984,7 @@ export class ServerTradeScreenComponent implements OnInit {
       }
     }
     this.topAlgos = listOfProfits.sort((a, b) => b.profit - a.profit).slice(0, 5)
+    console.log(this.topAlgos)
     this.buyGutter = this.topAlgos[0].buyBuffer
     this.sellGutter = this.topAlgos[0].sellBuffer
     this.check200Gutter = this.topAlgos[0].checkBuffer
