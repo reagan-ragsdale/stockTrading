@@ -544,7 +544,7 @@ export class ServerTradeScreenComponent implements OnInit {
   runEntireSimulationIntraDay() {
     this.worker.postMessage(this.stockDataForSelectedDay)
     this.worker.onmessage = (message: any) => {
-      console.log(message.data.length)
+      console.log(message)
     }
     let listOfProfits = []
     let mapOfLongSmaValues = new Map<number, sma200Array[]>()

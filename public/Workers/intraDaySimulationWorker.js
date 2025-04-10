@@ -1,6 +1,6 @@
 self.onmessage = function (message) {
     console.log(message.data)
-    self.postMessage('Reeieved message and sent back')
+    self.postMessage('Recieved message and sent back')
     //runSim(message.data)
 }
 /* function runSim(data){
