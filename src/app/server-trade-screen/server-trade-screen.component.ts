@@ -101,7 +101,7 @@ export class ServerTradeScreenComponent implements OnInit {
   intraDayLongSma: number = 0
   intraDayMediumSma: number = 0
   intraDayShortSma: number = 0
-  worker = new Worker('Workers/intraDaySimulationWorker.js')
+  worker = new Worker('Workers/intraDaySimulationWorker.js', { type: 'module' })
   interDayLongSma: number = 0;
   interDayMediumSma: number = 0
   interDayShortSma: number = 0
@@ -544,7 +544,8 @@ export class ServerTradeScreenComponent implements OnInit {
   runEntireSimulationIntraDay() {
     this.worker.postMessage(this.stockDataForSelectedDay)
     this.worker.onmessage = (message: any) => {
-      console.log(message)
+      console.log()
+      console.log('Message from worker: ' ,message.data)
     }
     let listOfProfits = []
     let mapOfLongSmaValues = new Map<number, sma200Array[]>()

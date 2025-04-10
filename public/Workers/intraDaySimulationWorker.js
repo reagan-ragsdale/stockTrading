@@ -1,8 +1,12 @@
-self.onmessage = function (message) {
-    console.log(message.data)
-    self.postMessage('Recieved message and sent back')
-    //runSim(message.data)
-}
+
+/* self.addEventListener('message', (event) => {
+  console.log(event.data);
+  self.postMessage('Received message and sent back');
+}); */
+self.addEventListener('message', (event) => {
+  console.log(event.data);
+  self.postMessage('Received message and sent back');
+});
 /* function runSim(data){
     let listOfProfits = []
     let mapOfLongSmaValues = new Map()
