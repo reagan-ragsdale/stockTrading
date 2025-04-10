@@ -546,7 +546,7 @@ export class ServerTradeScreenComponent implements OnInit {
 
 
   async runEntireSimulationIntraDay() {
-    let listOfProfits = await SimulationController.runEntireSimulationIntraDay(this.stockDataForSelectedDay)
+    let listOfProfits = await SimulationController.runEntireSimulationIntraDay(this.selectedStockName, this.selectedDate)
 
     /* let mapOfLongSmaValues = new Map<number, sma200Array[]>()
     let mapOfMediumSmaValues = new Map<string, sma200Array[]>()

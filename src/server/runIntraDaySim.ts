@@ -1,4 +1,4 @@
-import { DbStockHistoryData } from "../shared/tasks/dbStockHistoryData.js";
+import { DbStockHistoryData, dbStockHistoryDataRepo } from "../shared/tasks/dbStockHistoryData.js";
 type sma200Array = {
     stockName: string;
     close: number;
@@ -11,8 +11,8 @@ type sma200Array = {
     price: number;
   }
 let selectedStockData: DbStockHistoryData[] = []
-export const runIntraDaySim = async (stockData: DbStockHistoryData[]): Promise<any[]> => {
-    selectedStockData = stockData
+export const runIntraDaySim = async (stockName: string, date: string): Promise<any[]> => {
+    selectedStockData = await dbStockHistoryDataRepo.find({where: {stockName: stockName, date: date}, orderBy: {date: 'asc'}})
     let listOfProfits = []
     let mapOfLongSmaValues = new Map<number, sma200Array[]>()
     let mapOfMediumSmaValues = new Map<string, sma200Array[]>()
@@ -69,6 +69,7 @@ export const runIntraDaySim = async (stockData: DbStockHistoryData[]): Promise<a
       }
       console.log('finished outer loop iteration')
     }
+    listOfProfits = listOfProfits.sort((a,b) => b.profit - a.profit).slice(0,5)
     return listOfProfits
 
     

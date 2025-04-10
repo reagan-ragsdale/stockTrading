@@ -14,8 +14,8 @@ export class SimulationController {
   static intraDaySimulation: typeof runIntraDaySim
 
   @BackendMethod({ allowed: true })
-  static async runEntireSimulationIntraDay(stockData: DbStockHistoryData[]): Promise<any[]> {
-    return SimulationController.intraDaySimulation(stockData)
+  static async runEntireSimulationIntraDay(stockName: string, date: string): Promise<any[]> {
+    return SimulationController.intraDaySimulation(stockName, date)
   }
 
 
