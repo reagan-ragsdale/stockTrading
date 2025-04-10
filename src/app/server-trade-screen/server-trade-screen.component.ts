@@ -101,7 +101,7 @@ export class ServerTradeScreenComponent implements OnInit {
   intraDayLongSma: number = 0
   intraDayMediumSma: number = 0
   intraDayShortSma: number = 0
-  worker = new Worker('../../Workers/intraDaySimulationWorker.js')
+  worker = new Worker('Workers/intraDaySimulationWorker.js')
   interDayLongSma: number = 0;
   interDayMediumSma: number = 0
   interDayShortSma: number = 0
