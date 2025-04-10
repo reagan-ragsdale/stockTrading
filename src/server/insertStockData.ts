@@ -159,7 +159,6 @@ export const socketCall = async (): Promise<void> => {
                             }
                             
                             insertData.push(data)
-                            if (data.stockName == 'TSLA' || data.stockName == 'AAPL') {
                                 stockData[data.stockName].history.push(data.stockPrice)
                                 if (stockData[data.stockName].history.length == 3600) {
                                     stockData[data.stockName].last3600 = stockData[data.stockName].history
@@ -220,7 +219,7 @@ export const socketCall = async (): Promise<void> => {
                                 }
                                 userOrders = await dbOrdersRepo.find({ where: { userId: userServerAlgos!.map(e => e.userId) }, orderBy: { orderTime: 'desc' } })
 
-                            }
+                            
 
 
 
