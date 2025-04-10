@@ -68,11 +68,11 @@ function calculateIntraDayLongSmaAllDays(longValue, selectedStockData) {
     for (let i = 0; i < longValue; i++) {
       windowSum += selectedStockData[i].stockPrice;
     }
-    returnArray.push({ stockName: this.selectedStockName, close: selectedStockData[longValue].stockPrice, avg: (windowSum / longValue), date: new Date(selectedStockData[longValue].time).toLocaleTimeString() });
+    returnArray.push({ stockName: selectedStockData[longValue].stockName, close: selectedStockData[longValue].stockPrice, avg: (windowSum / longValue), date: new Date(selectedStockData[longValue].time).toLocaleTimeString() });
 
     for (let i = longValue; i < selectedStockData.length; i++) {
       windowSum += selectedStockData[i].stockPrice - selectedStockData[i - longValue].stockPrice;
-      returnArray.push({ stockName: this.selectedStockName, close: selectedStockData[i].stockPrice, avg: (windowSum / longValue), date: new Date(selectedStockData[i].time).toLocaleTimeString() });
+      returnArray.push({ stockName: selectedStockData[i].stockName, close: selectedStockData[i].stockPrice, avg: (windowSum / longValue), date: new Date(selectedStockData[i].time).toLocaleTimeString() });
     }
     return returnArray
   }
@@ -83,11 +83,11 @@ function calculateIntraDayLongSmaAllDays(longValue, selectedStockData) {
     for (let i = longValue - shortValue; i < longValue; i++) {
       windowSum += selectedStockData[i].stockPrice;
     }
-    returnArray.push({ stockName: this.selectedStockName, close: selectedStockData[longValue].stockPrice, avg: (windowSum / shortValue), date: new Date(selectedStockData[longValue].time).toLocaleTimeString() }); // Push the average of the first window
+    returnArray.push({ stockName: selectedStockData[longValue].stockName, close: selectedStockData[longValue].stockPrice, avg: (windowSum / shortValue), date: new Date(selectedStockData[longValue].time).toLocaleTimeString() }); // Push the average of the first window
 
     for (let i = longValue; i < selectedStockData.length; i++) {
       windowSum += selectedStockData[i].stockPrice - selectedStockData[i - shortValue].stockPrice; // Add new element, remove old element
-      returnArray.push({ stockName: this.selectedStockName, close: selectedStockData[i].stockPrice, avg: (windowSum / shortValue), date: new Date(selectedStockData[i].time).toLocaleTimeString() }); // Push the new average
+      returnArray.push({ stockName: selectedStockData[i].stockName, close: selectedStockData[i].stockPrice, avg: (windowSum / shortValue), date: new Date(selectedStockData[i].time).toLocaleTimeString() }); // Push the new average
     }
     return returnArray
   }
@@ -97,11 +97,11 @@ function calculateIntraDayLongSmaAllDays(longValue, selectedStockData) {
     for (let i = longValue - mediumValue; i < longValue; i++) {
       windowSum += selectedStockData[i].stockPrice;
     }
-    returnArray.push({ stockName: this.selectedStockName, close: selectedStockData[longValue].stockPrice, avg: (windowSum / mediumValue), date: new Date(selectedStockData[longValue].time).toLocaleTimeString() }); // Push the average of the first window
+    returnArray.push({ stockName: selectedStockData[longValue].stockName, close: selectedStockData[longValue].stockPrice, avg: (windowSum / mediumValue), date: new Date(selectedStockData[longValue].time).toLocaleTimeString() }); // Push the average of the first window
 
     for (let i = longValue; i < selectedStockData.length; i++) {
       windowSum += selectedStockData[i].stockPrice - selectedStockData[i - mediumValue].stockPrice; // Add new element, remove old element
-      returnArray.push({ stockName: this.selectedStockName, close: selectedStockData[i].stockPrice, avg: (windowSum / mediumValue), date: new Date(selectedStockData[i].time).toLocaleTimeString() }); // Push the new average
+      returnArray.push({ stockName: selectedStockData[i].stockName, close: selectedStockData[i].stockPrice, avg: (windowSum / mediumValue), date: new Date(selectedStockData[i].time).toLocaleTimeString() }); // Push the new average
     }
     return returnArray
   }
@@ -110,12 +110,10 @@ function calculateIntraDayLongSmaAllDays(longValue, selectedStockData) {
     let orderLocations = []
     for (let i = 0; i < shortArray.length; i++) {
       if (buyOrSell == 'Buy' && (((shortArray[i].avg - mediumArray[i].avg) / mediumArray[i].avg) < (buyGutter * -1)) && (((shortArray[i].avg - longArray[i].avg) / longArray[i].avg) < checkGutter)) {
-        //this.executeOrder(shortArray[i], 'Buy')
         orderLocations.push({ buySell: 'Buy', date: shortArray[i].date, price: shortArray[i].close })
         buyOrSell = 'Sell'
       }
       else if (buyOrSell == 'Sell' && (((shortArray[i].avg - mediumArray[i].avg) / mediumArray[i].avg) > sellGutter) && shortArray[i].close > orderLocations[orderLocations.length - 1].price) {
-        //this.executeOrder(shortArray[i], 'Sell')
         orderLocations.push({ buySell: 'Sell', date: shortArray[i].date, price: shortArray[i].close })
         buyOrSell = 'Buy'
       }
