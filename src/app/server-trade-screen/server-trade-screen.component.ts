@@ -101,7 +101,7 @@ export class ServerTradeScreenComponent implements OnInit {
   intraDayLongSma: number = 0
   intraDayMediumSma: number = 0
   intraDayShortSma: number = 0
-  worker = new Worker('../Workers/intraDaySimulationWorker.js')
+  worker = new Worker('../../Workers/intraDaySimulationWorker.js')
   interDayLongSma: number = 0;
   interDayMediumSma: number = 0
   interDayShortSma: number = 0
@@ -956,6 +956,7 @@ export class ServerTradeScreenComponent implements OnInit {
               for(let p = 1; p <= 15; p++){
                 if (mapOfShortSmaValues.get(JSON.stringify({long: m, value: p})) === undefined) {
                   let listOfShortResult = this.calculateInterDayShortSma(m, p)
+                  console.log(listOfShortResult)
                   mapOfShortSmaValues.set(
                     JSON.stringify({long: m, value: p}),
                     listOfShortResult
