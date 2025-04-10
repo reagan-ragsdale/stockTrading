@@ -273,7 +273,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   }]
   async refreshData() {
     this.chartData.history = this.chartInfo.map(e => e.stockPrice)
-    this.chartData.labels = this.chartInfo.map(e => reusedFunctions.epochToLocalTime(e.time))
+    this.chartData.labels = this.chartInfo.map(e => new Date(e.time).toLocaleTimeString())
     this.chartData.time = this.chartInfo.map(e => e.time)
     this.selectedStockCurrent = this.chartData.history[this.chartData.history.length - 1]
     this.selectedStockHigh = Math.max(...this.chartData.history)
