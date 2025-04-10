@@ -34,7 +34,6 @@ export class AuthController {
       name: user.userName,
       roles: user.isAdmin ? ["admin"] : [],
     };
-    console.log(remult.user)
     remult.context.request!.session!["user"] = remult.user;
     return remult.user;
   }

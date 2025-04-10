@@ -101,10 +101,11 @@ export class ServerTradeScreenComponent implements OnInit {
   intraDayLongSma: number = 0
   intraDayMediumSma: number = 0
   intraDayShortSma: number = 0
-  worker = new Worker('Workers/intraDaySimulationWorker.js', { type: 'module' })
+  
   interDayLongSma: number = 0;
   interDayMediumSma: number = 0
   interDayShortSma: number = 0
+  private worker!: Worker;
   
 
   async saveAlgos() {
@@ -541,12 +542,17 @@ export class ServerTradeScreenComponent implements OnInit {
   }
   listOfChildSmaValues: smaChildLists[] = []
   listOfLongSmaValues: smaLists[] = []
+  
   runEntireSimulationIntraDay() {
-    this.worker.postMessage(this.stockDataForSelectedDay)
-    this.worker.onmessage = (message: any) => {
-      console.log()
-      console.log('Message from worker: ' ,message.data)
+    this.worker = new Worker('Workers/intraDaySimulationWorker.js', { type: 'module' })
+    this.worker.onmessage = (e) => {
+      console.log('From worker:', e.data);
+    };
+    for(let i = 1; i <= 20; i++ ){
+      this.worker.postMessage(i)
     }
+    
+    
     let listOfProfits = []
     let mapOfLongSmaValues = new Map<number, sma200Array[]>()
     let mapOfMediumSmaValues = new Map<string, sma200Array[]>()
@@ -1131,6 +1137,7 @@ export class ServerTradeScreenComponent implements OnInit {
   async ngOnInit() {
     Chart.register(annotationPlugin);
     Chart.register(...registerables)
+    
     this.isLoading = true
     this.userAlgos = await dbAlgorithmListRepo.findFirst({ userId: remult.user?.id })
     this.listOfServerAlgos.push({
