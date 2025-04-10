@@ -1074,6 +1074,9 @@ export class ServerTradeScreenComponent implements OnInit {
     this.stockChart.update()
   }
   calculateSma() {
+      this.listOfLast200Days = []
+      this.listOfLast40Days = []
+      this.listOfLast5Days = []
       let tempStock200: sma200Array[] = []
       for (let j = this.interDayLongSma; j < this.selectedInterDayStockData.length; j++) {
         let last200Price: number = 0;
