@@ -38,6 +38,8 @@ import { getDailyStockInfo } from '../app/apiCalls/getDailyStockInfo.js'
 import { DbStockDashInfo } from '../shared/tasks/dbStockDashInfo.js'
 import { DbAlgorithmList } from '../shared/tasks/dbAlgorithmList.js'
 import { DbListOfProfits } from '../shared/tasks/dbListOfProfits.js'
+import { SimulationController } from '../shared/controllers/SimulationController.js'
+import { runIntraDaySim } from './runIntraDaySim.js'
 
 //import ev from '../../environmentVariables.json'
 
@@ -45,12 +47,13 @@ config()
 AuthController.generate = generate;
 AuthController.verify = verify
 OAuthContoller.sendCall = oauthCall;
+SimulationController.intraDaySimulation = runIntraDaySim
 
 
 
 
 export const api = remultExpress({
-    controllers:[AuthController, SimFinance, OAuthContoller, OrderController,StockController, RegFinanceController, RegressionOrderController, RegressionStockController, StockHistoryController],
+    controllers:[AuthController, SimFinance, OAuthContoller, OrderController,StockController, RegFinanceController, RegressionOrderController, RegressionStockController, StockHistoryController, SimulationController],
     entities: [
       Task,
       Users,

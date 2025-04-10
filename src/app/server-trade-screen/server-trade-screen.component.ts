@@ -17,6 +17,7 @@ import { DbStockHistoryData, dbStockHistoryDataRepo } from '../../shared/tasks/d
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
 import { empty } from 'rxjs';
+import { SimulationController } from '../../shared/controllers/SimulationController';
 
 type serverAlgos = {
   name: string;
@@ -543,90 +544,14 @@ export class ServerTradeScreenComponent implements OnInit {
   listOfChildSmaValues: smaChildLists[] = []
   listOfLongSmaValues: smaLists[] = []
 
-  runWorker(data: any) {
-    return new Promise((resolve, reject) => {
-      const worker = new Worker('Workers/intraDaySimulationWorker.js', { type: 'module' });
 
-      worker.onmessage = (e) => {
-        resolve(e.data);
-        worker.terminate();
-      };
-
-      worker.onerror = (err) => {
-        reject(err);
-        worker.terminate();
-      };
-
-      worker.postMessage({ gutter: Number((data * .001).toPrecision(3)), stockData: this.stockDataForSelectedDay });
-    });
-  }
-  createWorker() {
-
-    const worker = new Worker('./Workers/intraDaySimulationWorker.js', { type: 'module' });
-
-    worker.onmessage = (e) => {
-      this.results.push(e.data);
-      this.busyWorkers.delete(worker);
-
-      if (this.taskQueue.length > 0) {
-        const nextTask = this.taskQueue.shift();
-        worker.postMessage({ gutter: Number((nextTask! * .001).toPrecision(3)), stockData: this.stockDataForSelectedDay});
-        this.busyWorkers.add(worker);
-      } else if (this.busyWorkers.size === 0) {
-        console.log('🎉 All tasks done:', this.results);
-        this.workers.forEach(w => w.terminate());
-        console.log(this.results.length)
-      }
-    };
-
-    worker.onerror = (err) => {
-      console.error('❌ Worker error:', err.message);
-      this.busyWorkers.delete(worker);
-    };
-
-    return worker;
-  }
-
-  // Spin up pool and assign initial tasks
-
-  NUM_WORKERS = 4; // Pool size
-  taskQueue = Array.from({ length: 20 }, (_, i) => i + 1); // Tasks 1 to 20
-  results: any[] = [];
-  completed = 0;
-
-  // Create pool
-  workers: any[] = [];
-  busyWorkers = new Set();
   async runEntireSimulationIntraDay() {
-    for (let i = 0; i < this.NUM_WORKERS; i++) {
-      const worker = this.createWorker();
-      this.workers.push(worker);
+    let listOfProfits = await SimulationController.runEntireSimulationIntraDay(this.stockDataForSelectedDay)
 
-      if (this.taskQueue.length > 0) {
-        const task = this.taskQueue.shift();
-        worker.postMessage({ gutter: Number((task! * .001).toPrecision(3)), stockData: this.stockDataForSelectedDay});
-        this.busyWorkers.add(worker);
-      }
-    }
-    
-    /*  let listOfProfits = []
-     const promises = Array.from({ length: 20 }, (_, i) => this.runWorker(i + 1));
-     const results = await Promise.all(promises);
-     console.log('results: ' + results.length) */
-    /* for(let i = 1; i <= 20; i++ ){
-      let worker = new Worker('Workers/intraDaySimulationWorker.js', { type: 'module' })
-      worker.postMessage({gutter: Number((i * .001).toPrecision(3)), stockData: this.stockDataForSelectedDay})
-      worker.onmessage = (e) => {
-        //console.log('From worker:', e.data);
-        listOfProfits.push(e.data)
-      };
-    } */
-
-    //let listOfProfits = []
-    let mapOfLongSmaValues = new Map<number, sma200Array[]>()
+    /* let mapOfLongSmaValues = new Map<number, sma200Array[]>()
     let mapOfMediumSmaValues = new Map<string, sma200Array[]>()
     let mapOfShortSmaValues = new Map<string, sma200Array[]>()
-    /* for (let i = 1; i <= 20; i++) {
+     for (let i = 1; i <= 20; i++) {
       for (let j = 1; j <= 20; j++) {
         console.time('sell')
         for (let k = 1; k <= 30; k++) {
@@ -679,7 +604,7 @@ export class ServerTradeScreenComponent implements OnInit {
       console.log('finished outer loop iteration')
     }
     console.log(listOfProfits.length)
-    console.log(listOfProfits.sort((a, b) => b.profit - a.profit).slice(0, 50))
+    console.log(listOfProfits.sort((a, b) => b.profit - a.profit).slice(0, 50)) */
     this.topAlgos = listOfProfits.sort((a, b) => b.profit - a.profit).slice(0, 5)
     this.buyGutter = this.topAlgos[0].buyBuffer
     this.sellGutter = this.topAlgos[0].sellBuffer
@@ -688,7 +613,7 @@ export class ServerTradeScreenComponent implements OnInit {
     this.intraDayMediumSma = this.topAlgos[0].smaMedium
     this.intraDayShortSma = this.topAlgos[0].smaShort
     this.calculateIntraDaySma()
-    this.runSimulationIntraDay() */
+    this.runSimulationIntraDay() 
 
   }
 
