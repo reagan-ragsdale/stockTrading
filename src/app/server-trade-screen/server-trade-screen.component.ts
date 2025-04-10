@@ -1037,16 +1037,16 @@ export class ServerTradeScreenComponent implements OnInit {
   
   calculateBuyAndSellPoints() {
     let buyOrSell = 'Buy'
-    for (let i = 0; i < this.selectedStockLast5.length; i++) {
+    for (let i = 0; i < this.listOfLast5Days.length; i++) {
       if (buyOrSell == 'Buy') {
-        if ((((this.selectedStockLast5[i].avg - this.selectedStockLast40[i].avg) / this.selectedStockLast40[i].avg) < (this.buyGutter * -1)) && ((Math.abs(this.selectedStockLast5[i].avg - this.selectedStockLast200[i].avg) / this.selectedStockLast200[i].avg) < this.check200Gutter)) {
-          this.executeOrder(this.selectedStockLast5[i], 'Buy')
+        if ((((this.listOfLast5Days[i].avg - this.listOfLast40Days[i].avg) / this.listOfLast40Days[i].avg) < (this.buyGutter * -1)) && ((Math.abs(this.listOfLast5Days[i].avg - this.listOfLast200Days[i].avg) / this.listOfLast200Days[i].avg) < this.check200Gutter)) {
+          this.executeOrder(this.listOfLast5Days[i], 'Buy')
           buyOrSell = 'Sell'
         }
       }
       else {
-        if ((((this.selectedStockLast5[i].avg - this.selectedStockLast40[i].avg) / this.selectedStockLast40[i].avg) > this.sellGutter) && this.selectedStockLast5[i].close > this.orderLocations[this.orderLocations.length - 1].price) {
-          this.executeOrder(this.selectedStockLast5[i], 'Sell')
+        if ((((this.listOfLast5Days[i].avg - this.listOfLast40Days[i].avg) / this.listOfLast40Days[i].avg) > this.sellGutter) && this.listOfLast5Days[i].close > this.orderLocations[this.orderLocations.length - 1].price) {
+          this.executeOrder(this.listOfLast5Days[i], 'Sell')
           buyOrSell = 'Buy'
         }
       }
@@ -1142,7 +1142,6 @@ export class ServerTradeScreenComponent implements OnInit {
     this.interDayLongSma = 200
     this.interDayMediumSma = 40
     this.interDayShortSma = 5
-    this.calculateSma()
     this.createOrUpdateChart()
     this.runSimulation()
     await this.getStockHistoricalData()
