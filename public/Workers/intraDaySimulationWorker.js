@@ -15,7 +15,7 @@ self.addEventListener('message', (event) => {
         for (let k = 1; k <= 30; k++) {
           for (let m = 60; m <= 90; m += 5) {
             if (mapOfLongSmaValues.get(m * 60) === undefined) {
-              let listOfLastHourResult = calculateIntraDayLongSmaAllDays(m * 60, stockData)
+              let listOfLastHourResult = calculateIntraDayLongSmaAllDays(m * 60, data.stockData)
               mapOfLongSmaValues.set(
                 m * 60,
                 listOfLastHourResult
@@ -24,7 +24,7 @@ self.addEventListener('message', (event) => {
 
             for (let n = 20; n <= 40; n += 5) {
               if (mapOfMediumSmaValues.get(JSON.stringify({ long: m * 60, value: n * 60 })) === undefined) {
-                let listOfLastMediumResult = calculateIntraDayMediumSmaAllDays(m * 60, n * 60, stockData)
+                let listOfLastMediumResult = calculateIntraDayMediumSmaAllDays(m * 60, n * 60, data.stockData)
                 mapOfMediumSmaValues.set(
                   JSON.stringify({ long: m * 60, value: n * 60 }),
                   listOfLastMediumResult
@@ -32,17 +32,17 @@ self.addEventListener('message', (event) => {
               }
               for (let p = 1; p <= 10; p++) {
                 if (mapOfShortSmaValues.get(JSON.stringify({ long: m * 60, value: p * 60 })) === undefined) {
-                  let listOfLastShortResult = calculateIntraDayShortSmaAllDays(m * 60, p * 60, stockData)
+                  let listOfLastShortResult = calculateIntraDayShortSmaAllDays(m * 60, p * 60, data.stockData)
                   mapOfShortSmaValues.set(
                     JSON.stringify({ long: m * 60, value: p * 60 }),
                     listOfLastShortResult
                   )
                 }
-                let orderLocations = calculateBuyAndSellPointsIntraDayNew(mapOfLongSmaValues.get(m * 60), mapOfMediumSmaValues.get(JSON.stringify({ long: m * 60, value: n * 60 })), mapOfShortSmaValues.get(JSON.stringify({ long: m * 60, value: p * 60 })), data, Number((j * .001).toPrecision(3)), Number((k * .001).toPrecision(3)))
+                let orderLocations = calculateBuyAndSellPointsIntraDayNew(mapOfLongSmaValues.get(m * 60), mapOfMediumSmaValues.get(JSON.stringify({ long: m * 60, value: n * 60 })), mapOfShortSmaValues.get(JSON.stringify({ long: m * 60, value: p * 60 })), data.gutter, Number((j * .001).toPrecision(3)), Number((k * .001).toPrecision(3)))
                 let totalProfit = calculateTotalProfitNew(orderLocations)
 
                 listOfProfits.push({
-                  buyBuffer: data,
+                  buyBuffer: data.gutter,
                   sellBuffer: Number((j * .001).toPrecision(3)),
                   checkBuffer: Number((k * .001).toPrecision(3)),
                   smaLong: m * 60,

@@ -548,7 +548,7 @@ export class ServerTradeScreenComponent implements OnInit {
     let listOfProfits = []
     for(let i = 1; i <= 20; i++ ){
       let worker = new Worker('Workers/intraDaySimulationWorker.js', { type: 'module' })
-      worker.postMessage(Number((i * .001).toPrecision(3)))
+      worker.postMessage({gutter: Number((i * .001).toPrecision(3)), stockData: this.stockDataForSelectedDay})
       worker.onmessage = (e) => {
         //console.log('From worker:', e.data);
         listOfProfits.push(e.data)
