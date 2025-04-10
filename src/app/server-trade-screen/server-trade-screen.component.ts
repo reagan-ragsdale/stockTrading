@@ -545,21 +545,22 @@ export class ServerTradeScreenComponent implements OnInit {
   
   runEntireSimulationIntraDay() {
     
-    
+    let listOfProfits = []
     for(let i = 1; i <= 20; i++ ){
       let worker = new Worker('Workers/intraDaySimulationWorker.js', { type: 'module' })
-      worker.postMessage(i)
+      worker.postMessage(Number((i * .001).toPrecision(3)))
       worker.onmessage = (e) => {
-        console.log('From worker:', e.data);
+        //console.log('From worker:', e.data);
+        listOfProfits.push(e.data)
       };
     }
+    console.log(listOfProfits.length)
     
-    
-    let listOfProfits = []
+    //let listOfProfits = []
     let mapOfLongSmaValues = new Map<number, sma200Array[]>()
     let mapOfMediumSmaValues = new Map<string, sma200Array[]>()
     let mapOfShortSmaValues = new Map<string, sma200Array[]>()
-    for (let i = 1; i <= 20; i++) {
+    /* for (let i = 1; i <= 20; i++) {
       for (let j = 1; j <= 20; j++) {
         console.time('sell')
         for (let k = 1; k <= 30; k++) {
@@ -621,7 +622,7 @@ export class ServerTradeScreenComponent implements OnInit {
     this.intraDayMediumSma = this.topAlgos[0].smaMedium
     this.intraDayShortSma = this.topAlgos[0].smaShort
     this.calculateIntraDaySma()
-    this.runSimulationIntraDay()
+    this.runSimulationIntraDay() */
 
   }
 

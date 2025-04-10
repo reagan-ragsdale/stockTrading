@@ -4,15 +4,13 @@
   self.postMessage('Received message and sent back');
 }); */
 self.addEventListener('message', (event) => {
-  console.log('Here in worker: ', event.data);
-  self.postMessage('Message being sent from worker to parent: ' + event.data);
+  runSim(event.data)
 });
-/* function runSim(data){
+ function runSim(data){
     let listOfProfits = []
     let mapOfLongSmaValues = new Map()
     let mapOfMediumSmaValues = new Map()
     let mapOfShortSmaValues = new Map()
-    for (let i = 1; i <= 20; i++) {
       for (let j = 1; j <= 20; j++) {
         for (let k = 1; k <= 30; k++) {
           for (let m = 60; m <= 90; m += 5) {
@@ -40,11 +38,11 @@ self.addEventListener('message', (event) => {
                     listOfLastShortResult
                   )
                 }
-                let orderLocations = calculateBuyAndSellPointsIntraDayNew(mapOfLongSmaValues.get(m * 60), mapOfMediumSmaValues.get(JSON.stringify({ long: m * 60, value: n * 60 })), mapOfShortSmaValues.get(JSON.stringify({ long: m * 60, value: p * 60 })), Number((i * .001).toPrecision(3)), Number((j * .001).toPrecision(3)), Number((k * .001).toPrecision(3)))
+                let orderLocations = calculateBuyAndSellPointsIntraDayNew(mapOfLongSmaValues.get(m * 60), mapOfMediumSmaValues.get(JSON.stringify({ long: m * 60, value: n * 60 })), mapOfShortSmaValues.get(JSON.stringify({ long: m * 60, value: p * 60 })), data, Number((j * .001).toPrecision(3)), Number((k * .001).toPrecision(3)))
                 let totalProfit = calculateTotalProfitNew(orderLocations)
 
                 listOfProfits.push({
-                  buyBuffer: Number((i * .001).toPrecision(3)),
+                  buyBuffer: data,
                   sellBuffer: Number((j * .001).toPrecision(3)),
                   checkBuffer: Number((k * .001).toPrecision(3)),
                   smaLong: m * 60,
@@ -58,11 +56,9 @@ self.addEventListener('message', (event) => {
 
           }
 
-        }
+        
       }
-      console.log('finished outer loop iteration')
     }
-    listOfProfits = listOfProfits.sort((a, b) => b.profit - a.profit).slice(0, 500)
     self.postMessage(listOfProfits)
 }
 
@@ -137,4 +133,4 @@ function calculateIntraDayLongSmaAllDays(longValue, selectedStockData) {
     }
     return returnPofit
   }
-    */
+    
