@@ -1085,7 +1085,7 @@ export class ServerTradeScreenComponent implements OnInit {
           last200Price += this.selectedInterDayStockData[j - k].close
         }
         let last200Avg = last200Price / this.interDayLongSma
-        tempStock200.push({ stockName: this.selectedStockName, close: this.selectedInterDayStockData[j].close, avg: last200Avg, date: new Date(this.selectedInterDayStockData[j].date).toLocaleTimeString() })
+        tempStock200.push({ stockName: this.selectedStockName, close: this.selectedInterDayStockData[j].close, avg: last200Avg, date: new Date(this.selectedInterDayStockData[j].date).toLocaleDateString() })
       }
       let tempStock40: sma200Array[] = []
       for (let j = this.interDayLongSma; j < this.selectedInterDayStockData.length; j++) {
@@ -1094,7 +1094,7 @@ export class ServerTradeScreenComponent implements OnInit {
           last50Price += this.selectedInterDayStockData[j - k].close
         }
         let last200Avg = last50Price / this.interDayMediumSma
-        tempStock40.push({ stockName: this.selectedStockName, close: this.selectedInterDayStockData[j].close, avg: last200Avg, date: new Date(this.selectedInterDayStockData[j].date).toLocaleTimeString() })
+        tempStock40.push({ stockName: this.selectedStockName, close: this.selectedInterDayStockData[j].close, avg: last200Avg, date: new Date(this.selectedInterDayStockData[j].date).toLocaleDateString() })
       }
       let tempStock5: sma200Array[] = []
       for (let j = this.interDayLongSma; j < this.selectedInterDayStockData.length; j++) {
@@ -1103,7 +1103,7 @@ export class ServerTradeScreenComponent implements OnInit {
           last50Price += this.selectedInterDayStockData[j - k].close
         }
         let last200Avg = last50Price / this.interDayShortSma
-        tempStock5.push({ stockName: this.selectedStockName, close: this.selectedInterDayStockData[j].close, avg: last200Avg, date: new Date(this.selectedInterDayStockData[j].date).toLocaleTimeString() })
+        tempStock5.push({ stockName: this.selectedStockName, close: this.selectedInterDayStockData[j].close, avg: last200Avg, date: new Date(this.selectedInterDayStockData[j].date).toLocaleDateString() })
       }
       this.listOfLast200Days.push(...tempStock200)
       this.listOfLast40Days.push(...tempStock40)
