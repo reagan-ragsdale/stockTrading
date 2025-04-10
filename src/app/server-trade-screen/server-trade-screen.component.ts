@@ -544,12 +544,14 @@ export class ServerTradeScreenComponent implements OnInit {
   listOfLongSmaValues: smaLists[] = []
   
   runEntireSimulationIntraDay() {
-    this.worker = new Worker('Workers/intraDaySimulationWorker.js', { type: 'module' })
-    this.worker.onmessage = (e) => {
-      console.log('From worker:', e.data);
-    };
+    
+    
     for(let i = 1; i <= 20; i++ ){
-      this.worker.postMessage(i)
+      let worker = new Worker('Workers/intraDaySimulationWorker.js', { type: 'module' })
+      worker.postMessage(i)
+      worker.onmessage = (e) => {
+        console.log('From worker:', e.data);
+      };
     }
     
     
