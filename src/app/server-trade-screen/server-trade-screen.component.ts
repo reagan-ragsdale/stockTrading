@@ -543,18 +543,37 @@ export class ServerTradeScreenComponent implements OnInit {
   listOfChildSmaValues: smaChildLists[] = []
   listOfLongSmaValues: smaLists[] = []
   
-  runEntireSimulationIntraDay() {
+   runWorker(data: any) {
+    return new Promise((resolve, reject) => {
+      const worker = new Worker('./worker.js', { type: 'module' });
+  
+      worker.onmessage = (e) => {
+        resolve(e.data);
+        worker.terminate();
+      };
+  
+      worker.onerror = (err) => {
+        reject(err);
+        worker.terminate();
+      };
+  
+      worker.postMessage({gutter: Number((data * .001).toPrecision(3)), stockData: this.stockDataForSelectedDay});
+    });
+  }
+  async runEntireSimulationIntraDay() {
     
     let listOfProfits = []
-    for(let i = 1; i <= 20; i++ ){
+    const promises = Array.from({ length: 5 }, (_, i) => this.runWorker(i + 1));
+    const results = await Promise.all(promises);
+    console.log('results: ' + results.length)
+    /* for(let i = 1; i <= 20; i++ ){
       let worker = new Worker('Workers/intraDaySimulationWorker.js', { type: 'module' })
       worker.postMessage({gutter: Number((i * .001).toPrecision(3)), stockData: this.stockDataForSelectedDay})
       worker.onmessage = (e) => {
         //console.log('From worker:', e.data);
         listOfProfits.push(e.data)
       };
-    }
-    console.log(listOfProfits.length)
+    } */
     
     //let listOfProfits = []
     let mapOfLongSmaValues = new Map<number, sma200Array[]>()
