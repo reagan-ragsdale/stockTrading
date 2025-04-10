@@ -3,10 +3,10 @@
   console.log(event.data);
   self.postMessage('Received message and sent back');
 }); */
-self.addEventListener('message', (event) => {
+self.onmessage = (event) => {
   console.log('Here in worker: ', event.data);
   self.postMessage('Message being sent from worker to parent: ' + event.data);
-});
+};
 /* function runSim(data){
     let listOfProfits = []
     let mapOfLongSmaValues = new Map()
