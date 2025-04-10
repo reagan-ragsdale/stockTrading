@@ -563,7 +563,7 @@ export class ServerTradeScreenComponent implements OnInit {
   async runEntireSimulationIntraDay() {
     
     let listOfProfits = []
-    const promises = Array.from({ length: 5 }, (_, i) => this.runWorker(i + 1));
+    const promises = Array.from({ length: 20 }, (_, i) => this.runWorker(i + 1));
     const results = await Promise.all(promises);
     console.log('results: ' + results.length)
     /* for(let i = 1; i <= 20; i++ ){
