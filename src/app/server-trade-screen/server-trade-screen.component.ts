@@ -111,10 +111,7 @@ export class ServerTradeScreenComponent implements OnInit {
     await dbAlgorithmListRepo.save({ ...this.userAlgos, sma200sma50: this.listOfServerAlgos[0].isSelected })
   }
   getStockDisplay() {
-    this.selectedStockLast200 = this.listOfLast200Days.filter(e => e.stockName == this.selectedStockName)
-    this.selectedStockLast40 = this.listOfLast40Days.filter(e => e.stockName == this.selectedStockName)
-    this.selectedStockLast5 = this.listOfLast5Days.filter(e => e.stockName == this.selectedStockName)
-    console.log(this.selectedStockLast200)
+    this.selectedInterDayStockData = this.allHistory.filter(e => e.stockName == this.selectedStockName)
   }
   async onSelectedStockChange(event: any) {
     if (event.isUserInput == true) {
@@ -125,7 +122,8 @@ export class ServerTradeScreenComponent implements OnInit {
         this.intraDayMediumSma = 1800;
         this.intraDayShortSma = 300
         this.selectedInterDayStockData = this.allHistory.filter(e => e.stockName = this.selectedStockName)
-        this.getStockDisplay()
+        //this.getStockDisplay()
+        this.calculateSma()
         this.updateChart()
         this.runSimulation()
         this.isLoading = false
@@ -155,12 +153,12 @@ export class ServerTradeScreenComponent implements OnInit {
 
       data: {// values on X-Axis
 
-        labels: this.selectedStockLast200.map(e => ''),
+        labels: this.listOfLast200Days.map(e => e.date),
 
         datasets: [
           {
             label: 'Actual',
-            data: this.selectedStockLast200.map(e => e.close),
+            data: this.listOfLast200Days.map(e => e.close),
             backgroundColor: '#54C964',
             hoverBackgroundColor: '#54C964',
             borderColor: '#54C964',
@@ -171,7 +169,7 @@ export class ServerTradeScreenComponent implements OnInit {
           },
           {
             label: '200',
-            data: this.selectedStockLast200.map(e => e.avg),
+            data: this.listOfLast200Days.map(e => e.avg),
             backgroundColor: '#d82c2c',
             hoverBackgroundColor: '#d82c2c',
             borderColor: '#d82c2c',
@@ -182,7 +180,7 @@ export class ServerTradeScreenComponent implements OnInit {
           },
           {
             label: '40',
-            data: this.selectedStockLast40.map(e => e.avg),
+            data: this.listOfLast40Days.map(e => e.avg),
             backgroundColor: '#eeb528',
             hoverBackgroundColor: '#eeb528',
             borderColor: '#eeb528',
@@ -194,7 +192,7 @@ export class ServerTradeScreenComponent implements OnInit {
           ,
           {
             label: '5',
-            data: this.selectedStockLast5.map(e => e.avg),
+            data: this.listOfLast5Days.map(e => e.avg),
             backgroundColor: '#1ca0de',
             hoverBackgroundColor: '#1ca0de',
             borderColor: '#1ca0de',
@@ -333,7 +331,8 @@ export class ServerTradeScreenComponent implements OnInit {
       this.buyGutter = .05
       this.sellGutter = .01
       this.check200Gutter = .1
-      this.getStockDisplay()
+      //this.getStockDisplay()
+      this.calculateSma()
       this.updateChart()
       this.runSimulation()
       this.isLoading = false
@@ -1108,17 +1107,17 @@ export class ServerTradeScreenComponent implements OnInit {
     
   }
   updateChart() {
-    this.stockChart.data.datasets[0].data = this.selectedStockLast200.map(e => e.close)
+    this.stockChart.data.datasets[0].data = this.listOfLast200Days.map(e => e.close)
     this.stockChart.data.datasets[0].label = 'Actual'
-    this.stockChart.data.datasets[1].data = this.selectedStockLast200.map(e => e.avg)
+    this.stockChart.data.datasets[1].data = this.listOfLast200Days.map(e => e.avg)
     this.stockChart.data.datasets[1].label = this.interDayLongSma
-    this.stockChart.data.datasets[2].data = this.selectedStockLast40.map(e => e.avg)
+    this.stockChart.data.datasets[2].data = this.listOfLast40Days.map(e => e.avg)
     this.stockChart.data.datasets[2].label = this.interDayMediumSma
-    this.stockChart.data.datasets[3].data = this.selectedStockLast5.map(e => e.avg)
+    this.stockChart.data.datasets[3].data = this.listOfLast5Days.map(e => e.avg)
     this.stockChart.data.datasets[3].label = this.interDayShortSma
-    this.stockChart.data.labels = this.selectedStockLast200.map(e => e.date)
-    this.stockChart.options.scales.y.max = this.getMaxForChart(this.selectedStockLast200)
-    this.stockChart.options.scales.y.min = this.getMinForChart(this.selectedStockLast200)
+    this.stockChart.data.labels = this.listOfLast200Days.map(e => e.date)
+    this.stockChart.options.scales.y.max = this.getMaxForChart(this.listOfLast200Days)
+    this.stockChart.options.scales.y.min = this.getMinForChart(this.listOfLast200Days)
     this.stockChart.update()
   }
 
@@ -1141,7 +1140,6 @@ export class ServerTradeScreenComponent implements OnInit {
     this.interDayMediumSma = 40
     this.interDayShortSma = 5
     this.calculateSma()
-    this.getStockDisplay()
     this.createOrUpdateChart()
     this.runSimulation()
     await this.getStockHistoricalData()
