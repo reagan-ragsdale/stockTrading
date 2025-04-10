@@ -936,6 +936,7 @@ export class ServerTradeScreenComponent implements OnInit {
     let mapOfShortSmaValues = new Map<string, sma200Array[]>()
     for (let i = 1; i < 20; i++) {
       for (let j = 1; j < 20; j++) {
+        console.time('inter sell')
         for (let k = 1; k < 30; k++) {
           for(let m = 150; m <= 250; m += 5){
             if (mapOfLongSmaValues.get(m) === undefined) {
@@ -979,7 +980,7 @@ export class ServerTradeScreenComponent implements OnInit {
             }
           }
         }
-
+        console.timeEnd('inter sell')
       }
     }
     this.topAlgos = listOfProfits.sort((a, b) => b.profit - a.profit).slice(0, 5)
