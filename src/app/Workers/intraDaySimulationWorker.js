@@ -1,9 +1,9 @@
-self.onmessage = function(message){
+self.onmessage = function (message) {
     console.log(message.data)
     self.postMessage('Reeieved message and sent back')
     //runSim(message.data)
 }
-function runSim(data){
+/* function runSim(data){
     let listOfProfits = []
     let mapOfLongSmaValues = new Map()
     let mapOfMediumSmaValues = new Map()
@@ -62,7 +62,7 @@ function runSim(data){
     self.postMessage(listOfProfits)
 }
 
-function calculateIntraDayLongSmaAllDays(longValue, selectedStockData) {
+function calculateIntraDayLongSmaAllDays(longValue, selectedStockData) { 
     let returnArray = []
     let windowSum = 0;
     for (let i = 0; i < longValue; i++) {
@@ -76,6 +76,7 @@ function calculateIntraDayLongSmaAllDays(longValue, selectedStockData) {
     }
     return returnArray
   }
+
   function calculateIntraDayShortSmaAllDays(longValue, shortValue, selectedStockData) {
     let returnArray = []
     let windowSum = 0;
@@ -132,3 +133,4 @@ function calculateIntraDayLongSmaAllDays(longValue, selectedStockData) {
     }
     return returnPofit
   }
+    */

@@ -1076,7 +1076,7 @@ export class ServerTradeScreenComponent implements OnInit {
       let tempStock200: sma200Array[] = []
       for (let j = this.interDayLongSma; j < this.selectedInterDayStockData.length; j++) {
         let last200Price: number = 0;
-        for (let k = 0; k < 200; k++) {
+        for (let k = 0; k < this.interDayLongSma; k++) {
           last200Price += this.selectedInterDayStockData[j - k].close
         }
         let last200Avg = last200Price / this.interDayLongSma
@@ -1135,6 +1135,9 @@ export class ServerTradeScreenComponent implements OnInit {
     this.distinctStocks = this.allHistory.map(e => e.stockName).filter((v, i, a) => a.indexOf(v) === i)
     this.selectedStockName = this.distinctStocks[0]
     this.selectedInterDayStockData = this.allHistory.filter(e => e.stockName == this.selectedStockName)
+    this.interDayLongSma = 200
+    this.interDayMediumSma = 40
+    this.interDayShortSma = 5
     this.calculateSma()
     this.getStockDisplay()
     this.createOrUpdateChart()
