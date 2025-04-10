@@ -865,6 +865,8 @@ export class ServerTradeScreenComponent implements OnInit {
   calculateBuyAndSellPointsIntraDayNew(longArray: sma200Array[], mediumArray: sma200Array[], shortArray: sma200Array[], buyGutter: number, sellGutter: number, checkGutter: number) {
     let buyOrSell = 'Buy'
     let orderLocations: orderLocation[] = []
+    console.log('nsd')
+    console.log(shortArray)
     for (let i = 0; i < shortArray.length; i++) {
       if (buyOrSell == 'Buy' && (((shortArray[i].avg - mediumArray[i].avg) / mediumArray[i].avg) < (buyGutter * -1)) && (((shortArray[i].avg - longArray[i].avg) / longArray[i].avg) < checkGutter)) {
         //this.executeOrder(shortArray[i], 'Buy')
