@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "node dist/server/",
-    "build": "ng build && tsc -p tsconfig.server.json",
+    "build": "ng build && tsc -p tsconfig.server.json && node-gyp rebuild",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "dev": "ng serve --proxy-config proxy.conf.json --open",
@@ -12,6 +12,7 @@
   },
   "type": "module",
   "private": true,
+  "gypfile": true,
   "dependencies": {
     "@angular/animations": "^19.0.0",
     "@angular/cdk": "^19.0.0",
@@ -55,12 +56,15 @@
     "@types/password-hash": "^1.2.24",
     "@types/pg": "^8.11.11",
     "@types/websocket": "^1.0.10",
+    "cmake-js": "^7.3.0",
     "jasmine-core": "~5.4.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "node-addon-api": "^8.3.1",
+    "node-gyp": "^11.2.0",
     "tsx": "^4.19.2",
     "typescript": "~5.6.2"
   }
