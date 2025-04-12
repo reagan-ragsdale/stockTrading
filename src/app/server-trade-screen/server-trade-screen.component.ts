@@ -827,7 +827,7 @@ export class ServerTradeScreenComponent implements OnInit {
   async runEntireSimulationIntraDayAllDays2() {
     let listOfProfits = []
     console.log(this.distinctDates)
-    for (let h = 0; h <= 2; h++) {
+    for (let h = 0; h <= 5; h++) {
       let selectedDate = this.distinctDates[h]
       this.stockDataForSelectedDay = await this.updateStockChartDataNew(selectedDate)
       let mapOfLongSmaValues = new Map<number, sma200Array[]>()
