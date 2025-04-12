@@ -598,10 +598,8 @@ export class ServerTradeScreenComponent implements OnInit {
                   })
                   listOfProfits.sort((a,b) => b.profit - a.profit)
                 }
-                else{
-                  if(totalProfit > listOfProfits[listOfProfits.length - 1].profit){
-                    listOfProfits.pop()
-                    listOfProfits.push({
+                else if(totalProfit > listOfProfits[4].profit){
+                    listOfProfits[4] = {
                       buyBuffer: Number((i * .001).toPrecision(3)),
                       sellBuffer: Number((j * .001).toPrecision(3)),
                       checkBuffer: Number((k * .001).toPrecision(3)),
@@ -610,9 +608,9 @@ export class ServerTradeScreenComponent implements OnInit {
                       smaShort: p * 60,
                       profit: totalProfit,
                       numberOfTrades: orderLocations.length
-                    })
+                    }
                     listOfProfits.sort((a,b) => b.profit - a.profit)
-                  }
+                  
                 }
                 
               }
