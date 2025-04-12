@@ -548,9 +548,9 @@ export class ServerTradeScreenComponent implements OnInit {
 
 
   async runEntireSimulationIntraDay() {
-    let listOfProfits = await SimulationController.runEntireSimulationIntraDay(this.selectedStockName, this.selectedDate)
-
-    /* let mapOfLongSmaValues = new Map<number, sma200Array[]>()
+    let listOfProfits = []
+    let minProfit = 0
+    let mapOfLongSmaValues = new Map<number, sma200Array[]>()
     let mapOfMediumSmaValues = new Map<string, sma200Array[]>()
     let mapOfShortSmaValues = new Map<string, sma200Array[]>()
      for (let i = 1; i <= 20; i++) {
@@ -585,16 +585,36 @@ export class ServerTradeScreenComponent implements OnInit {
                 let orderLocations = this.calculateBuyAndSellPointsIntraDayNew(mapOfLongSmaValues.get(m * 60)!, mapOfMediumSmaValues.get(JSON.stringify({ long: m * 60, value: n * 60 }))!, mapOfShortSmaValues.get(JSON.stringify({ long: m * 60, value: p * 60 }))!, Number((i * .001).toPrecision(3)), Number((j * .001).toPrecision(3)), Number((k * .001).toPrecision(3)))
                 let totalProfit = this.calculateTotalProfitNew(orderLocations)
   
-                listOfProfits.push({
-                  buyBuffer: Number((i * .001).toPrecision(3)),
-                  sellBuffer: Number((j * .001).toPrecision(3)),
-                  checkBuffer: Number((k * .001).toPrecision(3)),
-                  smaLong: m * 60,
-                  smaMedium: n * 60,
-                  smaShort: p * 60,
-                  profit: totalProfit,
-                  numberOfTrades: orderLocations.length
-                })
+                if(listOfProfits.length < 5){
+                  listOfProfits.push({
+                    buyBuffer: Number((i * .001).toPrecision(3)),
+                    sellBuffer: Number((j * .001).toPrecision(3)),
+                    checkBuffer: Number((k * .001).toPrecision(3)),
+                    smaLong: m * 60,
+                    smaMedium: n * 60,
+                    smaShort: p * 60,
+                    profit: totalProfit,
+                    numberOfTrades: orderLocations.length
+                  })
+                  listOfProfits.sort((a,b) => b.profit - a.profit)
+                }
+                else{
+                  if(totalProfit > listOfProfits[listOfProfits.length - 1].profit){
+                    listOfProfits.pop()
+                    listOfProfits.push({
+                      buyBuffer: Number((i * .001).toPrecision(3)),
+                      sellBuffer: Number((j * .001).toPrecision(3)),
+                      checkBuffer: Number((k * .001).toPrecision(3)),
+                      smaLong: m * 60,
+                      smaMedium: n * 60,
+                      smaShort: p * 60,
+                      profit: totalProfit,
+                      numberOfTrades: orderLocations.length
+                    })
+                    listOfProfits.sort((a,b) => b.profit - a.profit)
+                  }
+                }
+                
               }
             }
   
@@ -606,8 +626,7 @@ export class ServerTradeScreenComponent implements OnInit {
       console.log('finished outer loop iteration')
     }
     console.log(listOfProfits.length)
-    console.log(listOfProfits.sort((a, b) => b.profit - a.profit).slice(0, 50)) */
-    this.topAlgos = listOfProfits.sort((a, b) => b.profit - a.profit).slice(0, 5)
+    this.topAlgos = listOfProfits
     this.buyGutter = this.topAlgos[0].buyBuffer
     this.sellGutter = this.topAlgos[0].sellBuffer
     this.check200Gutter = this.topAlgos[0].checkBuffer
