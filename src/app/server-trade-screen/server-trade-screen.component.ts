@@ -827,8 +827,8 @@ export class ServerTradeScreenComponent implements OnInit {
   async runEntireSimulationIntraDayAllDays2() {
     let listOfProfits = []
     console.log(this.distinctDates)
-
-    for (let h = 0; h <= 4; h++) {
+    let numberOfDays = 5
+    for (let h = 0; h <= numberOfDays - 1; h++) {
       let selectedDate = this.distinctDates[h]
       this.stockDataForSelectedDay = await this.updateStockChartDataNew(selectedDate)
       let mapOfLongSmaValues = new Map<number, sma200Array[]>()
@@ -887,41 +887,40 @@ export class ServerTradeScreenComponent implements OnInit {
       }
       console.log('finsihed: ' + this.selectedDate)
     }
-    let topAverages = []
-    const comboMap = new Map<string, any[]>();
-
-    for (const e of listOfProfits) {
-      const key = `${e.buyBuffer}|${e.sellBuffer}|${e.checkBuffer}|${e.smaLong}|${e.smaMedium}|${e.smaShort}`;
-      if (!comboMap.has(key)) {
-        comboMap.set(key, []);
+    let topAverages: any[] = []
+    for (let i = 0; i < 4200000; i++) {
+      let filteredData = []
+      filteredData.push(listOfProfits[i])
+      for (let j = 1; j < numberOfDays; j++) {
+        filteredData.push(listOfProfits[i + (j * 4200000)])
       }
-      comboMap.get(key)!.push(e);
-    }
-    for (const [key, entries] of comboMap.entries()) {
-      const [buyBuffer, sellBuffer, checkBuffer, smaLong, smaMedium, smaShort] = key.split('|').map(Number);
-      
-      const totalProfit = entries.reduce((sum, e) => sum + e.profit, 0);
-      const totalTrades = entries.reduce((sum, e) => sum + e.numberOfTrades, 0);
-      const avgProfit = totalProfit / entries.length;
-      const avgTrades = totalTrades / entries.length;
-    
-      const result = {
-        buyBuffer,
-        sellBuffer,
-        checkBuffer,
-        smaLong,
-        smaMedium,
-        smaShort,
-        profit: avgProfit,
-        numberOfTrades: avgTrades
-      };
-    
+      let averageProfit = filteredData.reduce((sum, val) => sum + val.profit, 0) / filteredData.length
+      let averageNumTrades = filteredData.reduce((sum, val) => sum + val.numberOfTrades, 0) / filteredData.length
       if (topAverages.length < 5) {
-        topAverages.push(result);
-        topAverages.sort((a, b) => b.profit - a.profit);
-      } else if (avgProfit > topAverages[4].profit) {
-        topAverages[4] = result;
-        topAverages.sort((a, b) => b.profit - a.profit);
+        topAverages.push({
+          buyBuffer: filteredData[0].buyBuffer,
+          sellBuffer:  filteredData[0].sellBuffer,
+          checkBuffer:  filteredData[0].checkBuffer,
+          smaLong:  filteredData[0].smaLong,
+          smaMedium:  filteredData[0].smaMedium,
+          smaShort:  filteredData[0].smaShort,
+          profit: averageProfit,
+          numberOfTrades: averageNumTrades
+        })
+        topAverages.sort((a,b) => b.profit - a.profit)
+      }
+      else if(averageProfit > topAverages[4].profit){
+        topAverages[4] = {
+          buyBuffer: filteredData[0].buyBuffer,
+          sellBuffer:  filteredData[0].sellBuffer,
+          checkBuffer:  filteredData[0].checkBuffer,
+          smaLong:  filteredData[0].smaLong,
+          smaMedium:  filteredData[0].smaMedium,
+          smaShort:  filteredData[0].smaShort,
+          profit: averageProfit,
+          numberOfTrades: averageNumTrades
+        }
+        topAverages.sort((a,b) => b.profit - a.profit)
       }
     }
     console.log(topAverages)
