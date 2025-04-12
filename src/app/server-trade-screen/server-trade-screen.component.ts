@@ -885,14 +885,20 @@ export class ServerTradeScreenComponent implements OnInit {
         }
         console.log('finished outer loop iteration')
       }
-      console.log('finsihed: ' + this.selectedDate)
+      console.log('finsihed: ' + selectedDate)
     }
     let topAverages: any[] = []
+    let count = 0
     for (let i = 0; i < 4200000; i++) {
       let filteredData = []
       filteredData.push(listOfProfits[i])
       for (let j = 1; j < numberOfDays; j++) {
         filteredData.push(listOfProfits[i + (j * 4200000)])
+      }
+      if(count == 0){
+        console.log('filtered data below')
+        console.log(filteredData)
+        count++
       }
       let averageProfit = filteredData.reduce((sum, val) => sum + val.profit, 0) / filteredData.length
       let averageNumTrades = filteredData.reduce((sum, val) => sum + val.numberOfTrades, 0) / filteredData.length

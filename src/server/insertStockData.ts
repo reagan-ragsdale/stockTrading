@@ -34,31 +34,46 @@ export const socketCall = async (): Promise<void> => {
             sma200: sma200
         }
     } */
-    let stockDayTradeValues: { [key: string]: { Buy: number, Sell: number, Check200: number } } = {
+    let stockDayTradeValues: { [key: string]: { Buy: number, Sell: number, Check200: number, SmaLong: number, SmaMedium: number, SmaShort: number } } = {
         'TSLA': {
-            Buy: .004,
-            Sell: .006,
-            Check200: .01
+            Buy: .01,
+            Sell: .013,
+            Check200: .001,
+            SmaLong: 5400,
+            SmaMedium: 1200,
+            SmaShort: 60
         },
         'AAPL': {
-            Buy: .001,
-            Sell: .002,
-            Check200: .01
+            Buy: .002,
+            Sell: .008,
+            Check200: .03,
+            SmaLong: 3600,
+            SmaMedium: 1200,
+            SmaShort: 180
         },
         'MSFT': {
             Buy: .001,
             Sell: .004,
-            Check200: .01
+            Check200: .01,
+            SmaLong: 5400,
+            SmaMedium: 1200,
+            SmaShort: 60
         },
         'AMD': {
             Buy: .001,
             Sell: .002,
-            Check200: .10
+            Check200: .10,
+            SmaLong: 5400,
+            SmaMedium: 1200,
+            SmaShort: 60
         },
         'PLTR': {
             Buy: .001,
             Sell: .002,
-            Check200: .01
+            Check200: .01,
+            SmaLong: 5400,
+            SmaMedium: 1200,
+            SmaShort: 60
         },
     }
     let stockSmaBuySell: { [key: string]: { Buy: number, Sell: number, Check200: number } } = {
@@ -159,18 +174,18 @@ export const socketCall = async (): Promise<void> => {
                             
                             insertData.push(data)
                                 stockData[data.stockName].history.push(data.stockPrice)
-                                if (stockData[data.stockName].history.length == 3600) {
+                                if (stockData[data.stockName].history.length == stockDayTradeValues[data.stockName].SmaLong) {
                                     stockData[data.stockName].last3600 = stockData[data.stockName].history
-                                    stockData[data.stockName].last3600sma = stockData[data.stockName].last3600.reduce((sum, val) => sum + val, 0) / 3600
-                                    stockData[data.stockName].last1800sma = stockData[data.stockName].last3600.slice(-1800).reduce((sum, val) => sum + val, 0) / 1800
-                                    stockData[data.stockName].last300sma = stockData[data.stockName].last3600.slice(-300).reduce((sum, val) => sum + val, 0) / 300
+                                    stockData[data.stockName].last3600sma = stockData[data.stockName].last3600.reduce((sum, val) => sum + val, 0) / stockDayTradeValues[data.stockName].SmaLong
+                                    stockData[data.stockName].last1800sma = stockData[data.stockName].last3600.slice(stockDayTradeValues[data.stockName].SmaMedium * -1).reduce((sum, val) => sum + val, 0) / stockDayTradeValues[data.stockName].SmaMedium
+                                    stockData[data.stockName].last300sma = stockData[data.stockName].last3600.slice(stockDayTradeValues[data.stockName].SmaShort * -1).reduce((sum, val) => sum + val, 0) / stockDayTradeValues[data.stockName].SmaShort
                                 }
-                                else if (stockData[data.stockName].history.length > 3600) {
+                                else if (stockData[data.stockName].history.length > stockDayTradeValues[data.stockName].SmaLong) {
                                     stockData[data.stockName].last3600.shift()
                                     stockData[data.stockName].last3600.push(data.stockPrice)
-                                    stockData[data.stockName].last3600sma = stockData[data.stockName].last3600.reduce((sum, val) => sum + val, 0) / 3600
-                                    stockData[data.stockName].last1800sma = stockData[data.stockName].last3600.slice(-1800).reduce((sum, val) => sum + val, 0) / 1800
-                                    stockData[data.stockName].last300sma = stockData[data.stockName].last3600.slice(-300).reduce((sum, val) => sum + val, 0) / 300
+                                    stockData[data.stockName].last3600sma = stockData[data.stockName].last3600.reduce((sum, val) => sum + val, 0) / stockDayTradeValues[data.stockName].SmaLong
+                                    stockData[data.stockName].last1800sma = stockData[data.stockName].last3600.slice(stockDayTradeValues[data.stockName].SmaMedium * -1).reduce((sum, val) => sum + val, 0) / stockDayTradeValues[data.stockName].SmaMedium
+                                    stockData[data.stockName].last300sma = stockData[data.stockName].last3600.slice(stockDayTradeValues[data.stockName].SmaShort * -1).reduce((sum, val) => sum + val, 0) / stockDayTradeValues[data.stockName].SmaShort
                                 }
                                 for (let j = 0; j < userServerAlgos.length; j++) {
                                     let filteredOrderOnUserAndStock = userOrders.filter(e => e.userId == userServerAlgos![j].userId && e.stockName == data.stockName)[0]
