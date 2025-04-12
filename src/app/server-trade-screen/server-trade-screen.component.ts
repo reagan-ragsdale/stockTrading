@@ -506,6 +506,34 @@ export class ServerTradeScreenComponent implements OnInit {
     }
     return returnArray
   }
+  calculateIntraDayMediumSmaNew(mediumValue: number): sma200Array[]{
+    let returnArray: sma200Array[] = []
+    let windowSum: number = 0
+    for (let i = 0; i < mediumValue; i++) {
+      windowSum += this.stockDataForSelectedDay[i].stockPrice;
+    }
+    returnArray.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[mediumValue].stockPrice, avg: (windowSum / mediumValue), date: new Date(this.stockDataForSelectedDay[mediumValue].time).toLocaleTimeString() }); // Push the average of the first window
+
+    for (let i = mediumValue; i < this.stockDataForSelectedDay.length; i++) {
+      windowSum += this.stockDataForSelectedDay[i].stockPrice - this.stockDataForSelectedDay[i - mediumValue].stockPrice; // Add new element, remove old element
+      returnArray.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[i].stockPrice, avg: (windowSum / mediumValue), date: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString() }); // Push the new average
+    }
+    return returnArray
+  }
+  calculateIntraDayShortSmaNew(shortValue: number): sma200Array[]{
+    let returnArray: sma200Array[] = []
+    let windowSum: number = 0
+    for (let i = 0; i < shortValue; i++) {
+      windowSum += this.stockDataForSelectedDay[i].stockPrice;
+    }
+    returnArray.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[shortValue].stockPrice, avg: (windowSum / shortValue), date: new Date(this.stockDataForSelectedDay[shortValue].time).toLocaleTimeString() }); // Push the average of the first window
+
+    for (let i = shortValue; i < this.stockDataForSelectedDay.length; i++) {
+      windowSum += this.stockDataForSelectedDay[i].stockPrice - this.stockDataForSelectedDay[i - shortValue].stockPrice; // Add new element, remove old element
+      returnArray.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[i].stockPrice, avg: (windowSum / shortValue), date: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString() }); // Push the new average
+    }
+    return returnArray
+  }
   updateChartIntraDay() {
     this.stockChart.data.datasets[0].data = this.listOfLastHour.map(e => e.close)
     this.stockChart.data.datasets[0].label = 'Actual'
@@ -551,8 +579,8 @@ export class ServerTradeScreenComponent implements OnInit {
     let listOfProfits = []
     let minProfit = 0
     let mapOfLongSmaValues = new Map<number, sma200Array[]>()
-    let mapOfMediumSmaValues = new Map<string, sma200Array[]>()
-    let mapOfShortSmaValues = new Map<string, sma200Array[]>()
+    let mapOfMediumSmaValues = new Map<number, sma200Array[]>()
+    let mapOfShortSmaValues = new Map<number, sma200Array[]>()
      for (let i = 1; i <= 20; i++) {
       for (let j = 1; j <= 20; j++) {
         console.time('sell')
@@ -567,25 +595,25 @@ export class ServerTradeScreenComponent implements OnInit {
             }
   
             for (let n = 20; n <= 40; n += 5) {
-              if (mapOfMediumSmaValues.get(JSON.stringify({ long: m * 60, value: n * 60 })) === undefined) {
-                let listOfLastMediumResult = this.calculateIntraDayMediumSma(m * 60, n * 60)
+              if (mapOfMediumSmaValues.get(n * 60) === undefined) {
+                let listOfLastMediumResult = this.calculateIntraDayMediumSmaNew(n * 60)
                 mapOfMediumSmaValues.set(
-                  JSON.stringify({ long: m * 60, value: n * 60 }),
+                  n * 60,
                   listOfLastMediumResult
                 )
               }
               for (let p = 1; p <= 10; p++) {
-                if (mapOfShortSmaValues.get(JSON.stringify({ long: m * 60, value: p * 60 })) === undefined) {
-                  let listOfLastShortResult = this.calculateIntraDayShortSma(m * 60, p * 60)
+                if (mapOfShortSmaValues.get(p * 60 ) === undefined) {
+                  let listOfLastShortResult = this.calculateIntraDayShortSmaNew(p * 60)
                   mapOfShortSmaValues.set(
-                    JSON.stringify({ long: m * 60, value: p * 60 }),
+                    p * 60,
                     listOfLastShortResult
                   )
                 }
-                let orderLocations = this.calculateBuyAndSellPointsIntraDayNew(mapOfLongSmaValues.get(m * 60)!, mapOfMediumSmaValues.get(JSON.stringify({ long: m * 60, value: n * 60 }))!, mapOfShortSmaValues.get(JSON.stringify({ long: m * 60, value: p * 60 }))!, Number((i * .001).toPrecision(3)), Number((j * .001).toPrecision(3)), Number((k * .001).toPrecision(3)))
+                let orderLocations = this.calculateBuyAndSellPointsIntraDayNew2(mapOfLongSmaValues.get(m * 60)!, mapOfMediumSmaValues.get(n * 60)!, mapOfShortSmaValues.get(p * 60)!, Number((i * .001).toPrecision(3)), Number((j * .001).toPrecision(3)), Number((k * .001).toPrecision(3)))
                 let totalProfit = this.calculateTotalProfitNew(orderLocations)
   
-                //if(listOfProfits.length < 5){
+                if(listOfProfits.length < 5){
                   listOfProfits.push({
                     buyBuffer: Number((i * .001).toPrecision(3)),
                     sellBuffer: Number((j * .001).toPrecision(3)),
@@ -595,7 +623,7 @@ export class ServerTradeScreenComponent implements OnInit {
                     smaShort: p * 60,
                     profit: totalProfit,
                     numberOfTrades: orderLocations.length
-                  })/* 
+                  })
                   listOfProfits.sort((a,b) => b.profit - a.profit)
                 }
                 else if(totalProfit > listOfProfits[4].profit){
@@ -611,7 +639,7 @@ export class ServerTradeScreenComponent implements OnInit {
                     }
                     listOfProfits.sort((a,b) => b.profit - a.profit)
                   
-                } */
+                }
                 
               }
             }
@@ -624,7 +652,7 @@ export class ServerTradeScreenComponent implements OnInit {
       console.log('finished outer loop iteration')
     }
     console.log(listOfProfits.length)
-    this.topAlgos = listOfProfits.sort((a,b) => b.profit - a.profit).slice(0,5)
+    this.topAlgos = listOfProfits
     this.buyGutter = this.topAlgos[0].buyBuffer
     this.sellGutter = this.topAlgos[0].sellBuffer
     this.check200Gutter = this.topAlgos[0].checkBuffer
@@ -893,6 +921,28 @@ export class ServerTradeScreenComponent implements OnInit {
       else if (buyOrSell == 'Sell' && (((shortArray[i].avg - mediumArray[i].avg) / mediumArray[i].avg) > sellGutter) && shortArray[i].close > orderLocations[orderLocations.length - 1].price) {
         //this.executeOrder(shortArray[i], 'Sell')
         orderLocations.push({ buySell: 'Sell', date: shortArray[i].date, price: shortArray[i].close })
+        buyOrSell = 'Buy'
+      }
+
+
+    }
+    return orderLocations
+  }
+  calculateBuyAndSellPointsIntraDayNew2(longArray: sma200Array[], mediumArray: sma200Array[], shortArray: sma200Array[], buyGutter: number, sellGutter: number, checkGutter: number) {
+    let buyOrSell = 'Buy'
+    let orderLocations: orderLocation[] = []
+    let longArrayLen = longArray.length
+    let mediumArrayLen = mediumArray.length
+    let shortArrayLen = shortArray.length
+    for (let i = 0; i < longArray.length; i++) {
+      if (buyOrSell == 'Buy' && (((shortArray[i + (shortArrayLen - longArrayLen)].avg - mediumArray[i + (mediumArrayLen - longArrayLen)].avg) / mediumArray[i + (mediumArrayLen - longArrayLen)].avg) < (buyGutter * -1)) && (((shortArray[i + (shortArrayLen - longArrayLen)].avg - longArray[i].avg) / longArray[i].avg) < checkGutter)) {
+        //this.executeOrder(shortArray[i], 'Buy')
+        orderLocations.push({ buySell: 'Buy', date: shortArray[i + (shortArrayLen - longArrayLen)].date, price: shortArray[i + (shortArrayLen - longArrayLen)].close })
+        buyOrSell = 'Sell'
+      }
+      else if (buyOrSell == 'Sell' && (((shortArray[i + (shortArrayLen - longArrayLen)].avg - mediumArray[i + (mediumArrayLen - longArrayLen)].avg) / mediumArray[i + (mediumArrayLen - longArrayLen)].avg) > sellGutter) && shortArray[i + (shortArrayLen - longArrayLen)].close > orderLocations[orderLocations.length - 1].price) {
+        //this.executeOrder(shortArray[i], 'Sell')
+        orderLocations.push({ buySell: 'Sell', date: shortArray[i + (shortArrayLen - longArrayLen)].date, price: shortArray[i + (shortArrayLen - longArrayLen)].close })
         buyOrSell = 'Buy'
       }
 
