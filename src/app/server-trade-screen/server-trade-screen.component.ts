@@ -558,32 +558,31 @@ export class ServerTradeScreenComponent implements OnInit {
         console.time('sell')
         for (let k = 1; k <= 30; k++) {
           for (let m = 60; m <= 90; m += 5) {
-            
-            //if (mapOfLongSmaValues.get(m * 60) === undefined) {
+            if (mapOfLongSmaValues.get(m * 60) === undefined) {
               let listOfLastHourResult = this.calculateIntraDayLongSma(m * 60)
-              //mapOfLongSmaValues.set(
-              //  m * 60,
-               // listOfLastHourResult
-              //)
-            //}
+              mapOfLongSmaValues.set(
+                m * 60,
+                listOfLastHourResult
+              )
+            }
   
             for (let n = 20; n <= 40; n += 5) {
-             // if (mapOfMediumSmaValues.get(JSON.stringify({ long: m * 60, value: n * 60 })) === undefined) {
+              if (mapOfMediumSmaValues.get(JSON.stringify({ long: m * 60, value: n * 60 })) === undefined) {
                 let listOfLastMediumResult = this.calculateIntraDayMediumSma(m * 60, n * 60)
-               // mapOfMediumSmaValues.set(
-                //  JSON.stringify({ long: m * 60, value: n * 60 }),
-                //  listOfLastMediumResult
-               // )
-             // }
+                mapOfMediumSmaValues.set(
+                  JSON.stringify({ long: m * 60, value: n * 60 }),
+                  listOfLastMediumResult
+                )
+              }
               for (let p = 1; p <= 10; p++) {
-               // if (mapOfShortSmaValues.get(JSON.stringify({ long: m * 60, value: p * 60 })) === undefined) {
+                if (mapOfShortSmaValues.get(JSON.stringify({ long: m * 60, value: p * 60 })) === undefined) {
                   let listOfLastShortResult = this.calculateIntraDayShortSma(m * 60, p * 60)
-               //   mapOfShortSmaValues.set(
-               //     JSON.stringify({ long: m * 60, value: p * 60 }),
-               //     listOfLastShortResult
-                  //)
-               // }
-                let orderLocations = this.calculateBuyAndSellPointsIntraDayNew(listOfLastHourResult, listOfLastMediumResult, listOfLastShortResult, Number((i * .001).toPrecision(3)), Number((j * .001).toPrecision(3)), Number((k * .001).toPrecision(3)))
+                  mapOfShortSmaValues.set(
+                    JSON.stringify({ long: m * 60, value: p * 60 }),
+                    listOfLastShortResult
+                  )
+                }
+                let orderLocations = this.calculateBuyAndSellPointsIntraDayNew(mapOfLongSmaValues.get(m * 60)!, mapOfMediumSmaValues.get(JSON.stringify({ long: m * 60, value: n * 60 }))!, mapOfShortSmaValues.get(JSON.stringify({ long: m * 60, value: p * 60 }))!, Number((i * .001).toPrecision(3)), Number((j * .001).toPrecision(3)), Number((k * .001).toPrecision(3)))
                 let totalProfit = this.calculateTotalProfitNew(orderLocations)
   
                 if(listOfProfits.length < 5){
