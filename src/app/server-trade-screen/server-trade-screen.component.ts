@@ -827,12 +827,12 @@ export class ServerTradeScreenComponent implements OnInit {
   async runEntireSimulationIntraDayAllDays2() {
     let listOfProfits = []
     
-    let mapOfStockDayData = new Map<string, DbStockHistoryData[]>()
+    /* let mapOfStockDayData = new Map<string, DbStockHistoryData[]>()
     let allOfStockData = await dbStockHistoryDataRepo.find({ where: { stockName: this.selectedStockName }, orderBy: { time: 'asc' } })
     for (let g = 0; g < this.distinctDates.length; g++) {
       let filteredData = allOfStockData.filter(e => e.date == this.distinctDates[g])
       mapOfStockDayData.set(this.distinctDates[g], filteredData)
-    }
+    } */
     for (let h = 2; h >= 0; h--) {
       let selectedDate = this.distinctDates[this.distinctDates.length - (h+1)]
       let selectedStockData = await this.updateStockChartDataNew(selectedDate)
