@@ -585,7 +585,7 @@ export class ServerTradeScreenComponent implements OnInit {
                 let orderLocations = this.calculateBuyAndSellPointsIntraDayNew(mapOfLongSmaValues.get(m * 60)!, mapOfMediumSmaValues.get(JSON.stringify({ long: m * 60, value: n * 60 }))!, mapOfShortSmaValues.get(JSON.stringify({ long: m * 60, value: p * 60 }))!, Number((i * .001).toPrecision(3)), Number((j * .001).toPrecision(3)), Number((k * .001).toPrecision(3)))
                 let totalProfit = this.calculateTotalProfitNew(orderLocations)
   
-                if(listOfProfits.length < 5){
+                //if(listOfProfits.length < 5){
                   listOfProfits.push({
                     buyBuffer: Number((i * .001).toPrecision(3)),
                     sellBuffer: Number((j * .001).toPrecision(3)),
@@ -595,7 +595,7 @@ export class ServerTradeScreenComponent implements OnInit {
                     smaShort: p * 60,
                     profit: totalProfit,
                     numberOfTrades: orderLocations.length
-                  })
+                  })/* 
                   listOfProfits.sort((a,b) => b.profit - a.profit)
                 }
                 else if(totalProfit > listOfProfits[4].profit){
@@ -611,7 +611,7 @@ export class ServerTradeScreenComponent implements OnInit {
                     }
                     listOfProfits.sort((a,b) => b.profit - a.profit)
                   
-                }
+                } */
                 
               }
             }
@@ -624,7 +624,7 @@ export class ServerTradeScreenComponent implements OnInit {
       console.log('finished outer loop iteration')
     }
     console.log(listOfProfits.length)
-    this.topAlgos = listOfProfits
+    this.topAlgos = listOfProfits.sort((a,b) => b.profit - a.profit).slice(0,5)
     this.buyGutter = this.topAlgos[0].buyBuffer
     this.sellGutter = this.topAlgos[0].sellBuffer
     this.check200Gutter = this.topAlgos[0].checkBuffer
