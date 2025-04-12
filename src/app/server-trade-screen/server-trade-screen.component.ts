@@ -18,7 +18,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
 import { empty } from 'rxjs';
 import { SimulationController } from '../../shared/controllers/SimulationController';
-const cppRunIntraDaySim = require('../../cppAddons/runIntraDaySim.cpp')
+
+
 
 type serverAlgos = {
   name: string;
@@ -1132,7 +1133,6 @@ export class ServerTradeScreenComponent implements OnInit {
   async ngOnInit() {
     Chart.register(annotationPlugin);
     Chart.register(...registerables)
-    console.log('addon', cppRunIntraDaySim)
     this.isLoading = true
     this.userAlgos = await dbAlgorithmListRepo.findFirst({ userId: remult.user?.id })
     this.listOfServerAlgos.push({

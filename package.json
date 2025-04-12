@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "node dist/server/",
-    "build": "ng build && tsc -p tsconfig.server.json && node-gyp rebuild",
+    "build": "ng build && tsc -p tsconfig.server.json",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "dev": "ng serve --proxy-config proxy.conf.json --open",
