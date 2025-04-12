@@ -827,6 +827,7 @@ export class ServerTradeScreenComponent implements OnInit {
   async runEntireSimulationIntraDayAllDays2() {
     let listOfProfits = []
     console.log(this.distinctDates)
+
     for (let h = 0; h <= 4; h++) {
       let selectedDate = this.distinctDates[h]
       this.stockDataForSelectedDay = await this.updateStockChartDataNew(selectedDate)
@@ -923,54 +924,6 @@ export class ServerTradeScreenComponent implements OnInit {
         topAverages.sort((a, b) => b.profit - a.profit);
       }
     }
-    /* let distinctBuys = [.001, .002, .003, .004, .005, .006, .007, .008, .009, .010, .011, .012, .013, .014, .015, .016, .017, .018, .019, .020]
-    let distinctSells = [.001, .002, .003, .004, .005, .006, .007, .008, .009, .010, .011, .012, .013, .014, .015, .016, .017, .018, .019, .020]
-    let distinctChecks = [.001, .002, .003, .004, .005, .006, .007, .008, .009, .010, .011, .012, .013, .014, .015, .016, .017, .018, .019, .020, .021, .022, .023, .024, .025, .026, .027, .028, .029, .030]
-    let distinctLongs = [60, 65, 70, 75, 80, 85, 90]
-    let distinctMediums = [20, 25, 30, 35, 40]
-    let distinctShorts = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    for (let i = 0; i < distinctBuys.length; i++) {
-      for (let j = 0; j < distinctSells.length; j++) {
-        for (let k = 0; k < distinctChecks.length; k++) {
-          for (let m = 0; m < distinctLongs.length; m++) {
-            for (let n = 0; n < distinctMediums.length; n++) {
-              for (let p = 0; p < distinctShorts.length; p++) {
-                let filteredData = listOfProfits.filter(e => e.buyBuffer == distinctBuys[i] && e.sellBuffer == distinctSells[j] && e.checkBuffer == distinctChecks[k] && e.smaLong == distinctLongs[m] && e.smaMedium == distinctMediums[n] && e.smaShort == distinctShorts[p])
-                let averageProfit = filteredData.reduce((sum, val) => sum + val.profit, 0) / filteredData.length
-                let averageNumTrades = filteredData.reduce((sum, val) => sum + val.numberOfTrades, 0) / filteredData.length
-                if (topAverages.length < 5) {
-                  topAverages.push({
-                    buyBuffer: distinctBuys[i],
-                    sellBuffer: distinctSells[j],
-                    checkBuffer: distinctChecks[k],
-                    smaLong: distinctLongs[m],
-                    smaMedium: distinctMediums[n],
-                    smaShort: distinctShorts[p],
-                    profit: averageProfit,
-                    numberOfTrades: averageNumTrades
-                  })
-                  topAverages.sort((a, b) => b.profit - a.profit)
-                }
-                else if (averageProfit > topAverages[4].profit) {
-                  topAverages[4] = {
-                    buyBuffer: distinctBuys[i],
-                    sellBuffer: distinctSells[j],
-                    checkBuffer: distinctChecks[k],
-                    smaLong: distinctLongs[m],
-                    smaMedium: distinctMediums[n],
-                    smaShort: distinctShorts[p],
-                    profit: averageProfit,
-                    numberOfTrades: averageNumTrades
-                  }
-                  topAverages.sort((a, b) => b.profit - a.profit)
-                }
-                listOfProfits = listOfProfits.filter(e => e.buyBuffer != distinctBuys[i] && e.sellBuffer != distinctSells[j] && e.checkBuffer != distinctChecks[k] && e.smaLong != distinctLongs[m] && e.smaMedium != distinctMediums[n] && e.smaShort != distinctShorts[p])
-              }
-            }
-          }
-        }
-      }
-    } */
     console.log(topAverages)
   }
   calculateBuyAndSellPointsIntraDayNew(longArray: sma200Array[], mediumArray: sma200Array[], shortArray: sma200Array[], buyGutter: number, sellGutter: number, checkGutter: number) {
