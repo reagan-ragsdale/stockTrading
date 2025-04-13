@@ -13,6 +13,12 @@ export class DbCurrentDayStockData {
     stockPrice = 0
 
     @Fields.number()
+    askPrice = 0
+
+    @Fields.number()
+    bidPrice = 0
+
+    @Fields.number()
     time = 0
 
     @Fields.number()

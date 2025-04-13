@@ -157,6 +157,8 @@ export class TestScreenComponent implements OnInit, OnDestroy {
   chartInfo: DbCurrentDayStockData[] = [{
     stockName: '',
     stockPrice: 0,
+    askPrice: 0,
+    bidPrice: 0,
     time: 0,
     volume: 0
   }]
@@ -620,6 +622,8 @@ export class TestScreenComponent implements OnInit, OnDestroy {
       let stockData: DbCurrentDayStockData = {
         stockName: this.stockDataForSelectedDay[i].stockName,
         stockPrice: this.stockDataForSelectedDay[i].stockPrice,
+        askPrice: 0,
+        bidPrice: 0,
         time: this.stockDataForSelectedDay[i].time,
         volume: 0
       }

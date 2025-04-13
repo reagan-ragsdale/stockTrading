@@ -229,6 +229,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
                 this.chartInfo.push({
                   stockName: newEvent.data[0].content[i].key,
                   stockPrice: newEvent.data[0].content[i]['3'],
+                  askPrice: 0,
+                  bidPrice: 0,
                   time: Number(newEvent.data[0].timestamp),
                   volume: newEvent.data[0].content[i]['8']
                 })
@@ -268,6 +270,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   chartInfo: DbCurrentDayStockData[] = [{
     stockName: '',
     stockPrice: 0,
+    askPrice: 0,
+    bidPrice: 0,
     time: 0,
     volume: 0
   }]
