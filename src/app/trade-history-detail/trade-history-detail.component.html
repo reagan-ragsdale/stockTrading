@@ -12,6 +12,14 @@
               <mat-option *ngFor="let type of dateTypes" value="{{type}}" (onSelectionChange)="onSelectedDateTypeChange($event)">{{type}}</mat-option>
             </mat-select>
           </mat-form-field>
+          <mat-form-field class="example-full-width">
+            <mat-label>Start Date</mat-label>
+            <input matInput placeholder="MM/DD/YYYY" [(ngModel)]="startDate">
+          </mat-form-field>
+          <mat-form-field class="example-full-width">
+            <mat-label>Favorite food</mat-label>
+            <input matInput placeholder="MM/DD/YYYY" [(ngModel)]="endDate" >
+          </mat-form-field>
           
           <button style="margin-top: auto; margin-bottom: auto; margin-left: .5rem;" mat-raised-button color="primary" aria-label="Search" (click)="onSubmitSearch()">Search</button>
           <div style="display:flex; align-items: end; gap: 1rem; margin-left:1rem; width:100%;">

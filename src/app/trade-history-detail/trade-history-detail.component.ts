@@ -14,12 +14,13 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MatNativeDateModule, MatRippleModule } from '@angular/material/core';
+import { FormsModule } from '@angular/forms';
  
 
 @Component({
   selector: 'app-trade-history-detail',
   providers: [provideNativeDateAdapter()],
-  imports: [MatSelectModule, MatTableModule, EpochToTimePipe, CommonModule, MatInputModule, MatButtonModule,MatFormFieldModule, MatDatepickerModule, MatNativeDateModule, MatRippleModule],
+  imports: [MatSelectModule, FormsModule, MatTableModule, EpochToTimePipe, CommonModule, MatInputModule, MatButtonModule,MatFormFieldModule, MatDatepickerModule, MatNativeDateModule, MatRippleModule],
   templateUrl: './trade-history-detail.component.html',
   styleUrl: './trade-history-detail.component.css'
 })
@@ -28,15 +29,6 @@ export class TradeHistoryDetailComponent implements OnInit {
 
   startDate: string = ''
   endDate: string = ''
-  onStartDateChange(event: any){
-    this.startDate = event.value
-  }
-  onEndDateChange(event: any){
-    this.endDate = event.value
-    if(this.startDate != ''){
-      this.picker?.close()
-    }
-  }
 
   selectedStockName: string = ''
   isLoading: boolean = true
@@ -89,7 +81,11 @@ export class TradeHistoryDetailComponent implements OnInit {
 
       }
       else if (this.dateType == 'Choose Date') {
-
+        let startTime = new Date(this.startDate)
+        let endTime = new Date(this.endDate)
+        console.log(startTime)
+        console.log(endTime)
+        //this.selectedStockOrders = this.allOrders.filter(e => this.isSameCalendarWeek(e.orderTime))
       }
     }
     else {
