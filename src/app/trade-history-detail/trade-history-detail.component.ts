@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {  Component, OnInit, ViewChild } from '@angular/core';
 import { MatSelectModule } from '@angular/material/select';
 import { OrderController } from '../../shared/controllers/OrderController';
 import { DbOrders } from '../../shared/tasks/dbOrders';
@@ -8,8 +8,7 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { SimFInance } from '../../shared/tasks/simFinance';
 import { SimFinance } from '../../shared/controllers/SimFinance';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-//import { MatInputModule } from '@angular/material/input';
+import {MatDatepickerModule, MatDateRangePicker} from '@angular/material/datepicker';
 import {provideNativeDateAdapter} from '@angular/material/core';
 import {MatFormFieldModule} from '@angular/material/form-field';
  
@@ -18,11 +17,23 @@ import {MatFormFieldModule} from '@angular/material/form-field';
   selector: 'app-trade-history-detail',
   providers: [provideNativeDateAdapter()],
   imports: [MatSelectModule, MatTableModule, EpochToTimePipe, CommonModule, MatButtonModule,MatFormFieldModule, MatDatepickerModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './trade-history-detail.component.html',
   styleUrl: './trade-history-detail.component.css'
 })
 export class TradeHistoryDetailComponent implements OnInit {
+  @ViewChild('picker') picker: MatDateRangePicker<Date> | undefined;
+
+  startDate: string = ''
+  endDate: string = ''
+  onStartDateChange(event: any){
+    this.startDate = event.value
+  }
+  onEndDateChange(event: any){
+    this.endDate = event.value
+    if(this.startDate != ''){
+      this.picker?.close()
+    }
+  }
 
   selectedStockName: string = ''
   isLoading: boolean = true
