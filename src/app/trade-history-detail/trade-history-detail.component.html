@@ -1,23 +1,23 @@
 <div style="display:flex; flex-direction: column;">
     <div class="top-bar" style="display:flex;">
-        <mat-form-field>
+        <mat-form-field style="padding-left:.5rem;">
             <mat-label>Stock</mat-label>
             <mat-select disableRipple [(value)]="selectedStockName">
               <mat-option *ngFor="let stock of distinctStocks" value="{{stock}}" (onSelectionChange)="onSelectedStockChange($event)">{{stock}}</mat-option>
             </mat-select>
           </mat-form-field>
-          <mat-form-field>
+          <mat-form-field style="padding-left:.5rem;">
             <mat-label>Date Range</mat-label>
             <mat-select disableRipple [(value)]="dateType">
               <mat-option *ngFor="let type of dateTypes" value="{{type}}" (onSelectionChange)="onSelectedDateTypeChange($event)">{{type}}</mat-option>
             </mat-select>
           </mat-form-field>
-          <mat-form-field class="example-full-width">
+          <mat-form-field style="padding-left:.5rem;" *ngIf="dateType == 'Choose Date'">
             <mat-label>Start Date</mat-label>
             <input matInput placeholder="MM/DD/YYYY" [(ngModel)]="startDate">
           </mat-form-field>
-          <mat-form-field class="example-full-width">
-            <mat-label>Favorite food</mat-label>
+          <mat-form-field style="padding-left:.5rem;" *ngIf="dateType == 'Choose Date'">
+            <mat-label>End Date</mat-label>
             <input matInput placeholder="MM/DD/YYYY" [(ngModel)]="endDate" >
           </mat-form-field>
           
