@@ -13,15 +13,13 @@
             </mat-select>
           </mat-form-field>
           <mat-form-field>
-            <mat-label>Input & change events</mat-label>
-            <input
-              matInput
-              [matDatepicker]="picker"
-              (dateChange)="addEvent($event)"
-              (dateChange)="picker.close()"/>
-            <mat-hint>MM/DD/YYYY</mat-hint>
+            <mat-label>Enter a date range</mat-label>
+            <mat-date-range-input [rangePicker]="picker">
+              <input matStartDate placeholder="Start date">
+              <input matEndDate placeholder="End date">
+            </mat-date-range-input>
             <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
+            <mat-date-range-picker #picker></mat-date-range-picker>
           </mat-form-field>
           <button style="margin-top: auto; margin-bottom: auto; margin-left: .5rem;" mat-raised-button color="primary" aria-label="Search" (click)="onSubmitSearch()">Search</button>
           <div style="display:flex; align-items: end; gap: 1rem; margin-left:1rem; width:100%;">
