@@ -14,7 +14,7 @@ import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-trade-history-detail',
-  imports: [MatSelectModule, MatTableModule, EpochToTimePipe, CommonModule, MatButtonModule, MatDatepickerModule,MatInputModule],
+  imports: [MatSelectModule, MatTableModule, EpochToTimePipe, CommonModule, MatButtonModule,MatInputModule, MatDatepickerModule],
   templateUrl: './trade-history-detail.component.html',
   styleUrl: './trade-history-detail.component.css'
 })
