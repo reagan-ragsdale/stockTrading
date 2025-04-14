@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatSelectModule } from '@angular/material/select';
 import { OrderController } from '../../shared/controllers/OrderController';
 import { DbOrders } from '../../shared/tasks/dbOrders';
@@ -10,11 +10,14 @@ import { SimFInance } from '../../shared/tasks/simFinance';
 import { SimFinance } from '../../shared/controllers/SimFinance';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
+import {provideNativeDateAdapter} from '@angular/material/core';
  
 
 @Component({
   selector: 'app-trade-history-detail',
+  providers: [provideNativeDateAdapter()],
   imports: [MatSelectModule, MatTableModule, EpochToTimePipe, CommonModule, MatButtonModule,MatInputModule, MatDatepickerModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './trade-history-detail.component.html',
   styleUrl: './trade-history-detail.component.css'
 })
