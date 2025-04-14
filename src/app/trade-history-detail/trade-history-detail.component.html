@@ -12,15 +12,7 @@
               <mat-option *ngFor="let type of dateTypes" value="{{type}}" (onSelectionChange)="onSelectedDateTypeChange($event)">{{type}}</mat-option>
             </mat-select>
           </mat-form-field>
-          <mat-form-field>
-            <mat-label>Enter a date range</mat-label>
-            <mat-date-range-input [rangePicker]="picker">
-              <input matStartDate placeholder="Start date" (dateChange)="onStartDateChange($event)">
-              <input matEndDate placeholder="End date" (dateChange)="onEndDateChange($event)">
-            </mat-date-range-input>
-            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-date-range-picker #picker></mat-date-range-picker>
-          </mat-form-field>
+          
           <button style="margin-top: auto; margin-bottom: auto; margin-left: .5rem;" mat-raised-button color="primary" aria-label="Search" (click)="onSubmitSearch()">Search</button>
           <div style="display:flex; align-items: end; gap: 1rem; margin-left:1rem; width:100%;">
             <h3>Total: {{totalProfit | currency:'USD':'symbol'}}</h3>
