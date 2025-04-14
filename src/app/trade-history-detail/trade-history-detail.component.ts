@@ -19,7 +19,7 @@ import { MatNativeDateModule, MatRippleModule } from '@angular/material/core';
 @Component({
   selector: 'app-trade-history-detail',
   providers: [provideNativeDateAdapter()],
-  imports: [MatSelectModule, MatTableModule, EpochToTimePipe, CommonModule, MatInputModule, MatButtonModule,MatFormFieldModule, MatDatepickerModule, BrowserAnimationsModule, MatNativeDateModule, MatRippleModule],
+  imports: [MatSelectModule, MatTableModule, EpochToTimePipe, CommonModule, MatInputModule, MatButtonModule,MatFormFieldModule, MatDatepickerModule, MatNativeDateModule, MatRippleModule],
   templateUrl: './trade-history-detail.component.html',
   styleUrl: './trade-history-detail.component.css'
 })
