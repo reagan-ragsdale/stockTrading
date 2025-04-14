@@ -83,9 +83,10 @@ export class TradeHistoryDetailComponent implements OnInit {
       else if (this.dateType == 'Choose Date') {
         let startTime = new Date(this.startDate)
         let endTime = new Date(this.endDate)
+        endTime.setHours(23,0,0,0)
         console.log(startTime)
         console.log(endTime)
-        //this.selectedStockOrders = this.allOrders.filter(e => this.isSameCalendarWeek(e.orderTime))
+        this.selectedStockOrders = this.allOrders.filter(e => e.orderTime >= startTime.getTime() && e.orderTime <= endTime.getTime())
       }
     }
     else {
@@ -102,7 +103,12 @@ export class TradeHistoryDetailComponent implements OnInit {
 
       }
       else if (this.dateType == 'Choose Date') {
-
+        let startTime = new Date(this.startDate)
+        let endTime = new Date(this.endDate)
+        endTime.setHours(23,0,0,0)
+        console.log(startTime)
+        console.log(endTime)
+        this.selectedStockOrders = this.allOrders.filter(e => e.orderTime >= startTime.getTime() && e.orderTime <= endTime.getTime() && e.stockName == this.selectedStockName)
       }
     }
     this.claculateOrderDetails()
