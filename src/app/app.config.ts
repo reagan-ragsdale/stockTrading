@@ -12,6 +12,7 @@ import {  MatButtonModule } from '@angular/material/button';
 import { AuthController } from '../shared/controllers/AuthController.js';
 import { remult } from 'remult';
 import { api } from '../server/api';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), 
@@ -22,7 +23,8 @@ export const appConfig: ApplicationConfig = {
     MatSnackBar,
     MatInputModule,
     AuthGuard,
-    MatButtonModule
+    MatButtonModule,
+    MatDatepickerModule 
   ]
   
 };
