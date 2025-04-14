@@ -9,7 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { SimFInance } from '../../shared/tasks/simFinance';
 import { SimFinance } from '../../shared/controllers/SimFinance';
 import {MatDatepickerModule} from '@angular/material/datepicker';
-import { MatInputModule } from '@angular/material/input';
+//import { MatInputModule } from '@angular/material/input';
 import {provideNativeDateAdapter} from '@angular/material/core';
 import {MatFormFieldModule} from '@angular/material/form-field';
  
@@ -17,7 +17,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 @Component({
   selector: 'app-trade-history-detail',
   providers: [provideNativeDateAdapter()],
-  imports: [MatSelectModule, MatTableModule, EpochToTimePipe, CommonModule, MatButtonModule,MatFormFieldModule,MatInputModule, MatDatepickerModule],
+  imports: [MatSelectModule, MatTableModule, EpochToTimePipe, CommonModule, MatButtonModule,MatFormFieldModule, MatDatepickerModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './trade-history-detail.component.html',
   styleUrl: './trade-history-detail.component.css'
