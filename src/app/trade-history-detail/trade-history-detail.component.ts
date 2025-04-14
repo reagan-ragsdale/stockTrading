@@ -11,12 +11,13 @@ import { SimFinance } from '../../shared/controllers/SimFinance';
 import {MatDatepickerModule, MatDateRangePicker} from '@angular/material/datepicker';
 import {provideNativeDateAdapter} from '@angular/material/core';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
  
 
 @Component({
   selector: 'app-trade-history-detail',
   providers: [provideNativeDateAdapter()],
-  imports: [MatSelectModule, MatTableModule, EpochToTimePipe, CommonModule, MatButtonModule,MatFormFieldModule, MatDatepickerModule],
+  imports: [MatSelectModule, MatTableModule, EpochToTimePipe, CommonModule, MatInputModule, MatButtonModule,MatFormFieldModule, MatDatepickerModule],
   templateUrl: './trade-history-detail.component.html',
   styleUrl: './trade-history-detail.component.css'
 })
