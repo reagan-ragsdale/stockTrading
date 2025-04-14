@@ -13,6 +13,7 @@ import { AuthController } from '../shared/controllers/AuthController.js';
 import { remult } from 'remult';
 import { api } from '../server/api';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import {MatNativeDateModule} from '@angular/material/core'
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), 
@@ -24,7 +25,8 @@ export const appConfig: ApplicationConfig = {
     MatInputModule,
     AuthGuard,
     MatButtonModule,
-    MatDatepickerModule 
+    MatDatepickerModule,
+    MatNativeDateModule 
   ]
   
 };
