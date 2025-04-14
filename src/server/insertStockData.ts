@@ -11,7 +11,7 @@ export const socketCall = async (): Promise<void> => {
     let startDate = new Date()
     startDate.setHours(5, 0, 0, 0)
     let startTime = startDate.getTime()
-    let endingTime = startTime + 28790000
+    let endingTime = startTime + 53990000
     console.log(endingTime)
 
     //admin user to start websocket
@@ -166,10 +166,10 @@ export const socketCall = async (): Promise<void> => {
                     //loop through each stock
                     for (let i = 0; i < newEvent.data[0].content.length; i++) {
                         //if the message contains either the bid, ask or last price then we want to proceed
-                        if (Object.hasOwn(newEvent.data[0].content[i], '1') || Object.hasOwn(newEvent.data[0].content[i], '2') || Object.hasOwn(newEvent.data[0].content[i], '3')) {
+                        if (Object.hasOwn(newEvent.data[0].content[i], '3')) {
                             let data: DbCurrentDayStockData = {
                                 stockName: newEvent.data[0].content[i].key,
-                                stockPrice: Object.hasOwn(newEvent.data[0].content[i], '3') ? newEvent.data[0].content[i]['3'] : stockData[newEvent.data[0].content[i].key].lastPrice,
+                                stockPrice: newEvent.data[0].content[i]['3'],
                                 askPrice: Object.hasOwn(newEvent.data[0].content[i], '2') ? newEvent.data[0].content[i]['2'] : stockData[newEvent.data[0].content[i].key].lastAsk,
                                 bidPrice: Object.hasOwn(newEvent.data[0].content[i], '1') ? newEvent.data[0].content[i]['1'] : stockData[newEvent.data[0].content[i].key].lastBid,
                                 time: Number(newEvent.data[0].timestamp),

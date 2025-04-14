@@ -8,10 +8,11 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { SimFInance } from '../../shared/tasks/simFinance';
 import { SimFinance } from '../../shared/controllers/SimFinance';
+import {MatDatepickerModule} from '@angular/material/datepicker';
 
 @Component({
   selector: 'app-trade-history-detail',
-  imports: [MatSelectModule, MatTableModule, EpochToTimePipe, CommonModule, MatButtonModule],
+  imports: [MatSelectModule, MatTableModule, EpochToTimePipe, CommonModule, MatButtonModule, MatDatepickerModule],
   templateUrl: './trade-history-detail.component.html',
   styleUrl: './trade-history-detail.component.css'
 })
