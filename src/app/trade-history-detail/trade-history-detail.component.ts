@@ -17,7 +17,6 @@ import {provideNativeDateAdapter} from '@angular/material/core';
   selector: 'app-trade-history-detail',
   providers: [provideNativeDateAdapter()],
   imports: [MatSelectModule, MatTableModule, EpochToTimePipe, CommonModule, MatButtonModule,MatInputModule, MatDatepickerModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './trade-history-detail.component.html',
   styleUrl: './trade-history-detail.component.css'
 })
