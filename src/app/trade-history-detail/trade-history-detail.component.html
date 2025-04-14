@@ -7,14 +7,13 @@
             </mat-select>
           </mat-form-field>
           <mat-form-field>
-            <mat-label>Date Range</mat-label>
-            <mat-select disableRipple [(value)]="dateType">
-              <mat-option *ngFor="let type of dateTypes" value="{{type}}" (onSelectionChange)="onSelectedDateTypeChange($event)">{{type}}</mat-option>
-            </mat-select>
-          </mat-form-field>
-          <mat-form-field>
-            <mat-label>Choose a date</mat-label>
-            <input matInput [matDatepicker]="picker">
+            <mat-label>Input & change events</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker"
+              (dateChange)="addEvent($event)"
+            />
+            <mat-hint>MM/DD/YYYY</mat-hint>
             <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>

@@ -52,6 +52,9 @@ export class TradeHistoryDetailComponent implements OnInit {
       this.dateType = event.source.value
     }
   }
+  addEvent(event: any){
+    console.log(event.value)
+  }
 
   async getStockOrders() {
     this.selectedStockOrders = await OrderController.getOrdersByStockName(this.selectedStockName)
