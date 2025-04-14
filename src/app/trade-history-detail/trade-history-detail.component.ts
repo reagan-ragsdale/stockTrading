@@ -67,6 +67,7 @@ export class TradeHistoryDetailComponent implements OnInit {
     this.selectedStockOrders = await OrderController.getOrdersByStockName(this.selectedStockName)
   }
   async onSubmitSearch() {
+    this.allOrders = await OrderController.getAllOrders()
     if (this.selectedStockName == 'All') {
       if (this.dateType == 'All') {
         this.selectedStockOrders = this.allOrders
