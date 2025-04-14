@@ -12,15 +12,20 @@
               <mat-option *ngFor="let type of dateTypes" value="{{type}}" (onSelectionChange)="onSelectedDateTypeChange($event)">{{type}}</mat-option>
             </mat-select>
           </mat-form-field>
-          <mat-form-field *ngIf="dateType == 'Choose Date'">
+          <mat-form-field *ngIf="dateType == 'Choose Date'" class="example-form-field">
             <mat-label>Enter a date range</mat-label>
-            <mat-date-range-input [rangePicker]="picker">
-              <input matStartDate placeholder="Start date">
-              <input matEndDate placeholder="End date">
+            <mat-date-range-input [rangePicker]="rangePicker">
+              <input matStartDate placeholder="Start date" />
+              <input matEndDate placeholder="End date" />
             </mat-date-range-input>
             <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
-            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-date-range-picker #picker></mat-date-range-picker>
+            <mat-datepicker-toggle matIconSuffix [for]="rangePicker"></mat-datepicker-toggle>
+            <mat-date-range-picker #rangePicker>
+              <mat-date-range-picker-actions>
+                <button mat-button matDateRangePickerCancel>Cancel</button>
+                <button mat-raised-button matDateRangePickerApply>Apply</button>
+              </mat-date-range-picker-actions>
+            </mat-date-range-picker>
           </mat-form-field>
           <button style="margin-top: auto; margin-bottom: auto; margin-left: .5rem;" mat-raised-button color="primary" aria-label="Search" (click)="onSubmitSearch()">Search</button>
           <div style="display:flex; align-items: end; gap: 1rem; margin-left:1rem; width:100%;">
