@@ -12,12 +12,13 @@ import {MatDatepickerModule, MatDateRangePicker} from '@angular/material/datepic
 import {provideNativeDateAdapter} from '@angular/material/core';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
  
 
 @Component({
   selector: 'app-trade-history-detail',
   providers: [provideNativeDateAdapter()],
-  imports: [MatSelectModule, MatTableModule, EpochToTimePipe, CommonModule, MatInputModule, MatButtonModule,MatFormFieldModule, MatDatepickerModule],
+  imports: [MatSelectModule, MatTableModule, EpochToTimePipe, CommonModule, MatInputModule, MatButtonModule,MatFormFieldModule, MatDatepickerModule, BrowserAnimationsModule],
   templateUrl: './trade-history-detail.component.html',
   styleUrl: './trade-history-detail.component.css'
 })
