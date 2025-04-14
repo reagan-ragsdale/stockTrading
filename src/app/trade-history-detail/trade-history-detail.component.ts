@@ -9,10 +9,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { SimFInance } from '../../shared/tasks/simFinance';
 import { SimFinance } from '../../shared/controllers/SimFinance';
 import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatInputModule } from '@angular/material/input';
+ 
 
 @Component({
   selector: 'app-trade-history-detail',
-  imports: [MatSelectModule, MatTableModule, EpochToTimePipe, CommonModule, MatButtonModule, MatDatepickerModule],
+  imports: [MatInputModule,MatSelectModule, MatTableModule, EpochToTimePipe, CommonModule, MatButtonModule, MatDatepickerModule, MatNativeDateModule],
   templateUrl: './trade-history-detail.component.html',
   styleUrl: './trade-history-detail.component.css'
 })
