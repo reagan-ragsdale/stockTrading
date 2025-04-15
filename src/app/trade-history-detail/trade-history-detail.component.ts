@@ -225,7 +225,7 @@ export class TradeHistoryDetailComponent implements OnInit {
     
     let filteredByUser = userStockInfo.filter(e => e.user == userServerAlgos[0].userId)
     console.log(filteredByUser)
-    let filteredByStock = filteredByUser.filter(e => e.stockName == testStock)
+    let filteredByStock = filteredByUser.filter(e => e.stockData.stockName == testStock)
     console.log(filteredByStock)
     //await this.getStockOrders()
     this.isLoading = false
