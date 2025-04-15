@@ -207,26 +207,8 @@ export class TradeHistoryDetailComponent implements OnInit {
     this.selectedStockOrders = this.allOrders
     await this.getUserFinanceData()
     this.claculateOrderDetails()
-    const userServerAlgos = await dbAlgorithmListRepo.find({ where: { sma200sma50: true } })
-    let userStockInfo: any[] = []
-    for (let i = 0; i < userServerAlgos.length; i++) {
-      userStockInfo.push({
-        user: userServerAlgos[i].userId, stockData: [
-          { stockName: 'AAPL', canTrade: true, numberOfTrades: 0 },
-          { stockName: 'TSLA', canTrade: true, numberOfTrades: 0 },
-          { stockName: 'MSFT', canTrade: true, numberOfTrades: 0 },
-          { stockName: 'AMD', canTrade: true, numberOfTrades: 0 },
-          { stockName: 'PLTR', canTrade: true, numberOfTrades: 0 },
-        ]
-      })
-    }
-    let testStock = 'AAPL'
-    console.log(userStockInfo)
     
-    let filteredByUser = userStockInfo.filter(e => e.user == userServerAlgos[0].userId)[0].stockData
-    console.log(filteredByUser)
-    let filteredByStock = filteredByUser.filter((e: { stockName: string; }) => e.stockName == testStock)
-    console.log(filteredByStock)
+    
     //await this.getStockOrders()
     this.isLoading = false
   }
