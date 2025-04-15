@@ -16,8 +16,6 @@ export async function initRequest(req: Request) {
 }
 
 export function setSessionUser(user: UserInfo | null): UserInfo {
-    console.log('here')
-    console.log(remult)
     remult.context.session['user'] = user
     remult.user = user!
     return user!

@@ -85,6 +85,9 @@
                     <mat-icon>info</mat-icon>
                   </button> -->
                 <h3>Bot: {{isBotAuthorized ? 'On' : 'Off'}}</h3>
+                <button style=" margin-top:auto; margin-bottom:auto;" mat-icon-button aria-label="Add Line" (click)="addLineToGraph()">
+                    <mat-icon>add</mat-icon>
+                  </button>
             </div>
               <!-- <div>
                 <button *ngFor="let mover of moversData" style="width: max-content;"mat-raised-button color="primary" aria-label="Add more funds" >{{mover.symbol}}</button>
@@ -99,7 +102,7 @@
                 </div>
                 <div class="canvas-container">
                     <canvas style="width:100% !important;" id="stock-chart">{{stockChart}}</canvas>
-                    <canvas style="width:100% !important;" id="volume-chart">{{volumeChart}}</canvas>
+                    <!-- <canvas style="width:100% !important;" id="volume-chart">{{volumeChart}}</canvas> -->
                 </div>
                 <div style="display:flex; flex-direction: column;">
                     <h4>{{selectedStockCurrent}}</h4>
@@ -110,7 +113,7 @@
                     <h4 *ngIf="isUserOrBot == 'Bot' && tradeCurrentHigh != 0" style="color: #DBD4D1 !important;">TH:{{tradeCurrentHigh | number:'1.2-5'}}</h4>
                     <h4 *ngIf="isUserOrBot == 'Bot' && tradeInitialAverage != 0" style="color: #9dfd01 !important;">IA:{{tradeInitialAverage | number:'1.2-5'}}</h4>
                 </div>
-                <div style="flex-grow: 1;">
+                <div style="flex-grow: 1;" *ngIf="false">
                     <div style="padding: 1rem; display: flex;flex-direction: column;">
                         <button style="width: max-content; margin: auto;"mat-raised-button color="warn" aria-label="Add more funds" (click)="openTradePopup()" [disabled]="isUserOrBot == 'Bot'">Trade</button>
                         <h2 style="text-align:center;">Active Positions</h2>

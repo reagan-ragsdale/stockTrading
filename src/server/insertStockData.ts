@@ -21,6 +21,19 @@ export const socketCall = async (): Promise<void> => {
     //get all orders for each above user
     let userOrders = await dbOrdersRepo.find({ where: { userId: userServerAlgos!.map(e => e.userId) }, orderBy: { orderTime: 'desc' } })
 
+    let userStockInfo: any[] = []
+    for (let i = 0; i < userServerAlgos.length; i++) {
+        userStockInfo.push({
+            user: userServerAlgos[i].userId, stockData: [
+                { stockName: 'AAPL', canTrade: true, numberOfTrades: 0 },
+                { stockName: 'TSLA', canTrade: true, numberOfTrades: 0 },
+                { stockName: 'MSFT', canTrade: true, numberOfTrades: 0 },
+                { stockName: 'AMD', canTrade: true, numberOfTrades: 0 },
+                { stockName: 'PLTR', canTrade: true, numberOfTrades: 0 },
+            ]
+        })
+    }
+    let testNum = 0;
 
     //set the values each stock will use in the algo
     let stockDayTradeValues: { [key: string]: { Buy: number, Sell: number, Check200: number, SmaLong: number, SmaMedium: number, SmaShort: number } } = {
@@ -189,6 +202,10 @@ export const socketCall = async (): Promise<void> => {
                                 stockData[data.stockName].last3600sma = stockData[data.stockName].last3600.reduce((sum, val) => sum + val, 0) / stockDayTradeValues[data.stockName].SmaLong
                                 stockData[data.stockName].last1800sma = stockData[data.stockName].last3600.slice(stockDayTradeValues[data.stockName].SmaMedium * -1).reduce((sum, val) => sum + val, 0) / stockDayTradeValues[data.stockName].SmaMedium
                                 stockData[data.stockName].last300sma = stockData[data.stockName].last3600.slice(stockDayTradeValues[data.stockName].SmaShort * -1).reduce((sum, val) => sum + val, 0) / stockDayTradeValues[data.stockName].SmaShort
+                                if(data.stockName == 'AAPL'){
+                                    console.log('Last 3600 length: ' + stockData[data.stockName].last3600.length)
+                                    console.log('history length: ' + stockData[data.stockName].history.length)
+                                }
                             }
                             //else if its greater than then we do a revolving door first in first out and recalculate the moving averages
                             else if (stockData[data.stockName].history.length > stockDayTradeValues[data.stockName].SmaLong) {
@@ -197,12 +214,24 @@ export const socketCall = async (): Promise<void> => {
                                 stockData[data.stockName].last3600sma = stockData[data.stockName].last3600.reduce((sum, val) => sum + val, 0) / stockDayTradeValues[data.stockName].SmaLong
                                 stockData[data.stockName].last1800sma = stockData[data.stockName].last3600.slice(stockDayTradeValues[data.stockName].SmaMedium * -1).reduce((sum, val) => sum + val, 0) / stockDayTradeValues[data.stockName].SmaMedium
                                 stockData[data.stockName].last300sma = stockData[data.stockName].last3600.slice(stockDayTradeValues[data.stockName].SmaShort * -1).reduce((sum, val) => sum + val, 0) / stockDayTradeValues[data.stockName].SmaShort
+                                if(data.stockName == 'AAPL'){
+                                    console.log('Last 3600 length: ' + stockData[data.stockName].last3600.length)
+                                    console.log('history length: ' + stockData[data.stockName].history.length)
+                                    console.log('Short sma: ' + stockData[data.stockName].last300sma)
+                                    console.log('Medium sma: ' + stockData[data.stockName].last1800sma)
+                                }
                             }
                             //loop through each user that is signed up for the bot
                             for (let j = 0; j < userServerAlgos.length; j++) {
                                 //find the users most recent order for the stock
                                 let filteredOrderOnUserAndStock = userOrders.filter(e => e.userId == userServerAlgos![j].userId && e.stockName == data.stockName)[0]
                                 let isBuy = filteredOrderOnUserAndStock.orderType == 'Sell' ? true : false;
+                                /* let userStockData = userStockInfo.filter(e => e.user == userServerAlgos![j].userId)
+                                let filteredStockByUser = userStockData.filter(e => e.stockName == data.stockName)[0]
+                                if(testNum == 0){
+                                    console.log(filteredStockByUser)
+                                    testNum++
+                                } */
 
                                 //is buy and the algo is met
                                 if (isBuy && stockData[data.stockName].canTrade && (((stockData[data.stockName].last300sma - stockData[data.stockName].last1800sma) / stockData[data.stockName].last1800sma) < (stockDayTradeValues[data.stockName].Buy * -1)) && (((stockData[data.stockName].last300sma - stockData[data.stockName].last3600sma) / stockData[data.stockName].last3600sma) < stockDayTradeValues[data.stockName].Check200)) {
@@ -234,7 +263,7 @@ export const socketCall = async (): Promise<void> => {
                                     orderPlaced = true;
                                 }
                                 //sell and the end of day and stock is greater than buy price
-                                /* else if(!isBuy && stockData[data.stockName].canTrade && data.time > endingTime && data.bidPrice > filteredOrderOnUserAndStock.stockPrice){
+                                 else if(!isBuy && stockData[data.stockName].canTrade && data.time > endingTime && data.bidPrice > filteredOrderOnUserAndStock.stockPrice){
                                     console.log('Placing final day sell order')
                                     await dbOrdersRepo.insert({
                                         userId: userServerAlgos[j].userId,
@@ -247,7 +276,7 @@ export const socketCall = async (): Promise<void> => {
                                     stockData[data.stockName].numberOfTrades++
                                     stockData[data.stockName].canTrade = false
                                     orderPlaced = true;
-                                }  */
+                                }  
                                 //sell and begining of day and stock is greater than previous day buy price
                                 else if (!isBuy && stockData[data.stockName].canTrade && stockData[data.stockName].numberOfTrades == 0 && data.bidPrice > filteredOrderOnUserAndStock.stockPrice) {
                                     console.log('Placing pre algo sell order')
@@ -287,7 +316,7 @@ export const socketCall = async (): Promise<void> => {
     }, 23400000);
 
 
-    
+
 
 
 

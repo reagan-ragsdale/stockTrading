@@ -52,6 +52,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   remult = remult
   readonly dialog = inject(MatDialog);
   @ViewChild('modalTemplate', { static: true }) modalTemplate!: TemplateRef<any>;
+  @ViewChild('addLineTemplate', { static: true }) addLineTemplate!: TemplateRef<any>;
 
 
 
@@ -128,6 +129,20 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       exitAnimationDuration: 0
     });
     this.tradeDialogRef.afterClosed().subscribe(async (result: any) => {
+      this.userSimFinData = await SimFinance.getSimFinData()
+      console.log(result)
+      await this.getStockInfo()
+
+    });
+  }
+  addLineDialogRef: any
+  addLineToGraph(){
+    this.addLineDialogRef = this.dialog.open(this.addLineTemplate, {
+      width: '400px',
+      enterAnimationDuration: 0,
+      exitAnimationDuration: 0
+    });
+    this.addLineDialogRef.afterClosed().subscribe(async (result: any) => {
       this.userSimFinData = await SimFinance.getSimFinData()
       console.log(result)
       await this.getStockInfo()

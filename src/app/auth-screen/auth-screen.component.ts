@@ -38,7 +38,6 @@ export class AuthScreenComponent implements OnInit {
   }
 
   async getUrl(){
-    console.log('here in get url')
     this.code = this.url.slice(this.url.indexOf('code=') + 5, this.url.indexOf('@') + 1)
     this.sharedCache.changeCurrentCode(this.code)
     await this.getTokens()
@@ -47,8 +46,6 @@ export class AuthScreenComponent implements OnInit {
   async ngOnInit() {
     let user = await remult.initUser()
     
-    console.log('user info below')
-    console.log(remult.authenticated())
     this.url = location.href
     this.getUrl()
   }

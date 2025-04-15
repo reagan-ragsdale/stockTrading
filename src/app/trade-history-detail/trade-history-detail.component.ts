@@ -1,4 +1,4 @@
-import {  Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSelectModule } from '@angular/material/select';
 import { OrderController } from '../../shared/controllers/OrderController';
 import { DbOrders } from '../../shared/tasks/dbOrders';
@@ -8,19 +8,21 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { SimFInance } from '../../shared/tasks/simFinance';
 import { SimFinance } from '../../shared/controllers/SimFinance';
-import {MatDatepickerModule, MatDateRangePicker} from '@angular/material/datepicker';
-import {provideNativeDateAdapter} from '@angular/material/core';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatDatepickerModule, MatDateRangePicker } from '@angular/material/datepicker';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MatNativeDateModule, MatRippleModule } from '@angular/material/core';
 import { FormsModule } from '@angular/forms';
- 
+import { dbAlgorithmListRepo } from '../../shared/tasks/dbAlgorithmList';
+import { usersStocksRepo } from '../../shared/tasks/usersStocks';
+
 
 @Component({
   selector: 'app-trade-history-detail',
   providers: [provideNativeDateAdapter()],
-  imports: [MatSelectModule, FormsModule, MatTableModule, EpochToTimePipe, CommonModule, MatInputModule, MatButtonModule,MatFormFieldModule, MatDatepickerModule, MatNativeDateModule, MatRippleModule],
+  imports: [MatSelectModule, FormsModule, MatTableModule, EpochToTimePipe, CommonModule, MatInputModule, MatButtonModule, MatFormFieldModule, MatDatepickerModule, MatNativeDateModule, MatRippleModule],
   templateUrl: './trade-history-detail.component.html',
   styleUrl: './trade-history-detail.component.css'
 })
@@ -59,7 +61,7 @@ export class TradeHistoryDetailComponent implements OnInit {
       this.dateType = event.source.value
     }
   }
-  addEvent(event: any){
+  addEvent(event: any) {
     console.log(event.value)
   }
 
@@ -84,7 +86,7 @@ export class TradeHistoryDetailComponent implements OnInit {
       else if (this.dateType == 'Choose Date') {
         let startTime = new Date(this.startDate)
         let endTime = new Date(this.endDate)
-        endTime.setHours(23,0,0,0)
+        endTime.setHours(23, 0, 0, 0)
         console.log(startTime)
         console.log(endTime)
         this.selectedStockOrders = this.allOrders.filter(e => e.orderTime >= startTime.getTime() && e.orderTime <= endTime.getTime())
@@ -106,7 +108,7 @@ export class TradeHistoryDetailComponent implements OnInit {
       else if (this.dateType == 'Choose Date') {
         let startTime = new Date(this.startDate)
         let endTime = new Date(this.endDate)
-        endTime.setHours(23,0,0,0)
+        endTime.setHours(23, 0, 0, 0)
         console.log(startTime)
         console.log(endTime)
         this.selectedStockOrders = this.allOrders.filter(e => e.orderTime >= startTime.getTime() && e.orderTime <= endTime.getTime() && e.stockName == this.selectedStockName)
@@ -159,7 +161,7 @@ export class TradeHistoryDetailComponent implements OnInit {
     return Math.ceil((pastDays + firstDayOfYear.getDay() + 1) / 7);
   }
   async getUserFinanceData() {
-      this.userSimFinData = await SimFinance.getSimFinData()
+    this.userSimFinData = await SimFinance.getSimFinData()
   }
 
   claculateOrderDetails() {
@@ -171,8 +173,8 @@ export class TradeHistoryDetailComponent implements OnInit {
 
     let totalWinAmt: number = 0
     let totalLossAmt: number = 0
-    let distinctStocks = this.selectedStockOrders.map(e => e.stockName).filter((v,i,a) => a.indexOf(v) === i)
-    for(let j = 0; j < distinctStocks.length; j++){
+    let distinctStocks = this.selectedStockOrders.map(e => e.stockName).filter((v, i, a) => a.indexOf(v) === i)
+    for (let j = 0; j < distinctStocks.length; j++) {
       let filteredStockOrders = this.selectedStockOrders.filter(e => e.stockName == distinctStocks[j])
       for (let i = 0; i < filteredStockOrders.length - 1; i++) {
         //need to find each pair of buy and sells
@@ -191,8 +193,8 @@ export class TradeHistoryDetailComponent implements OnInit {
         }
       }
     }
-    
-    this.percentChange = this.totalProfit / (this.userSimFinData[0].spending - this.totalProfit) 
+
+    this.percentChange = this.totalProfit / (this.userSimFinData[0].spending - this.totalProfit)
     this.averageWinAmt = this.totalWins == 0 ? 0 : (totalWinAmt / this.totalWins)
     this.averageLossAmt = this.totalLosses == 0 ? 0 : (totalLossAmt / this.totalLosses)
   }
@@ -205,6 +207,23 @@ export class TradeHistoryDetailComponent implements OnInit {
     this.selectedStockOrders = this.allOrders
     await this.getUserFinanceData()
     this.claculateOrderDetails()
+    const userServerAlgos = await dbAlgorithmListRepo.find({ where: { sma200sma50: true } })
+    let userStockInfo: any[] = []
+    for (let i = 0; i < userServerAlgos.length; i++) {
+      userStockInfo.push({
+        user: userServerAlgos[i].userId, stockData: [
+          { stockName: 'AAPL', canTrade: true, numberOfTrades: 0 },
+          { stockName: 'TSLA', canTrade: true, numberOfTrades: 0 },
+          { stockName: 'MSFT', canTrade: true, numberOfTrades: 0 },
+          { stockName: 'AMD', canTrade: true, numberOfTrades: 0 },
+          { stockName: 'PLTR', canTrade: true, numberOfTrades: 0 },
+        ]
+      })
+    }
+    let testStock = 'AAPL'
+    let filteredByUser = userStockInfo.filter(e => e.user == userServerAlgos[0])
+    let filteredByStock = filteredByUser.filter(e => e.stockName == testStock)
+    console.log(filteredByStock)
     //await this.getStockOrders()
     this.isLoading = false
   }
