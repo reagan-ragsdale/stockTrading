@@ -223,7 +223,7 @@ export class TradeHistoryDetailComponent implements OnInit {
     let testStock = 'AAPL'
     console.log(userStockInfo)
     
-    let filteredByUser = userStockInfo.filter(e => e.user == userServerAlgos[0])
+    let filteredByUser = userStockInfo.filter(e => e.user == userServerAlgos[0].userId)
     console.log(filteredByUser)
     let filteredByStock = filteredByUser.filter(e => e.stockName == testStock)
     console.log(filteredByStock)
