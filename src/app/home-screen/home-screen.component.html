@@ -8,7 +8,7 @@
         <div style="margin-left: 1rem;margin-top: auto;margin-bottom: auto; display: flex;align-items: center;">
             <h3>Live Env</h3>
             <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Change info">
-                <mat-icon>more_vert</mat-icon>
+                <mat-icon style="color: #DBD4D1;">more_vert</mat-icon>
               </button>
               <mat-menu #menu="matMenu">
                 <button mat-menu-item (click)="navToTestEnv()">
@@ -68,13 +68,13 @@
             </div>       
         </div>
         <button style=" margin-top:auto; margin-bottom:auto;" mat-icon-button aria-label="Add more funds" (click)="showAddFunds()">
-            <mat-icon>add</mat-icon>
+            <mat-icon style="color: #DBD4D1;">add</mat-icon>
           </button>
         <h3 style="padding-right:1rem;">{{userSimFinData[0].spending | currency:'USD':'symbol'}}</h3>
     </div>
     <div class="dashboard">
         <div style="padding-left: 1rem; padding-right:1rem; display:flex; flex-direction: column;">
-            <div style="display: flex; gap:2rem;">
+            <div style="display: flex; gap:2rem; align-items: center;">
                 <mat-form-field>
                     <mat-label>Select a Stock</mat-label>
                     <mat-select disableRipple [(value)]="selectedStockName">
@@ -86,7 +86,7 @@
                   </button> -->
                 <h3>Bot: {{isBotAuthorized ? 'On' : 'Off'}}</h3>
                 <button style=" margin-top:auto; margin-bottom:auto;" mat-icon-button aria-label="Add Line" (click)="addLineToGraph()">
-                    <mat-icon>add</mat-icon>
+                    <mat-icon style="color: #DBD4D1;">add</mat-icon>
                   </button>
             </div>
               <!-- <div>
@@ -181,6 +181,12 @@
     </div>
 </div>
 <ng-template #modalTemplate>
+    <app-trade [stockName]="chartData.name" [stockPrice]="selectedStockCurrent" 
+     [stockTime]="chartData.time[chartData.time.length - 1]"[ownedShares]="selectedStockData.shareQty"
+     [availableFunds]="userSimFinData[0]!.spending" [orderHistory]="selectedStockHistoryData[0]">
+    </app-trade>
+</ng-template>
+<ng-template #addLineTemplate>
     <app-trade [stockName]="chartData.name" [stockPrice]="selectedStockCurrent" 
      [stockTime]="chartData.time[chartData.time.length - 1]"[ownedShares]="selectedStockData.shareQty"
      [availableFunds]="userSimFinData[0]!.spending" [orderHistory]="selectedStockHistoryData[0]">
