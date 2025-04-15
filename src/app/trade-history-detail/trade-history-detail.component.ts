@@ -223,9 +223,9 @@ export class TradeHistoryDetailComponent implements OnInit {
     let testStock = 'AAPL'
     console.log(userStockInfo)
     
-    let filteredByUser = userStockInfo.filter(e => e.user == userServerAlgos[0].userId)
+    let filteredByUser = userStockInfo.filter(e => e.user == userServerAlgos[0].userId)[0]
     console.log(filteredByUser)
-    let filteredByStock = filteredByUser.filter(e => e.stockData.stockName == testStock)
+    let filteredByStock = filteredByUser.filter((e: { stockData: { stockName: string; }; }) => e.stockData.stockName == testStock)
     console.log(filteredByStock)
     //await this.getStockOrders()
     this.isLoading = false
