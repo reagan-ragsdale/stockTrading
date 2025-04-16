@@ -37,44 +37,44 @@ export const socketCall = async (): Promise<void> => {
     //set the values each stock will use in the algo
     let stockDayTradeValues: { [key: string]: { Buy: number, Sell: number, Check200: number, SmaLong: number, SmaMedium: number, SmaShort: number } } = {
         'TSLA': {
-            Buy: .01,
-            Sell: .013,
-            Check200: .001,
-            SmaLong: 5400,
-            SmaMedium: 1200,
-            SmaShort: 60
+            Buy: .003,
+            Sell: .003,
+            Check200: .002,
+            SmaLong: 3600,
+            SmaMedium: 1800,
+            SmaShort: 240
         },
         'AAPL': {
-            Buy: .002,
-            Sell: .008,
-            Check200: .03,
+            Buy: .001,
+            Sell: .002,
+            Check200: .002,
             SmaLong: 3600,
             SmaMedium: 1200,
-            SmaShort: 180
+            SmaShort: 300
         },
         'MSFT': {
             Buy: .001,
-            Sell: .006,
-            Check200: .029,
-            SmaLong: 4800,
-            SmaMedium: 1200,
-            SmaShort: 60
+            Sell: .001,
+            Check200: .005,
+            SmaLong: 4200,
+            SmaMedium: 1800,
+            SmaShort: 120
         },
         'AMD': {
-            Buy: .009,
-            Sell: .01,
-            Check200: .003,
-            SmaLong: 5400,
-            SmaMedium: 2100,
-            SmaShort: 180
+            Buy: .001,
+            Sell: .004,
+            Check200: .005,
+            SmaLong: 3600,
+            SmaMedium: 1500,
+            SmaShort: 120
         },
         'PLTR': {
             Buy: .003,
-            Sell: .002,
-            Check200: .026,
-            SmaLong: 5100,
-            SmaMedium: 1200,
-            SmaShort: 60
+            Sell: .004,
+            Check200: .006,
+            SmaLong: 3600,
+            SmaMedium: 1500,
+            SmaShort: 480
         },
     }
     //will be used for long term inter day trading
