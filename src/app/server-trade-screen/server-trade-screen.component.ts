@@ -1009,6 +1009,7 @@ export class ServerTradeScreenComponent implements OnInit {
           }
         }
       }
+      console.log('outer loop')
     }
     this.topAlgos = listOfProfits
     console.log(this.topAlgos)
