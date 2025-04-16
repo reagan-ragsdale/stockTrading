@@ -947,7 +947,6 @@ export class ServerTradeScreenComponent implements OnInit {
     let mapOfShortSmaValues = new Map<number, sma200Array[]>()
     for (let i = 1; i < 20; i++) {
       for (let j = 1; j < 20; j++) {
-        console.time('inter sell')
         for (let k = 1; k < 30; k++) {
           for (let m = 150; m <= 250; m += 5) {
             if (mapOfLongSmaValues.get(m) === undefined) {
@@ -977,6 +976,11 @@ export class ServerTradeScreenComponent implements OnInit {
                 let orderLocations = this.calculateBuyAndSellPointsIntraDayNew2(mapOfLongSmaValues.get(m)!, mapOfMediumSmaValues.get(n)!, mapOfShortSmaValues.get(p)!, Number((i * .001).toPrecision(3)), Number((j * .001).toPrecision(3)), Number((k * .001).toPrecision(3)))
                 let totalProfit = this.calculateTotalProfitNew(orderLocations)
 
+                if(i == 1 && j == 4 && k == 27 && m == 245 && n == 30 && p == 1){
+                  console.log(mapOfLongSmaValues.get(m)!)
+                  console.log(mapOfMediumSmaValues.get(n)!)
+                  console.log(mapOfShortSmaValues.get(p)!)
+                }
                 if(listOfProfits.length < 5){
                   listOfProfits.push({
                     buyBuffer: Number((i * .001).toPrecision(3)),
@@ -1008,7 +1012,6 @@ export class ServerTradeScreenComponent implements OnInit {
             }
           }
         }
-        console.timeEnd('inter sell')
       }
     }
     this.topAlgos = listOfProfits
@@ -1137,6 +1140,9 @@ export class ServerTradeScreenComponent implements OnInit {
     this.listOfLast200Days.push(...tempStock200)
     this.listOfLast40Days.push(...tempStock40)
     this.listOfLast5Days.push(...tempStock5)
+    console.log(this.listOfLast200Days)
+    console.log(this.listOfLast40Days)
+    console.log(this.listOfLast5Days)
 
   }
   updateChart() {
