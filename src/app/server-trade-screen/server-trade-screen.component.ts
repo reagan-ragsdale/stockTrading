@@ -945,6 +945,7 @@ export class ServerTradeScreenComponent implements OnInit {
     let mapOfLongSmaValues = new Map<number, sma200Array[]>()
     let mapOfMediumSmaValues = new Map<number, sma200Array[]>()
     let mapOfShortSmaValues = new Map<number, sma200Array[]>()
+    let shortSmaResult = this.calculateInterDayShortSma(1)
     for (let i = 1; i < 100; i++) {
       for (let j = 1; j < 100; j++) {
         for (let k = 1; k < 100; k++) {
@@ -956,7 +957,8 @@ export class ServerTradeScreenComponent implements OnInit {
                 listOfLongResult
               )
             }
-            for (let n = 30; n <= 90; n += 5) {
+            let newShortSma = shortSmaResult.slice(mapOfLongSmaValues.get(m)!.length * -1)
+            for (let n = 5; n <= 30; n += 5) {
               if (mapOfMediumSmaValues.get(n) === undefined) {
                 let listOfMediumResult = this.calculateInterDayMediumSma(n)
                 mapOfMediumSmaValues.set(
@@ -965,15 +967,16 @@ export class ServerTradeScreenComponent implements OnInit {
                 )
               }
              // for (let p = 1; p <= 15; p++) {
-                if (mapOfShortSmaValues.get(1) === undefined) {
+                /* if (mapOfShortSmaValues.get(1) === undefined) {
                   let listOfShortResult = this.calculateInterDayShortSma(1)
                   mapOfShortSmaValues.set(
                     1,
                     listOfShortResult
                   )
-                }
+                } */
+                  let newMediumSma = mapOfMediumSmaValues.get(n)!.slice(mapOfLongSmaValues.get(m)!.length * -1)
 
-                let orderLocations = this.calculateBuyAndSellPointsIntraDayNew2(mapOfLongSmaValues.get(m)!, mapOfMediumSmaValues.get(n)!, mapOfShortSmaValues.get(1)!, Number((i * .001).toPrecision(3)), Number((j * .001).toPrecision(3)), Number((k * .001).toPrecision(3)))
+                let orderLocations = this.calculateInterDayBuyAndSellPoints(mapOfLongSmaValues.get(m)!, newMediumSma, newShortSma, Number((i * .001).toPrecision(3)), Number((j * .001).toPrecision(3)), Number((k * .001).toPrecision(3)))
                 let totalProfit = this.calculateTotalProfitNew(orderLocations)
 
               
@@ -1020,6 +1023,27 @@ export class ServerTradeScreenComponent implements OnInit {
     this.interDayMediumSma = this.topAlgos[0].smaMedium
     this.interDayShortSma = this.topAlgos[0].smaShort
     this.runSimulation()
+  }
+
+  calculateInterDayBuyAndSellPoints(longArray: sma200Array[], mediumArray: sma200Array[], shortArray: sma200Array[], buyGutter: number, sellGutter: number, checkGutter: number){
+    let buyOrSell = 'Buy'
+    let orderLocations: orderLocation[] = []
+    let longArrayLen = longArray.length
+    for (let i = 0; i < longArray.length; i++) {
+      if (buyOrSell == 'Buy' && (((shortArray[i].avg - mediumArray[i].avg) / mediumArray[i].avg) < (buyGutter * -1)) && (((shortArray[i].avg - longArray[i].avg) / longArray[i].avg) < checkGutter)) {
+        //this.executeOrder(shortArray[i], 'Buy')
+        orderLocations.push({ buySell: 'Buy', date: shortArray[i].date, price: shortArray[i].close })
+        buyOrSell = 'Sell'
+      }
+      else if (buyOrSell == 'Sell' && (((shortArray[i].avg - mediumArray[i].avg) / mediumArray[i].avg) > sellGutter) && shortArray[i].close > orderLocations[orderLocations.length - 1].price) {
+        //this.executeOrder(shortArray[i], 'Sell')
+        orderLocations.push({ buySell: 'Sell', date: shortArray[i].date, price: shortArray[i].close })
+        buyOrSell = 'Buy'
+      }
+
+
+    }
+    return orderLocations
   }
   calculateInterDayShortSma(shortValue: number) {
     let returnArray: sma200Array[] = []
