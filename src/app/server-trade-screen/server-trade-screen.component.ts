@@ -945,9 +945,9 @@ export class ServerTradeScreenComponent implements OnInit {
     let mapOfLongSmaValues = new Map<number, sma200Array[]>()
     let mapOfMediumSmaValues = new Map<number, sma200Array[]>()
     let mapOfShortSmaValues = new Map<number, sma200Array[]>()
-    for (let i = 1; i < 20; i++) {
-      for (let j = 1; j < 20; j++) {
-        for (let k = 1; k < 30; k++) {
+    for (let i = 1; i < 100; i++) {
+      for (let j = 1; j < 100; j++) {
+        for (let k = 1; k < 100; k++) {
           for (let m = 150; m <= 250; m += 5) {
             if (mapOfLongSmaValues.get(m) === undefined) {
               let listOfLongResult = this.calculateInterDayLongSma(m)
