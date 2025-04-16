@@ -976,11 +976,7 @@ export class ServerTradeScreenComponent implements OnInit {
                 let orderLocations = this.calculateBuyAndSellPointsIntraDayNew2(mapOfLongSmaValues.get(m)!, mapOfMediumSmaValues.get(n)!, mapOfShortSmaValues.get(p)!, Number((i * .001).toPrecision(3)), Number((j * .001).toPrecision(3)), Number((k * .001).toPrecision(3)))
                 let totalProfit = this.calculateTotalProfitNew(orderLocations)
 
-                if(i == 1 && j == 4 && k == 27 && m == 245 && n == 30 && p == 1){
-                  console.log(mapOfLongSmaValues.get(m)!)
-                  console.log(mapOfMediumSmaValues.get(n)!)
-                  console.log(mapOfShortSmaValues.get(p)!)
-                }
+              
                 if(listOfProfits.length < 5){
                   listOfProfits.push({
                     buyBuffer: Number((i * .001).toPrecision(3)),
