@@ -40,10 +40,11 @@ import { EpochToTimePipe } from "../services/epochToTimePipe.pipe";
 import { userRepo } from '../../shared/tasks/Users';
 import { DashboardComponent } from "../dashboard/dashboard.component";
 import { dbStockBasicHistoryRepo } from '../../shared/tasks/dbStockBasicHistory';
+import { AddGraphComponent } from "./add-graph/add-graph.component";
 //import { WebSocket } from 'ws';
 @Component({
   selector: 'app-home-screen',
-  imports: [CommonModule, FormsModule, MatTableModule, MatSelectModule, MatInputModule, MatMenuModule, MatFormFieldModule, MatIconModule, MatRadioModule, MatProgressSpinnerModule, MatButtonModule, MatButtonToggleModule, TradeComponent, EpochToTimePipe],
+  imports: [CommonModule, FormsModule, MatTableModule, MatSelectModule, MatInputModule, MatMenuModule, MatFormFieldModule, MatIconModule, MatRadioModule, MatProgressSpinnerModule, MatButtonModule, MatButtonToggleModule, TradeComponent, EpochToTimePipe, AddGraphComponent],
   templateUrl: './home-screen.component.html',
   styleUrl: './home-screen.component.css'
 })
@@ -130,7 +131,6 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     });
     this.tradeDialogRef.afterClosed().subscribe(async (result: any) => {
       this.userSimFinData = await SimFinance.getSimFinData()
-      console.log(result)
       await this.getStockInfo()
 
     });
@@ -143,9 +143,9 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       exitAnimationDuration: 0
     });
     this.addLineDialogRef.afterClosed().subscribe(async (result: any) => {
-      this.userSimFinData = await SimFinance.getSimFinData()
-      console.log(result)
-      await this.getStockInfo()
+      if(result.length > 0){
+        this.addNewLinesToGraph(result)
+      }
 
     });
   }
@@ -298,7 +298,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.selectedStockHigh = Math.max(...this.chartData.history)
     this.selectedStockLow = Math.min(...this.chartData.history)
     this.stockVariance = (this.chartData.history[this.chartData.history.length - 1] - this.stockOpenPrice) / this.stockOpenPrice
-    if (this.isUserOrBot == 'Bot' && this.isBotAuthorized == true && !this.isOrderPending) {
+    /* if (this.isUserOrBot == 'Bot' && this.isBotAuthorized == true && !this.isOrderPending) {
       let shouldPlaceOrder: buySellDto = {
         shouldExecuteOrder: false
       }
@@ -368,8 +368,12 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
          this.stockChart.options.plugins.annotation.annotations.gutterLineBelow.yMin = shouldPlaceOrder.gutterLineBelowMin!
          this.stockChart.options.plugins.annotation.annotations.gutterLineBelow.yMax = shouldPlaceOrder.gutterLineBelowMax! 
       }
-    }
+    } */
     this.updateChart()
+    if(this.stockChart.data.datasets.length > 1){
+    
+    }
+    
 
 
   }
@@ -399,7 +403,30 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.volumeChart.data.labels = this.chartData.labels.slice()
     this.volumeChart.update()
   }
-
+  addNewLinesToGraph(listOfLines: any[]){
+    for(let i = 0; i < listOfLines.length; i++){
+      let smaResult = this.calculateSma(listOfLines[i].length)
+      /* this.stockChart.data.datasets[i+1].data = this.chartData.history.slice()
+      this.stockChart.data.labels = this.chartData.labels.slice() */
+      console.log('sma result below')
+      console.log(smaResult)
+    }
+    
+    //this.stockChart.update()
+  }
+  calculateSma(lengthOfSma: number){
+    let returnArray: any[] = []
+    let windowValue: number = 0
+    for(let i = 0; i < lengthOfSma; i++){
+      windowValue += this.chartInfo[i].stockPrice
+    }
+    returnArray.push({sma: windowValue / lengthOfSma, time: this.chartInfo[lengthOfSma].time})
+    for(let i = lengthOfSma; i < this.chartInfo.length; i++){
+      windowValue += this.chartInfo[i].stockPrice - this.chartInfo[i - lengthOfSma].stockPrice;
+      returnArray.push({sma: windowValue / lengthOfSma, time: this.chartInfo[i].time})
+    }
+    return returnArray
+  }
   createOrUpdateChart() {
 
     console.log('create chart')
@@ -776,10 +803,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
 
   incomingTokensFromDB: any = []
   checkData(changes: any) {
-    console.log(this.accessToken)
     this.sharedCache.changeAccessToken(changes[0].accessToken)
     this.sharedCache.currentAccessToken.subscribe(token => this.accessToken = token!)
-    console.log(this.accessToken)
   }
   trendAlgoStartingPointChanged() {
     this.updateTrendIndexLine()

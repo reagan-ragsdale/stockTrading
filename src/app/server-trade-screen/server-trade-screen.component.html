@@ -20,17 +20,29 @@
       <mat-label>Check Gutter</mat-label>
       <input matInput type="number" [(ngModel)]="check200Gutter" placeholder="0.00" [min]=".001" step=".01">
     </mat-form-field>
-    <mat-form-field class="example-full-width" style="max-width: 140px; height: fit-content;">
+    <mat-form-field *ngIf="intraDayChecked" class="example-full-width" style="max-width: 140px; height: fit-content;">
       <mat-label>Long Sma</mat-label>
       <input matInput type="number" [(ngModel)]="intraDayLongSma" placeholder="0.00" [min]="3600" [max]="5400" step="5">
     </mat-form-field>
-    <mat-form-field class="example-full-width" style="max-width: 140px; height: fit-content;">
+    <mat-form-field *ngIf="intraDayChecked" class="example-full-width" style="max-width: 140px; height: fit-content;">
       <mat-label>Medium Sma</mat-label>
       <input matInput type="number" [(ngModel)]="intraDayMediumSma" placeholder="0.00" [min]="1200" [max]="3600" step="5">
     </mat-form-field>
-    <mat-form-field class="example-full-width" style="max-width: 140px; height: fit-content;">
+    <mat-form-field *ngIf="intraDayChecked" class="example-full-width" style="max-width: 140px; height: fit-content;">
       <mat-label>Short Sma</mat-label>
       <input matInput type="number" [(ngModel)]="intraDayShortSma" placeholder="0.00" [min]="60" [max]="600" step="1">
+    </mat-form-field>
+    <mat-form-field *ngIf="!intraDayChecked" class="example-full-width" style="max-width: 140px; height: fit-content;">
+      <mat-label>Long Sma</mat-label>
+      <input matInput type="number" [(ngModel)]="interDayLongSma" placeholder="0.00" [min]="150" [max]="250" step="1">
+    </mat-form-field>
+    <mat-form-field *ngIf="!intraDayChecked" class="example-full-width" style="max-width: 140px; height: fit-content;">
+      <mat-label>Medium Sma</mat-label>
+      <input matInput type="number" [(ngModel)]="interDayMediumSma" placeholder="0.00" [min]="20" [max]="50" step="1">
+    </mat-form-field>
+    <mat-form-field *ngIf="!intraDayChecked" class="example-full-width" style="max-width: 140px; height: fit-content;">
+      <mat-label>Short Sma</mat-label>
+      <input matInput type="number" [(ngModel)]="interDayShortSma" placeholder="0.00" [min]="1" [max]="15" step="1">
     </mat-form-field>
     <button style="margin-left:1rem;" mat-raised-button color="primary" (click)="onRunSimulation()">Run Sim</button>
     <h4 style="margin-left:1rem; color: #DBD4D1;">Total: {{bankTotal | currency:'USD':'symbol'}}</h4>

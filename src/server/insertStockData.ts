@@ -197,7 +197,7 @@ export const socketCall = async (): Promise<void> => {
                             stockData[data.stockName].lastBid = data.bidPrice
                             //if the length of the history is equal to what the long moving average length is then set the moving averages
                             if (stockData[data.stockName].history.length == stockDayTradeValues[data.stockName].SmaLong) {
-                                stockData[data.stockName].last3600 = stockData[data.stockName].history
+                                stockData[data.stockName].last3600 = stockData[data.stockName].history.slice()
                                 stockData[data.stockName].last3600sma = stockData[data.stockName].last3600.reduce((sum, val) => sum + val, 0) / stockDayTradeValues[data.stockName].SmaLong
                                 stockData[data.stockName].last1800sma = stockData[data.stockName].last3600.slice(stockDayTradeValues[data.stockName].SmaMedium * -1).reduce((sum, val) => sum + val, 0) / stockDayTradeValues[data.stockName].SmaMedium
                                 stockData[data.stockName].last300sma = stockData[data.stockName].last3600.slice(stockDayTradeValues[data.stockName].SmaShort * -1).reduce((sum, val) => sum + val, 0) / stockDayTradeValues[data.stockName].SmaShort
@@ -215,6 +215,7 @@ export const socketCall = async (): Promise<void> => {
                                 stockData[data.stockName].last300sma = stockData[data.stockName].last3600.slice(stockDayTradeValues[data.stockName].SmaShort * -1).reduce((sum, val) => sum + val, 0) / stockDayTradeValues[data.stockName].SmaShort
                                 if(data.stockName == 'AAPL'){
                                     console.log('Last 3600 length: ' + stockData[data.stockName].last3600.length)
+                                    console.log('Last 1800 length: ' + stockData[data.stockName].last3600.slice(stockDayTradeValues[data.stockName].SmaMedium * -1))
                                     console.log('history length: ' + stockData[data.stockName].history.length)
                                     console.log('Short sma: ' + stockData[data.stockName].last300sma)
                                     console.log('Medium sma: ' + stockData[data.stockName].last1800sma)
