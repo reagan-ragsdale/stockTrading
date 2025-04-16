@@ -934,7 +934,7 @@ export class ServerTradeScreenComponent implements OnInit {
     this.bankTotal = 500
     this.orderLocations = []
     this.totalPofit = 0
-    this.calculateSma()
+    this.calculateSmaNew()
     this.updateChart()
     this.calculateBuyAndSellPoints()
     this.updateGraphBuyAndSellPoints()
@@ -1144,6 +1144,36 @@ export class ServerTradeScreenComponent implements OnInit {
     console.log(this.listOfLast40Days)
     console.log(this.listOfLast5Days)
 
+  }
+  calculateSmaNew(){
+    this.listOfLast200Days = []
+    this.listOfLast40Days = []
+    this.listOfLast5Days = []
+    
+    for(let i = this.selectedInterDayStockData.length - 1; i >= 0; i--){
+      let longSma: number = 0
+      for(let j = 0; j < this.interDayLongSma; j++){
+        longSma += this.selectedInterDayStockData[i - j].close
+      }
+      this.listOfLast200Days.unshift({stockName: this.selectedStockName, close: this.selectedInterDayStockData[i].close, avg: longSma / this.interDayLongSma, date: new Date(this.selectedInterDayStockData[i].date).toLocaleDateString()})
+    }
+    for(let i = this.selectedInterDayStockData.length - 1; i >= 0; i--){
+      let mediumSma: number = 0
+      for(let j = 0; j < this.interDayMediumSma; j++){
+        mediumSma += this.selectedInterDayStockData[i - j].close
+      }
+      this.listOfLast40Days.unshift({stockName: this.selectedStockName, close: this.selectedInterDayStockData[i].close, avg: mediumSma / this.interDayMediumSma, date: new Date(this.selectedInterDayStockData[i].date).toLocaleDateString()})
+    }
+    for(let i = this.selectedInterDayStockData.length - 1; i >= 0; i--){
+      let shortSma: number = 0
+      for(let j = 0; j < this.interDayShortSma; j++){
+        shortSma += this.selectedInterDayStockData[i - j].close
+      }
+      this.listOfLast5Days.unshift({stockName: this.selectedStockName, close: this.selectedInterDayStockData[i].close, avg: shortSma / this.interDayShortSma, date: new Date(this.selectedInterDayStockData[i].date).toLocaleDateString()})
+    }
+    let lengthOfLongArray = this.listOfLast200Days.length
+    this.listOfLast40Days = this.listOfLast40Days.slice(lengthOfLongArray * -1)
+    this.listOfLast5Days = this.listOfLast5Days.slice(lengthOfLongArray * -1)
   }
   updateChart() {
     this.stockChart.data.datasets[0].data = this.listOfLast200Days.map(e => e.close)
