@@ -964,16 +964,16 @@ export class ServerTradeScreenComponent implements OnInit {
                   listOfMediumResult
                 )
               }
-              for (let p = 1; p <= 15; p++) {
-                if (mapOfShortSmaValues.get(p) === undefined) {
-                  let listOfShortResult = this.calculateInterDayShortSma(p)
+             // for (let p = 1; p <= 15; p++) {
+                if (mapOfShortSmaValues.get(1) === undefined) {
+                  let listOfShortResult = this.calculateInterDayShortSma(1)
                   mapOfShortSmaValues.set(
-                    p,
+                    1,
                     listOfShortResult
                   )
                 }
 
-                let orderLocations = this.calculateBuyAndSellPointsIntraDayNew2(mapOfLongSmaValues.get(m)!, mapOfMediumSmaValues.get(n)!, mapOfShortSmaValues.get(p)!, Number((i * .001).toPrecision(3)), Number((j * .001).toPrecision(3)), Number((k * .001).toPrecision(3)))
+                let orderLocations = this.calculateBuyAndSellPointsIntraDayNew2(mapOfLongSmaValues.get(m)!, mapOfMediumSmaValues.get(n)!, mapOfShortSmaValues.get(1)!, Number((i * .001).toPrecision(3)), Number((j * .001).toPrecision(3)), Number((k * .001).toPrecision(3)))
                 let totalProfit = this.calculateTotalProfitNew(orderLocations)
 
               
@@ -984,7 +984,7 @@ export class ServerTradeScreenComponent implements OnInit {
                     checkBuffer: Number((k * .001).toPrecision(3)),
                     smaLong: m,
                     smaMedium: n,
-                    smaShort: p,
+                    smaShort: 1,
                     profit: totalProfit,
                     numberOfTrades: orderLocations.length
                   })
@@ -997,14 +997,14 @@ export class ServerTradeScreenComponent implements OnInit {
                     checkBuffer: Number((k * .001).toPrecision(3)),
                     smaLong: m,
                     smaMedium: n,
-                    smaShort: p,
+                    smaShort: 1,
                     profit: totalProfit,
                     numberOfTrades: orderLocations.length
                   }
                   listOfProfits.sort((a,b) => b.profit - a.profit)
                 }
                 
-              }
+              //}
             }
           }
         }
