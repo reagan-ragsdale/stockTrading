@@ -416,14 +416,12 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   }
   calculateSma(lengthOfSma: number){
     let returnArray: any[] = []
-    let windowValue: number = 0
-    for(let i = 0; i < lengthOfSma; i++){
-      windowValue += this.chartInfo[i].stockPrice
-    }
-    returnArray.push({sma: windowValue / lengthOfSma, time: this.chartInfo[lengthOfSma].time})
-    for(let i = lengthOfSma; i < this.chartInfo.length; i++){
-      windowValue += this.chartInfo[i].stockPrice - this.chartInfo[i - lengthOfSma].stockPrice;
-      returnArray.push({sma: windowValue / lengthOfSma, time: this.chartInfo[i].time})
+    for(let i = this.chartInfo.length - 1; i >= lengthOfSma; i--){
+      let smaAmt: number = 0
+      for(let j = 0; j < lengthOfSma; j++){
+        smaAmt += this.chartInfo[i - j].stockPrice
+      }
+      returnArray.unshift({stockName: this.selectedStockName, close: this.chartInfo[i].stockPrice, avg: smaAmt / lengthOfSma, date: new Date(this.chartInfo[i].time).toLocaleTimeString()})
     }
     return returnArray
   }

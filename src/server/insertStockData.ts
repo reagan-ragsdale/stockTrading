@@ -62,19 +62,35 @@ export const socketCall = async (): Promise<void> => {
         },
         'AMD': {
             Buy: .001,
-            Sell: .004,
+            Sell: .002,
             Check200: .005,
             SmaLong: 3600,
             SmaMedium: 1500,
             SmaShort: 120
         },
         'PLTR': {
-            Buy: .003,
-            Sell: .004,
+            Buy: .002,
+            Sell: .002,
             Check200: .006,
             SmaLong: 3600,
             SmaMedium: 1500,
             SmaShort: 480
+        },
+        'XOM': {
+            Buy: .001,
+            Sell: .002,
+            Check200: .006,
+            SmaLong: 3600,
+            SmaMedium: 1500,
+            SmaShort: 300
+        },
+        'NVO': {
+            Buy: .001,
+            Sell: .002,
+            Check200: .006,
+            SmaLong: 3600,
+            SmaMedium: 1500,
+            SmaShort: 300
         },
     }
     //will be used for long term inter day trading
@@ -112,7 +128,9 @@ export const socketCall = async (): Promise<void> => {
         'MSFT': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 },
         'PLTR': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 },
         'AMD': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 },
-        'TSLA': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 }
+        'TSLA': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 },
+        'XOM': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 },
+        'NVO': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 }
     }
 
 
@@ -146,7 +164,7 @@ export const socketCall = async (): Promise<void> => {
                 "SchwabClientCustomerId": userData.schwabClientCustomerId,
                 "SchwabClientCorrelId": userData.schwabClientCorrelId,
                 "parameters": {
-                    "keys": "AAPL, MSFT, PLTR, AMD, TSLA",
+                    "keys": "AAPL, MSFT, PLTR, AMD, TSLA, XOM,NVO",
                     "fields": "0,1,2,3,4,5,6,7,8,9,10,33"
                 }
             }
@@ -215,7 +233,7 @@ export const socketCall = async (): Promise<void> => {
                                 stockData[data.stockName].last300sma = stockData[data.stockName].last3600.slice(stockDayTradeValues[data.stockName].SmaShort * -1).reduce((sum, val) => sum + val, 0) / stockDayTradeValues[data.stockName].SmaShort
                                 if(data.stockName == 'AAPL'){
                                     console.log('Last 3600 length: ' + stockData[data.stockName].last3600.length)
-                                    console.log('Last 1800 length: ' + stockData[data.stockName].last3600.slice(stockDayTradeValues[data.stockName].SmaMedium * -1))
+                                    console.log('Last 1800 length: ' + stockData[data.stockName].last3600.slice(stockDayTradeValues[data.stockName].SmaMedium * -1).length)
                                     console.log('history length: ' + stockData[data.stockName].history.length)
                                     console.log('Short sma: ' + stockData[data.stockName].last300sma)
                                     console.log('Medium sma: ' + stockData[data.stockName].last1800sma)
@@ -245,6 +263,7 @@ export const socketCall = async (): Promise<void> => {
                                     orderPlaced = true;
                                 }
                                 //sell and the algo is met
+                                //add or if the price is a certain level above where it bought bc if its a steady rise then the moving averages will never move far enough apart
                                 else if (!isBuy && filteredByStock.canTrade && (((stockData[data.stockName].last300sma - stockData[data.stockName].last1800sma) / stockData[data.stockName].last1800sma) > stockDayTradeValues[data.stockName].Sell) && data.bidPrice > filteredOrderOnUserAndStock.stockPrice) {
                                     console.log('Placing a sell order')
                                     await dbOrdersRepo.insert({
