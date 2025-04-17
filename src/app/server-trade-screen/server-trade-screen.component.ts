@@ -1049,6 +1049,7 @@ export class ServerTradeScreenComponent implements OnInit {
   }
   updateGraphBuyAndSellPointsIntraDay() {
     this.annotationsArray = []
+    console.log(this.orderLocations)
     for (let i = 0; i < this.orderLocations.length; i++) {
       this.annotationsArray.push({
         type: 'line',
