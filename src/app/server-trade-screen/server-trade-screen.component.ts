@@ -583,9 +583,9 @@ export class ServerTradeScreenComponent implements OnInit {
     this.totalPofit = 0
     this.calculateIntraDaySma()
     this.updateChartIntraDay()
-    this.calculateBuyAndSellPointsIntraDay()
+    let orderLocations = this.calculateBuyAndSellPointsIntraDaySellAtEnd(this.listOfLastHour, this.listOfLast30Minutes, this.listOfLast5Minutes, this.buyGutter, this.sellGutter, this.check200Gutter)
     this.updateGraphBuyAndSellPointsIntraDay()
-    this.calculateTotalProfit()
+    this.calculateTotalProfitNew(orderLocations)
   }
   onRunEntireSimulation() {
     this.isLoading = true;
