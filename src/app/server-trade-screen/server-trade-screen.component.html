@@ -46,7 +46,7 @@
     </mat-form-field>
     <button style="margin-left:1rem;" mat-raised-button color="primary" (click)="onRunSimulation()">Run Sim</button>
     <h4 style="margin-left:1rem; color: #DBD4D1;">Total: {{bankTotal | currency:'USD':'symbol'}}</h4>
-    <h4 style="margin-left:1rem; color: #DBD4D1;">Total Profit: {{totalPofit | currency:'USD':'symbol'}}</h4>
+    <h4 style="margin-left:1rem; color: #DBD4D1;">Total Profit: {{totalProfit | currency:'USD':'symbol'}}</h4>
     <button style="margin-left:1rem;" mat-raised-button color="primary" (click)="onRunEntireSimulation()">Run Full Sim</button>
     <button *ngIf="intraDayChecked" style="margin-left:1rem;" mat-raised-button color="primary" (click)="onRunEntireSimulationIntraDayAllDays()">Run Full Sim All Days</button>
     <div *ngIf="topAlgos.length > 0" style="background-color:#3C3E3D;" >

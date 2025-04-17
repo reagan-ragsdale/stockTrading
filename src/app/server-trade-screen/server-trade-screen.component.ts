@@ -292,12 +292,12 @@ export class ServerTradeScreenComponent implements OnInit {
     }
   }
 
-  totalPofit: number = 0;
+  totalProfit: number = 0;
 
   calculateTotalProfit() {
     for (let i = 0; i < this.orderLocations.length; i++) {
       if (this.orderLocations[i].buySell == 'Sell') {
-        this.totalPofit += this.orderLocations[i].price - this.orderLocations[i - 1].price
+        this.totalProfit += this.orderLocations[i].price - this.orderLocations[i - 1].price
       }
     }
   }
@@ -580,12 +580,12 @@ export class ServerTradeScreenComponent implements OnInit {
   runSimulationIntraDay() {
     this.bankTotal = 500
     this.orderLocations = []
-    this.totalPofit = 0
+    this.totalProfit = 0
     this.calculateIntraDaySma()
     this.updateChartIntraDay()
     let orderLocations = this.calculateBuyAndSellPointsIntraDaySellAtEnd(this.listOfLastHour, this.listOfLast30Minutes, this.listOfLast5Minutes, this.buyGutter, this.sellGutter, this.check200Gutter)
-    this.updateGraphBuyAndSellPointsIntraDay()
-    this.calculateTotalProfitNew(orderLocations)
+    this.updateGraphBuyAndSellPointsIntraDayNew(orderLocations)
+    this.totalProfit = this.calculateTotalProfitNew(orderLocations)
   }
   onRunEntireSimulation() {
     this.isLoading = true;
@@ -1047,6 +1047,28 @@ export class ServerTradeScreenComponent implements OnInit {
 
     }
   }
+  updateGraphBuyAndSellPointsIntraDayNew(orderLocations: orderLocation[]){
+    console.log(orderLocations)
+    this.annotationsArray = []
+    for (let i = 0; i < orderLocations.length; i++) {
+      this.annotationsArray.push({
+        type: 'line',
+        //display: this.selectedStockHistoryData.length > 0,
+
+        xMin: this.listOfLastHour.findIndex(x => x.date == orderLocations[i].date),
+        xMax: this.listOfLastHour.findIndex(x => x.date == orderLocations[i].date),
+        borderColor: '#7874ff',
+        borderWidth: 2,
+        label: {
+          display: true,
+          content: orderLocations[i].buySell + ': ' + orderLocations[i].price,
+          position: 'end'
+        }
+      })
+    }
+    this.stockChart.options.plugins.annotation.annotations = this.annotationsArray
+    this.stockChart.update()
+  }
   updateGraphBuyAndSellPointsIntraDay() {
     this.annotationsArray = []
     console.log(this.orderLocations)
@@ -1074,7 +1096,7 @@ export class ServerTradeScreenComponent implements OnInit {
   runSimulation() {
     this.bankTotal = 500
     this.orderLocations = []
-    this.totalPofit = 0
+    this.totalProfit = 0
     this.calculateSmaNew()
     this.updateChart()
     this.calculateBuyAndSellPoints()
