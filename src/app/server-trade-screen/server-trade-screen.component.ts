@@ -708,13 +708,7 @@ export class ServerTradeScreenComponent implements OnInit {
                 }
                 let result = this.calculateBuyAndSellPointsIntraDaySellAtEnd(longSmaResult!, mediumSmaResult!, shortSmaResult!, Number((i * .001).toPrecision(3)), Number((j * .001).toPrecision(3)), Number((k * .001).toPrecision(3)))
                 
-                if(i == 1 && j == 1 && k == 1 && m == 70 && n == 20 && p == 9){
-                  console.log(longSmaResult!)
-                  console.log(mediumSmaResult!)
-                  console.log(shortSmaResult!)
-                  return;
-                }
-
+                
                 if (listOfProfits.length < 5) {
                   listOfProfits.push({
                     buyBuffer: Number((i * .001).toPrecision(3)),
