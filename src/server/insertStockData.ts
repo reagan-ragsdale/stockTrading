@@ -29,6 +29,8 @@ export const socketCall = async (): Promise<void> => {
                 { stockName: 'MSFT', canTrade: true, numberOfTrades: 0 },
                 { stockName: 'AMD', canTrade: true, numberOfTrades: 0 },
                 { stockName: 'PLTR', canTrade: true, numberOfTrades: 0 },
+                { stockName: 'XOM', canTrade: true, numberOfTrades: 0 },
+                { stockName: 'NVO', canTrade: true, numberOfTrades: 0 },
             ]
         })
     }
