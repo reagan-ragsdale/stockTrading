@@ -39,7 +39,7 @@ export const socketCall = async (): Promise<void> => {
         'TSLA': {
             Buy: .003,
             Sell: .003,
-            Check200: .002,
+            Check200: .001,
             SmaLong: 3600,
             SmaMedium: 1800,
             SmaShort: 240
@@ -47,7 +47,7 @@ export const socketCall = async (): Promise<void> => {
         'AAPL': {
             Buy: .001,
             Sell: .002,
-            Check200: .002,
+            Check200: .001,
             SmaLong: 3600,
             SmaMedium: 1200,
             SmaShort: 300
@@ -55,7 +55,7 @@ export const socketCall = async (): Promise<void> => {
         'MSFT': {
             Buy: .001,
             Sell: .001,
-            Check200: .005,
+            Check200: .001,
             SmaLong: 4200,
             SmaMedium: 1800,
             SmaShort: 120
@@ -63,7 +63,7 @@ export const socketCall = async (): Promise<void> => {
         'AMD': {
             Buy: .001,
             Sell: .002,
-            Check200: .005,
+            Check200: .001,
             SmaLong: 3600,
             SmaMedium: 1500,
             SmaShort: 120
@@ -71,7 +71,7 @@ export const socketCall = async (): Promise<void> => {
         'PLTR': {
             Buy: .002,
             Sell: .002,
-            Check200: .006,
+            Check200: .001,
             SmaLong: 3600,
             SmaMedium: 1500,
             SmaShort: 480
@@ -79,7 +79,7 @@ export const socketCall = async (): Promise<void> => {
         'XOM': {
             Buy: .001,
             Sell: .002,
-            Check200: .006,
+            Check200: .001,
             SmaLong: 3600,
             SmaMedium: 1500,
             SmaShort: 300
@@ -87,7 +87,7 @@ export const socketCall = async (): Promise<void> => {
         'NVO': {
             Buy: .001,
             Sell: .002,
-            Check200: .006,
+            Check200: .001,
             SmaLong: 3600,
             SmaMedium: 1500,
             SmaShort: 300
