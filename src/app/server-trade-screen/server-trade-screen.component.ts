@@ -455,24 +455,22 @@ export class ServerTradeScreenComponent implements OnInit {
     return returnArray
   }
   calculateIntraDayLongSma(longValue: number): sma200Array[] {
-    //let arrayLength = this.stockDataForSelectedDay.length - longValue + 1
-    //let returnArray: sma200Array[] = new Array(arrayLength)
-    let returnArray:sma200Array[] = []
+    let arrayLength = this.stockDataForSelectedDay.length - longValue + 1
+    let returnArray: sma200Array[] = new Array(arrayLength)
     let windowSum: number = 0;
     for (let i = 0; i < longValue; i++) {
       windowSum += this.stockDataForSelectedDay[i].stockPrice;
     }
-    returnArray.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[longValue].stockPrice, avg: (windowSum / longValue), date: new Date(this.stockDataForSelectedDay[longValue].time).toLocaleTimeString() });
-    //returnArray[0] = { stockName: this.selectedStockName, close: this.stockDataForSelectedDay[longValue].stockPrice, avg: (windowSum / longValue), date: new Date(this.stockDataForSelectedDay[longValue].time).toLocaleTimeString() };
+    returnArray[0] = { stockName: this.selectedStockName, close: this.stockDataForSelectedDay[longValue].stockPrice, avg: (windowSum / longValue), date: new Date(this.stockDataForSelectedDay[longValue].time).toLocaleTimeString() };
 
     for (let i = longValue; i < this.stockDataForSelectedDay.length; i++) {
       windowSum += this.stockDataForSelectedDay[i].stockPrice - this.stockDataForSelectedDay[i - longValue].stockPrice;
       console.time('Push Time')
-      returnArray.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[i].stockPrice, avg: (windowSum / longValue), date: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString() });
+      returnArray[i - longValue + 1] = { stockName: this.selectedStockName, close: this.stockDataForSelectedDay[i].stockPrice, avg: (windowSum / longValue), date: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString() };
       console.timeEnd('Push Time')
     }
     return returnArray
-    //returnArray[i - longValue + 1] = { stockName: this.selectedStockName, close: this.stockDataForSelectedDay[i].stockPrice, avg: (windowSum / longValue), date: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString() };
+    
   }
   calculateIntraDayShortSmaAllDays(longValue: number, shortValue: number, selectedStockData: DbStockHistoryData[]) {
     let returnArray: sma200Array[] = []
