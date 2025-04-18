@@ -357,7 +357,7 @@ export class ServerTradeScreenComponent implements OnInit {
   }
   async onRunEntireSimulationIntraDayAllDays() {
     this.isLoading = true;
-    await this.runEntireSimulationIntraDayAllDays2()
+    //await this.runEntireSimulationIntraDayAllDays2()
     this.isLoading = false
   }
   /* Intra Day */
@@ -435,7 +435,7 @@ export class ServerTradeScreenComponent implements OnInit {
     for (let i = longValue - shortValue; i < longValue; i++) {
       windowSum += this.stockDataForSelectedDay[i].stockPrice;
     }
-    returnArray.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[longValue].stockPrice, avg: (windowSum / shortValue), date: new Date(this.stockDataForSelectedDay[longValue].time).toLocaleTimeString() }); // Push the average of the first window
+    returnArray.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[longValue - 1].stockPrice, avg: (windowSum / shortValue), date: new Date(this.stockDataForSelectedDay[longValue - 1].time).toLocaleTimeString() }); // Push the average of the first window
 
     for (let i = longValue; i < this.stockDataForSelectedDay.length; i++) {
       windowSum += this.stockDataForSelectedDay[i].stockPrice - this.stockDataForSelectedDay[i - shortValue].stockPrice; // Add new element, remove old element
@@ -449,7 +449,7 @@ export class ServerTradeScreenComponent implements OnInit {
     for (let i = longValue - mediumValue; i < longValue; i++) {
       windowSum += this.stockDataForSelectedDay[i].stockPrice;
     }
-    returnArray.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[longValue].stockPrice, avg: (windowSum / mediumValue), date: new Date(this.stockDataForSelectedDay[longValue].time).toLocaleTimeString() }); // Push the average of the first window
+    returnArray.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[longValue - 1].stockPrice, avg: (windowSum / mediumValue), date: new Date(this.stockDataForSelectedDay[longValue - 1].time).toLocaleTimeString() }); // Push the average of the first window
 
     for (let i = longValue; i < this.stockDataForSelectedDay.length; i++) {
       windowSum += this.stockDataForSelectedDay[i].stockPrice - this.stockDataForSelectedDay[i - mediumValue].stockPrice; // Add new element, remove old element
@@ -463,7 +463,7 @@ export class ServerTradeScreenComponent implements OnInit {
     for (let i = 0; i < longValue; i++) {
       windowSum += this.stockDataForSelectedDay[i].stockPrice;
     }
-    returnArray.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[longValue].stockPrice, avg: (windowSum / longValue), date: new Date(this.stockDataForSelectedDay[longValue].time).toLocaleTimeString() });
+    returnArray.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[longValue - 1].stockPrice, avg: (windowSum / longValue), date: new Date(this.stockDataForSelectedDay[longValue - 1].time).toLocaleTimeString() });
 
     for (let i = longValue; i < this.stockDataForSelectedDay.length; i++) {
       windowSum += this.stockDataForSelectedDay[i].stockPrice - this.stockDataForSelectedDay[i - longValue].stockPrice;
@@ -478,7 +478,7 @@ export class ServerTradeScreenComponent implements OnInit {
     for (let i = longValue - shortValue; i < longValue; i++) {
       windowSum += selectedStockData[i].stockPrice;
     }
-    returnArray.push({ stockName: this.selectedStockName, close: selectedStockData[longValue].stockPrice, avg: (windowSum / shortValue), date: new Date(selectedStockData[longValue].time).toLocaleTimeString() }); // Push the average of the first window
+    returnArray.push({ stockName: this.selectedStockName, close: selectedStockData[longValue - 1].stockPrice, avg: (windowSum / shortValue), date: new Date(selectedStockData[longValue - 1].time).toLocaleTimeString() }); // Push the average of the first window
 
     for (let i = longValue; i < selectedStockData.length; i++) {
       windowSum += selectedStockData[i].stockPrice - selectedStockData[i - shortValue].stockPrice; // Add new element, remove old element
@@ -514,29 +514,29 @@ export class ServerTradeScreenComponent implements OnInit {
     }
     return returnArray
   }
-  calculateIntraDayMediumSmaNew(mediumValue: number): sma200Array[] {
+  calculateIntraDayMediumSmaNew(longValue: number, mediumValue: number): sma200Array[] {
     let returnArray: sma200Array[] = []
     let windowSum: number = 0
-    for (let i = 0; i < mediumValue; i++) {
+    for (let i = longValue - mediumValue; i < longValue; i++) {
       windowSum += this.stockDataForSelectedDay[i].stockPrice;
     }
-    returnArray.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[mediumValue].stockPrice, avg: (windowSum / mediumValue), date: new Date(this.stockDataForSelectedDay[mediumValue].time).toLocaleTimeString() }); // Push the average of the first window
+    returnArray.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[longValue - 1].stockPrice, avg: (windowSum / mediumValue), date: new Date(this.stockDataForSelectedDay[longValue - 1].time).toLocaleTimeString() }); // Push the average of the first window
 
-    for (let i = mediumValue; i < this.stockDataForSelectedDay.length; i++) {
+    for (let i = longValue; i < this.stockDataForSelectedDay.length; i++) {
       windowSum += this.stockDataForSelectedDay[i].stockPrice - this.stockDataForSelectedDay[i - mediumValue].stockPrice; // Add new element, remove old element
       returnArray.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[i].stockPrice, avg: (windowSum / mediumValue), date: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString() }); // Push the new average
     }
     return returnArray
   }
-  calculateIntraDayShortSmaNew(shortValue: number): sma200Array[] {
+  calculateIntraDayShortSmaNew(longValue: number, shortValue: number): sma200Array[] {
     let returnArray: sma200Array[] = []
     let windowSum: number = 0
-    for (let i = 0; i < shortValue; i++) {
+    for (let i = longValue - shortValue; i < longValue; i++) {
       windowSum += this.stockDataForSelectedDay[i].stockPrice;
     }
-    returnArray.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[shortValue].stockPrice, avg: (windowSum / shortValue), date: new Date(this.stockDataForSelectedDay[shortValue].time).toLocaleTimeString() }); // Push the average of the first window
+    returnArray.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[longValue - 1].stockPrice, avg: (windowSum / shortValue), date: new Date(this.stockDataForSelectedDay[longValue - 1].time).toLocaleTimeString() }); // Push the average of the first window
 
-    for (let i = shortValue; i < this.stockDataForSelectedDay.length; i++) {
+    for (let i = longValue; i < this.stockDataForSelectedDay.length; i++) {
       windowSum += this.stockDataForSelectedDay[i].stockPrice - this.stockDataForSelectedDay[i - shortValue].stockPrice; // Add new element, remove old element
       returnArray.push({ stockName: this.selectedStockName, close: this.stockDataForSelectedDay[i].stockPrice, avg: (windowSum / shortValue), date: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString() }); // Push the new average
     }
@@ -581,7 +581,7 @@ export class ServerTradeScreenComponent implements OnInit {
   listOfLongSmaValues: smaLists[] = []
 
 
-  runEntireSimulationIntraDay() {
+  /* runEntireSimulationIntraDay() {
     let listOfProfits = []
     let minProfit = 0
     let mapOfLongSmaValues = new Map<number, sma200Array[]>()
@@ -668,12 +668,12 @@ export class ServerTradeScreenComponent implements OnInit {
     this.calculateIntraDaySma()
     this.runSimulationIntraDay()
 
-  }
+  } */
   runEntireSimulationIntraDay2() {
     let listOfProfits = []
     let mapOfLongSmaValues = new Map<number, sma200Array[]>()
-    let mapOfMediumSmaValues = new Map<number, sma200Array[]>()
-    let mapOfShortSmaValues = new Map<number, sma200Array[]>()
+    let mapOfMediumSmaValues = new Map<string, sma200Array[]>()
+    let mapOfShortSmaValues = new Map<string, sma200Array[]>()
     for (let i = 1; i <= 20; i++) {
       for (let j = 1; j <= 20; j++) {
         console.time('sell')
@@ -689,20 +689,20 @@ export class ServerTradeScreenComponent implements OnInit {
             }
 
             for (let n = 20; n <= 40; n += 5) {
-              let mediumSmaResult = mapOfMediumSmaValues.get(n * 60)
+              let mediumSmaResult = mapOfMediumSmaValues.get(JSON.stringify({long: m * 60, value: n * 60}))
               if (mediumSmaResult === undefined) {
-                mediumSmaResult = this.calculateIntraDayMediumSmaNew(n * 60)
+                mediumSmaResult = this.calculateIntraDayMediumSmaNew(m * 60,n * 60)
                 mapOfMediumSmaValues.set(
-                  n * 60,
+                  JSON.stringify({long: m * 60, value: n * 60}),
                   mediumSmaResult
                 )
               }
               for (let p = 1; p <= 10; p++) {
-                let shortSmaResult = mapOfShortSmaValues.get(p * 60)
+                let shortSmaResult = mapOfShortSmaValues.get(JSON.stringify({long: m * 60, value: p * 60}))
                 if (shortSmaResult === undefined) {
-                  shortSmaResult = this.calculateIntraDayShortSmaNew(p * 60)
+                  shortSmaResult = this.calculateIntraDayShortSmaNew(m * 60, p * 60)
                   mapOfShortSmaValues.set(
-                    p * 60,
+                    JSON.stringify({long: m * 60, value: p * 60}),
                     shortSmaResult
                   )
                 }
@@ -767,7 +767,7 @@ export class ServerTradeScreenComponent implements OnInit {
 
 
 
-  async runEntireSimulationIntraDayAllDays() {
+  /* async runEntireSimulationIntraDayAllDays() {
     let listOfProfits = []
     console.log(this.distinctDates)
     let numberOfDays = 5
@@ -844,8 +844,8 @@ export class ServerTradeScreenComponent implements OnInit {
 
 
 
-  }
-  async runEntireSimulationIntraDayAllDays2() {
+  } */
+ /*  async runEntireSimulationIntraDayAllDays2() {
     let listOfProfits = []
     console.log(this.distinctDates)
     let numberOfDays = 5
@@ -951,7 +951,7 @@ export class ServerTradeScreenComponent implements OnInit {
       }
     }
     console.log(topAverages)
-  }
+  } */
   calculateBuyAndSellPointsIntraDayNew(longArray: sma200Array[], mediumArray: sma200Array[], shortArray: sma200Array[], buyGutter: number, sellGutter: number, checkGutter: number) {
     let buyOrSell = 'Buy'
     let orderLocations: orderLocation[] = []
