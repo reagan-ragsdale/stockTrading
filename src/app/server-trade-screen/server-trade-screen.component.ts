@@ -1141,6 +1141,11 @@ export class ServerTradeScreenComponent implements OnInit {
                 let result = this.calculateInterDayBuyAndSellPointsEntireSim(longSmaResult!, mediumSmaResult!, shortSmaResult!, Number((i * .001).toPrecision(3)), Number((j * .001).toPrecision(3)), Number((k * .001).toPrecision(3)))
                 let orderLocations = result.orderLocations
                 let profit = result.profit
+                if(i == 1 && j == 17 && k == 81 && m == 150 && n == 5 && p == 1){
+                  console.log(longSmaResult)
+                  console.log(mediumSmaResult)
+                  console.log(shortSmaResult)
+                }
 
 
                 if (listOfProfits.length < 5) {
@@ -1330,6 +1335,9 @@ export class ServerTradeScreenComponent implements OnInit {
       windowSum += this.selectedInterDayStockData[j].close - this.selectedInterDayStockData[j - this.interDayShortSma].close;
       this.shortSmaResults.push({ stockName: this.selectedStockName, close: this.selectedInterDayStockData[j].close, avg: windowSum / this.interDayShortSma, date: new Date(this.selectedInterDayStockData[j].date).toLocaleDateString() })
     }
+    console.log(this.longSmaResults)
+    console.log(this.mediumSmaResults)
+    console.log(this.shortSmaResults)
   }
   updateChart() {
     this.stockChart.data.datasets[0].data = this.longSmaResults.map(e => e.close)
