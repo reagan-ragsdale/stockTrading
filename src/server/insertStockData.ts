@@ -233,8 +233,11 @@ export const socketCall = async (): Promise<void> => {
                             //loop through each user that is signed up for the bot
                             for (let j = 0; j < userServerAlgos.length; j++) {
                                 //find the users most recent order for the stock
-                                let filteredOrderOnUserAndStock = userOrders.filter(e => e.userId == userServerAlgos![j].userId && e.stockName == data.stockName)[0]
-                                let isBuy = filteredOrderOnUserAndStock.orderType == 'Sell' ? true : false;
+                                let filteredOrderOnUserAndStock = userOrders.filter(e => e.userId == userServerAlgos![j].userId && e.stockName == data.stockName)
+                                let isBuy = true;
+                                if(filteredOrderOnUserAndStock.length > 0){
+                                    isBuy = filteredOrderOnUserAndStock[0].orderType == 'Sell' ? true : false;
+                                }
                                 let filteredByUser = userStockInfo.filter(e => e.user == userServerAlgos![j].userId)[0].stockData
                                 let filteredByStock = filteredByUser.filter((e: { stockName: string; }) => e.stockName == data.stockName)[0]
 
@@ -255,28 +258,28 @@ export const socketCall = async (): Promise<void> => {
                                 }
                                 //sell and the algo is met
                                 //add or if the price is a certain level above where it bought bc if its a steady rise then the moving averages will never move far enough apart
-                                else if (!isBuy && filteredByStock.canTrade && (((stockData[data.stockName].last300sma - stockData[data.stockName].last1800sma) / stockData[data.stockName].last1800sma) > stockDayTradeValues[data.stockName].Sell) && data.bidPrice > filteredOrderOnUserAndStock.stockPrice) {
+                                else if (!isBuy && filteredByStock.canTrade && (((stockData[data.stockName].last300sma - stockData[data.stockName].last1800sma) / stockData[data.stockName].last1800sma) > stockDayTradeValues[data.stockName].Sell) && data.bidPrice > filteredOrderOnUserAndStock[0].stockPrice) {
                                     console.log('Placing a sell order')
                                     await dbOrdersRepo.insert({
                                         userId: userServerAlgos[j].userId,
                                         stockName: data.stockName,
                                         orderType: 'Sell',
                                         stockPrice: data.bidPrice,
-                                        shareQty: filteredOrderOnUserAndStock.shareQty,
+                                        shareQty: filteredOrderOnUserAndStock[0].shareQty,
                                         orderTime: data.time
                                     })
                                     filteredByStock.numberOfTrades++
                                     orderPlaced = true;
                                 }
                                 //sell and the end of day and stock is greater than buy price
-                                 else if(!isBuy && filteredByStock.canTrade && data.time > endingTime && data.bidPrice > filteredOrderOnUserAndStock.stockPrice){
+                                 else if(!isBuy && filteredByStock.canTrade && data.time > endingTime && data.bidPrice > filteredOrderOnUserAndStock[0].stockPrice){
                                     console.log('Placing final day sell order')
                                     await dbOrdersRepo.insert({
                                         userId: userServerAlgos[j].userId,
                                         stockName: data.stockName,
                                         orderType: 'Sell',
                                         stockPrice: data.bidPrice,
-                                        shareQty: filteredOrderOnUserAndStock.shareQty,
+                                        shareQty: filteredOrderOnUserAndStock[0].shareQty,
                                         orderTime: data.time
                                     })
                                     filteredByStock.numberOfTrades++
@@ -284,14 +287,14 @@ export const socketCall = async (): Promise<void> => {
                                     orderPlaced = true;
                                 }  
                                 //sell and begining of day and stock is greater than previous day buy price
-                                else if (!isBuy && filteredByStock.canTrade && filteredByStock.numberOfTrades == 0 && data.bidPrice > filteredOrderOnUserAndStock.stockPrice) {
+                                else if (!isBuy && filteredByStock.canTrade && filteredByStock.numberOfTrades == 0 && data.bidPrice > filteredOrderOnUserAndStock[0].stockPrice) {
                                     console.log('Placing pre algo sell order')
                                     await dbOrdersRepo.insert({
                                         userId: userServerAlgos[j].userId,
                                         stockName: data.stockName,
                                         orderType: 'Sell',
                                         stockPrice: data.bidPrice,
-                                        shareQty: filteredOrderOnUserAndStock.shareQty,
+                                        shareQty: filteredOrderOnUserAndStock[0].shareQty,
                                         orderTime: data.time
                                     })
                                     filteredByStock.numberOfTrades++
