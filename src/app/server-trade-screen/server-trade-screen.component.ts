@@ -1112,7 +1112,7 @@ export class ServerTradeScreenComponent implements OnInit {
           for (let m = 150; m <= 250; m += 5) {
             let longSmaResult = mapOfLongSmaValues.get(m)
             if (longSmaResult === undefined) {
-              let longSmaResult = this.calculateInterDayLongSma(m)
+              longSmaResult = this.calculateInterDayLongSma(m)
               mapOfLongSmaValues.set(
                 m,
                 longSmaResult
@@ -1121,7 +1121,7 @@ export class ServerTradeScreenComponent implements OnInit {
             for (let n = 5; n <= 30; n += 5) {
               let mediumSmaResult = mapOfMediumSmaValues.get(JSON.stringify({ long: m, value: n }))
               if (mediumSmaResult === undefined) {
-                let mediumSmaResult = this.calculateInterDayMediumSma(m, n)
+                mediumSmaResult = this.calculateInterDayMediumSma(m, n)
                 mapOfMediumSmaValues.set(
                   JSON.stringify({ long: m, value: n }),
                   mediumSmaResult
