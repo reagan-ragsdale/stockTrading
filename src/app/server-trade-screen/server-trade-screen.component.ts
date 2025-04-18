@@ -712,6 +712,7 @@ export class ServerTradeScreenComponent implements OnInit {
                   console.log(longSmaResult!)
                   console.log(mediumSmaResult!)
                   console.log(shortSmaResult!)
+                  return;
                 }
 
                 if (listOfProfits.length < 5) {
