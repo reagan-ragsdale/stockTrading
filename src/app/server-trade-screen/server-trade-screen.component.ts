@@ -1170,7 +1170,7 @@ export class ServerTradeScreenComponent implements OnInit {
                     checkBuffer: Number((k * .001).toPrecision(3)),
                     smaLong: m,
                     smaMedium: n,
-                    smaShort: 1,
+                    smaShort: p,
                     profit: profit,
                     numberOfTrades: orderLocations.length
                   }
