@@ -1098,6 +1098,8 @@ export class ServerTradeScreenComponent implements OnInit {
     this.calculateSmaValuesInterDaySingleRun()
     this.updateChart()
     let result = this.calculateBuyAndSellPointsInterDay()
+    console.log(result.orderLocations)
+    console.log(result.profit)
     this.updateGraphBuyAndSellPoints(result.orderLocations)
     this.totalProfit = result.profit
   }
@@ -1142,9 +1144,8 @@ export class ServerTradeScreenComponent implements OnInit {
                 let orderLocations = result.orderLocations
                 let profit = result.profit
                 if(i == 1 && j == 17 && k == 81 && m == 150 && n == 5 && p == 1){
-                  console.log(longSmaResult)
-                  console.log(mediumSmaResult)
-                  console.log(shortSmaResult)
+                  console.log(orderLocations)
+                  console.log(profit)
                   return;
                 }
 
@@ -1248,7 +1249,7 @@ export class ServerTradeScreenComponent implements OnInit {
     for (let i = 0; i < longValue; i++) {
       windowSum += this.selectedInterDayStockData[i].close;
     }
-    returnArray.push({ stockName: this.selectedStockName, close: this.selectedInterDayStockData[longValue].close, avg: (windowSum / longValue), date: new Date(this.selectedInterDayStockData[longValue].date).toLocaleDateString() });
+    returnArray.push({ stockName: this.selectedStockName, close: this.selectedInterDayStockData[longValue - 1].close, avg: (windowSum / longValue), date: new Date(this.selectedInterDayStockData[longValue - 1].date).toLocaleDateString() });
 
     for (let i = longValue; i < this.selectedInterDayStockData.length; i++) {
       windowSum += this.selectedInterDayStockData[i].close - this.selectedInterDayStockData[i - longValue].close;
@@ -1336,9 +1337,6 @@ export class ServerTradeScreenComponent implements OnInit {
       windowSum += this.selectedInterDayStockData[j].close - this.selectedInterDayStockData[j - this.interDayShortSma].close;
       this.shortSmaResults.push({ stockName: this.selectedStockName, close: this.selectedInterDayStockData[j].close, avg: windowSum / this.interDayShortSma, date: new Date(this.selectedInterDayStockData[j].date).toLocaleDateString() })
     }
-    console.log(this.longSmaResults)
-    console.log(this.mediumSmaResults)
-    console.log(this.shortSmaResults)
   }
   updateChart() {
     this.stockChart.data.datasets[0].data = this.longSmaResults.map(e => e.close)
