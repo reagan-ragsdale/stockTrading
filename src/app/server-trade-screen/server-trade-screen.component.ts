@@ -1258,7 +1258,7 @@ export class ServerTradeScreenComponent implements OnInit {
           orderLocations.push({ buySell: 'Buy', date: this.shortSmaResults[i].date, price: this.shortSmaResults[i].close })
           buyOrSell = 'Sell'
       }
-      else if(buyOrSell == 'Sell' && ((((this.shortSmaResults[i].avg - this.mediumSmaResults[i].avg) / this.mediumSmaResults[i].avg) > this.sellGutter) && this.shortSmaResults[i].close > this.orderLocations[this.orderLocations.length - 1].price)){
+      else if(buyOrSell == 'Sell' && ((((this.shortSmaResults[i].avg - this.mediumSmaResults[i].avg) / this.mediumSmaResults[i].avg) > this.sellGutter) && this.shortSmaResults[i].close > orderLocations[orderLocations.length - 1].price)){
           orderLocations.push({ buySell: 'Sell', date: this.shortSmaResults[i].date, price: this.shortSmaResults[i].close })
           totalProfit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
           buyOrSell = 'Buy'
