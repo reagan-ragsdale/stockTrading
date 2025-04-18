@@ -18,6 +18,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
 import { empty } from 'rxjs';
 import { SimulationController } from '../../shared/controllers/SimulationController';
+import { TradeHistoryDetailComponent } from '../trade-history-detail/trade-history-detail.component';
 
 
 
@@ -127,7 +128,7 @@ export class ServerTradeScreenComponent implements OnInit {
         this.intraDayShortSma = 300
         this.selectedInterDayStockData = this.allHistory.filter(e => e.stockName = this.selectedStockName)
         //this.getStockDisplay()
-        this.calculateSmaNew()
+        this.calculateSmaValuesInterDaySingleRun()
         this.updateChart()
         this.runSimulation()
         this.isLoading = false
@@ -336,7 +337,7 @@ export class ServerTradeScreenComponent implements OnInit {
       this.sellGutter = .01
       this.check200Gutter = .1
       //this.getStockDisplay()
-      this.calculateSmaNew()
+      this.calculateSmaValuesInterDaySingleRun()
       this.updateChart()
       this.runSimulation()
       this.isLoading = false
@@ -1094,14 +1095,11 @@ export class ServerTradeScreenComponent implements OnInit {
 
   /* Inter Day */
   runSimulation() {
-    this.bankTotal = 500
-    this.orderLocations = []
-    this.totalProfit = 0
-    this.calculateSmaNew()
+    this.calculateSmaValuesInterDaySingleRun()
     this.updateChart()
-    this.calculateBuyAndSellPoints()
-    this.updateGraphBuyAndSellPoints()
-    this.calculateTotalProfit()
+    let result = this.calculateBuyAndSellPoints()
+    this.updateGraphBuyAndSellPoints(result.orderLocations)
+    this.totalProfit = result.profit
   }
   runEntireSimulationInterDay() {
     let listOfProfits = []
@@ -1251,38 +1249,40 @@ export class ServerTradeScreenComponent implements OnInit {
     return returnArray
   }
 
-  calculateBuyAndSellPoints() {
+  calculateBuyAndSellPoints(): any {
     let buyOrSell = 'Buy'
+    let orderLocations: orderLocation[] = []
+    let totalProfit = 0
     for (let i = 0; i < this.shortSmaResults.length; i++) {
-      if (buyOrSell == 'Buy') {
-        if ((((this.shortSmaResults[i].avg - this.mediumSmaResults[i].avg) / this.mediumSmaResults[i].avg) < (this.buyGutter * -1)) && (((this.shortSmaResults[i].avg - this.longSmaResults[i].avg) / this.longSmaResults[i].avg) < this.check200Gutter)) {
-          this.executeOrder(this.shortSmaResults[i], 'Buy')
+      if (buyOrSell == 'Buy' && ((((this.shortSmaResults[i].avg - this.mediumSmaResults[i].avg) / this.mediumSmaResults[i].avg) < (this.buyGutter * -1)) && (((this.shortSmaResults[i].avg - this.longSmaResults[i].avg) / this.longSmaResults[i].avg) < this.check200Gutter))) {
+          orderLocations.push({ buySell: 'Buy', date: this.shortSmaResults[i].date, price: this.shortSmaResults[i].close })
           buyOrSell = 'Sell'
-        }
       }
-      else {
-        if ((((this.shortSmaResults[i].avg - this.mediumSmaResults[i].avg) / this.mediumSmaResults[i].avg) > this.sellGutter) && this.shortSmaResults[i].close > this.orderLocations[this.orderLocations.length - 1].price) {
-          this.executeOrder(this.shortSmaResults[i], 'Sell')
+      else if(buyOrSell == 'Sell' && ((((this.shortSmaResults[i].avg - this.mediumSmaResults[i].avg) / this.mediumSmaResults[i].avg) > this.sellGutter) && this.shortSmaResults[i].close > this.orderLocations[this.orderLocations.length - 1].price)){
+          orderLocations.push({ buySell: 'Sell', date: this.shortSmaResults[i].date, price: this.shortSmaResults[i].close })
+          totalProfit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
           buyOrSell = 'Buy'
-        }
       }
-
+      else if(buyOrSell == 'Sell' && i == this.shortSmaResults.length - 1){
+        orderLocations.push({ buySell: 'Sell', date: this.shortSmaResults[i].date, price: this.shortSmaResults[i].close })
+        totalProfit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
+      }
     }
+    return {orderLocations: orderLocations, profit: totalProfit}
   }
-  updateGraphBuyAndSellPoints() {
-    console.log(this.orderLocations)
+  updateGraphBuyAndSellPoints(orderLocations: orderLocation[]) {
     this.annotationsArray = []
-    for (let i = 0; i < this.orderLocations.length; i++) {
+    for (let i = 0; i < orderLocations.length; i++) {
       this.annotationsArray.push({
         type: 'line',
         //display: this.selectedStockHistoryData.length > 0,
-        xMin: this.longSmaResults.findIndex(x => x.date == this.orderLocations[i].date),
-        xMax: this.longSmaResults.findIndex(x => x.date == this.orderLocations[i].date),
+        xMin: this.longSmaResults.findIndex(x => x.date == orderLocations[i].date),
+        xMax: this.longSmaResults.findIndex(x => x.date == orderLocations[i].date),
         borderColor: '#7874ff',
         borderWidth: 2,
         label: {
           display: true,
-          content: this.orderLocations[i].buySell + ': ' + this.orderLocations[i].price,
+          content: orderLocations[i].buySell + ': ' + orderLocations[i].price,
           position: 'end'
         }
       })
@@ -1291,7 +1291,7 @@ export class ServerTradeScreenComponent implements OnInit {
     this.stockChart.update()
   }
   
-  calculateSmaNew(){
+  calculateSmaValuesInterDaySingleRun(){
     this.longSmaResults.length = 0
     this.mediumSmaResults.length = 0
     this.shortSmaResults.length = 0
