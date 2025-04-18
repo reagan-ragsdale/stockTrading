@@ -230,9 +230,6 @@ export class TradeHistoryDetailComponent implements OnInit {
 
 
     //await this.getStockOrders()
-    let arrayLEngth = 4
-    let newTHing: DbOrders[] = new Array(arrayLEngth)
-    console.log(newTHing.length)
     this.isLoading = false
   }
 
