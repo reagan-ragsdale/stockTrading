@@ -1097,7 +1097,7 @@ export class ServerTradeScreenComponent implements OnInit {
   runSimulation() {
     this.calculateSmaValuesInterDaySingleRun()
     this.updateChart()
-    let result = this.calculateBuyAndSellPoints()
+    let result = this.calculateBuyAndSellPointsInterDay()
     this.updateGraphBuyAndSellPoints(result.orderLocations)
     this.totalProfit = result.profit
   }
@@ -1138,7 +1138,7 @@ export class ServerTradeScreenComponent implements OnInit {
                 }
 
 
-                let result = this.calculateInterDayBuyAndSellPoints(longSmaResult!, mediumSmaResult!, shortSmaResult!, Number((i * .001).toPrecision(3)), Number((j * .001).toPrecision(3)), Number((k * .001).toPrecision(3)))
+                let result = this.calculateInterDayBuyAndSellPointsEntireSim(longSmaResult!, mediumSmaResult!, shortSmaResult!, Number((i * .001).toPrecision(3)), Number((j * .001).toPrecision(3)), Number((k * .001).toPrecision(3)))
                 let orderLocations = result.orderLocations
                 let profit = result.profit
 
@@ -1188,7 +1188,7 @@ export class ServerTradeScreenComponent implements OnInit {
     this.runSimulation()
   }
 
-  calculateInterDayBuyAndSellPoints(longArray: sma200Array[], mediumArray: sma200Array[], shortArray: sma200Array[], buyGutter: number, sellGutter: number, checkGutter: number) {
+  calculateInterDayBuyAndSellPointsEntireSim(longArray: sma200Array[], mediumArray: sma200Array[], shortArray: sma200Array[], buyGutter: number, sellGutter: number, checkGutter: number) {
     let buyOrSell = 'Buy'
     let orderLocations: orderLocation[] = []
     let longArrayLen = longArray.length
@@ -1251,7 +1251,7 @@ export class ServerTradeScreenComponent implements OnInit {
     return returnArray
   }
 
-  calculateBuyAndSellPoints(): any {
+  calculateBuyAndSellPointsInterDay() {
     let buyOrSell = 'Buy'
     let orderLocations: orderLocation[] = []
     let totalProfit = 0
@@ -1264,10 +1264,6 @@ export class ServerTradeScreenComponent implements OnInit {
         orderLocations.push({ buySell: 'Sell', date: this.shortSmaResults[i].date, price: this.shortSmaResults[i].close })
         totalProfit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
         buyOrSell = 'Buy'
-      }
-      else if (buyOrSell == 'Sell' && i == this.shortSmaResults.length - 1) {
-        orderLocations.push({ buySell: 'Sell', date: this.shortSmaResults[i].date, price: this.shortSmaResults[i].close })
-        totalProfit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
       }
     }
     return { orderLocations: orderLocations, profit: totalProfit }
