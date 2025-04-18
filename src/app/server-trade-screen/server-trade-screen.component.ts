@@ -1108,9 +1108,9 @@ export class ServerTradeScreenComponent implements OnInit {
     let mapOfLongSmaValues = new Map<number, sma200Array[]>()
     let mapOfMediumSmaValues = new Map<string, sma200Array[]>()
     let mapOfShortSmaValues = new Map<string, sma200Array[]>()
-    for (let i = 1; i < 100; i++) {
-      for (let j = 1; j < 100; j++) {
-        for (let k = 1; k < 100; k++) {
+    for (let i = 1; i < 200; i++) {
+      for (let j = 1; j < 200; j++) {
+        for (let k = 1; k < 200; k++) {
           for (let m = 150; m <= 250; m += 5) {
             let longSmaResult = mapOfLongSmaValues.get(m)
             if (longSmaResult === undefined) {
@@ -1120,7 +1120,7 @@ export class ServerTradeScreenComponent implements OnInit {
                 longSmaResult
               )
             }
-            for (let n = 5; n <= 30; n += 5) {
+            for (let n = 20; n <= 50; n += 5) {
               let mediumSmaResult = mapOfMediumSmaValues.get(JSON.stringify({ long: m, value: n }))
               if (mediumSmaResult === undefined) {
                 mediumSmaResult = this.calculateInterDayMediumSma(m, n)
@@ -1143,11 +1143,11 @@ export class ServerTradeScreenComponent implements OnInit {
                 let result = this.calculateInterDayBuyAndSellPointsEntireSim(longSmaResult!, mediumSmaResult!, shortSmaResult!, Number((i * .001).toPrecision(3)), Number((j * .001).toPrecision(3)), Number((k * .001).toPrecision(3)))
                 let orderLocations = result.orderLocations
                 let profit = result.profit
-                if(i == 1 && j == 17 && k == 81 && m == 150 && n == 5 && p == 1){
+                /* if(i == 1 && j == 17 && k == 81 && m == 150 && n == 5 && p == 1){
                   console.log(orderLocations)
                   console.log(profit)
                   return;
-                }
+                } */
 
 
                 if (listOfProfits.length < 5) {
