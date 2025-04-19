@@ -652,7 +652,7 @@ export class ServerTradeScreenComponent implements OnInit {
                       shortSmaResult
                     )
                   }
-                  let result = this.calculateBuyAndSellPointsIntraDaySellAtEnd(mapOfLongSmaValues.get(m * 60)!, mapOfMediumSmaValues.get(n * 60)!, mapOfShortSmaValues.get(p * 60)!, Number((i * .001).toPrecision(3)), Number((j * .001).toPrecision(3)), Number((k * .001).toPrecision(3)))
+                  let result = this.calculateBuyAndSellPointsIntraDaySellAtEnd(longSmaResult!, mediumSmaResult!, shortSmaResult!, Number((i * .001).toPrecision(3)), Number((j * .001).toPrecision(3)), Number((k * .001).toPrecision(3)))
                   
 
                   listOfProfits.push({
