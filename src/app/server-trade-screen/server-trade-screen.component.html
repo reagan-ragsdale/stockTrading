@@ -101,38 +101,7 @@
         </mat-table>
       
   </div>
-  <div *ngIf="topAlgosAllDays.length > 0 && intraDayChecked" style="background-color:#3C3E3D;" >
-    <mat-table [dataSource]="topAlgosAllDays"  style="height:inherit; background-color:#3C3E3D; border-radius: 8px; border: 1px solid #DBD4D1;">
-        <!-- Position Column -->
-        <ng-container matColumnDef="Profit">
-          <mat-header-cell *matHeaderCellDef> Profit </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.profit | currency:'USD':'symbol'}} </mat-cell>
-        </ng-container>
-      
-        <!-- Name Column -->
-        <ng-container matColumnDef="NoTrades">
-          <mat-header-cell *matHeaderCellDef> No. Trades </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.numberOfTrades | number:'1.2-2'}} </mat-cell>
-        </ng-container>
-      
-        <!-- Weight Column -->
-        <ng-container matColumnDef="BuyGutter">
-          <mat-header-cell *matHeaderCellDef> Buy Gutter </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.buyBuffer | number:'1.2-5'}} </mat-cell>
-        </ng-container>
-      
-        <!-- Symbol Column -->
-        <ng-container matColumnDef="SellGutter">
-          <mat-header-cell *matHeaderCellDef> Sell Gutter </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.sellBuffer | number:'1.2-5'}} </mat-cell>
-        </ng-container>
-
-      
-        <mat-header-row *matHeaderRowDef="displayedColumns;" style="min-height:fit-content; background-color:#3C3E3D; color: #DBD4D1;" ></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;" style="min-height:fit-content; background-color:#3C3E3D; color: #DBD4D1;"></mat-row>
-      </mat-table>
-    
-</div>
+  
   </div>
   <div style="display: flex; flex-direction: column;">
     <div style="display:flex; gap: 1rem;">
