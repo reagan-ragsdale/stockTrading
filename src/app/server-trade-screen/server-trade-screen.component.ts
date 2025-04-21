@@ -1107,6 +1107,7 @@ export class ServerTradeScreenComponent implements OnInit {
     this.distinctStocks = this.allHistory.map(e => e.stockName).filter((v, i, a) => a.indexOf(v) === i)
     this.selectedStockName = this.distinctStocks[0]
     this.selectedInterDayStockData = this.allHistory.filter(e => e.stockName == this.selectedStockName)
+    console.log(this.selectedInterDayStockData)
     this.interDayLongSma = 200
     this.interDayMediumSma = 40
     this.interDayShortSma = 5
