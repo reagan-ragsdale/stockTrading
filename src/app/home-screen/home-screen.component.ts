@@ -150,7 +150,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.addLineDialogRef.afterClosed().subscribe(async (result: any) => {
       if(result.length > 0){
         console.log(result)
-        //this.addNewLinesToGraph(result)
+        this.addNewLinesToGraph(result)
       }
 
     });
