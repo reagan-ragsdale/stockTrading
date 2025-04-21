@@ -461,10 +461,10 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     for(let i = 0; i < lengthOfSma; i++){
       windowSum += this.chartInfo[i].stockPrice
     }
-    returnArray.push({stockName: this.selectedStockName, close: this.chartInfo[lengthOfSma -1].stockPrice, avg: windowSum / lengthOfSma, date: new Date(this.chartInfo[lengthOfSma -1].time).toLocaleTimeString()})
+    returnArray.unshift({stockName: this.selectedStockName, close: this.chartInfo[lengthOfSma -1].stockPrice, avg: windowSum / lengthOfSma, date: new Date(this.chartInfo[lengthOfSma -1].time).toLocaleTimeString()})
     for(let j = lengthOfSma; j < this.chartInfo.length; j++){
       windowSum += this.chartInfo[j].stockPrice - this.chartInfo[j - lengthOfSma].stockPrice
-      returnArray.push({stockName: this.selectedStockName, close: this.chartInfo[j].stockPrice, avg: windowSum / lengthOfSma, date: new Date(this.chartInfo[j].time).toLocaleTimeString()})
+      returnArray.unshift({stockName: this.selectedStockName, close: this.chartInfo[j].stockPrice, avg: windowSum / lengthOfSma, date: new Date(this.chartInfo[j].time).toLocaleTimeString()})
     }
     console.log('here 4')
     return returnArray
