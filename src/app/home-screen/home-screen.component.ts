@@ -425,6 +425,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   listOfAddedLines: lineType[] = []
   listOfSmaLines: any[] = []
   addNewLinesToGraph(listOfLines: any[]){
+    console.log('here addNewLinesToGraph')
     this.stockChart.data.datasets = this.stockChart.data.datasets.filter((e: { label: string; }) => e.label == this.selectedStockName)
     for(let i = 0; i < listOfLines.length; i++){
       this.listOfAddedLines.push({id: i, smaLength: listOfLines[i].smaLength})
@@ -442,7 +443,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
             spanGaps: true
       })
     }
-    
+    console.log('done addNewLinesToGraph')
     this.stockChart.update()
   }
   calculateSma(lengthOfSma: number){
