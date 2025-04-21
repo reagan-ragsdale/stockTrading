@@ -959,7 +959,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     await this.getStockInfo()
     this.userData = await dbTokenRepo.findFirst({ userId: remult.user?.id }) as DbTOkens
     this.createOrUpdateChart()
-    this.createVolumeChart()
+    //this.createVolumeChart()
     await this.getStockData()
     await this.loadStockVariance()
     this.startWebsocket()
