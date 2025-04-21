@@ -426,9 +426,10 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   listOfAddedLines: lineType[] = []
   listOfSmaLines: any[] = []
   addNewLinesToGraph(listOfLines: any[]){
+    this.listOfAddedLines = []
     let newLines = [...listOfLines]
     console.log('here addNewLinesToGraph')
-    //this.stockChart.data.datasets = this.stockChart.data.datasets.filter((e: { label: string; }) => e.label == this.selectedStockName)
+    this.stockChart.data.datasets = [this.stockChart.data.datasets[0]]
     console.log(this.stockChart.data.datasets)
     
     console.log(newLines.length)
