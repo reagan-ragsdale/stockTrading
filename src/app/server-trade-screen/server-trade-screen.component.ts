@@ -340,6 +340,7 @@ export class ServerTradeScreenComponent implements OnInit {
       this.calculateIntraDaySma()
       this.updateChartIntraDay()
       this.runSimulationIntraDay()
+      this.calcualateIntraDayRsi()
       this.isLoading = false
     }
     else {
@@ -1057,6 +1058,41 @@ export class ServerTradeScreenComponent implements OnInit {
     this.stockChart.options.scales.y.max = this.getMaxForChart(this.longSmaResults)
     this.stockChart.options.scales.y.min = this.getMinForChart(this.longSmaResults)
     this.stockChart.update()
+  }
+  calcualateIntraDayRsi(){
+    this.rsiPeriodNum = 300
+    let rsiData = this.stockDataForSelectedDay.slice(this.intraDayLongSma - this.rsiPeriodNum - 2)
+    
+    let rsiUps = []
+    let rsiDowns = []
+    for (let i = 1; i <= this.rsiPeriodNum; i++) {
+      let change = rsiData[i].stockPrice - rsiData[i - 1].stockPrice
+      if (change >= 0) {
+        rsiUps.push(change)
+      }
+      else {
+        rsiDowns.push(Math.abs(change))
+      }
+    }
+    let avgUp = rsiUps.reduce((sum, val) => sum + val, 0) / this.rsiPeriodNum
+    let avgDown = rsiDowns.reduce((sum, val) => sum + val, 0) / this.rsiPeriodNum
+
+    for (let i = this.rsiPeriodNum + 1; i < rsiData.length; i++) {
+      let change = rsiData[i].stockPrice  - rsiData[i - 1].stockPrice;
+      let gain = change > 0 ? change : 0;
+      let loss = change < 0 ? Math.abs(change) : 0;
+
+      // Wilder's smoothing
+      avgUp = (avgUp * (this.rsiPeriodNum - 1) + gain) / this.rsiPeriodNum;
+      avgDown = (avgDown * (this.rsiPeriodNum - 1) + loss) / this.rsiPeriodNum;
+
+      const rs = avgDown === 0 ? 100 : avgUp / avgDown;
+      const rsi = 100 - (100 / (1 + rs));
+      this.rsiData.push({rsiNum: rsi, date: new Date(rsiData[i].time).toLocaleTimeString()});
+      this.rsiChart.data.datasets[0].data = this.rsiData.map(e => e.rsiNum)
+      this.rsiChart.data.labels = this.rsiData.map(e => e.date)
+      this.rsiChart.update()
+    }
   }
 
   selectedStockBasicHistoryData: DbStockBasicHistory[] = []
