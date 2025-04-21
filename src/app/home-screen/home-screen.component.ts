@@ -443,6 +443,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         newData.push(null)
       }
       newData.push(...smaResult.map(e => e.avg))
+      console.log(newData)
       this.stockChart.data.datasets.push({
             label: newLines[i].smaLength.toString(),
             data: newData,
