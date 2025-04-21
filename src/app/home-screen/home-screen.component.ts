@@ -447,6 +447,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
             pointRadius: 0,
             spanGaps: true
       })
+      console.log(this.stockChart.data.datasets)
     }
     console.log('done addNewLinesToGraph')
     this.stockChart.update()
