@@ -1060,6 +1060,7 @@ export class ServerTradeScreenComponent implements OnInit {
     this.stockChart.update()
   }
   calcualateIntraDayRsi(){
+    this.rsiData.length = 0
     this.rsiPeriodNum = 1800
     let rsiData = this.stockDataForSelectedDay.slice(this.intraDayLongSma - this.rsiPeriodNum - 2)
     
