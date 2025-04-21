@@ -426,17 +426,18 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   listOfAddedLines: lineType[] = []
   listOfSmaLines: any[] = []
   addNewLinesToGraph(listOfLines: any[]){
+    let newLines = [...listOfLines]
     console.log('here addNewLinesToGraph')
     this.stockChart.data.datasets = this.stockChart.data.datasets.filter((e: { label: string; }) => e.label == this.selectedStockName)
     
-    console.log(listOfLines.length)
-    for(let i = 0; i < listOfLines.length; i++){
+    console.log(newLines.length)
+    for(let i = 0; i < newLines.length; i++){
       console.log('here 2: ' + i )
-      this.listOfAddedLines.push({id: i, smaLength: listOfLines[i].smaLength})
-      let smaResult = this.calculateSma(listOfLines[i].smaLength)
-      this.listOfSmaLines.push({smaLength: listOfLines[i].smaLength, smaValues: smaResult})
+      this.listOfAddedLines.push({id: i, smaLength: newLines[i].smaLength})
+      let smaResult = this.calculateSma(newLines[i].smaLength)
+      this.listOfSmaLines.push({smaLength: newLines[i].smaLength, smaValues: smaResult})
       this.stockChart.data.datasets.push({
-            label: listOfLines[i].smaLength.toString(),
+            label: newLines[i].smaLength.toString(),
             data: smaResult.map(e => e.avg),
             backgroundColor: this.listOfBGCOlors[i],
             hoverBackgroundColor: this.listOfBGCOlors[i],
