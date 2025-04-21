@@ -257,7 +257,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
                 })
                 console.log(this.chartData)
                 await this.refreshData()
-                this.refreshVolumeData()
+                
               }
             }
           }
@@ -389,11 +389,12 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   refreshAddedLines(){
     for(let i = 0; i < this.listOfAddedLines.length; i++){
       let selectedSma = this.listOfSmaLines.filter(e => e.smaLength == this.listOfAddedLines[i].smaLength)[0].smaValues
+      console.log(selectedSma)
       let previousVal = selectedSma[selectedSma.length - 1].avg * this.listOfAddedLines[i].smaLength
       previousVal += this.chartData.history[this.chartData.history.length - 1] - selectedSma[selectedSma.length - this.listOfAddedLines[i].smaLength].close
-      selectedSma.smaValues.push({stockName: this.selectedStockName, close: this.chartData.history[this.chartData.history.length - 1], avg: previousVal / this.listOfAddedLines[i].smaLength, date: new Date(this.chartData.time[this.chartData.time.length - 1]).toLocaleTimeString()})
-      let selectedDataSet = this.stockChart.data.datasets.filter((e: { label: string; }) => e.label == this.listOfAddedLines[i].smaLength.toString())
-      selectedDataSet.data = selectedSma.smaValues
+      //selectedSma.smaValues.push({stockName: this.selectedStockName, close: this.chartData.history[this.chartData.history.length - 1], avg: previousVal / this.listOfAddedLines[i].smaLength, date: new Date(this.chartData.time[this.chartData.time.length - 1]).toLocaleTimeString()})
+      //let selectedDataSet = this.stockChart.data.datasets.filter((e: { label: string; }) => e.label == this.listOfAddedLines[i].smaLength.toString())
+      //selectedDataSet.data = selectedSma.smaValues
     }
   }
   submitFollowUp(){
