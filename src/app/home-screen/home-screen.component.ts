@@ -953,6 +953,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     await this.getUserLeaderBoard()
     this.distinctAvailableStocks = (await dbCurrentDayStockDataRepo.groupBy({ group: ['stockName'], orderBy: { stockName: 'desc' } })).map(e => e.stockName)
     this.selectedStockName = this.distinctAvailableStocks[0]
+    this.chartData.name = this.selectedStockName
     await this.getStockInfo()
     this.userData = await dbTokenRepo.findFirst({ userId: remult.user?.id }) as DbTOkens
     this.createOrUpdateChart()
