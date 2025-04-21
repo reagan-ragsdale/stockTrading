@@ -438,9 +438,14 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       this.listOfAddedLines.push({id: i, smaLength: newLines[i].smaLength})
       let smaResult = this.calculateSma(newLines[i].smaLength)
       this.listOfSmaLines.push({smaLength: newLines[i].smaLength, smaValues: smaResult})
+      let newData: any[] = []
+      for(let j = 0; j < newLines[i].smaLength - 1; j++){
+        newData.push(null)
+      }
+      newData.push(...smaResult.map(e => e.avg))
       this.stockChart.data.datasets.push({
             label: newLines[i].smaLength.toString(),
-            data: smaResult.map(e => e.avg),
+            data: newData,
             backgroundColor: this.listOfBGCOlors[i],
             hoverBackgroundColor: this.listOfBGCOlors[i],
             borderColor: this.listOfBGCOlors[i],
@@ -461,10 +466,10 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     for(let i = 0; i < lengthOfSma; i++){
       windowSum += this.chartInfo[i].stockPrice
     }
-    returnArray.unshift({stockName: this.selectedStockName, close: this.chartInfo[lengthOfSma -1].stockPrice, avg: windowSum / lengthOfSma, date: new Date(this.chartInfo[lengthOfSma -1].time).toLocaleTimeString()})
+    returnArray.push({stockName: this.selectedStockName, close: this.chartInfo[lengthOfSma -1].stockPrice, avg: windowSum / lengthOfSma, date: new Date(this.chartInfo[lengthOfSma -1].time).toLocaleTimeString()})
     for(let j = lengthOfSma; j < this.chartInfo.length; j++){
       windowSum += this.chartInfo[j].stockPrice - this.chartInfo[j - lengthOfSma].stockPrice
-      returnArray.unshift({stockName: this.selectedStockName, close: this.chartInfo[j].stockPrice, avg: windowSum / lengthOfSma, date: new Date(this.chartInfo[j].time).toLocaleTimeString()})
+      returnArray.push({stockName: this.selectedStockName, close: this.chartInfo[j].stockPrice, avg: windowSum / lengthOfSma, date: new Date(this.chartInfo[j].time).toLocaleTimeString()})
     }
     console.log('here 4')
     return returnArray
