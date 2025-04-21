@@ -1104,7 +1104,7 @@ export class ServerTradeScreenComponent implements OnInit {
   rsiPeriodNum = 14
   async getStockBasicHistoryData() {
     this.selectedStockBasicHistoryData = await dbStockBasicHistoryRepo.find({ where: { stockName: this.selectedStockName }, orderBy: { date: 'asc' } })
-    this.rsiDateRange = this.selectedStockBasicHistoryData.slice(this.interDayLongSma - this.rsiPeriodNum)
+    this.rsiDateRange = this.selectedStockBasicHistoryData.slice(this.interDayLongSma)
     console.log(this.rsiDateRange)
     let rsiUps = []
     let rsiDowns = []
@@ -1132,7 +1132,7 @@ export class ServerTradeScreenComponent implements OnInit {
 
       const rs = avgDown === 0 ? 100 : avgUp / avgDown;
       const rsi = 100 - (100 / (1 + rs));
-      rsiValues.push({rsiNum: rsi, date: this.rsiDateRange[i].date});
+      rsiValues.push({rsiNum: rsi, date: new Date(this.rsiDateRange[i].date).toLocaleDateString()});
     }
     console.log(rsiValues)
   }
