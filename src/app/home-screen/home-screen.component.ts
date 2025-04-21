@@ -41,6 +41,11 @@ import { userRepo } from '../../shared/tasks/Users';
 import { DashboardComponent } from "../dashboard/dashboard.component";
 import { dbStockBasicHistoryRepo } from '../../shared/tasks/dbStockBasicHistory';
 import { AddGraphComponent } from "./add-graph/add-graph.component";
+
+type lineType = {
+  id: number,
+  smaLength: number
+}
 //import { WebSocket } from 'ws';
 @Component({
   selector: 'app-home-screen',
@@ -216,7 +221,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
           "SchwabClientCustomerId": this.userData!.schwabClientCustomerId,
           "SchwabClientCorrelId": this.userData!.schwabClientCorrelId,
           "parameters": {
-            "keys": "AAPL, MSFT, PLTR, AMD, TSLA",
+            "keys": "AAPL, MSFT, PLTR, AMD, TSLA, XOM,NVO, NEE, BAC, NVDA",
             "fields": "0,1,2,3,4,5,6,7,8,9,10,33"
           }
         }
@@ -298,6 +303,9 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.selectedStockHigh = Math.max(...this.chartData.history)
     this.selectedStockLow = Math.min(...this.chartData.history)
     this.stockVariance = (this.chartData.history[this.chartData.history.length - 1] - this.stockOpenPrice) / this.stockOpenPrice
+    if(this.listOfAddedLines.length > 0){
+      this.refreshAddedLines()
+    }
     /* if (this.isUserOrBot == 'Bot' && this.isBotAuthorized == true && !this.isOrderPending) {
       let shouldPlaceOrder: buySellDto = {
         shouldExecuteOrder: false
@@ -377,6 +385,16 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
 
 
   }
+  refreshAddedLines(){
+    for(let i = 0; i < this.listOfAddedLines.length; i++){
+      let selectedSma = this.listOfSmaLines.filter(e => e.smaLength == this.listOfAddedLines[i].smaLength)[0].smaValues
+      let previousVal = selectedSma[selectedSma.length - 1].avg * this.listOfAddedLines[i].smaLength
+      previousVal += this.chartData.history[this.chartData.history.length - 1] - selectedSma[selectedSma.length - this.listOfAddedLines[i].smaLength].close
+      selectedSma.smaValues.push({stockName: this.selectedStockName, close: this.chartData.history[this.chartData.history.length - 1], avg: previousVal / this.listOfAddedLines[i].smaLength, date: new Date(this.chartData.time[this.chartData.time.length - 1]).toLocaleTimeString()})
+      let selectedDataSet = this.stockChart.data.datasets.filter((e: { label: string; }) => e.label == this.listOfAddedLines[i].smaLength.toString())
+      selectedDataSet.data = selectedSma.smaValues
+    }
+  }
   submitFollowUp(){
     this.isBotAuthorized = true;
     this.selectedAlgo = this.tempSelectedAlgo
@@ -403,25 +421,40 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.volumeChart.data.labels = this.chartData.labels.slice()
     this.volumeChart.update()
   }
+  listOfBGCOlors: string[] = ['#d82c2c', '#eeb528', '#1ca0de']
+  listOfAddedLines: lineType[] = []
+  listOfSmaLines: any[] = []
   addNewLinesToGraph(listOfLines: any[]){
+    this.stockChart.data.datasets = this.stockChart.data.datasets.filter((e: { label: string; }) => e.label == this.selectedStockName)
     for(let i = 0; i < listOfLines.length; i++){
-      let smaResult = this.calculateSma(listOfLines[i].length)
-      /* this.stockChart.data.datasets[i+1].data = this.chartData.history.slice()
-      this.stockChart.data.labels = this.chartData.labels.slice() */
-      console.log('sma result below')
-      console.log(smaResult)
+      this.listOfAddedLines.push({id: i, smaLength: listOfLines[i].smaLength})
+      let smaResult = this.calculateSma(listOfLines[i].smaLength)
+      this.listOfSmaLines.push({smaLength: listOfLines[i].smaLength, smaValues: smaResult})
+      this.stockChart.data.datasets.push({
+            label: listOfLines[i].smaLength.toString(),
+            data: smaResult.map(e => e.avg),
+            backgroundColor: this.listOfBGCOlors[i],
+            hoverBackgroundColor: this.listOfBGCOlors[i],
+            borderColor: this.listOfBGCOlors[i],
+            pointBackgroundColor: this.listOfBGCOlors[i],
+            pointBorderColor: this.listOfBGCOlors[i],
+            pointRadius: 0,
+            spanGaps: true
+      })
     }
     
-    //this.stockChart.update()
+    this.stockChart.update()
   }
   calculateSma(lengthOfSma: number){
     let returnArray: any[] = []
-    for(let i = this.chartInfo.length - 1; i >= lengthOfSma; i--){
-      let smaAmt: number = 0
-      for(let j = 0; j < lengthOfSma; j++){
-        smaAmt += this.chartInfo[i - j].stockPrice
-      }
-      returnArray.unshift({stockName: this.selectedStockName, close: this.chartInfo[i].stockPrice, avg: smaAmt / lengthOfSma, date: new Date(this.chartInfo[i].time).toLocaleTimeString()})
+    let windowSum = 0
+    for(let i = 0; i < lengthOfSma; i++){
+      windowSum += this.chartInfo[i].stockPrice
+    }
+    returnArray.push({stockName: this.selectedStockName, close: this.chartInfo[lengthOfSma -1].stockPrice, avg: windowSum / lengthOfSma, date: new Date(this.chartInfo[lengthOfSma -1].time).toLocaleTimeString()})
+    for(let j = lengthOfSma; j < this.chartInfo.length; j++){
+      windowSum += this.chartInfo[j].stockPrice - this.chartInfo[j - lengthOfSma].stockPrice
+      returnArray.push({stockName: this.selectedStockName, close: this.chartInfo[j].stockPrice, avg: windowSum / lengthOfSma, date: new Date(this.chartInfo[j].time).toLocaleTimeString()})
     }
     return returnArray
   }

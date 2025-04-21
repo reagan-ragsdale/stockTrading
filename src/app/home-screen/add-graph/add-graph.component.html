@@ -3,15 +3,15 @@
 </div>
 <mat-dialog-content style="display: flex;flex-direction: column;">
     <div>
-        <button style="margin-top:auto; margin-bottom:auto;" [disabled]="listOfLines.length >= 3" mat-icon-button aria-label="Add Line" (click)="addLine()">
+        <button style="margin-top:auto; margin-bottom:auto;" [disabled]="listOfLinesIncoming.length >= 3" mat-icon-button aria-label="Add Line" (click)="addLine()">
             <mat-icon style="color: #DBD4D1;">add</mat-icon>
           </button>
     </div>
-    <div *ngIf="listOfLines.length > 0">
-        <div *ngFor="let line of listOfLines" style="display: flex;">
+    <div *ngIf="listOfLinesIncoming.length > 0">
+        <div *ngFor="let line of listOfLinesIncoming" style="display: flex;">
             <mat-form-field  class="example-full-width" style="max-width: 110px;">
                 <mat-label>Stop Loss</mat-label>
-                <input matInput type="number" required [(ngModel)]="line.length" placeholder="0.00" [max]="5400" [min]="60">
+                <input matInput type="number" required [(ngModel)]="line.smaLength" placeholder="0.00" [max]="5400" [min]="60">
             </mat-form-field>
             <button style="margin-top:auto; margin-bottom:auto;" mat-icon-button aria-label="Delete Line" (click)="removeLine(line.id)">
                 <mat-icon style="color: #DBD4D1;">delete</mat-icon>

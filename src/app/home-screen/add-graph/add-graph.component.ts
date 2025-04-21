@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Output } from '@angular/core';
+import { Component, inject, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -11,7 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 
 type lineType = {
   id: number,
-  length: number
+  smaLength: number
 }
 @Component({
   selector: 'app-add-graph',
@@ -21,21 +21,24 @@ type lineType = {
 })
 
 export class AddGraphComponent {
+
+  @Input() listOfLinesIncoming: lineType[] = []
+
   readonly dialogRef = inject(MatDialogRef<AddGraphComponent>);
 
-  listOfLines: lineType[] = [] 
+
 
   addLine(){
-    this.listOfLines.push({
-      id: this.listOfLines.length,
-      length: 60
+    this.listOfLinesIncoming.push({
+      id: this.listOfLinesIncoming.length,
+      smaLength: 60
     })
   }
   removeLine(id: number){
-    this.listOfLines = this.listOfLines.filter(e => e.id != id)
+    this.listOfLinesIncoming = this.listOfLinesIncoming.filter(e => e.id != id)
   }
 
   onSubmit(){
-    this.dialogRef.close(this.listOfLines)
+    this.dialogRef.close(this.listOfLinesIncoming)
   }
 }
