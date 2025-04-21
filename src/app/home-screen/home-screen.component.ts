@@ -427,6 +427,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   addNewLinesToGraph(listOfLines: any[]){
     console.log('here addNewLinesToGraph')
     this.stockChart.data.datasets = this.stockChart.data.datasets.filter((e: { label: string; }) => e.label == this.selectedStockName)
+    console.log('here 2')
     for(let i = 0; i < listOfLines.length; i++){
       this.listOfAddedLines.push({id: i, smaLength: listOfLines[i].smaLength})
       let smaResult = this.calculateSma(listOfLines[i].smaLength)
@@ -447,6 +448,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.stockChart.update()
   }
   calculateSma(lengthOfSma: number){
+    console.log('here 3')
     let returnArray: any[] = []
     let windowSum = 0
     for(let i = 0; i < lengthOfSma; i++){
@@ -457,6 +459,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       windowSum += this.chartInfo[j].stockPrice - this.chartInfo[j - lengthOfSma].stockPrice
       returnArray.push({stockName: this.selectedStockName, close: this.chartInfo[j].stockPrice, avg: windowSum / lengthOfSma, date: new Date(this.chartInfo[j].time).toLocaleTimeString()})
     }
+    console.log('here 4')
     return returnArray
   }
   createOrUpdateChart() {
