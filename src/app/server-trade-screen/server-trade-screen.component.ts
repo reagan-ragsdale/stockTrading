@@ -1089,10 +1089,11 @@ export class ServerTradeScreenComponent implements OnInit {
       const rs = avgDown === 0 ? 100 : avgUp / avgDown;
       const rsi = 100 - (100 / (1 + rs));
       this.rsiData.push({rsiNum: rsi, date: new Date(rsiData[i].time).toLocaleTimeString()});
-      this.rsiChart.data.datasets[0].data = this.rsiData.map(e => e.rsiNum)
+      
+    }
+    this.rsiChart.data.datasets[0].data = this.rsiData.map(e => e.rsiNum)
       this.rsiChart.data.labels = this.rsiData.map(e => e.date)
       this.rsiChart.update()
-    }
   }
 
   selectedStockBasicHistoryData: DbStockBasicHistory[] = []
