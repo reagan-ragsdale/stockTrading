@@ -256,51 +256,17 @@ export class ServerTradeScreenComponent implements OnInit {
 
       data: {// values on X-Axis
 
-        labels: this.longSmaResults.map(e => e.date),
+        labels: this.rsiData.map(e => e.date),
 
         datasets: [
           {
             label: 'Actual',
-            data: this.longSmaResults.map(e => e.close),
+            data: this.rsiData.map(e => e.rsiNum),
             backgroundColor: '#54C964',
             hoverBackgroundColor: '#54C964',
             borderColor: '#54C964',
             pointBackgroundColor: '#54C964',
             pointBorderColor: '#54C964',
-            pointRadius: 0,
-            spanGaps: true
-          },
-          {
-            label: '200',
-            data: this.longSmaResults.map(e => e.avg),
-            backgroundColor: '#d82c2c',
-            hoverBackgroundColor: '#d82c2c',
-            borderColor: '#d82c2c',
-            pointBackgroundColor: '#d82c2c',
-            pointBorderColor: '#d82c2c',
-            pointRadius: 0,
-            spanGaps: true
-          },
-          {
-            label: '40',
-            data: this.mediumSmaResults.map(e => e.avg),
-            backgroundColor: '#eeb528',
-            hoverBackgroundColor: '#eeb528',
-            borderColor: '#eeb528',
-            pointBackgroundColor: '#eeb528',
-            pointBorderColor: '#eeb528',
-            pointRadius: 0,
-            spanGaps: true
-          }
-          ,
-          {
-            label: '5',
-            data: this.shortSmaResults.map(e => e.avg),
-            backgroundColor: '#1ca0de',
-            hoverBackgroundColor: '#1ca0de',
-            borderColor: '#1ca0de',
-            pointBackgroundColor: '#1ca0de',
-            pointBorderColor: '#1ca0de',
             pointRadius: 0,
             spanGaps: true
           }
@@ -327,8 +293,8 @@ export class ServerTradeScreenComponent implements OnInit {
 
         scales: {
           y: {
-            max: this.getMaxForChart(this.longSmaResults),
-            min: this.getMinForChart(this.longSmaResults),
+            max: 100,
+            min: 0,
             grid: {
               color: 'hsl(18, 12%, 60%)'
             },
@@ -341,12 +307,6 @@ export class ServerTradeScreenComponent implements OnInit {
 
           }
 
-        },
-        plugins: {
-          annotation: {
-            annotations: this.annotationsArray
-
-          }
         }
       }
     })
@@ -1102,6 +1062,7 @@ export class ServerTradeScreenComponent implements OnInit {
   selectedStockBasicHistoryData: DbStockBasicHistory[] = []
   rsiDateRange: DbStockBasicHistory[] = []
   rsiPeriodNum = 14
+  rsiData: any[] = []
   async getStockBasicHistoryData() {
     this.selectedStockBasicHistoryData = await dbStockBasicHistoryRepo.find({ where: { stockName: this.selectedStockName }, orderBy: { date: 'asc' } })
     this.rsiDateRange = this.selectedStockBasicHistoryData.slice(this.interDayLongSma)
@@ -1120,7 +1081,6 @@ export class ServerTradeScreenComponent implements OnInit {
     let avgUp = rsiUps.reduce((sum, val) => sum + val, 0) / this.rsiPeriodNum
     let avgDown = rsiDowns.reduce((sum, val) => sum + val, 0) / this.rsiPeriodNum
 
-    let rsiValues = []
     for (let i = this.rsiPeriodNum + 1; i < this.rsiDateRange.length; i++) {
       let change = this.rsiDateRange[i].close - this.rsiDateRange[i - 1].close;
       let gain = change > 0 ? change : 0;
@@ -1132,9 +1092,10 @@ export class ServerTradeScreenComponent implements OnInit {
 
       const rs = avgDown === 0 ? 100 : avgUp / avgDown;
       const rsi = 100 - (100 / (1 + rs));
-      rsiValues.push({rsiNum: rsi, date: new Date(this.rsiDateRange[i].date).toLocaleDateString()});
+      this.rsiData.push({rsiNum: rsi, date: new Date(this.rsiDateRange[i].date).toLocaleDateString()});
     }
-    console.log(rsiValues)
+    console.log(this.rsiData)
+    this.createOrUpdateRsiChart()
   }
 
 
