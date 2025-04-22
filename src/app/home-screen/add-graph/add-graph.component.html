@@ -1,28 +1,24 @@
-<div mat-dialog-title style="display: flex; justify-content: space-between;">
+<div mat-dialog-title style="display: flex; justify-content: center;">
     <h2>Add Lines</h2>
 </div>
 <mat-dialog-content style="display: flex;flex-direction: column;">
-    <div>
+    <div style="display:flex; justify-content: flex-end;">
         <button style="margin-top:auto; margin-bottom:auto;" [disabled]="listOfLinesIncoming.length >= 3" mat-icon-button aria-label="Add Line" (click)="addLine()">
-            <mat-icon style="color: #DBD4D1;">add</mat-icon>
+            <mat-icon style="color: black;">add</mat-icon>
           </button>
     </div>
-    <div *ngIf="listOfLinesIncoming.length > 0">
+    <div *ngIf="listOfLinesIncoming.length > 0" style="display: flex; flex-direction: column;  align-items: flex-end;">
         <div *ngFor="let line of listOfLinesIncoming" style="display: flex;">
             <mat-form-field  class="example-full-width" style="max-width: 110px;">
-                <mat-label>Stop Loss</mat-label>
+                <mat-label>SMA Length</mat-label>
                 <input matInput type="number" required [(ngModel)]="line.smaLength" placeholder="0.00" [max]="5400" [min]="60">
             </mat-form-field>
             <button style="margin-top:auto; margin-bottom:auto;" mat-icon-button aria-label="Delete Line" (click)="removeLine(line.id)">
-                <mat-icon style="color: #DBD4D1;">delete</mat-icon>
+                <mat-icon style="color: black;">delete</mat-icon>
               </button>
         </div>
     </div>
-    
-
-
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-    <button mat-button mat-dialog-close >Cancel</button>
-    <button mat-button cdkFocusInitial (click)="onSubmit()">Submit</button>
+    <button mat-button cdkFocusInitial (click)="onSubmit()">Save</button>
 </mat-dialog-actions>
