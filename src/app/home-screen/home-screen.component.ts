@@ -888,6 +888,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     if (event.isUserInput == true) {
       this.isLoading = true;
       this.listOfAddedLines = []
+      this.stockChart.data.datasets = [this.stockChart.data.datasets[0]]
       this.selectedStockName = event.source.value
       this.chartData.name = this.selectedStockName
       await this.getStockInfo()
