@@ -71,12 +71,12 @@
             <mat-icon style="color: #DBD4D1;">add</mat-icon>
           </button>
         <h3 style="padding-right:1rem;">{{userSimFinData[0].spending | currency:'USD':'symbol'}}</h3>
-        <div style="display:flex; gap: .5rem;">
+        <div style="display:flex; gap: .5rem; margin-left:auto; margin-right:1rem;">
             <h3>Last Order: </h3>
             <h3>{{selectedStockHistoryData[0].stockName}}</h3>
             <h3>{{selectedStockHistoryData[0].shareQty}} Share</h3>
             <h3>{{selectedStockHistoryData[0].stockPrice | currency:'USD':'symbol'}}</h3>
-            <h3>{{selectedStockHistoryData[0].orderTime | date:'shortDate' }}</h3>
+            <h3>{{selectedStockHistoryData[0].orderTime | date:'dd/MM/yyyy HH:mm:ss' }}</h3>
         </div>
         
     </div>

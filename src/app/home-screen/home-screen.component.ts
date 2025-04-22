@@ -196,7 +196,6 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         this.selectedStockTotalNet += ((this.selectedStockHistoryData[i].shareQty * this.selectedStockHistoryData[i].stockPrice) - (this.selectedStockHistoryData[i + 1].shareQty * this.selectedStockHistoryData[i + 1].stockPrice))
       }
     }
-    console.log(this.selectedStockHistoryData)
 
   }
   startWebsocket() {
@@ -397,7 +396,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       let selectedDataSet = this.stockChart.data.datasets.filter((e: { label: string; }) => e.label == this.listOfAddedLines[i].smaLength.toString())
       console.log(selectedSma.length)
       console.log(selectedDataSet)
-      selectedDataSet.data = selectedSma.smaValues.slice()
+      selectedDataSet.data = selectedSma.slice()
     }
   }
   submitFollowUp(){
