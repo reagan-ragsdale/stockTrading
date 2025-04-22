@@ -114,7 +114,7 @@ export const socketCall = async (): Promise<void> => {
         },
         'NVDA': {
             Buy: .002,
-            Sell: .002,
+            Sell: .001,
             Check200: .001,
             SmaLong: 3600,
             SmaMedium: 1800,
@@ -151,17 +151,17 @@ export const socketCall = async (): Promise<void> => {
     }
 
     //create information to be used for each stock, the price history, the long, medium and short moving average, number of trades, if the stock can trage, and the last prices
-    let stockData: { [key: string]: { history: number[], last3600: number[], last3600sma: number, last1800sma: number, last300sma: number, lastPrice: number, lastAsk: number, lastBid: number } } = {
-        'AAPL': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 },
-        'MSFT': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 },
-        'PLTR': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 },
-        'AMD': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 },
-        'TSLA': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 },
-        'XOM': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 },
-        'NVO': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 },
-        'NEE': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 },
-        'BAC': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 },
-        'NVDA': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 }
+    let stockData: { [key: string]: { history: number[], last3600: number[], last3600sma: number, last1800sma: number, last300sma: number, lastPrice: number, lastAsk: number, lastBid: number, stopLossAmt: number } } = {
+        'AAPL': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0, stopLossAmt: 0 },
+        'MSFT': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0, stopLossAmt: 0 },
+        'PLTR': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0, stopLossAmt: 0 },
+        'AMD': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0, stopLossAmt: 0 },
+        'TSLA': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0, stopLossAmt: 0 },
+        'XOM': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0, stopLossAmt: 0 },
+        'NVO': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0, stopLossAmt: 0 },
+        'NEE': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0, stopLossAmt: 0 },
+        'BAC': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0, stopLossAmt: 0 },
+        'NVDA': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0, stopLossAmt: 0 }
     }
 
 

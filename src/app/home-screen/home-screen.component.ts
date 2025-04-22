@@ -152,6 +152,10 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         console.log(result)
         this.addNewLinesToGraph(result)
       }
+      else if(this.stockChart.data.datasets.length > 1){
+        this.stockChart.data.datasets = [this.stockChart.data.datasets[0]]
+        this.stockChart.update()
+      }
 
     });
   }
@@ -173,6 +177,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       console.log(error.message)
     }
   }
+  
   async getStockInfo() {
     this.selectedStockTotalNet = 0
     this.stockData = await StockController.getAllStocks()
@@ -379,9 +384,6 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       }
     } */
     this.updateChart()
-    if(this.stockChart.data.datasets.length > 1){
-    
-    }
     
 
 
@@ -395,7 +397,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       let selectedDataSet = this.stockChart.data.datasets.filter((e: { label: string; }) => e.label == this.listOfAddedLines[i].smaLength.toString())
       console.log(selectedSma.length)
       console.log(selectedDataSet)
-      selectedDataSet.data = selectedSma.smaValues
+      selectedDataSet.data = selectedSma.smaValues.slice()
     }
   }
   submitFollowUp(){
