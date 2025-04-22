@@ -393,7 +393,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       let previousVal = selectedSma[selectedSma.length - 1].avg * this.listOfAddedLines[i].smaLength
       previousVal += this.chartData.history[this.chartData.history.length - 1] - selectedSma[selectedSma.length - this.listOfAddedLines[i].smaLength].close
       selectedSma.push({stockName: this.selectedStockName, close: this.chartData.history[this.chartData.history.length - 1], avg: previousVal / this.listOfAddedLines[i].smaLength, date: new Date(this.chartData.time[this.chartData.time.length - 1]).toLocaleTimeString()})
-      let selectedDataSet = this.stockChart.data.datasets.filter((e: { label: string; }) => e.label == this.listOfAddedLines[i].smaLength.toString())
+      let selectedDataSet = this.stockChart.data.datasets.filter((e: { label: string; }) => e.label == this.listOfAddedLines[i].smaLength.toString())[0]
       console.log(selectedSma.length)
       console.log(selectedDataSet)
       selectedDataSet.data = selectedSma.slice()
