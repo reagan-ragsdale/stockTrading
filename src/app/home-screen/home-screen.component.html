@@ -5,7 +5,7 @@
 </ng-container>
 <div style="display:flex; flex-direction: column; height: calc(100vh - 63px);">
     <div class="top-bar">
-        <div style="margin-left: 1rem;margin-top: auto;margin-bottom: auto; display: flex;align-items: center;">
+        <div *ngIf="false" style="margin-left: 1rem;margin-top: auto;margin-bottom: auto; display: flex;align-items: center;">
             <h3>Live Env</h3>
             <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Change info">
                 <mat-icon style="color: #DBD4D1;">more_vert</mat-icon>
@@ -59,7 +59,7 @@
                    
             </div>
         </div>
-        <div style="margin-left:auto; margin-right: 2rem; display:flex; align-items: center; gap: 1rem;">
+        <div *ngIf="false" style="margin-left:auto; margin-right: 2rem; display:flex; align-items: center; gap: 1rem;">
             <h3>Leaderboard:</h3>
             <div style="display: flex; gap: 5px;" *ngFor="let user of userLeaderBoard; let i = index;">
                 <span style="color: #DBD4D1;">{{i + 1}}.</span>
@@ -84,7 +84,6 @@
                   <!-- <button mat-icon-button (click)="toggleStockInfo()">
                     <mat-icon>info</mat-icon>
                   </button> -->
-                <h3>Bot: {{isBotAuthorized ? 'On' : 'Off'}}</h3>
                 <button style=" margin-top:auto; margin-bottom:auto;" mat-icon-button aria-label="Add Line" (click)="addLineToGraph()">
                     <mat-icon style="color: #DBD4D1;">add</mat-icon>
                   </button>
