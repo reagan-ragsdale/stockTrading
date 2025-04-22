@@ -425,7 +425,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.volumeChart.data.labels = this.chartData.labels.slice()
     this.volumeChart.update()
   }
-  listOfBGCOlors: string[] = ['#d82c2c', '#eeb528', '#1ca0de']
+  listOfBGCOlors: string[] = ['#1ca0de', '#eeb528','#d82c2c' ]
   listOfAddedLines: lineType[] = []
   listOfSmaLines: any[] = []
   addNewLinesToGraph(listOfLines: any[]){
