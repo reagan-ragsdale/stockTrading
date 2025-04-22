@@ -396,7 +396,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       let selectedDataSet = this.stockChart.data.datasets.filter((e: { label: string; }) => e.label == this.listOfAddedLines[i].smaLength.toString())[0]
       console.log(selectedSma.length)
       console.log(selectedDataSet)
-      selectedDataSet.data = selectedSma.slice()
+      selectedDataSet.data.push(previousVal / this.listOfAddedLines[i].smaLength)
     }
   }
   submitFollowUp(){
