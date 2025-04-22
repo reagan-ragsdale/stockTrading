@@ -445,7 +445,6 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         newData.push(null)
       }
       newData.push(...smaResult.map(e => e.avg))
-      console.log(newData)
       this.stockChart.data.datasets.push({
             label: newLines[i].smaLength.toString(),
             data: newData,
@@ -457,7 +456,6 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
             pointRadius: 0,
             spanGaps: true
       })
-      console.log(this.stockChart.data.datasets)
     }
     console.log('done addNewLinesToGraph')
     this.stockChart.update()
@@ -889,6 +887,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   async onSelectedStockChange(event: any) {
     if (event.isUserInput == true) {
       this.isLoading = true;
+      this.listOfAddedLines = []
       this.selectedStockName = event.source.value
       this.chartData.name = this.selectedStockName
       await this.getStockInfo()

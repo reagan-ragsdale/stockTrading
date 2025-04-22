@@ -15,7 +15,7 @@ type lineType = {
 }
 @Component({
   selector: 'app-add-graph',
-  imports: [CommonModule,MatDialogContent,MatCheckboxModule,MatIconModule,MatButtonToggleModule,MatDialogActions,MatDialogClose,MatDialogTitle,MatButtonModule,MatFormFieldModule,MatInputModule,FormsModule],
+  imports: [CommonModule,MatDialogContent,MatCheckboxModule,MatIconModule,MatButtonToggleModule,MatDialogActions,MatDialogTitle,MatButtonModule,MatFormFieldModule,MatInputModule,FormsModule],
   templateUrl: './add-graph.component.html',
   styleUrl: './add-graph.component.css'
 })
