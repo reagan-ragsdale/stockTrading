@@ -69,7 +69,7 @@ export class ServerTradeScreenComponent implements OnInit {
   rsiChart: any;
   distinctStocks: string[] = []
   annotationsArray: any[] = []
-  intraDayChecked: boolean = true;
+  intraDayChecked: boolean = false;
   distinctDates: string[] = []
   selectedDate: string = ''
   stockDataForSelectedDay: DbStockHistoryData[] = []
@@ -1153,7 +1153,7 @@ export class ServerTradeScreenComponent implements OnInit {
     Chart.register(annotationPlugin);
     Chart.register(...registerables)
     this.isLoading = true
-    this.allHistory = await dbStockBasicHistoryRepo.find({where: {}, orderBy: { stockName: 'desc', date: 'asc' } })
+    this.allHistory = await dbStockBasicHistoryRepo.find({where: {}, orderBy: { stockName: 'asc', date: 'asc' } })
     this.distinctStocks = this.allHistory.map(e => e.stockName).filter((v, i, a) => a.indexOf(v) === i)
     this.selectedStockName = this.distinctStocks[0]
     this.selectedInterDayStockData = this.allHistory.filter(e => e.stockName == this.selectedStockName)
