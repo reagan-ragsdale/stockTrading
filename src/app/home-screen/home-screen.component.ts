@@ -236,7 +236,6 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       this.schwabWebsocket!.send(JSON.stringify(loginMsg))
     }
     this.schwabWebsocket.onmessage = async (event) => {
-      console.log(JSON.parse(event.data.toString()))
       let newEvent = JSON.parse(event.data.toString())
 
 
@@ -259,7 +258,6 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
                   time: Number(newEvent.data[0].timestamp),
                   volume: newEvent.data[0].content[i]['8']
                 })
-                console.log(this.chartData)
                 await this.refreshData()
                 
               }
@@ -954,7 +952,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     await AuthController.resetUser()
     await this.getUserFinanceData()
     //await this.getUserLeaderBoard()
-    this.distinctAvailableStocks = (await dbCurrentDayStockDataRepo.groupBy({ group: ['stockName'], orderBy: { stockName: 'desc' } })).map(e => e.stockName)
+    this.distinctAvailableStocks = ['AAPL', 'MSFT', 'PLTR', 'AMD', 'TSLA', 'XOM','NVO', 'NEE', 'BAC', 'NVDA']
+    //(await dbCurrentDayStockDataRepo.groupBy({ group: ['stockName'], orderBy: { stockName: 'desc' } })).map(e => e.stockName)
     this.selectedStockName = this.distinctAvailableStocks[0]
     this.chartData.name = this.selectedStockName
     await this.getStockInfo()
