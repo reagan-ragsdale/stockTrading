@@ -194,5 +194,5 @@
     </app-trade>
 </ng-template>
 <ng-template #addLineTemplate>
-    <app-add-graph [listOfLinesIncoming]="listOfAddedLines"></app-add-graph>
+    <app-add-graph [listOfLinesIncoming]="listOfAddedLines" [stockDataLength]="chartData.history.length"></app-add-graph>
 </ng-template>

@@ -23,6 +23,7 @@ type lineType = {
 export class AddGraphComponent {
 
   @Input() listOfLinesIncoming: lineType[] = []
+  @Input() stockDataLength: number = 0
 
   readonly dialogRef = inject(MatDialogRef<AddGraphComponent>);
 
