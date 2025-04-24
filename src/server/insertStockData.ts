@@ -271,7 +271,9 @@ export const socketCall = async (): Promise<void> => {
                                 }
                                 let filteredByUser = userStockInfo.filter(e => e.user == userServerAlgos![j].userId)[0].stockData
                                 let filteredByStock = filteredByUser.filter((e: { stockName: string; }) => e.stockName == data.stockName)[0]
-
+                                if(!filteredByStock.canTrade && (Date.now() - filteredOrderOnUserAndStock[0].orderTime > 1800000)){
+                                    filteredByStock.canTrade = true
+                                }
                                 if (isBuy && filteredByStock.canTrade) {
                                     //is buy and the algo is met
                                     if ((((stockData[data.stockName].last300sma - stockData[data.stockName].last1800sma) / stockData[data.stockName].last1800sma) < (stockDayTradeValues[data.stockName].Buy * -1)) && (((stockData[data.stockName].last300sma - stockData[data.stockName].last3600sma) / stockData[data.stockName].last3600sma) < stockDayTradeValues[data.stockName].Check200)) {
@@ -309,7 +311,6 @@ export const socketCall = async (): Promise<void> => {
                                     }
                                     //price is less than stop loss
                                     else if(data.bidPrice <= filteredByStock.stopLoss){
-                                        //add a cool down period
                                         console.log('Placing a stop loss sell order for: ' + data.stockName + ' - ' + data.bidPrice)
                                         await dbOrdersRepo.insert({
                                             userId: userServerAlgos[j].userId,
@@ -321,6 +322,9 @@ export const socketCall = async (): Promise<void> => {
                                         })
                                         filteredByStock.numberOfTrades++
                                         orderPlaced = true;
+                                        if(data.bidPrice < filteredOrderOnUserAndStock[0].stockPrice){
+                                            filteredByStock.canTrade = false
+                                        }
                                     }
                                     //if sell and not algo and price is above threshold and stop loss is below buy
                                     else if (data.bidPrice >= filteredByStock.stopLossGainThreshold && filteredByStock.stopLoss < filteredOrderOnUserAndStock[0].stockPrice) {
