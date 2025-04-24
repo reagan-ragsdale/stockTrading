@@ -388,17 +388,15 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   }
   refreshAddedLines(){
     for(let i = 0; i < this.listOfAddedLines.length; i++){
-      let selectedSma = this.listOfSmaLines.filter(e => e.smaLength == this.listOfAddedLines[i].smaLength)[0].smaValues
-      let previousVal = 0
-      for(let j = selectedSma.length - 1; j < this.listOfAddedLines[i].smaLength; j--){
-        previousVal += selectedSma[j].close
+      let newVal = 0
+      let count = 0
+      for(let j = this.listOfAddedLines[i].smaLength - 1; j >= this.chartData.history.length - this.listOfAddedLines[i].smaLength; j--){
+        newVal += this.chartData.history[j]
+        count++
       }
-      previousVal += this.chartData.history[this.chartData.history.length - 1] - selectedSma[selectedSma.length - this.listOfAddedLines[i].smaLength].close
-      selectedSma.push({stockName: this.selectedStockName, close: this.chartData.history[this.chartData.history.length - 1], avg: previousVal / this.listOfAddedLines[i].smaLength, date: new Date(this.chartData.time[this.chartData.time.length - 1]).toLocaleTimeString()})
       let selectedDataSet = this.stockChart.data.datasets.filter((e: { label: string; }) => e.label == this.listOfAddedLines[i].smaLength.toString())[0]
-      console.log(selectedSma.length)
-      console.log(selectedDataSet)
-      selectedDataSet.data.push(previousVal / this.listOfAddedLines[i].smaLength)
+      console.log(count)
+      selectedDataSet.data.push(newVal / this.listOfAddedLines[i].smaLength)
     }
   }
   submitFollowUp(){
