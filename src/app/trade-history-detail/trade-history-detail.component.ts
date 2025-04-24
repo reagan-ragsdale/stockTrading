@@ -210,6 +210,10 @@ export class TradeHistoryDetailComponent implements OnInit {
 
 
     //use below to show object references
+    let name = 'Reagan'
+    let newName = name
+    newName = 'Ben'
+    console.log(name)
     const userServerAlgos = await dbAlgorithmListRepo.find({ where: { sma200sma50: true } })
     let userStockInfo: any[] = []
     for (let i = 0; i < userServerAlgos.length; i++) {
