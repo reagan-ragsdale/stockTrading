@@ -390,12 +390,13 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     for(let i = 0; i < this.listOfAddedLines.length; i++){
       let newVal = 0
       let count = 0
-      for(let j = this.listOfAddedLines[i].smaLength - 1; j >= this.chartData.history.length - this.listOfAddedLines[i].smaLength; j--){
+      for(let j = this.chartData.history.length - 1; j >= this.chartData.history.length - this.listOfAddedLines[i].smaLength; j--){
         newVal += this.chartData.history[j]
         count++
       }
       let selectedDataSet = this.stockChart.data.datasets.filter((e: { label: string; }) => e.label == this.listOfAddedLines[i].smaLength.toString())[0]
       console.log(count)
+      console.log(selectedDataSet)
       selectedDataSet.data.push(newVal / this.listOfAddedLines[i].smaLength)
     }
   }
