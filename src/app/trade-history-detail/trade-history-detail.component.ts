@@ -210,7 +210,7 @@ export class TradeHistoryDetailComponent implements OnInit {
 
 
     //use below to show object references
-    /* const userServerAlgos = await dbAlgorithmListRepo.find({ where: { sma200sma50: true } })
+    const userServerAlgos = await dbAlgorithmListRepo.find({ where: { sma200sma50: true } })
     let userStockInfo: any[] = []
     for (let i = 0; i < userServerAlgos.length; i++) {
       userStockInfo.push({
@@ -226,7 +226,7 @@ export class TradeHistoryDetailComponent implements OnInit {
     let filteredByUser = userStockInfo.filter(e => e.user == userServerAlgos![0].userId)[0].stockData
     let filteredByStock = filteredByUser.filter((e: { stockName: string; }) => e.stockName == 'AAPL')[0]
     filteredByStock.canTrade = false
-    console.log(userStockInfo) */
+    console.log(userStockInfo) 
 
 
     //await this.getStockOrders()
