@@ -153,6 +153,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         this.addNewLinesToGraph(result)
       }
       else if(this.stockChart.data.datasets.length > 1){
+        this.listOfAddedLines = []
         this.stockChart.data.datasets = [this.stockChart.data.datasets[0]]
         this.stockChart.update()
       }
