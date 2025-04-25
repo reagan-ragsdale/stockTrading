@@ -1,7 +1,7 @@
 export const getAccounts = async (accessToken: string): Promise<any> => {
     try {
         
-        const url = `https://api.schwabapi.com/v1/accounts`;
+        const url = `https://api.schwabapi.com/trader/v1/accounts`;
         const options = {
             method: 'GET',
             headers: {
