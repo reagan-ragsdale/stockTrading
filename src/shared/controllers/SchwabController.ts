@@ -9,8 +9,8 @@ export class SchwabController {
     static getAccounts: typeof getAccounts
   
     @BackendMethod({ allowed: true })
-    static async getAccountsCall(accessToken: string) {
-       await SchwabController.getAccounts(accessToken)
+    static async getAccountsCall(accessToken: string): Promise<any> {
+       return await SchwabController.getAccounts(accessToken)
   
     }
 }
