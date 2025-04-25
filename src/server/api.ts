@@ -56,7 +56,7 @@ SchwabController.getAccounts = getAccounts
 
 
 export const api = remultExpress({
-    controllers:[AuthController, SimFinance, OAuthContoller, OrderController,StockController, RegFinanceController, RegressionOrderController, RegressionStockController, StockHistoryController, SimulationController],
+    controllers:[AuthController, SimFinance, OAuthContoller, OrderController,StockController, RegFinanceController, RegressionOrderController, RegressionStockController, StockHistoryController, SimulationController, SchwabController],
     entities: [
       Task,
       Users,
