@@ -40,6 +40,8 @@ import { DbAlgorithmList } from '../shared/tasks/dbAlgorithmList.js'
 import { DbListOfProfits } from '../shared/tasks/dbListOfProfits.js'
 import { SimulationController } from '../shared/controllers/SimulationController.js'
 import { runIntraDaySim } from './runIntraDaySim.js'
+import { SchwabController } from '../shared/controllers/SchwabController.js'
+import { getAccounts } from './schwabApiCalls.js'
 
 //import ev from '../../environmentVariables.json'
 
@@ -48,6 +50,7 @@ AuthController.generate = generate;
 AuthController.verify = verify
 OAuthContoller.sendCall = oauthCall;
 SimulationController.intraDaySimulation = runIntraDaySim
+SchwabController.getAccounts = getAccounts
 
 
 
