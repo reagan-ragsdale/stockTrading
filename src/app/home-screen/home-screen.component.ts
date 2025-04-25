@@ -42,6 +42,7 @@ import { DashboardComponent } from "../dashboard/dashboard.component";
 import { dbStockBasicHistoryRepo } from '../../shared/tasks/dbStockBasicHistory';
 import { AddGraphComponent } from "./add-graph/add-graph.component";
 import { getAccountInfo, getAccounts } from '../../server/schwabApiCalls';
+import { SchwabController } from '../../shared/controllers/SchwabController';
 
 type lineType = {
   id: number,
@@ -952,7 +953,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     await AuthController.resetUser()  
     let userTokenData = await dbTokenRepo.findFirst({userId: user?.id}) as DbTOkens
     if(userTokenData.accountNum == ''){
-      let accountNum = await getAccounts(userTokenData.accessToken)
+      let accountNum = await SchwabController.getAccountsCall(userTokenData.accessToken)
       console.log(accountNum)
       //await dbTokenRepo.update(userTokenData.id!, {...userTokenData, accountNum: accountNum})
       //userTokenData = await dbTokenRepo.findFirst({userId: user?.id}) as DbTOkens
