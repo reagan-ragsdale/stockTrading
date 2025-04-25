@@ -41,6 +41,7 @@ import { userRepo } from '../../shared/tasks/Users';
 import { DashboardComponent } from "../dashboard/dashboard.component";
 import { dbStockBasicHistoryRepo } from '../../shared/tasks/dbStockBasicHistory';
 import { AddGraphComponent } from "./add-graph/add-graph.component";
+import { getAccountInfo, getAccounts } from '../../server/schwabApiCalls';
 
 type lineType = {
   id: number,
@@ -389,14 +390,10 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   refreshAddedLines(){
     for(let i = 0; i < this.listOfAddedLines.length; i++){
       let newVal = 0
-      let count = 0
       for(let j = this.chartData.history.length - 1; j >= this.chartData.history.length - this.listOfAddedLines[i].smaLength; j--){
         newVal += this.chartData.history[j]
-        count++
       }
       let selectedDataSet = this.stockChart.data.datasets.filter((e: { label: string; }) => e.label == this.listOfAddedLines[i].smaLength.toString())[0]
-      console.log(count)
-      console.log(selectedDataSet)
       selectedDataSet.data.push(newVal / this.listOfAddedLines[i].smaLength)
     }
   }
@@ -952,11 +949,17 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     Chart.register(annotationPlugin);
     Chart.register(...registerables)
     let user = await remult.initUser()
-    await AuthController.resetUser()
-    await this.getUserFinanceData()
-    //await this.getUserLeaderBoard()
+    await AuthController.resetUser()  
+    let userTokenData = await dbTokenRepo.findFirst({userId: user?.id}) as DbTOkens
+    if(userTokenData.accountNum == ''){
+      let accountNum = await getAccounts(userTokenData.accessToken)
+      console.log(accountNum)
+      //await dbTokenRepo.update(userTokenData.id!, {...userTokenData, accountNum: accountNum})
+      //userTokenData = await dbTokenRepo.findFirst({userId: user?.id}) as DbTOkens
+    }
+    //let userAccountInfo = await getAccountInfo(userTokenData.accountNum, userTokenData.accessToken)
+
     this.distinctAvailableStocks = ['AAPL', 'MSFT', 'PLTR', 'AMD', 'TSLA', 'XOM','NVO', 'NEE', 'BAC', 'NVDA']
-    //(await dbCurrentDayStockDataRepo.groupBy({ group: ['stockName'], orderBy: { stockName: 'desc' } })).map(e => e.stockName)
     this.selectedStockName = this.distinctAvailableStocks[0]
     this.chartData.name = this.selectedStockName
     await this.getStockInfo()

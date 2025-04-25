@@ -1,3 +1,23 @@
+export const getAccounts = async (accessToken: string): Promise<any> => {
+    try {
+        
+        const url = `https://api.schwabapi.com/v1/accounts`;
+        const options = {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        };
+
+        const response = await fetch(url, options);
+        const result = await response.json();
+        return result
+    }
+    catch (error: any) {
+        console.log('refreshToken server: ' + error.message)
+        return ''
+    }
+}
 
 export const getAccountInfo = async (accountNumber: string, accessToken: string): Promise<any> => {
     try {

@@ -41,6 +41,9 @@ export class DbTOkens {
     @Fields.boolean({ includeInApi: true })
     needsNewAuth = true
 
+    @Fields.boolean({ includeInApi: true })
+    accountNum = ''
+
     @Fields.createdAt()
     createdAt?: Date
     
