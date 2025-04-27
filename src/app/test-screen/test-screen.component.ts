@@ -124,7 +124,7 @@ export class TestScreenComponent implements OnInit, OnDestroy {
       stockName: selectedStock.length > 0 ? selectedStock[0].stockName : '',
       shareQty: selectedStock.length > 0 ? selectedStock[0].shareQty : 0
     }
-    this.stockHistoryData = await RegressionOrderController.getAllTestOrders()
+    this.stockHistoryData = []
     this.selectedStockHistoryData = this.stockHistoryData.filter(e => e.stockName == this.selectedStockName)
 
     //below is most likely not the best wat to find the net but it'll work for now

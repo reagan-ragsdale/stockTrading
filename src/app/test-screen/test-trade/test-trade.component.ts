@@ -37,6 +37,7 @@ export class TestTradeComponent {
   @Input() orderHistory: DbOrders = {
     userId: '',
     stockPrice: 0,
+    orderId: 0,
     shareQty: 0,
     stockName: '',
     orderTime: 0,

@@ -40,7 +40,8 @@ export class TradeComponent {
     shareQty: 0,
     stockName: '',
     orderTime: 0,
-    orderType: ''
+    orderType: '',
+    orderId: 0
   }
 
   buyOrSell: string = 'Buy'
