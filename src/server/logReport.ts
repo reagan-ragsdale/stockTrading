@@ -5,30 +5,30 @@ export const createExcel = async (logArray: tradeLogDto[]): Promise<excelJS.Buff
     const worksheet = workbook.addWorksheet("Log");
 
     worksheet.columns = [
-        { header: "Stock Name", key: "stockName", width: 30 },
-        { header: "Order ID", key: "orderId", width: 30 },
-        { header: "Time", key: "time", width: 60 },
+        { header: "Stock Name", key: "stockName", width: 15 },
+        { header: "Order ID", key: "orderId", width: 20 },
+        { header: "Time", key: "time", width: 20 },
         { header: "Description", key: "description", width: 30 },
-        { header: "Shares", key: "shares", width: 30 },
-        { header: "Last Price", key: "lastPrice", width: 30 },
-        { header: "Last Ask", key: "lastAsk", width: 30 },
-        { header: "Last Bid", key: "lastBid", width: 30 },
-        { header: "Can Trade", key: "canTrade", width: 30 },
-        { header: "Number Of Trades", key: "numberOfTrades", width: 30 },
-        { header: "Stop Loss", key: "stopLoss", width: 30 },
-        { header: "Stop Loss Gain Threshold", key: "stopLossGainThreshold", width: 30 },
-        { header: "Trade High", key: "tradeHigh", width: 30 },
-        { header: "Long SMA", key: "longSma", width: 30 },
-        { header: "Medium SMA", key: "mediumSma", width: 30 },
-        { header: "Short SMA Buy", key: "shortSmaBuy", width: 30 },
-        { header: "Short SMA Sell", key: "shortSmaSell", width: 30 },
-        { header: "Buy Param", key: "buyParam", width: 30 },
-        { header: "Sell Param", key: "sellParam", width: 30 },
-        { header: "Check Param", key: "checkParam", width: 30 },
-        { header: "Long SMA Length", key: "longSmaLength", width: 30 },
-        { header: "Medium SMA Length", key: "mediumSmaLength", width: 30 },
-        { header: "Short SMA Buy Length", key: "shortSmaBuyLength", width: 30 },
-        { header: "Short SMA Sell Length", key: "shortSmaSellLength", width: 30 }
+        { header: "Shares", key: "shares", width: 10 },
+        { header: "Last Price", key: "lastPrice", width: 10 },
+        { header: "Last Ask", key: "lastAsk", width: 10 },
+        { header: "Last Bid", key: "lastBid", width: 10 },
+        { header: "Can Trade", key: "canTrade", width: 10 },
+        { header: "Number Of Trades", key: "numberOfTrades", width: 10 },
+        { header: "Stop Loss", key: "stopLoss", width: 10 },
+        { header: "Stop Loss Gain Threshold", key: "stopLossGainThreshold", width: 10 },
+        { header: "Trade High", key: "tradeHigh", width: 10 },
+        { header: "Long SMA", key: "longSma", width: 10 },
+        { header: "Medium SMA", key: "mediumSma", width: 10 },
+        { header: "Short SMA Buy", key: "shortSmaBuy", width: 10 },
+        { header: "Short SMA Sell", key: "shortSmaSell", width: 10 },
+        { header: "Buy Param", key: "buyParam", width: 10 },
+        { header: "Sell Param", key: "sellParam", width: 10 },
+        { header: "Check Param", key: "checkParam", width: 10 },
+        { header: "Long SMA Length", key: "longSmaLength", width: 10 },
+        { header: "Medium SMA Length", key: "mediumSmaLength", width: 10 },
+        { header: "Short SMA Buy Length", key: "shortSmaBuyLength", width: 10 },
+        { header: "Short SMA Sell Length", key: "shortSmaSellLength", width: 10 }
     ];
     let blankRow = {
         stockName: '',
@@ -65,7 +65,9 @@ export const createExcel = async (logArray: tradeLogDto[]): Promise<excelJS.Buff
             worksheet.addRow({
                 stockName: filteredByOrder[j].stockName,
                 orderId: filteredByOrder[j].orderId,
-                time: filteredByOrder[j].time,
+                time: new Date(filteredByOrder[j].time).toLocaleTimeString('en-US', {
+                    timeZone: 'America/Chicago',
+                }),
                 description: filteredByOrder[j].logType,
                 shares: filteredByOrder[j].shares,
                 lastPrice: filteredByOrder[j].lastPrice,
@@ -93,7 +95,6 @@ export const createExcel = async (logArray: tradeLogDto[]): Promise<excelJS.Buff
     }
 
     const buffer = await workbook.xlsx.writeBuffer();
-    //workbook.xlsx.writeFile("dailyLog.xlsx")
     console.log("written")
     return buffer
 }

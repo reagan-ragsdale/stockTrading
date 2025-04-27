@@ -15,8 +15,8 @@ export const emailer = async (spreadsheetBuffer: excelJS.Buffer) => {
         const mailOptions = {
             from: process.env['EmailHandle'],
             to: process.env['reaganEmail'],
-            subject: 'Todays Log',
-            text: 'Log Data: ' + today.toLocaleDateString(),
+            subject: 'KrakenStock Log: ' + today.toLocaleDateString(),
+            text: 'Report Attatched',
             attachments: [{
                 filename: 'DailyLog.xlsx',
                 content: Buffer.from(spreadsheetBuffer),

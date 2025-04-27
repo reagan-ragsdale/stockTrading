@@ -16,7 +16,7 @@ export class LoggerController {
     @BackendMethod({ allowed: true })
     static async sendEmailCall() {
         //let logData = LogService.getLogHistory()
-        let logData: tradeLogDto[] = [
+         let logData: tradeLogDto[] = [
             {
                 stockName: 'Stock 1',
                 orderId: 1,
@@ -45,7 +45,7 @@ export class LoggerController {
                 askPrice: 0,
                 bidPrice: 0,
                 logType: 'Log 1',
-                time: 100
+                time: 1745793625000
             },{
                 stockName: 'Stock 1',
                 orderId: 1,
@@ -74,7 +74,7 @@ export class LoggerController {
                 askPrice: 0,
                 bidPrice: 0,
                 logType: 'Log 2',
-                time: 105
+                time: 1745793629000
             },{
                 stockName: 'Stock 2',
                 orderId: 2,
@@ -103,7 +103,7 @@ export class LoggerController {
                 askPrice: 0,
                 bidPrice: 0,
                 logType: 'Log 3',
-                time: 102
+                time: 1745793635000
             },{
                 stockName: 'Stock 2',
                 orderId: 2,
@@ -132,9 +132,9 @@ export class LoggerController {
                 askPrice: 0,
                 bidPrice: 0,
                 logType: 'Log 4',
-                time: 109
+                time: 1745793639000
             }
-        ]
+        ] 
 
         let excelBuffer = await LoggerController.generateExcel(logData)
         await LoggerController.sendEmail(excelBuffer)
