@@ -19,7 +19,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-trade-history-detail',
   providers: [provideNativeDateAdapter()],
-  imports: [MatSelectModule, FormsModule, MatTableModule, EpochToTimePipe, CommonModule, MatInputModule, MatButtonModule, MatFormFieldModule, MatDatepickerModule, MatNativeDateModule, MatRippleModule],
+  imports: [MatSelectModule, FormsModule, MatTableModule, CommonModule, MatInputModule, MatButtonModule, MatFormFieldModule, MatDatepickerModule, MatNativeDateModule, MatRippleModule],
   templateUrl: './trade-history-detail.component.html',
   styleUrl: './trade-history-detail.component.css'
 })
