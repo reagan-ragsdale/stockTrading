@@ -35,7 +35,7 @@ import { reusedFunctions } from '../services/reusedFunctions';
 import { dbTokenRepo, DbTOkens } from '../../shared/tasks/dbTokens';
 import { setSessionUser } from '../../server/server-session';
 import { AuthController } from '../../shared/controllers/AuthController';
-import {MatTableModule} from '@angular/material/table';
+import { MatTableModule } from '@angular/material/table';
 import { EpochToTimePipe } from "../services/epochToTimePipe.pipe";
 import { userRepo } from '../../shared/tasks/Users';
 import { DashboardComponent } from "../dashboard/dashboard.component";
@@ -116,7 +116,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   stockVarianceHigh: number = 0;
   stockVarianceLow: number = 0;
 
-  displayedColumns: string[] = ["Trade", "Stock","Shares","Price","Time"]
+  displayedColumns: string[] = ["Trade", "Stock", "Shares", "Price", "Time"]
 
   showAddFunds() {
     const dialogRef = this.dialog.open(AddFundsComponent, {
@@ -143,18 +143,18 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     });
   }
   addLineDialogRef: any
-  addLineToGraph(){
+  addLineToGraph() {
     this.addLineDialogRef = this.dialog.open(this.addLineTemplate, {
       width: '400px',
       enterAnimationDuration: 0,
       exitAnimationDuration: 0
     });
     this.addLineDialogRef.afterClosed().subscribe(async (result: any) => {
-      if(result.length > 0){
+      if (result.length > 0) {
         console.log(result)
         this.addNewLinesToGraph(result)
       }
-      else if(this.stockChart.data.datasets.length > 1){
+      else if (this.stockChart.data.datasets.length > 1) {
         this.listOfAddedLines = []
         this.stockChart.data.datasets = [this.stockChart.data.datasets[0]]
         this.stockChart.update()
@@ -180,7 +180,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       console.log(error.message)
     }
   }
-  
+
   async getStockInfo() {
     this.selectedStockTotalNet = 0
     this.stockData = await StockController.getAllStocks()
@@ -262,7 +262,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
                   volume: newEvent.data[0].content[i]['8']
                 })
                 await this.refreshData()
-                
+
               }
             }
           }
@@ -287,9 +287,9 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.chartData.volume.push(this.chartInfo[this.chartInfo.length - 1].volume - this.chartInfo[this.chartInfo.length - 2].volume)
     this.updateVolumeChart()
   }
-  getInitialVolumeData(){
+  getInitialVolumeData() {
     this.chartData.volume = []
-    for(let i = 1; i < this.chartInfo.length; i++){
+    for (let i = 1; i < this.chartInfo.length; i++) {
       this.chartData.volume.push(this.chartInfo[i].volume - this.chartInfo[i - 1].volume)
     }
   }
@@ -309,7 +309,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.selectedStockHigh = Math.max(...this.chartData.history)
     this.selectedStockLow = Math.min(...this.chartData.history)
     this.stockVariance = (this.chartData.history[this.chartData.history.length - 1] - this.stockOpenPrice) / this.stockOpenPrice
-    if(this.listOfAddedLines.length > 0){
+    if (this.listOfAddedLines.length > 0) {
       this.refreshAddedLines()
     }
     /* if (this.isUserOrBot == 'Bot' && this.isBotAuthorized == true && !this.isOrderPending) {
@@ -384,21 +384,21 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       }
     } */
     this.updateChart()
-    
+
 
 
   }
-  refreshAddedLines(){
-    for(let i = 0; i < this.listOfAddedLines.length; i++){
+  refreshAddedLines() {
+    for (let i = 0; i < this.listOfAddedLines.length; i++) {
       let newVal = 0
-      for(let j = this.chartData.history.length - 1; j >= this.chartData.history.length - this.listOfAddedLines[i].smaLength; j--){
+      for (let j = this.chartData.history.length - 1; j >= this.chartData.history.length - this.listOfAddedLines[i].smaLength; j--) {
         newVal += this.chartData.history[j]
       }
       let selectedDataSet = this.stockChart.data.datasets.filter((e: { label: string; }) => e.label == this.listOfAddedLines[i].smaLength.toString())[0]
       selectedDataSet.data.push(newVal / this.listOfAddedLines[i].smaLength)
     }
   }
-  submitFollowUp(){
+  submitFollowUp() {
     this.isBotAuthorized = true;
     this.selectedAlgo = this.tempSelectedAlgo
     this.stopLossPrice = this.selectedStopLossPrice
@@ -424,53 +424,53 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.volumeChart.data.labels = this.chartData.labels.slice()
     this.volumeChart.update()
   }
-  listOfBGCOlors: string[] = ['#1ca0de', '#eeb528','#d82c2c' ]
+  listOfBGCOlors: string[] = ['#1ca0de', '#eeb528', '#d82c2c']
   listOfAddedLines: lineType[] = []
   listOfSmaLines: any[] = []
-  addNewLinesToGraph(listOfLines: any[]){
+  addNewLinesToGraph(listOfLines: any[]) {
     this.listOfAddedLines = []
     let newLines = [...listOfLines]
     console.log('here addNewLinesToGraph')
     this.stockChart.data.datasets = [this.stockChart.data.datasets[0]]
     console.log(this.stockChart.data.datasets)
-    
+
     console.log(newLines.length)
-    for(let i = 0; i < newLines.length; i++){
-      console.log('here 2: ' + i )
-      this.listOfAddedLines.push({id: i, smaLength: newLines[i].smaLength})
+    for (let i = 0; i < newLines.length; i++) {
+      console.log('here 2: ' + i)
+      this.listOfAddedLines.push({ id: i, smaLength: newLines[i].smaLength })
       let smaResult = this.calculateSma(newLines[i].smaLength)
-      this.listOfSmaLines.push({smaLength: newLines[i].smaLength, smaValues: smaResult})
+      this.listOfSmaLines.push({ smaLength: newLines[i].smaLength, smaValues: smaResult })
       let newData: any[] = []
-      for(let j = 0; j < newLines[i].smaLength - 1; j++){
+      for (let j = 0; j < newLines[i].smaLength - 1; j++) {
         newData.push(null)
       }
       newData.push(...smaResult.map(e => e.avg))
       this.stockChart.data.datasets.push({
-            label: newLines[i].smaLength.toString(),
-            data: newData,
-            backgroundColor: this.listOfBGCOlors[i],
-            hoverBackgroundColor: this.listOfBGCOlors[i],
-            borderColor: this.listOfBGCOlors[i],
-            pointBackgroundColor: this.listOfBGCOlors[i],
-            pointBorderColor: this.listOfBGCOlors[i],
-            pointRadius: 0,
-            spanGaps: true
+        label: newLines[i].smaLength.toString(),
+        data: newData,
+        backgroundColor: this.listOfBGCOlors[i],
+        hoverBackgroundColor: this.listOfBGCOlors[i],
+        borderColor: this.listOfBGCOlors[i],
+        pointBackgroundColor: this.listOfBGCOlors[i],
+        pointBorderColor: this.listOfBGCOlors[i],
+        pointRadius: 0,
+        spanGaps: true
       })
     }
     console.log('done addNewLinesToGraph')
     this.stockChart.update()
   }
-  calculateSma(lengthOfSma: number){
+  calculateSma(lengthOfSma: number) {
     console.log('here 3')
     let returnArray: any[] = []
     let windowSum = 0
-    for(let i = 0; i < lengthOfSma; i++){
+    for (let i = 0; i < lengthOfSma; i++) {
       windowSum += this.chartInfo[i].stockPrice
     }
-    returnArray.push({stockName: this.selectedStockName, close: this.chartInfo[lengthOfSma -1].stockPrice, avg: windowSum / lengthOfSma, date: new Date(this.chartInfo[lengthOfSma -1].time).toLocaleTimeString()})
-    for(let j = lengthOfSma; j < this.chartInfo.length; j++){
+    returnArray.push({ stockName: this.selectedStockName, close: this.chartInfo[lengthOfSma - 1].stockPrice, avg: windowSum / lengthOfSma, date: new Date(this.chartInfo[lengthOfSma - 1].time).toLocaleTimeString() })
+    for (let j = lengthOfSma; j < this.chartInfo.length; j++) {
       windowSum += this.chartInfo[j].stockPrice - this.chartInfo[j - lengthOfSma].stockPrice
-      returnArray.push({stockName: this.selectedStockName, close: this.chartInfo[j].stockPrice, avg: windowSum / lengthOfSma, date: new Date(this.chartInfo[j].time).toLocaleTimeString()})
+      returnArray.push({ stockName: this.selectedStockName, close: this.chartInfo[j].stockPrice, avg: windowSum / lengthOfSma, date: new Date(this.chartInfo[j].time).toLocaleTimeString() })
     }
     console.log('here 4')
     return returnArray
@@ -858,7 +858,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.updateTrendIndexLine()
     this.isChangesToBot = true;
   }
-  updatesToAlgo(){
+  updatesToAlgo() {
     this.isChangesToBot = true
   }
   confirmAlgo() {
@@ -880,7 +880,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.stockChart.options.plugins.annotation.annotations.trendIndex.xMax = this.tempTrendAlgoStartingPoint
     this.stockChart.update()
   }
-  
+
   navToTestEnv() {
     this.router.navigate(['/testEnv'])
   }
@@ -910,8 +910,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   async getStockData() {
     this.chartInfo = await dbCurrentDayStockDataRepo.find({ where: { stockName: this.selectedStockName }, orderBy: { time: 'asc' } })
     this.chartData.name = this.selectedStockName
-    for(let i = 0; i < this.chartInfo.length; i++){
-      if(reusedFunctions.is830AMCT(this.chartInfo[i].time)){
+    for (let i = 0; i < this.chartInfo.length; i++) {
+      if (reusedFunctions.is830AMCT(this.chartInfo[i].time)) {
         this.stockOpenPrice = this.chartInfo[i].stockPrice;
         break;
       }
@@ -919,29 +919,35 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.getInitialVolumeData()
   }
   userLeaderBoard: any[] = []
-  async getUserLeaderBoard(){
+  async getUserLeaderBoard() {
     let users = await userRepo.find()
-    for(let i = 0; i < users.length; i++){
+    for (let i = 0; i < users.length; i++) {
       let userSavings = await SimFinance.getSimFinDataByUser(users[i].userId)
       this.userLeaderBoard.push({
         userName: users[i].userName,
         spending: userSavings[0].spending
       })
     }
-    this.userLeaderBoard.sort((a,b) => b.spending - a.spending)
+    this.userLeaderBoard.sort((a, b) => b.spending - a.spending)
   }
-  async loadStockVariance(){
-    let stockVarianceData = await dbStockBasicHistoryRepo.find({where: {stockName: this.selectedStockName}})
+  async loadStockVariance() {
+    let stockVarianceData = await dbStockBasicHistoryRepo.find({ where: { stockName: this.selectedStockName } })
     let totalHigh = 0;
     let totalLow = 0;
-    for(let i = 0; i < stockVarianceData.length; i++){
+    for (let i = 0; i < stockVarianceData.length; i++) {
       totalHigh += ((stockVarianceData[i].high - stockVarianceData[i].open) / stockVarianceData[i].open)
       totalLow += ((stockVarianceData[i].low - stockVarianceData[i].open) / stockVarianceData[i].open)
     }
-    this.stockVarianceHigh = totalHigh/stockVarianceData.length;
-    this.stockVarianceLow = totalLow/stockVarianceData.length;
+    this.stockVarianceHigh = totalHigh / stockVarianceData.length;
+    this.stockVarianceLow = totalLow / stockVarianceData.length;
   }
-  
+  getDateTime(epoch: number): string {
+    let dateTime = new Date(epoch).toLocaleTimeString('en-US', {
+      timeZone: 'America/Chicago',
+    })
+    return dateTime
+  }
+
 
 
   isLoading: boolean = false;
@@ -950,9 +956,9 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     Chart.register(annotationPlugin);
     Chart.register(...registerables)
     let user = await remult.initUser()
-    await AuthController.resetUser()  
-    let userTokenData = await dbTokenRepo.findFirst({userId: user?.id}) as DbTOkens
-    if(userTokenData.accountNum == ''){
+    await AuthController.resetUser()
+    let userTokenData = await dbTokenRepo.findFirst({ userId: user?.id }) as DbTOkens
+    if (userTokenData.accountNum == '') {
       let accountNum = await SchwabController.getAccountsCall(userTokenData.accessToken)
       console.log(accountNum)
       //await dbTokenRepo.update(userTokenData.id!, {...userTokenData, accountNum: accountNum})
@@ -960,7 +966,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     }
     //let userAccountInfo = await getAccountInfo(userTokenData.accountNum, userTokenData.accessToken)
 
-    this.distinctAvailableStocks = ['AAPL', 'MSFT', 'PLTR', 'AMD', 'TSLA', 'XOM','NVO', 'NEE', 'BAC', 'NVDA']
+    this.distinctAvailableStocks = ['AAPL', 'MSFT', 'PLTR', 'AMD', 'TSLA', 'XOM', 'NVO', 'NEE', 'BAC', 'NVDA']
     this.selectedStockName = this.distinctAvailableStocks[0]
     this.chartData.name = this.selectedStockName
     await this.getStockInfo()
@@ -970,7 +976,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     await this.getStockData()
     await this.loadStockVariance()
     this.startWebsocket()
-    
+
 
     this.isLoading = false;
 

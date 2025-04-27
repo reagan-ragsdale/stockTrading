@@ -1,8 +1,9 @@
 export class reusedFunctions {
     static epochToLocalTime(epoch: number): string {
-        return new Date(epoch).toLocaleTimeString('en-US', {
+        let returnDate = new Date(epoch).toLocaleTimeString('en-US', {
             timeZone: 'America/Chicago',
         })
+        return returnDate
     }
     static formatDate(date: Date): string {
         const day = String(date.getDate()).padStart(2, '0'); // Ensure two digits

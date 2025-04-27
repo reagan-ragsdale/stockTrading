@@ -195,6 +195,12 @@ export class TradeHistoryDetailComponent implements OnInit {
     this.averageWinAmt = this.totalWins == 0 ? 0 : (totalWinAmt / this.totalWins)
     this.averageLossAmt = this.totalLosses == 0 ? 0 : (totalLossAmt / this.totalLosses)
   }
+  getTime(epoch: number): string {
+    let returnTime = new Date(epoch).toLocaleTimeString('en-US', {
+      timeZone: 'America/Chicago',
+    })
+    return returnTime
+  }
 
   async ngOnInit() {
     this.isLoading = true

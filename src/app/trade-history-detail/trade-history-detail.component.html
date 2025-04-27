@@ -64,7 +64,7 @@
 
             <ng-container matColumnDef="Time">
                 <mat-header-cell *matHeaderCellDef> Time </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{element.orderTime | epochToTimePipe}} </mat-cell>
+                <mat-cell *matCellDef="let element"> {{getTime(element.orderTime)}} </mat-cell>
             </ng-container>
           
             <mat-header-row *matHeaderRowDef="displayedColumns" style="min-height:fit-content;" ></mat-header-row>
