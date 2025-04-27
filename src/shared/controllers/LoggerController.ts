@@ -136,8 +136,8 @@ export class LoggerController {
             }
         ]
 
-        await LoggerController.generateExcel(logData)
-        await LoggerController.sendEmail()
+        let excelBuffer = await LoggerController.generateExcel(logData)
+        await LoggerController.sendEmail(excelBuffer)
 
     }
 
