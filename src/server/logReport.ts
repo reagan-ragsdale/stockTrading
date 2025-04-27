@@ -54,7 +54,7 @@ export const createExcel = async (logArray: tradeLogDto[]): Promise<excelJS.Buff
         longSmaLength: '',
         mediumSmaLength: '',
         shortSmaBuyLength: '',
-        shortSmaSellLengt: ''
+        shortSmaSellLength: ''
     }
 
     let distinctOrders = logArray.map(e => e.orderId).filter((v, i, a) => a.indexOf(v) === i)
@@ -88,7 +88,7 @@ export const createExcel = async (logArray: tradeLogDto[]): Promise<excelJS.Buff
                 longSmaLength: filteredByOrder[j].dayTradeValues.SmaLong,
                 mediumSmaLength: filteredByOrder[j].dayTradeValues.SmaMedium,
                 shortSmaBuyLength: filteredByOrder[j].dayTradeValues.SmaShort,
-                shortSmaSellLengt: filteredByOrder[j].dayTradeValues.SmaShortSell
+                shortSmaSellLength: filteredByOrder[j].dayTradeValues.SmaShortSell
             })
         }
         worksheet.addRow(blankRow)
