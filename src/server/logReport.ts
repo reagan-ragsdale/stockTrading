@@ -1,6 +1,6 @@
 import excelJS from "exceljs"
 import { tradeLogDto } from "../app/Dtos/TradingBotDtos";
-export const createExcel = async (logArray: tradeLogDto[]) => {
+export const createExcel = async (logArray: tradeLogDto[]): Promise<excelJS.Buffer> => {
     const workbook = new excelJS.Workbook();
     const worksheet = workbook.addWorksheet("Log");
 
@@ -92,6 +92,8 @@ export const createExcel = async (logArray: tradeLogDto[]) => {
         worksheet.addRow(blankRow)
     }
 
-    workbook.xlsx.writeFile("dailyLog.xlsx")
+    const buffer = await workbook.xlsx.writeBuffer();
+    //workbook.xlsx.writeFile("dailyLog.xlsx")
     console.log("written")
+    return buffer
 }

@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer';
+import excelJS from "exceljs"
 
-export const emailer = async () => {
+export const emailer = async (spreadsheetBuffer: excelJS.Buffer) => {
     try {
         const transporter = nodemailer.createTransport({
             service: 'Gmail',
@@ -14,12 +15,15 @@ export const emailer = async () => {
         const mailOptions = {
             from: process.env['EmailHandle'],
             to: process.env['reaganEmail'],
-            subject: 'Error',
+            subject: 'Todays Log',
             text: 'Log Data: ' + today.toLocaleDateString(),
             attachments: [{
-                filename: 'dailyLog.xlsx',
-                path: './dailyLog.xlsx'
-            }]
+                filename: 'DailyLog.xlsx',
+                content: Buffer.from(spreadsheetBuffer),
+                contentType:
+                  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+              },
+            ]
         };
 
         const info = await transporter.sendMail(mailOptions);
