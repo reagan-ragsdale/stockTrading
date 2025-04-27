@@ -42,6 +42,9 @@ import { SimulationController } from '../shared/controllers/SimulationController
 import { runIntraDaySim } from './runIntraDaySim.js'
 import { SchwabController } from '../shared/controllers/SchwabController.js'
 import { getAccounts } from './schwabApiCalls.js'
+import { LoggerController } from '../shared/controllers/LoggerController.js'
+import { emailer } from './log-emailer.js'
+import { createExcel } from './logReport.js'
 
 //import ev from '../../environmentVariables.json'
 
@@ -51,12 +54,14 @@ AuthController.verify = verify
 OAuthContoller.sendCall = oauthCall;
 SimulationController.intraDaySimulation = runIntraDaySim
 SchwabController.getAccounts = getAccounts
+LoggerController.sendEmail = emailer
+LoggerController.generateExcel = createExcel
 
 
 
 
 export const api = remultExpress({
-    controllers:[AuthController, SimFinance, OAuthContoller, OrderController,StockController, RegFinanceController, RegressionOrderController, RegressionStockController, StockHistoryController, SimulationController, SchwabController],
+    controllers:[AuthController, SimFinance, OAuthContoller, OrderController,StockController, RegFinanceController, RegressionOrderController, RegressionStockController, StockHistoryController, SimulationController, SchwabController, LoggerController],
     entities: [
       Task,
       Users,
@@ -96,7 +101,8 @@ export const api = remultExpress({
       
       cron.schedule('0 9 * * 1,4', () => resetTokens()),
       cron.schedule('*/25 * * * *', () => loadNewToken()),
-      cron.schedule('0 23 * * 1-5 ', () => loadDailyDataIntoHistory())
+      cron.schedule('0 23 * * 1-5 ', () => loadDailyDataIntoHistory()),
+      await LoggerController.sendEmailCall()
       
       //getDailyStockInfo()
       

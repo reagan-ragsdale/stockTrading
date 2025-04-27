@@ -26,6 +26,9 @@ export class DbOrders {
     @Fields.number()
     orderTime = 0
 
+    @Fields.number()
+    orderId = 0
+
     @Fields.createdAt()
     createdAt?: Date
 

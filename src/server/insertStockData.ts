@@ -3,8 +3,10 @@
 import { DbCurrentDayStockData, dbCurrentDayStockDataRepo } from "../shared/tasks/dbCurrentDayStockData.js"
 import { dbTokenRepo, DbTOkens } from "../shared/tasks/dbTokens.js"
 import { WebSocket } from 'ws';
-import { dbAlgorithmListRepo } from "../shared/tasks/dbAlgorithmList.js";
 import { dbOrdersRepo } from "../shared/tasks/dbOrders.js";
+import { LoggerController } from "../shared/controllers/LoggerController.js";
+import { DayTradeValues, stockDataInfo, StockInfo, tradeLogDto } from "../app/Dtos/TradingBotDtos.js";
+
 
 export const socketCall = async (): Promise<void> => {
     console.log('here in insert file')
@@ -16,164 +18,48 @@ export const socketCall = async (): Promise<void> => {
     //admin user to start websocket
     const userData = await dbTokenRepo.findFirst({ id: 'asdfghjkl' }) as DbTOkens
     //get list of users signed up for the sma200
-    const userServerAlgos = await dbAlgorithmListRepo.find({ where: { sma200sma50: true } })
+    //const userServerAlgos = await dbAlgorithmListRepo.find({ where: { sma200sma50: true } })
     //get all orders for each above user
-    let userOrders = await dbOrdersRepo.find({ where: { userId: userServerAlgos!.map(e => e.userId) }, orderBy: { orderTime: 'desc' } })
+    let userOrders = await dbOrdersRepo.find({ where: { userId: 'Shared' }, orderBy: { orderTime: 'desc' } })
 
-    let userStockInfo: any[] = []
-    for (let i = 0; i < userServerAlgos.length; i++) {
-        userStockInfo.push({
-            user: userServerAlgos[i].userId, stockData: [
-                { stockName: 'AAPL', canTrade: true, numberOfTrades: 0, stopLoss: 0, stopLossGainThreshold: 0, tradeHigh: 0 },
-                { stockName: 'TSLA', canTrade: true, numberOfTrades: 0, stopLoss: 0, stopLossGainThreshold: 0, tradeHigh: 0 },
-                { stockName: 'MSFT', canTrade: true, numberOfTrades: 0, stopLoss: 0, stopLossGainThreshold: 0, tradeHigh: 0 },
-                { stockName: 'AMD', canTrade: true, numberOfTrades: 0, stopLoss: 0, stopLossGainThreshold: 0, tradeHigh: 0 },
-                { stockName: 'PLTR', canTrade: true, numberOfTrades: 0, stopLoss: 0, stopLossGainThreshold: 0, tradeHigh: 0 },
-                { stockName: 'XOM', canTrade: true, numberOfTrades: 0, stopLoss: 0, stopLossGainThreshold: 0, tradeHigh: 0 },
-                { stockName: 'NVO', canTrade: true, numberOfTrades: 0, stopLoss: 0, stopLossGainThreshold: 0, tradeHigh: 0 },
-                { stockName: 'NEE', canTrade: true, numberOfTrades: 0, stopLoss: 0, stopLossGainThreshold: 0, tradeHigh: 0 },
-                { stockName: 'BAC', canTrade: true, numberOfTrades: 0, stopLoss: 0, stopLossGainThreshold: 0, tradeHigh: 0 },
-                { stockName: 'NVDA', canTrade: true, numberOfTrades: 0, stopLoss: 0, stopLossGainThreshold: 0, tradeHigh: 0 },
-            ]
-        })
+    let stockInfoMap = new Map<string, StockInfo>()
+    let listOfTradableStocks: string[] = ['AAPL', 'TSLA', 'MSFT', 'AMD', 'PLTR', 'XOM', 'NVO', 'NEE', 'BAC', 'NVDA']
+    for (let i = 0; i < listOfTradableStocks.length; i++) {
+        stockInfoMap.set(listOfTradableStocks[i], { canTrade: true, numberOfTrades: 0, stopLoss: 0, stopLossGainThreshold: 0, tradeHigh: 0 })
     }
-    let testNum = 0;
+
+
+
+
+
 
     //set the values each stock will use in the algo
-    let stockDayTradeValues: { [key: string]: { Buy: number, Sell: number, Check200: number, SmaLong: number, SmaMedium: number, SmaShort: number, SmaShortSell: number } } = {
-        'TSLA': {
-            Buy: .003,
-            Sell: .002,
-            Check200: .001,
-            SmaLong: 3600,
-            SmaMedium: 1800,
-            SmaShort: 300,
-            SmaShortSell: 120
-        },
-        'AAPL': {
-            Buy: .002,
-            Sell: .002,
-            Check200: .001,
-            SmaLong: 3600,
-            SmaMedium: 1200,
-            SmaShort: 300,
-            SmaShortSell: 120
-        },
-        'MSFT': {
-            Buy: .002,
-            Sell: .001,
-            Check200: .001,
-            SmaLong: 4200,
-            SmaMedium: 1800,
-            SmaShort: 300,
-            SmaShortSell: 120
-        },
-        'AMD': {
-            Buy: .002,
-            Sell: .001,
-            Check200: .001,
-            SmaLong: 3600,
-            SmaMedium: 1500,
-            SmaShort: 300,
-            SmaShortSell: 120
-        },
-        'PLTR': {
-            Buy: .003,
-            Sell: .002,
-            Check200: .001,
-            SmaLong: 3600,
-            SmaMedium: 1500,
-            SmaShort: 300,
-            SmaShortSell: 120
-        },
-        'XOM': {
-            Buy: .002,
-            Sell: .001,
-            Check200: .001,
-            SmaLong: 2500,
-            SmaMedium: 1500,
-            SmaShort: 300,
-            SmaShortSell: 120
-        },
-        'NVO': {
-            Buy: .002,
-            Sell: .001,
-            Check200: .001,
-            SmaLong: 2400,
-            SmaMedium: 1500,
-            SmaShort: 300,
-            SmaShortSell: 120
-        }, 'NEE': {
-            Buy: .002,
-            Sell: .001,
-            Check200: .001,
-            SmaLong: 2600,
-            SmaMedium: 1500,
-            SmaShort: 300,
-            SmaShortSell: 120
-        },
-        'BAC': {
-            Buy: .002,
-            Sell: .001,
-            Check200: .001,
-            SmaLong: 2600,
-            SmaMedium: 1500,
-            SmaShort: 300,
-            SmaShortSell: 120
-        },
-        'NVDA': {
-            Buy: .003,
-            Sell: .001,
-            Check200: .001,
-            SmaLong: 3600,
-            SmaMedium: 1800,
-            SmaShort: 300,
-            SmaShortSell: 120
-        },
-    }
-    //will be used for long term inter day trading
-    let stockSmaBuySell: { [key: string]: { Buy: number, Sell: number, Check200: number } } = {
-        'TSLA': {
-            Buy: .05,
-            Sell: .16,
-            Check200: .10
-        },
-        'AAPL': {
-            Buy: .06,
-            Sell: .12,
-            Check200: .11
-        },
-        'MSFT': {
-            Buy: .01,
-            Sell: .02,
-            Check200: .10
-        },
-        'AMD': {
-            Buy: .08,
-            Sell: .09,
-            Check200: .10
-        },
-        'PLTR': {
-            Buy: .04,
-            Sell: .15,
-            Check200: .10
-        }
-    }
+    let stockDayTradeValuesMap = new Map<string, DayTradeValues>()
+
+    stockDayTradeValuesMap.set('TSLA', { Buy: .003, Sell: .002, Check200: .001, SmaLong: 3600, SmaMedium: 1800, SmaShort: 300, SmaShortSell: 120 })
+    stockDayTradeValuesMap.set('AAPL', { Buy: .002, Sell: .002, Check200: .001, SmaLong: 3600, SmaMedium: 1200, SmaShort: 300, SmaShortSell: 120 })
+    stockDayTradeValuesMap.set('MSFT', { Buy: .002, Sell: .001, Check200: .001, SmaLong: 4200, SmaMedium: 1800, SmaShort: 300, SmaShortSell: 120 })
+    stockDayTradeValuesMap.set('AMD', { Buy: .002, Sell: .001, Check200: .001, SmaLong: 3600, SmaMedium: 1500, SmaShort: 300, SmaShortSell: 120 })
+    stockDayTradeValuesMap.set('PLTR', { Buy: .003, Sell: .002, Check200: .001, SmaLong: 3600, SmaMedium: 1500, SmaShort: 300, SmaShortSell: 120 })
+    stockDayTradeValuesMap.set('XOM', { Buy: .002, Sell: .001, Check200: .001, SmaLong: 2500, SmaMedium: 1500, SmaShort: 300, SmaShortSell: 120 })
+    stockDayTradeValuesMap.set('NVO', { Buy: .002, Sell: .001, Check200: .001, SmaLong: 2400, SmaMedium: 1500, SmaShort: 300, SmaShortSell: 120 })
+    stockDayTradeValuesMap.set('NEE', { Buy: .002, Sell: .001, Check200: .001, SmaLong: 2600, SmaMedium: 1500, SmaShort: 300, SmaShortSell: 120 })
+    stockDayTradeValuesMap.set('BAC', { Buy: .002, Sell: .001, Check200: .001, SmaLong: 2600, SmaMedium: 1500, SmaShort: 300, SmaShortSell: 120 })
+    stockDayTradeValuesMap.set('NVDA', { Buy: .003, Sell: .001, Check200: .001, SmaLong: 3600, SmaMedium: 1800, SmaShort: 300, SmaShortSell: 120 })
+
 
     //create information to be used for each stock, the price history, the long, medium and short moving average, number of trades, if the stock can trage, and the last prices
-    let stockData: { [key: string]: { history: number[], last3600: number[], last3600sma: number, last1800sma: number, last300sma: number, last300Sellsma: number, lastPrice: number, lastAsk: number, lastBid: number } } = {
-        'AAPL': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, last300Sellsma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 },
-        'MSFT': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, last300Sellsma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 },
-        'PLTR': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, last300Sellsma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 },
-        'AMD': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, last300Sellsma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 },
-        'TSLA': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, last300Sellsma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 },
-        'XOM': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, last300Sellsma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 },
-        'NVO': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, last300Sellsma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 },
-        'NEE': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, last300Sellsma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 },
-        'BAC': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, last300Sellsma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 },
-        'NVDA': { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, last300Sellsma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 }
-    }
-
+    let stockDataMap = new Map<string, stockDataInfo>()
+    stockDataMap.set('AAPL', { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, last300Sellsma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+    stockDataMap.set('MSFT', { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, last300Sellsma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+    stockDataMap.set('PLTR', { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, last300Sellsma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+    stockDataMap.set('AMD', { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, last300Sellsma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+    stockDataMap.set('TSLA', { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, last300Sellsma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+    stockDataMap.set('XOM', { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, last300Sellsma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+    stockDataMap.set('NVO', { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, last300Sellsma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+    stockDataMap.set('NEE', { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, last300Sellsma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+    stockDataMap.set('BAC', { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, last300Sellsma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+    stockDataMap.set('NVDA', { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, last300Sellsma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
 
     //intitalize websocket
     const schwabWebsocket = new WebSocket(userData.streamerSocketUrl)
@@ -238,11 +124,14 @@ export const socketCall = async (): Promise<void> => {
                     for (let i = 0; i < newEvent.data[0].content.length; i++) {
                         //if the message contains either the bid, ask or last price then we want to proceed
                         if (Object.hasOwn(newEvent.data[0].content[i], '3')) {
+                            let stockData = stockDataMap.get(newEvent.data[0].content[i].key)!
+                            let stockDayTradeValues = stockDayTradeValuesMap.get(newEvent.data[0].content[i].key)!
+                            let stockInfo = stockInfoMap.get(newEvent.data[0].content[i].key)!
                             let data: DbCurrentDayStockData = {
                                 stockName: newEvent.data[0].content[i].key,
                                 stockPrice: newEvent.data[0].content[i]['3'],
-                                askPrice: Object.hasOwn(newEvent.data[0].content[i], '2') ? newEvent.data[0].content[i]['2'] : stockData[newEvent.data[0].content[i].key].lastAsk,
-                                bidPrice: Object.hasOwn(newEvent.data[0].content[i], '1') ? newEvent.data[0].content[i]['1'] : stockData[newEvent.data[0].content[i].key].lastBid,
+                                askPrice: Object.hasOwn(newEvent.data[0].content[i], '2') ? newEvent.data[0].content[i]['2'] : stockData.lastAsk,
+                                bidPrice: Object.hasOwn(newEvent.data[0].content[i], '1') ? newEvent.data[0].content[i]['1'] : stockData.lastBid,
                                 time: Number(newEvent.data[0].timestamp),
                                 volume: newEvent.data[0].content[i]['8']
                             }
@@ -251,157 +140,321 @@ export const socketCall = async (): Promise<void> => {
                             insertData.push(data)
 
                             //update the history and last prices
-                            stockData[data.stockName].history.push(data.stockPrice)
-                            stockData[data.stockName].lastAsk = data.askPrice
-                            stockData[data.stockName].lastBid = data.bidPrice
+                            stockData.history.push(data.stockPrice)
+                            stockData.lastAsk = data.askPrice
+                            stockData.lastBid = data.bidPrice
                             //if the length of the history is equal to what the long moving average length is then set the moving averages
-                            if (stockData[data.stockName].history.length == stockDayTradeValues[data.stockName].SmaLong) {
-                                stockData[data.stockName].last3600 = stockData[data.stockName].history.slice()
-                                stockData[data.stockName].last3600sma = stockData[data.stockName].last3600.reduce((sum, val) => sum + val, 0) / stockDayTradeValues[data.stockName].SmaLong
-                                stockData[data.stockName].last1800sma = stockData[data.stockName].last3600.slice(stockDayTradeValues[data.stockName].SmaMedium * -1).reduce((sum, val) => sum + val, 0) / stockDayTradeValues[data.stockName].SmaMedium
-                                stockData[data.stockName].last300sma = stockData[data.stockName].last3600.slice(stockDayTradeValues[data.stockName].SmaShort * -1).reduce((sum, val) => sum + val, 0) / stockDayTradeValues[data.stockName].SmaShort
-                                stockData[data.stockName].last300Sellsma = stockData[data.stockName].last3600.slice(stockDayTradeValues[data.stockName].SmaShortSell * -1).reduce((sum, val) => sum + val, 0) / stockDayTradeValues[data.stockName].SmaShortSell
+                            if (stockData.history.length == stockDayTradeValues.SmaLong) {
+                                stockData.last3600 = stockData.history.slice()
+                                stockData.last3600sma = stockData.last3600.reduce((sum, val) => sum + val, 0) / stockDayTradeValues.SmaLong
+                                stockData.last1800sma = stockData.last3600.slice(stockDayTradeValues.SmaMedium * -1).reduce((sum, val) => sum + val, 0) / stockDayTradeValues.SmaMedium
+                                stockData.last300sma = stockData.last3600.slice(stockDayTradeValues.SmaShort * -1).reduce((sum, val) => sum + val, 0) / stockDayTradeValues.SmaShort
+                                stockData.last300Sellsma = stockData.last3600.slice(stockDayTradeValues.SmaShortSell * -1).reduce((sum, val) => sum + val, 0) / stockDayTradeValues.SmaShortSell
                             }
                             //else if its greater than then we do a revolving door first in first out and recalculate the moving averages
-                            else if (stockData[data.stockName].history.length > stockDayTradeValues[data.stockName].SmaLong) {
-                                stockData[data.stockName].last3600.shift()
-                                stockData[data.stockName].last3600.push(data.stockPrice)
-                                stockData[data.stockName].last3600sma = stockData[data.stockName].last3600.reduce((sum, val) => sum + val, 0) / stockDayTradeValues[data.stockName].SmaLong
-                                stockData[data.stockName].last1800sma = stockData[data.stockName].last3600.slice(stockDayTradeValues[data.stockName].SmaMedium * -1).reduce((sum, val) => sum + val, 0) / stockDayTradeValues[data.stockName].SmaMedium
-                                stockData[data.stockName].last300sma = stockData[data.stockName].last3600.slice(stockDayTradeValues[data.stockName].SmaShort * -1).reduce((sum, val) => sum + val, 0) / stockDayTradeValues[data.stockName].SmaShort
+                            else if (stockData.history.length > stockDayTradeValues.SmaLong) {
+                                stockData.last3600.shift()
+                                stockData.last3600.push(data.stockPrice)
+                                stockData.last3600sma = stockData.last3600.reduce((sum, val) => sum + val, 0) / stockDayTradeValues.SmaLong
+                                stockData.last1800sma = stockData.last3600.slice(stockDayTradeValues.SmaMedium * -1).reduce((sum, val) => sum + val, 0) / stockDayTradeValues.SmaMedium
+                                stockData.last300sma = stockData.last3600.slice(stockDayTradeValues.SmaShort * -1).reduce((sum, val) => sum + val, 0) / stockDayTradeValues.SmaShort
 
                             }
-                            //loop through each user that is signed up for the bot
-                            for (let j = 0; j < userServerAlgos.length; j++) {
-                                //find the users most recent order for the stock
-                                let filteredOrderOnUserAndStock = userOrders.filter(e => e.userId == userServerAlgos![j].userId && e.stockName == data.stockName)
-                                let isBuy = true;
-                                if (filteredOrderOnUserAndStock.length > 0) {
-                                    isBuy = filteredOrderOnUserAndStock[0].orderType == 'Sell' ? true : false;
-                                }
-                                let filteredByUser = userStockInfo.filter(e => e.user == userServerAlgos![j].userId)[0].stockData
-                                let filteredByStock = filteredByUser.filter((e: { stockName: string; }) => e.stockName == data.stockName)[0]
-                                if(!filteredByStock.canTrade && (Date.now() - filteredOrderOnUserAndStock[0].orderTime > 1800000)){
-                                    filteredByStock.canTrade = true
-                                }
-                                if (isBuy && filteredByStock.canTrade) {
-                                    //is buy and the algo is met
-                                    if ((((stockData[data.stockName].last300sma - stockData[data.stockName].last1800sma) / stockData[data.stockName].last1800sma) < (stockDayTradeValues[data.stockName].Buy * -1)) && (((stockData[data.stockName].last300sma - stockData[data.stockName].last3600sma) / stockData[data.stockName].last3600sma) < stockDayTradeValues[data.stockName].Check200)) {
-                                        console.log('Placing a buy order for: ' + data.stockName + ' - ' + data.askPrice)
-
-                                        await dbOrdersRepo.insert({
-                                            userId: userServerAlgos[j].userId,
-                                            stockName: data.stockName,
-                                            orderType: 'Buy',
-                                            stockPrice: data.askPrice,
-                                            shareQty: 1,
-                                            orderTime: data.time
-                                        })
-                                        filteredByStock.stopLoss = data.askPrice - (data.askPrice * stockDayTradeValues[data.stockName].Buy)
-                                        filteredByStock.stopLossGainThreshold = stockData[data.stockName].last1800sma
-                                        filteredByStock.tradeHigh = data.askPrice
-                                        //have the threshold and follow up be closer
-                                        console.log('stop loss for: ' + data.stockName + ' - ' + filteredByStock.stopLoss)
-                                        filteredByStock.numberOfTrades++
-                                        orderPlaced = true;
-                                    }
-                                }
-                                else if (!isBuy && filteredByStock.canTrade) {
-                                    if(filteredByStock.stopLoss == 0){
-                                        filteredByStock.stopLoss = filteredOrderOnUserAndStock[0].stockPrice - (filteredOrderOnUserAndStock[0].stockPrice * stockDayTradeValues[data.stockName].Buy)
-                                    }
-                                    if(filteredByStock.stopLossGainThreshold == 0){
-                                        filteredByStock.stopLossGainThreshold = filteredOrderOnUserAndStock[0].stockPrice * stockDayTradeValues[data.stockName].Buy
-                                    }
-                                    //the algo is met
-                                    if ((((stockData[data.stockName].last300Sellsma - stockData[data.stockName].last1800sma) / stockData[data.stockName].last1800sma) > stockDayTradeValues[data.stockName].Sell) && data.bidPrice > filteredOrderOnUserAndStock[0].stockPrice) {
-                                        console.log('Placing a sell order for: ' + data.stockName + ' - ' + data.bidPrice)
-                                        await dbOrdersRepo.insert({
-                                            userId: userServerAlgos[j].userId,
-                                            stockName: data.stockName,
-                                            orderType: 'Sell',
-                                            stockPrice: data.bidPrice,
-                                            shareQty: filteredOrderOnUserAndStock[0].shareQty,
-                                            orderTime: data.time
-                                        })
-                                        filteredByStock.numberOfTrades++
-                                        orderPlaced = true;
-                                    }
-                                    //price is less than stop loss
-                                    else if(data.bidPrice <= filteredByStock.stopLoss){
-                                        console.log([data.stockName, filteredByStock.stopLoss])
-                                        console.log('Placing a stop loss sell order for: ' + data.stockName + ' - ' + data.bidPrice)
-                                        await dbOrdersRepo.insert({
-                                            userId: userServerAlgos[j].userId,
-                                            stockName: data.stockName,
-                                            orderType: 'Sell',
-                                            stockPrice: data.bidPrice,
-                                            shareQty: filteredOrderOnUserAndStock[0].shareQty,
-                                            orderTime: data.time
-                                        })
-                                        filteredByStock.numberOfTrades++
-                                        orderPlaced = true;
-                                        if(data.bidPrice < filteredOrderOnUserAndStock[0].stockPrice){
-                                            filteredByStock.canTrade = false
-                                        }
-                                    }
-                                    //if sell and not algo and price is above threshold and stop loss is below buy
-                                    else if (data.bidPrice >= filteredByStock.stopLossGainThreshold && filteredByStock.stopLoss < filteredOrderOnUserAndStock[0].stockPrice) {
-                                        filteredByStock.stopLoss = filteredOrderOnUserAndStock[0].stockPrice
-                                    }
-                                    //if sell and not algo and price is above threshold and stop loss is above buy
-                                    else if (data.bidPrice > filteredByStock.tradeHigh && data.bidPrice >= filteredByStock.stopLossGainThreshold && filteredByStock.stopLoss >= filteredOrderOnUserAndStock[0].stockPrice) {
-                                        filteredByStock.stopLoss += data.bidPrice - filteredByStock.tradeHigh
-                                        if(data.stockName == 'TSLA'){
-                                            console.log(data.stockName = ' new stop loss: ' + filteredByStock.stopLoss)
-                                        }
-                                    }
-                                    //sell and the end of day
-                                    else if (data.time > endingTime) {
-                                        console.log('Placing final day sell order for: ' + data.stockName + ' - ' + data.bidPrice)
-                                        await dbOrdersRepo.insert({
-                                            userId: userServerAlgos[j].userId,
-                                            stockName: data.stockName,
-                                            orderType: 'Sell',
-                                            stockPrice: data.bidPrice,
-                                            shareQty: filteredOrderOnUserAndStock[0].shareQty,
-                                            orderTime: data.time
-                                        })
-                                        filteredByStock.numberOfTrades++
-                                        filteredByStock.canTrade = false
-                                        orderPlaced = true;
-                                    }
-                                    //sell and begining of day and stock is greater than previous day buy price
-                                    else if (filteredByStock.numberOfTrades == 0 && data.bidPrice > filteredOrderOnUserAndStock[0].stockPrice) {
-                                        console.log('Placing pre algo sell order for: ' + data.stockName + ' - ' + data.bidPrice)
-                                        await dbOrdersRepo.insert({
-                                            userId: userServerAlgos[j].userId,
-                                            stockName: data.stockName,
-                                            orderType: 'Sell',
-                                            stockPrice: data.bidPrice,
-                                            shareQty: filteredOrderOnUserAndStock[0].shareQty,
-                                            orderTime: data.time
-                                        })
-                                        filteredByStock.numberOfTrades++
-                                        orderPlaced = true;
-                                    }
-                                    if(data.bidPrice > filteredByStock.tradeHigh){
-                                        filteredByStock.tradeHigh = data.bidPrice
-                                    }
-                                }
-
-
-
-
-
+                            //find the users most recent order for the stock
+                            let filteredOrderOnStock = userOrders.filter(e => e.stockName == data.stockName)
+                            let isBuy = true;
+                            if (filteredOrderOnStock.length > 0) {
+                                isBuy = filteredOrderOnStock[0].orderType == 'Sell' ? true : false;
                             }
+                            if (stockInfo.canTrade == false && (Date.now() - filteredOrderOnStock[0].orderTime > 1800000)) {
+                                stockInfo.canTrade = true
+                                let logMessage: tradeLogDto = {
+                                    stockName: data.stockName,
+                                    orderId: filteredOrderOnStock[0].orderId,
+                                    shares: 0,
+                                    dayTradeValues: stockDayTradeValues,
+                                    stockInfo: stockInfo,
+                                    longSma: stockData.last3600sma,
+                                    mediumSma: stockData.last1800sma,
+                                    shortSmaBuy: stockData.last300sma,
+                                    shortSmaSell: stockData.last300Sellsma,
+                                    lastPrice: data.stockPrice,
+                                    askPrice: stockData.lastAsk,
+                                    bidPrice: stockData.lastBid,
+                                    logType: 'Stock out of cooldown period: ',
+                                    time: data.time,
+
+                                }
+                                LoggerController.addToLog(logMessage)
+                            }
+                            if (isBuy && stockInfo.canTrade) {
+                                //is buy and the algo is met
+                                if ((((stockData.last300sma - stockData.last1800sma) / stockData.last1800sma) < (stockDayTradeValues.Buy * -1)) && (((stockData.last300sma - stockData.last3600sma) / stockData.last3600sma) < stockDayTradeValues.Check200)) {
+                                    console.log('Placing a buy order for: ' + data.stockName + ' - ' + data.askPrice)
+                                    let orderId = Math.floor(Math.random() * 10000000000)
+                                    await dbOrdersRepo.insert({
+                                        userId: 'Shared',
+                                        stockName: data.stockName,
+                                        orderType: 'Buy',
+                                        stockPrice: data.askPrice,
+                                        shareQty: 1,
+                                        orderId: orderId,
+                                        orderTime: data.time
+                                    })
+                                    stockInfo.stopLoss = data.askPrice - (data.askPrice * stockDayTradeValues.Buy)
+                                    stockInfo.stopLossGainThreshold = stockData.last1800sma
+                                    stockInfo.tradeHigh = data.askPrice
+                                    //have the threshold and follow up be closer
+                                    console.log('stop loss for: ' + data.stockName + ' - ' + stockInfo.stopLoss)
+                                    stockInfo.numberOfTrades++
+                                    orderPlaced = true;
+                                    let logMessage: tradeLogDto = {
+                                        stockName: data.stockName,
+                                        orderId: orderId,
+                                        shares:1,
+                                        dayTradeValues: stockDayTradeValues,
+                                        stockInfo: stockInfo,
+                                        longSma: stockData.last3600sma,
+                                        mediumSma: stockData.last1800sma,
+                                        shortSmaBuy: stockData.last300sma,
+                                        shortSmaSell: stockData.last300Sellsma,
+                                        lastPrice: data.stockPrice,
+                                        askPrice: stockData.lastAsk,
+                                        bidPrice: stockData.lastBid,
+                                        logType: 'Buy: ',
+                                        time: data.time,
+
+                                    }
+                                    LoggerController.addToLog(logMessage)
+                                    
+                                }
+                            }
+                            else if (!isBuy && stockInfo.canTrade) {
+                                if (stockInfo.stopLoss == 0) {
+                                    stockInfo.stopLoss = filteredOrderOnStock[0].stockPrice - (filteredOrderOnStock[0].stockPrice * stockDayTradeValues.Buy)
+                                }
+                                if (stockInfo.stopLossGainThreshold == 0) {
+                                    stockInfo.stopLossGainThreshold = filteredOrderOnStock[0].stockPrice * stockDayTradeValues.Buy
+                                }
+                                //the algo is met
+                                if ((((stockData.last300Sellsma - stockData.last1800sma) / stockData.last1800sma) > stockDayTradeValues.Sell) && data.bidPrice > filteredOrderOnStock[0].stockPrice) {
+                                    console.log('Placing a sell order for: ' + data.stockName + ' - ' + data.bidPrice)
+                                    await dbOrdersRepo.insert({
+                                        userId: 'Shared',
+                                        stockName: data.stockName,
+                                        orderType: 'Sell',
+                                        stockPrice: data.bidPrice,
+                                        shareQty: filteredOrderOnStock[0].shareQty,
+                                        orderId: filteredOrderOnStock[0].orderId,
+                                        orderTime: data.time
+                                    })
+                                    stockInfo.numberOfTrades++
+                                    orderPlaced = true;
+                                    let logMessage: tradeLogDto = {
+                                        stockName: data.stockName,
+                                        orderId: filteredOrderOnStock[0].orderId,
+                                        shares: 1,
+                                        dayTradeValues: stockDayTradeValues,
+                                        stockInfo: stockInfo,
+                                        longSma: stockData.last3600sma,
+                                        mediumSma: stockData.last1800sma,
+                                        shortSmaBuy: stockData.last300sma,
+                                        shortSmaSell: stockData.last300Sellsma,
+                                        lastPrice: data.stockPrice,
+                                        askPrice: stockData.lastAsk,
+                                        bidPrice: stockData.lastBid,
+                                        logType: 'Sell: ',
+                                        time: data.time,
+
+                                    }
+                                    LoggerController.addToLog(logMessage)
+                                }
+                                //price is less than stop loss
+                                else if (data.bidPrice <= stockInfo.stopLoss) {
+                                    console.log([data.stockName, stockInfo.stopLoss])
+                                    console.log('Placing a stop loss sell order for: ' + data.stockName + ' - ' + data.bidPrice)
+                                    await dbOrdersRepo.insert({
+                                        userId: 'Shared',
+                                        stockName: data.stockName,
+                                        orderType: 'Sell',
+                                        stockPrice: data.bidPrice,
+                                        shareQty: filteredOrderOnStock[0].shareQty,
+                                        orderId: filteredOrderOnStock[0].orderId,
+                                        orderTime: data.time
+                                    })
+                                    stockInfo.numberOfTrades++
+                                    orderPlaced = true;
+                                    if (data.bidPrice < filteredOrderOnStock[0].stockPrice) {
+                                        stockInfo.canTrade = false
+                                    }
+                                    let logMessage: tradeLogDto = {
+                                        stockName: data.stockName,
+                                        orderId: filteredOrderOnStock[0].orderId,
+                                        shares: 1,
+                                        dayTradeValues: stockDayTradeValues,
+                                        stockInfo: stockInfo,
+                                        longSma: stockData.last3600sma,
+                                        mediumSma: stockData.last1800sma,
+                                        shortSmaBuy: stockData.last300sma,
+                                        shortSmaSell: stockData.last300Sellsma,
+                                        lastPrice: data.stockPrice,
+                                        askPrice: stockData.lastAsk,
+                                        bidPrice: stockData.lastBid,
+                                        logType: 'Stop Loss Sell: ',
+                                        time: data.time,
+
+                                    }
+                                    LoggerController.addToLog(logMessage)
+                                }
+                                //if sell and not algo and price is above threshold and stop loss is below buy
+                                else if (data.bidPrice >= stockInfo.stopLossGainThreshold && stockInfo.stopLoss < filteredOrderOnStock[0].stockPrice) {
+                                    stockInfo.stopLoss = filteredOrderOnStock[0].stockPrice
+                                    let logMessage: tradeLogDto = {
+                                        stockName: data.stockName,
+                                        orderId: filteredOrderOnStock[0].orderId,
+                                        shares: 0,
+                                        dayTradeValues: stockDayTradeValues,
+                                        stockInfo: stockInfo,
+                                        longSma: stockData.last3600sma,
+                                        mediumSma: stockData.last1800sma,
+                                        shortSmaBuy: stockData.last300sma,
+                                        shortSmaSell: stockData.last300Sellsma,
+                                        lastPrice: data.stockPrice,
+                                        askPrice: stockData.lastAsk,
+                                        bidPrice: stockData.lastBid,
+                                        logType: 'Moved Stop Loss to Buy Price: ',
+                                        time: data.time,
+
+                                    }
+                                    LoggerController.addToLog(logMessage)
+                                }
+                                //if sell and not algo and price is above threshold and stop loss is above buy
+                                else if (data.bidPrice > stockInfo.tradeHigh && data.bidPrice >= stockInfo.stopLossGainThreshold && stockInfo.stopLoss >= filteredOrderOnStock[0].stockPrice) {
+                                    stockInfo.stopLoss += data.bidPrice - stockInfo.tradeHigh
+                                    if (data.stockName == 'TSLA') {
+                                        console.log(data.stockName = ' new stop loss: ' + stockInfo.stopLoss)
+                                    }
+                                    let logMessage: tradeLogDto = {
+                                        stockName: data.stockName,
+                                        orderId: filteredOrderOnStock[0].orderId,
+                                        shares: 0,
+                                        dayTradeValues: stockDayTradeValues,
+                                        stockInfo: stockInfo,
+                                        longSma: stockData.last3600sma,
+                                        mediumSma: stockData.last1800sma,
+                                        shortSmaBuy: stockData.last300sma,
+                                        shortSmaSell: stockData.last300Sellsma,
+                                        lastPrice: data.stockPrice,
+                                        askPrice: stockData.lastAsk,
+                                        bidPrice: stockData.lastBid,
+                                        logType: 'Increased Stop Loss: ',
+                                        time: data.time,
+
+                                    }
+                                    LoggerController.addToLog(logMessage)
+                                }
+                                //sell and the end of day
+                                else if (data.time > endingTime) {
+                                    console.log('Placing final day sell order for: ' + data.stockName + ' - ' + data.bidPrice)
+                                    await dbOrdersRepo.insert({
+                                        userId: 'Shared',
+                                        stockName: data.stockName,
+                                        orderType: 'Sell',
+                                        stockPrice: data.bidPrice,
+                                        shareQty: filteredOrderOnStock[0].shareQty,
+                                        orderId: filteredOrderOnStock[0].orderId,
+                                        orderTime: data.time
+                                    })
+                                    stockInfo.numberOfTrades++
+                                    stockInfo.canTrade = false
+                                    orderPlaced = true;
+                                    let logMessage: tradeLogDto = {
+                                        stockName: data.stockName,
+                                        orderId: filteredOrderOnStock[0].orderId,
+                                        shares: 1,
+                                        dayTradeValues: stockDayTradeValues,
+                                        stockInfo: stockInfo,
+                                        longSma: stockData.last3600sma,
+                                        mediumSma: stockData.last1800sma,
+                                        shortSmaBuy: stockData.last300sma,
+                                        shortSmaSell: stockData.last300Sellsma,
+                                        lastPrice: data.stockPrice,
+                                        askPrice: stockData.lastAsk,
+                                        bidPrice: stockData.lastBid,
+                                        logType: 'Final Day Sell: ',
+                                        time: data.time,
+
+                                    }
+                                    LoggerController.addToLog(logMessage)
+                                }
+                                //sell and begining of day and stock is greater than previous day buy price
+                                else if (stockInfo.numberOfTrades == 0 && data.bidPrice > filteredOrderOnStock[0].stockPrice) {
+                                    console.log('Placing pre algo sell order for: ' + data.stockName + ' - ' + data.bidPrice)
+                                    await dbOrdersRepo.insert({
+                                        userId: 'Shared',
+                                        stockName: data.stockName,
+                                        orderType: 'Sell',
+                                        stockPrice: data.bidPrice,
+                                        shareQty: filteredOrderOnStock[0].shareQty,
+                                        orderId: filteredOrderOnStock[0].orderId,
+                                        orderTime: data.time
+                                    })
+                                    stockInfo.numberOfTrades++
+                                    orderPlaced = true;
+                                    let logMessage: tradeLogDto = {
+                                        stockName: data.stockName,
+                                        orderId: filteredOrderOnStock[0].orderId,
+                                        shares: 1,
+                                        dayTradeValues: stockDayTradeValues,
+                                        stockInfo: stockInfo,
+                                        longSma: stockData.last3600sma,
+                                        mediumSma: stockData.last1800sma,
+                                        shortSmaBuy: stockData.last300sma,
+                                        shortSmaSell: stockData.last300Sellsma,
+                                        lastPrice: data.stockPrice,
+                                        askPrice: stockData.lastAsk,
+                                        bidPrice: stockData.lastBid,
+                                        logType: 'Pre Algo Sell: ',
+                                        time: data.time,
+
+                                    }
+                                    LoggerController.addToLog(logMessage)
+                                }
+                                if (data.bidPrice > stockInfo.tradeHigh) {
+                                    stockInfo.tradeHigh = data.bidPrice
+                                    let logMessage: tradeLogDto = {
+                                        stockName: data.stockName,
+                                        orderId: filteredOrderOnStock[0].orderId,
+                                        shares: 0,
+                                        dayTradeValues: stockDayTradeValues,
+                                        stockInfo: stockInfo,
+                                        longSma: stockData.last3600sma,
+                                        mediumSma: stockData.last1800sma,
+                                        shortSmaBuy: stockData.last300sma,
+                                        shortSmaSell: stockData.last300Sellsma,
+                                        lastPrice: data.stockPrice,
+                                        askPrice: stockData.lastAsk,
+                                        bidPrice: stockData.lastBid,
+                                        logType: 'Updated Trade High: ',
+                                        time: data.time,
+
+                                    }
+                                    LoggerController.addToLog(logMessage)
+                                }
+                            }
+
+
+
+
+
+
                         }
                     }
                     //insert all stocks data into the db
                     await dbCurrentDayStockDataRepo.insert(insertData)
                     //update the orders if there was an order placed
                     if (orderPlaced) {
-                        userOrders = await dbOrdersRepo.find({ where: { userId: userServerAlgos!.map(e => e.userId) }, orderBy: { orderTime: 'desc' } })
+                        userOrders = await dbOrdersRepo.find({ where: { userId: 'Shared' }, orderBy: { orderTime: 'desc' } })
                     }
 
                 }

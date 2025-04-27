@@ -12,11 +12,8 @@ import { MatDatepickerModule, MatDateRangePicker } from '@angular/material/datep
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MatNativeDateModule, MatRippleModule } from '@angular/material/core';
 import { FormsModule } from '@angular/forms';
-import { dbAlgorithmListRepo } from '../../shared/tasks/dbAlgorithmList';
-import { usersStocksRepo } from '../../shared/tasks/usersStocks';
 
 
 @Component({
@@ -66,10 +63,10 @@ export class TradeHistoryDetailComponent implements OnInit {
   }
 
   async getStockOrders() {
-    this.selectedStockOrders = await OrderController.getOrdersByStockName(this.selectedStockName)
+    this.selectedStockOrders = await OrderController.getSharedOrdersByStockName(this.selectedStockName)
   }
   async onSubmitSearch() {
-    this.allOrders = await OrderController.getAllOrders()
+    this.allOrders = await OrderController.getAllSharedOrders()
     if (this.selectedStockName == 'All') {
       if (this.dateType == 'All') {
         this.selectedStockOrders = this.allOrders
@@ -201,7 +198,7 @@ export class TradeHistoryDetailComponent implements OnInit {
 
   async ngOnInit() {
     this.isLoading = true
-    this.allOrders = await OrderController.getAllOrders()
+    this.allOrders = await OrderController.getAllSharedOrders()
     this.distinctStocks = this.distinctStocks.concat(this.allOrders.map(e => e.stockName).filter((v, i, a) => a.indexOf(v) === i))
     this.selectedStockName = this.distinctStocks[0]
     this.selectedStockOrders = this.allOrders
@@ -209,29 +206,6 @@ export class TradeHistoryDetailComponent implements OnInit {
     this.claculateOrderDetails()
 
 
-    //use below to show object references
-    /* let name = 'Reagan'
-    let newName = name
-    newName = 'Ben'
-    console.log(name)
-
-    const userServerAlgos = await dbAlgorithmListRepo.find({ where: { sma200sma50: true } })
-    let userStockInfo: any[] = []
-    for (let i = 0; i < userServerAlgos.length; i++) {
-      userStockInfo.push({
-        user: userServerAlgos[i].userId, stockData: [
-          { stockName: 'AAPL', canTrade: true, numberOfTrades: 0 },
-          { stockName: 'TSLA', canTrade: true, numberOfTrades: 0 },
-          { stockName: 'MSFT', canTrade: true, numberOfTrades: 0 },
-          { stockName: 'AMD', canTrade: true, numberOfTrades: 0 },
-          { stockName: 'PLTR', canTrade: true, numberOfTrades: 0 },
-        ]
-      })
-    }
-    let filteredByUser = userStockInfo.filter(e => e.user == userServerAlgos![0].userId)[0].stockData
-    let filteredByStock = filteredByUser.filter((e: { stockName: string; }) => e.stockName == 'AAPL')[0]
-    filteredByStock.canTrade = false
-    console.log(userStockInfo)  */
 
 
     //await this.getStockOrders()
