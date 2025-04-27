@@ -71,7 +71,7 @@
             <mat-icon style="color: #DBD4D1;">add</mat-icon>
           </button>
         <h3 style="padding-right:1rem;">{{userSimFinData[0].spending | currency:'USD':'symbol'}}</h3>
-        <div style="display:flex; gap: .5rem; margin-left:auto; margin-right:1rem;">
+        <div *ngIf="selectedStockHistoryData.length > 0" style="display:flex; gap: .5rem; margin-left:auto; margin-right:1rem;">
             <h3>Last Order: </h3>
             <h3>{{selectedStockHistoryData[0].orderType}}</h3>
             <h3>{{selectedStockHistoryData[0].shareQty}} Share</h3>

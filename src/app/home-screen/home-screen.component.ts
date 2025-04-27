@@ -189,8 +189,9 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       stockName: selectedStock.length > 0 ? selectedStock[0].stockName : '',
       shareQty: selectedStock.length > 0 ? selectedStock[0].shareQty : 0
     }
-    this.stockHistoryData = await OrderController.getAllOrders()
+    this.stockHistoryData = await OrderController.getAllSharedOrders()
     this.selectedStockHistoryData = this.stockHistoryData.filter(e => e.stockName == this.selectedStockName)
+    
 
     //below is most likely not the best wat to find the net but it'll work for now
     for (let i = 0; i < this.selectedStockHistoryData.length - 1; i++) {
