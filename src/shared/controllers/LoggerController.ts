@@ -1,5 +1,5 @@
 import { BackendMethod } from 'remult'
-import { LogService } from '../../app/services/LogService'
+import { LogService } from '../../app/services/LogService.js'
 import { tradeLogDto } from '../../app/Dtos/TradingBotDtos'
 import { emailer } from '../../server/log-emailer'
 import { createExcel } from '../../server/logReport'
