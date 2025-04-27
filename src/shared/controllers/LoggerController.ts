@@ -15,8 +15,8 @@ export class LoggerController {
 
     @BackendMethod({ allowed: true })
     static async sendEmailCall() {
-        //let logData = LogService.getLogHistory()
-         let logData: tradeLogDto[] = [
+        let logData = LogService.getLogHistory()
+         /* let logData: tradeLogDto[] = [
             {
                 stockName: 'Stock 1',
                 orderId: 1,
@@ -134,7 +134,7 @@ export class LoggerController {
                 logType: 'Log 4',
                 time: 1745793639000
             }
-        ] 
+        ]  */
 
         let excelBuffer = await LoggerController.generateExcel(logData)
         await LoggerController.sendEmail(excelBuffer)
