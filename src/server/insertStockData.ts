@@ -141,6 +141,7 @@ export const socketCall = async (): Promise<void> => {
 
                             //update the history and last prices
                             stockData.history.push(data.stockPrice)
+                            stockData.lastPrice = data.stockPrice
                             stockData.lastAsk = data.askPrice
                             stockData.lastBid = data.bidPrice
                             //if the length of the history is equal to what the long moving average length is then set the moving averages
@@ -158,7 +159,7 @@ export const socketCall = async (): Promise<void> => {
                                 stockData.last3600sma = stockData.last3600.reduce((sum, val) => sum + val, 0) / stockDayTradeValues.SmaLong
                                 stockData.last1800sma = stockData.last3600.slice(stockDayTradeValues.SmaMedium * -1).reduce((sum, val) => sum + val, 0) / stockDayTradeValues.SmaMedium
                                 stockData.last300sma = stockData.last3600.slice(stockDayTradeValues.SmaShort * -1).reduce((sum, val) => sum + val, 0) / stockDayTradeValues.SmaShort
-
+                                stockData.last300Sellsma = stockData.last3600.slice(stockDayTradeValues.SmaShortSell * -1).reduce((sum, val) => sum + val, 0) / stockDayTradeValues.SmaShortSell
                             }
                             //find the users most recent order for the stock
                             let filteredOrderOnStock = userOrders.filter(e => e.stockName == data.stockName)
@@ -172,15 +173,9 @@ export const socketCall = async (): Promise<void> => {
                                     stockName: data.stockName,
                                     orderId: filteredOrderOnStock[0].orderId,
                                     shares: 0,
-                                    dayTradeValues: stockDayTradeValues,
-                                    stockInfo: stockInfo,
-                                    longSma: stockData.last3600sma,
-                                    mediumSma: stockData.last1800sma,
-                                    shortSmaBuy: stockData.last300sma,
-                                    shortSmaSell: stockData.last300Sellsma,
-                                    lastPrice: data.stockPrice,
-                                    askPrice: stockData.lastAsk,
-                                    bidPrice: stockData.lastBid,
+                                    dayTradeValues: structuredClone(stockDayTradeValues),
+                                    stockInfo: structuredClone(stockInfo),
+                                    stockDataInfo: structuredClone(stockData),
                                     logType: 'Stock out of cooldown period: ',
                                     time: data.time,
 
@@ -212,15 +207,9 @@ export const socketCall = async (): Promise<void> => {
                                         stockName: data.stockName,
                                         orderId: orderId,
                                         shares:1,
-                                        dayTradeValues: stockDayTradeValues,
-                                        stockInfo: stockInfo,
-                                        longSma: stockData.last3600sma,
-                                        mediumSma: stockData.last1800sma,
-                                        shortSmaBuy: stockData.last300sma,
-                                        shortSmaSell: stockData.last300Sellsma,
-                                        lastPrice: data.stockPrice,
-                                        askPrice: stockData.lastAsk,
-                                        bidPrice: stockData.lastBid,
+                                        dayTradeValues: structuredClone(stockDayTradeValues),
+                                        stockInfo: structuredClone(stockInfo),
+                                        stockDataInfo: structuredClone(stockData),
                                         logType: 'Buy: ',
                                         time: data.time,
 
@@ -254,15 +243,9 @@ export const socketCall = async (): Promise<void> => {
                                         stockName: data.stockName,
                                         orderId: filteredOrderOnStock[0].orderId,
                                         shares: 1,
-                                        dayTradeValues: stockDayTradeValues,
-                                        stockInfo: stockInfo,
-                                        longSma: stockData.last3600sma,
-                                        mediumSma: stockData.last1800sma,
-                                        shortSmaBuy: stockData.last300sma,
-                                        shortSmaSell: stockData.last300Sellsma,
-                                        lastPrice: data.stockPrice,
-                                        askPrice: stockData.lastAsk,
-                                        bidPrice: stockData.lastBid,
+                                        dayTradeValues: structuredClone(stockDayTradeValues),
+                                        stockInfo: structuredClone(stockInfo),
+                                        stockDataInfo: structuredClone(stockData),
                                         logType: 'Sell: ',
                                         time: data.time,
 
@@ -291,15 +274,9 @@ export const socketCall = async (): Promise<void> => {
                                         stockName: data.stockName,
                                         orderId: filteredOrderOnStock[0].orderId,
                                         shares: 1,
-                                        dayTradeValues: stockDayTradeValues,
-                                        stockInfo: stockInfo,
-                                        longSma: stockData.last3600sma,
-                                        mediumSma: stockData.last1800sma,
-                                        shortSmaBuy: stockData.last300sma,
-                                        shortSmaSell: stockData.last300Sellsma,
-                                        lastPrice: data.stockPrice,
-                                        askPrice: stockData.lastAsk,
-                                        bidPrice: stockData.lastBid,
+                                        dayTradeValues: structuredClone(stockDayTradeValues),
+                                        stockInfo: structuredClone(stockInfo),
+                                        stockDataInfo: structuredClone(stockData),
                                         logType: 'Stop Loss Sell: ',
                                         time: data.time,
 
@@ -313,15 +290,9 @@ export const socketCall = async (): Promise<void> => {
                                         stockName: data.stockName,
                                         orderId: filteredOrderOnStock[0].orderId,
                                         shares: 0,
-                                        dayTradeValues: stockDayTradeValues,
-                                        stockInfo: stockInfo,
-                                        longSma: stockData.last3600sma,
-                                        mediumSma: stockData.last1800sma,
-                                        shortSmaBuy: stockData.last300sma,
-                                        shortSmaSell: stockData.last300Sellsma,
-                                        lastPrice: data.stockPrice,
-                                        askPrice: stockData.lastAsk,
-                                        bidPrice: stockData.lastBid,
+                                        dayTradeValues: structuredClone(stockDayTradeValues),
+                                        stockInfo: structuredClone(stockInfo),
+                                        stockDataInfo: structuredClone(stockData),
                                         logType: 'Moved Stop Loss to Buy Price: ',
                                         time: data.time,
 
@@ -332,21 +303,15 @@ export const socketCall = async (): Promise<void> => {
                                 else if (data.bidPrice > stockInfo.tradeHigh && data.bidPrice >= stockInfo.stopLossGainThreshold && stockInfo.stopLoss >= filteredOrderOnStock[0].stockPrice) {
                                     stockInfo.stopLoss += data.bidPrice - stockInfo.tradeHigh
                                     if (data.stockName == 'TSLA') {
-                                        console.log(data.stockName = ' new stop loss: ' + stockInfo.stopLoss)
+                                        console.log(data.stockName + ' new stop loss: ' + stockInfo.stopLoss)
                                     }
                                     let logMessage: tradeLogDto = {
                                         stockName: data.stockName,
                                         orderId: filteredOrderOnStock[0].orderId,
                                         shares: 0,
-                                        dayTradeValues: stockDayTradeValues,
-                                        stockInfo: stockInfo,
-                                        longSma: stockData.last3600sma,
-                                        mediumSma: stockData.last1800sma,
-                                        shortSmaBuy: stockData.last300sma,
-                                        shortSmaSell: stockData.last300Sellsma,
-                                        lastPrice: data.stockPrice,
-                                        askPrice: stockData.lastAsk,
-                                        bidPrice: stockData.lastBid,
+                                        dayTradeValues: structuredClone(stockDayTradeValues),
+                                        stockInfo: structuredClone(stockInfo),
+                                        stockDataInfo: structuredClone(stockData),
                                         logType: 'Increased Stop Loss: ',
                                         time: data.time,
 
@@ -372,15 +337,9 @@ export const socketCall = async (): Promise<void> => {
                                         stockName: data.stockName,
                                         orderId: filteredOrderOnStock[0].orderId,
                                         shares: 1,
-                                        dayTradeValues: stockDayTradeValues,
-                                        stockInfo: stockInfo,
-                                        longSma: stockData.last3600sma,
-                                        mediumSma: stockData.last1800sma,
-                                        shortSmaBuy: stockData.last300sma,
-                                        shortSmaSell: stockData.last300Sellsma,
-                                        lastPrice: data.stockPrice,
-                                        askPrice: stockData.lastAsk,
-                                        bidPrice: stockData.lastBid,
+                                        dayTradeValues: structuredClone(stockDayTradeValues),
+                                        stockInfo: structuredClone(stockInfo),
+                                        stockDataInfo: structuredClone(stockData),
                                         logType: 'Final Day Sell: ',
                                         time: data.time,
 
@@ -405,15 +364,9 @@ export const socketCall = async (): Promise<void> => {
                                         stockName: data.stockName,
                                         orderId: filteredOrderOnStock[0].orderId,
                                         shares: 1,
-                                        dayTradeValues: stockDayTradeValues,
-                                        stockInfo: stockInfo,
-                                        longSma: stockData.last3600sma,
-                                        mediumSma: stockData.last1800sma,
-                                        shortSmaBuy: stockData.last300sma,
-                                        shortSmaSell: stockData.last300Sellsma,
-                                        lastPrice: data.stockPrice,
-                                        askPrice: stockData.lastAsk,
-                                        bidPrice: stockData.lastBid,
+                                        dayTradeValues: structuredClone(stockDayTradeValues),
+                                        stockInfo: structuredClone(stockInfo),
+                                        stockDataInfo: structuredClone(stockData),
                                         logType: 'Pre Algo Sell: ',
                                         time: data.time,
 
@@ -426,15 +379,9 @@ export const socketCall = async (): Promise<void> => {
                                         stockName: data.stockName,
                                         orderId: filteredOrderOnStock[0].orderId,
                                         shares: 0,
-                                        dayTradeValues: stockDayTradeValues,
-                                        stockInfo: stockInfo,
-                                        longSma: stockData.last3600sma,
-                                        mediumSma: stockData.last1800sma,
-                                        shortSmaBuy: stockData.last300sma,
-                                        shortSmaSell: stockData.last300Sellsma,
-                                        lastPrice: data.stockPrice,
-                                        askPrice: stockData.lastAsk,
-                                        bidPrice: stockData.lastBid,
+                                        dayTradeValues: structuredClone(stockDayTradeValues),
+                                        stockInfo: structuredClone(stockInfo),
+                                        stockDataInfo: structuredClone(stockData),
                                         logType: 'Updated Trade High: ',
                                         time: data.time,
 

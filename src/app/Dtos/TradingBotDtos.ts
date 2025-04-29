@@ -31,13 +31,7 @@ export type tradeLogDto = {
     shares: number;
     dayTradeValues: DayTradeValues;
     stockInfo: StockInfo;
-    longSma: number;
-    mediumSma: number;
-    shortSmaBuy: number;
-    shortSmaSell: number;
-    lastPrice: number;
-    askPrice: number; 
-    bidPrice: number;
+    stockDataInfo: stockDataInfo;
     logType: string;
     time: number;
 
