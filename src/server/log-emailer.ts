@@ -14,7 +14,7 @@ export const emailer = async (spreadsheetBuffer: excelJS.Buffer) => {
         let today = new Date()
         const mailOptions = {
             from: process.env['EmailHandle'],
-            to: process.env['reaganEmail'] + ',' + process.env['briannaEmail'],
+            to: process.env['reaganEmail'] + ',' + process.env['benEmail'],
             subject: 'KrakenStock Log: ' + today.toLocaleDateString(),
             text: 'Report Attatched',
             attachments: [{
