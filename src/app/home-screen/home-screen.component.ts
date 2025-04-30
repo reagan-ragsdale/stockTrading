@@ -13,7 +13,6 @@ import annotationPlugin from 'chartjs-plugin-annotation';
 import { OrderController } from '../../shared/controllers/OrderController';
 import { DbOrders } from '../../shared/tasks/dbOrders';
 import { OrderService } from '../services/orderService';
-import { AnalysisService } from '../services/analysisService';
 import { StockAnalysisDto } from '../Dtos/stockAnalysisDto';
 import { stockOrder } from '../Dtos/stockOrder';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -26,22 +25,18 @@ import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input';
-import { buySellDto } from '../Dtos/buySellDto';
 import { MatMenuModule } from '@angular/material/menu';
 import { Router } from '@angular/router';
 import { DbCurrentDayStockData, dbCurrentDayStockDataRepo } from '../../shared/tasks/dbCurrentDayStockData';
 import { MatSelectModule } from '@angular/material/select';
 import { reusedFunctions } from '../services/reusedFunctions';
 import { dbTokenRepo, DbTOkens } from '../../shared/tasks/dbTokens';
-import { setSessionUser } from '../../server/server-session';
 import { AuthController } from '../../shared/controllers/AuthController';
 import { MatTableModule } from '@angular/material/table';
 import { EpochToTimePipe } from "../services/epochToTimePipe.pipe";
 import { userRepo } from '../../shared/tasks/Users';
-import { DashboardComponent } from "../dashboard/dashboard.component";
 import { dbStockBasicHistoryRepo } from '../../shared/tasks/dbStockBasicHistory';
 import { AddGraphComponent } from "./add-graph/add-graph.component";
-import { getAccountInfo, getAccounts } from '../../server/schwabApiCalls';
 import { SchwabController } from '../../shared/controllers/SchwabController';
 
 type lineType = {
@@ -230,7 +225,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
           "SchwabClientCustomerId": this.userData!.schwabClientCustomerId,
           "SchwabClientCorrelId": this.userData!.schwabClientCorrelId,
           "parameters": {
-            "keys": "AAPL, MSFT, PLTR, AMD, TSLA, XOM,NVO, NEE, BAC, NVDA",
+            "keys": "AAPL, MSFT, PLTR, AMD, TSLA, XOM,NVO, NEE, NVDA",
             "fields": "0,1,2,3,4,5,6,7,8,9,10,33"
           }
         }

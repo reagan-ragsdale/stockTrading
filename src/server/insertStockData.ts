@@ -6,6 +6,7 @@ import { WebSocket } from 'ws';
 import { dbOrdersRepo } from "../shared/tasks/dbOrders.js";
 import { LoggerController } from "../shared/controllers/LoggerController.js";
 import { DayTradeValues, stockDataInfo, StockInfo, tradeLogDto } from "../app/Dtos/TradingBotDtos.js";
+import { simFinRepo } from "../shared/tasks/simFinance.js";
 
 
 export const socketCall = async (): Promise<void> => {
@@ -17,13 +18,15 @@ export const socketCall = async (): Promise<void> => {
 
     //admin user to start websocket
     const userData = await dbTokenRepo.findFirst({ id: 'asdfghjkl' }) as DbTOkens
+
+    let userFinance = await simFinRepo.findFirst({userId: 'Shared'})
     //get list of users signed up for the sma200
     //const userServerAlgos = await dbAlgorithmListRepo.find({ where: { sma200sma50: true } })
     //get all orders for each above user
     let userOrders = await dbOrdersRepo.find({ where: { userId: 'Shared' }, orderBy: { orderTime: 'desc' } })
 
     let stockInfoMap = new Map<string, StockInfo>()
-    let listOfTradableStocks: string[] = ['AAPL', 'TSLA', 'MSFT', 'AMD', 'PLTR', 'XOM', 'NVO', 'NEE', 'BAC', 'NVDA']
+    let listOfTradableStocks: string[] = ['AAPL', 'TSLA', 'MSFT', 'AMD', 'PLTR', 'XOM', 'NVO', 'NEE', 'NVDA']
     for (let i = 0; i < listOfTradableStocks.length; i++) {
         stockInfoMap.set(listOfTradableStocks[i], { canTrade: true, numberOfTrades: 0, stopLoss: 0, stopLossGainThreshold: 0, tradeHigh: 0 })
     }
@@ -36,30 +39,28 @@ export const socketCall = async (): Promise<void> => {
     //set the values each stock will use in the algo
     let stockDayTradeValuesMap = new Map<string, DayTradeValues>()
 
-    stockDayTradeValuesMap.set('TSLA', { Buy: .003, Sell: .002, Check200: .001, SmaLong: 3600, SmaMedium: 1800, SmaShort: 300, SmaShortSell: 120 })
-    stockDayTradeValuesMap.set('AAPL', { Buy: .002, Sell: .002, Check200: .001, SmaLong: 3600, SmaMedium: 1200, SmaShort: 300, SmaShortSell: 120 })
-    stockDayTradeValuesMap.set('MSFT', { Buy: .002, Sell: .001, Check200: .001, SmaLong: 4200, SmaMedium: 1800, SmaShort: 300, SmaShortSell: 120 })
-    stockDayTradeValuesMap.set('AMD', { Buy: .002, Sell: .001, Check200: .001, SmaLong: 3600, SmaMedium: 1500, SmaShort: 300, SmaShortSell: 120 })
-    stockDayTradeValuesMap.set('PLTR', { Buy: .003, Sell: .002, Check200: .001, SmaLong: 3600, SmaMedium: 1500, SmaShort: 300, SmaShortSell: 120 })
-    stockDayTradeValuesMap.set('XOM', { Buy: .002, Sell: .001, Check200: .001, SmaLong: 2500, SmaMedium: 1500, SmaShort: 300, SmaShortSell: 120 })
-    stockDayTradeValuesMap.set('NVO', { Buy: .002, Sell: .001, Check200: .001, SmaLong: 2400, SmaMedium: 1500, SmaShort: 300, SmaShortSell: 120 })
-    stockDayTradeValuesMap.set('NEE', { Buy: .002, Sell: .001, Check200: .001, SmaLong: 2600, SmaMedium: 1500, SmaShort: 300, SmaShortSell: 120 })
-    stockDayTradeValuesMap.set('BAC', { Buy: .002, Sell: .001, Check200: .001, SmaLong: 2600, SmaMedium: 1500, SmaShort: 300, SmaShortSell: 120 })
-    stockDayTradeValuesMap.set('NVDA', { Buy: .003, Sell: .001, Check200: .001, SmaLong: 3600, SmaMedium: 1800, SmaShort: 300, SmaShortSell: 120 })
+    stockDayTradeValuesMap.set('TSLA', { Buy: .003, Sell: .002, Check200: .001, SmaLong: 3600, SmaMedium: 1800, SmaShort: 300, SmaShortSell: 120, SmaShortMinuteBuy: 60 })
+    stockDayTradeValuesMap.set('AAPL', { Buy: .002, Sell: .002, Check200: .001, SmaLong: 3600, SmaMedium: 1200, SmaShort: 300, SmaShortSell: 120, SmaShortMinuteBuy: 60 })
+    stockDayTradeValuesMap.set('MSFT', { Buy: .002, Sell: .001, Check200: .001, SmaLong: 4200, SmaMedium: 1800, SmaShort: 300, SmaShortSell: 120, SmaShortMinuteBuy: 60 })
+    stockDayTradeValuesMap.set('AMD', { Buy: .002, Sell: .001, Check200: .001, SmaLong: 3600, SmaMedium: 1500, SmaShort: 300, SmaShortSell: 120, SmaShortMinuteBuy: 60 })
+    stockDayTradeValuesMap.set('PLTR', { Buy: .003, Sell: .002, Check200: .001, SmaLong: 3600, SmaMedium: 1500, SmaShort: 300, SmaShortSell: 120, SmaShortMinuteBuy: 60 })
+    stockDayTradeValuesMap.set('XOM', { Buy: .002, Sell: .001, Check200: .001, SmaLong: 2500, SmaMedium: 1500, SmaShort: 300, SmaShortSell: 120, SmaShortMinuteBuy: 60 })
+    stockDayTradeValuesMap.set('NVO', { Buy: .002, Sell: .001, Check200: .001, SmaLong: 2400, SmaMedium: 1500, SmaShort: 300, SmaShortSell: 120, SmaShortMinuteBuy: 60 })
+    stockDayTradeValuesMap.set('NEE', { Buy: .002, Sell: .001, Check200: .001, SmaLong: 2600, SmaMedium: 1500, SmaShort: 300, SmaShortSell: 120, SmaShortMinuteBuy: 60 })
+    stockDayTradeValuesMap.set('NVDA', { Buy: .003, Sell: .001, Check200: .001, SmaLong: 3600, SmaMedium: 1800, SmaShort: 300, SmaShortSell: 120, SmaShortMinuteBuy: 60 })
 
 
     //create information to be used for each stock, the price history, the long, medium and short moving average, number of trades, if the stock can trage, and the last prices
     let stockDataMap = new Map<string, stockDataInfo>()
-    stockDataMap.set('AAPL', { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, last300Sellsma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
-    stockDataMap.set('MSFT', { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, last300Sellsma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
-    stockDataMap.set('PLTR', { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, last300Sellsma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
-    stockDataMap.set('AMD', { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, last300Sellsma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
-    stockDataMap.set('TSLA', { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, last300Sellsma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
-    stockDataMap.set('XOM', { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, last300Sellsma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
-    stockDataMap.set('NVO', { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, last300Sellsma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
-    stockDataMap.set('NEE', { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, last300Sellsma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
-    stockDataMap.set('BAC', { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, last300Sellsma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
-    stockDataMap.set('NVDA', { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, last300Sellsma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+    stockDataMap.set('AAPL', { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, last300Sellsma: 0, last60Buysma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+    stockDataMap.set('MSFT', { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, last300Sellsma: 0, last60Buysma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+    stockDataMap.set('PLTR', { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, last300Sellsma: 0, last60Buysma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+    stockDataMap.set('AMD', { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, last300Sellsma: 0, last60Buysma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+    stockDataMap.set('TSLA', { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, last300Sellsma: 0, last60Buysma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+    stockDataMap.set('XOM', { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, last300Sellsma: 0, last60Buysma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+    stockDataMap.set('NVO', { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, last300Sellsma: 0, last60Buysma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+    stockDataMap.set('NEE', { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, last300Sellsma: 0, last60Buysma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+    stockDataMap.set('NVDA', { history: [], last3600: [], last3600sma: 0, last1800sma: 0, last300sma: 0, last300Sellsma: 0, last60Buysma: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
 
     //intitalize websocket
     const schwabWebsocket = new WebSocket(userData.streamerSocketUrl)
@@ -91,7 +92,7 @@ export const socketCall = async (): Promise<void> => {
                 "SchwabClientCustomerId": userData.schwabClientCustomerId,
                 "SchwabClientCorrelId": userData.schwabClientCorrelId,
                 "parameters": {
-                    "keys": "AAPL, MSFT, PLTR, AMD, TSLA, XOM,NVO, NEE, BAC, NVDA",
+                    "keys": "AAPL, MSFT, PLTR, AMD, TSLA, XOM,NVO, NEE, NVDA",
                     "fields": "0,1,2,3,4,5,6,7,8,9,10,33"
                 }
             }
@@ -151,6 +152,7 @@ export const socketCall = async (): Promise<void> => {
                                 stockData.last1800sma = stockData.last3600.slice(stockDayTradeValues.SmaMedium * -1).reduce((sum, val) => sum + val, 0) / stockDayTradeValues.SmaMedium
                                 stockData.last300sma = stockData.last3600.slice(stockDayTradeValues.SmaShort * -1).reduce((sum, val) => sum + val, 0) / stockDayTradeValues.SmaShort
                                 stockData.last300Sellsma = stockData.last3600.slice(stockDayTradeValues.SmaShortSell * -1).reduce((sum, val) => sum + val, 0) / stockDayTradeValues.SmaShortSell
+                                stockData.last60Buysma = stockData.last3600.slice(stockDayTradeValues.SmaShortMinuteBuy * -1).reduce((sum, val) => sum + val, 0) / stockDayTradeValues.SmaShortMinuteBuy
                             }
                             //else if its greater than then we do a revolving door first in first out and recalculate the moving averages
                             else if (stockData.history.length > stockDayTradeValues.SmaLong) {
@@ -160,6 +162,7 @@ export const socketCall = async (): Promise<void> => {
                                 stockData.last1800sma = stockData.last3600.slice(stockDayTradeValues.SmaMedium * -1).reduce((sum, val) => sum + val, 0) / stockDayTradeValues.SmaMedium
                                 stockData.last300sma = stockData.last3600.slice(stockDayTradeValues.SmaShort * -1).reduce((sum, val) => sum + val, 0) / stockDayTradeValues.SmaShort
                                 stockData.last300Sellsma = stockData.last3600.slice(stockDayTradeValues.SmaShortSell * -1).reduce((sum, val) => sum + val, 0) / stockDayTradeValues.SmaShortSell
+                                stockData.last60Buysma = stockData.last3600.slice(stockDayTradeValues.SmaShortMinuteBuy * -1).reduce((sum, val) => sum + val, 0) / stockDayTradeValues.SmaShortMinuteBuy
                             }
                             //find the users most recent order for the stock
                             let filteredOrderOnStock = userOrders.filter(e => e.stockName == data.stockName)
@@ -184,7 +187,7 @@ export const socketCall = async (): Promise<void> => {
                             }
                             if (isBuy && stockInfo.canTrade) {
                                 //is buy and the algo is met
-                                if ((((stockData.last300sma - stockData.last1800sma) / stockData.last1800sma) < (stockDayTradeValues.Buy * -1)) && (((stockData.last300sma - stockData.last3600sma) / stockData.last3600sma) < stockDayTradeValues.Check200)) {
+                                if ((((stockData.last300sma - stockData.last1800sma) / stockData.last1800sma) < (stockDayTradeValues.Buy * -1)) && (((stockData.last300sma - stockData.last3600sma) / stockData.last3600sma) < stockDayTradeValues.Check200) && (data.askPrice <= userFinance?.spending!)) {
                                     console.log('Placing a buy order for: ' + data.stockName + ' - ' + data.askPrice)
                                     let orderId = Math.floor(Math.random() * 10000000000)
                                     await dbOrdersRepo.insert({
@@ -204,6 +207,9 @@ export const socketCall = async (): Promise<void> => {
                                     console.log('stop loss for: ' + data.stockName + ' - ' + stockInfo.stopLoss)
                                     stockInfo.numberOfTrades++
                                     orderPlaced = true;
+                                    let newSpending = userFinance?.spending! - data.askPrice
+                                    simFinRepo.update(userFinance?.id!, {...userFinance, spending: newSpending})
+                                    userFinance = await simFinRepo.findFirst({userId: 'Shared'})
                                     let logMessage: tradeLogDto = {
                                         stockName: data.stockName,
                                         orderId: orderId,
@@ -268,9 +274,9 @@ export const socketCall = async (): Promise<void> => {
                                     })
                                     stockInfo.numberOfTrades++
                                     orderPlaced = true;
-                                    if (data.bidPrice < filteredOrderOnStock[0].stockPrice) {
+                                    //if (data.bidPrice < filteredOrderOnStock[0].stockPrice) {
                                         stockInfo.canTrade = false
-                                    }
+                                    //}
                                     let logMessage: tradeLogDto = {
                                         stockName: data.stockName,
                                         orderId: filteredOrderOnStock[0].orderId,

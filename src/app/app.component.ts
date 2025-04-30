@@ -7,6 +7,7 @@ import { AuthController } from '../shared/controllers/AuthController.js';
 import { MatButtonModule } from '@angular/material/button';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatIconModule} from '@angular/material/icon';
+import { SimFInance, simFinRepo } from '../shared/tasks/simFinance.js';
 
 
 @Component({
@@ -39,8 +40,9 @@ export class AppComponent{
   navToServerAlgos(){
     this.router.navigate([`/serverTradeList`])
   }
-
-  ngOnInit(){
+  sharedFinance: SimFInance | undefined = undefined
+  async ngOnInit(){
     remult.initUser()
+    this.sharedFinance = await simFinRepo.findFirst({userId: 'Shared'})
   }
 }

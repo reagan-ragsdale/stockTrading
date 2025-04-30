@@ -179,10 +179,10 @@ export class AuthController {
     await dbTokenRepo.insert({userId: userId})
   }
 
-  @BackendMethod({ allowed: true })
+  /* @BackendMethod({ allowed: true })
   static async setAllUsersNewTokens() {
-    await dbTokenRepo.updateMany({where:{ id: { '!=': 'd'}}, set: {needsNewAuth: true}})
-  }
+    await dbTokenRepo.updateMany( set: {needsNewAuth: true})
+  } */
 
   
 

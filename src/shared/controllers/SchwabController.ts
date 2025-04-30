@@ -1,12 +1,12 @@
 import { BackendMethod, remult } from 'remult'
-import { getAccounts } from '../../server/schwabApiCalls'
+import { getAccountNumbers } from '../../server/schwabApiCalls'
 
 
 
 
 export class SchwabController {
 
-    static getAccounts: typeof getAccounts
+    static getAccounts: typeof getAccountNumbers
   
     @BackendMethod({ allowed: true })
     static async getAccountsCall(accessToken: string): Promise<any> {

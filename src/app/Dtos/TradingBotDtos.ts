@@ -13,6 +13,7 @@ export type DayTradeValues = {
     SmaMedium: number;
     SmaShort: number;
     SmaShortSell: number;
+    SmaShortMinuteBuy: number;
 }
 export type stockDataInfo = {
     history: number[];
@@ -21,6 +22,7 @@ export type stockDataInfo = {
     last1800sma: number;
     last300sma: number;
     last300Sellsma: number;
+    last60Buysma: number;
     lastPrice: number;
     lastAsk: number;
     lastBid: number;
