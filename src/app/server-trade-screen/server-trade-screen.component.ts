@@ -825,6 +825,8 @@ export class ServerTradeScreenComponent implements OnInit {
     let stopLossThreshold = 0
     let tradeHigh = 0
     let canTrade = true
+    console.log(longArray)
+    console.log(shortArraySell)
     for (let i = 0; i < longArrayLen; i++) {
       if(canTrade == false){
         if((new Date(shortArray[i].date).getTime() - new Date(orderLocations[orderLocations.length - 1].date).getTime()) > 1800000){
