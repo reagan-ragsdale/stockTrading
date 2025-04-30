@@ -888,8 +888,8 @@ export class ServerTradeScreenComponent implements OnInit {
     console.log(shortArraySell)
     for (let i = 0; i < longArrayLen; i++) {
       if(canTrade == false){
-        console.log(new Date(Date.parse(shortArray[i].date).getTime()))
-        console.log(new Date(Date.parse(orderLocations[orderLocations.length - 1].date).getTime()))
+        console.log(new Date(Date.parse(shortArray[i].date)).getTime())
+        console.log(new Date(Date.parse(orderLocations[orderLocations.length - 1].date)).getTime())
         if((new Date(shortArray[i].date).getTime() - new Date(orderLocations[orderLocations.length - 1].date).getTime()) > 1800000){
           canTrade = true
         }
