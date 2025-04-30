@@ -824,37 +824,50 @@ export class ServerTradeScreenComponent implements OnInit {
     let stopLoss = 0;
     let stopLossThreshold = 0
     let tradeHigh = 0
+    let canTrade = true
     for (let i = 0; i < longArrayLen; i++) {
-      if (buyOrSell == 'Buy' && (((shortArray[i].avg - mediumArray[i].avg) / mediumArray[i].avg) < (buyGutter * -1)) && (((shortArray[i].avg - longArray[i].avg) / longArray[i].avg) < checkGutter) && (shortArrayBuy[i].avg > shortArray[i].avg)) {
-        orderLocations.push({ buySell: 'Buy', date: shortArray[i].date, price: shortArray[i].close })
-        stopLoss = shortArray[i].close - (shortArray[i].close * .002)
-        stopLossThreshold = shortArray[i].close + (shortArray[i].close * .001)
-        tradeHigh = shortArray[i].close
-        buyOrSell = 'Sell'
+      if(canTrade == false){
+        if((new Date(shortArray[i].date).getTime() - new Date(orderLocations[orderLocations.length - 1].date).getTime()) > 1800000){
+          canTrade = true
+        }
       }
-      else if (buyOrSell == 'Sell' && (((shortArraySell[i].avg - mediumArray[i].avg) / mediumArray[i].avg) > sellGutter) && shortArraySell[i].close > orderLocations[orderLocations.length - 1].price) {
-        orderLocations.push({ buySell: 'Sell', date: shortArraySell[i].date, price: shortArraySell[i].close })
-        profit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
-        buyOrSell = 'Buy'
+      if(canTrade && buyOrSell == 'Buy'){
+        if (canTrade && buyOrSell == 'Buy' && (((shortArray[i].avg - mediumArray[i].avg) / mediumArray[i].avg) < (buyGutter * -1)) && (((shortArray[i].avg - longArray[i].avg) / longArray[i].avg) < checkGutter) && (shortArrayBuy[i].avg > shortArray[i].avg)) {
+          orderLocations.push({ buySell: 'Buy', date: shortArray[i].date, price: shortArray[i].close })
+          stopLoss = shortArray[i].close - (shortArray[i].close * .002)
+          stopLossThreshold = shortArray[i].close + (shortArray[i].close * .001)
+          tradeHigh = shortArray[i].close
+          buyOrSell = 'Sell'
+        }
       }
-      else if(buyOrSell == 'Sell' && shortArraySell[i].close <= stopLoss){
-        orderLocations.push({ buySell: 'Sell', date: shortArraySell[i].date, price: shortArraySell[i].close })
-        profit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
-        buyOrSell = 'Buy'
+      else if(canTrade && buyOrSell == 'Sell'){
+        if ((((shortArraySell[i].avg - mediumArray[i].avg) / mediumArray[i].avg) > sellGutter) && shortArraySell[i].close > orderLocations[orderLocations.length - 1].price) {
+          orderLocations.push({ buySell: 'Sell', date: shortArraySell[i].date, price: shortArraySell[i].close })
+          profit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
+          buyOrSell = 'Buy'
+        }
+        else if(shortArraySell[i].close <= stopLoss){
+          orderLocations.push({ buySell: 'Sell', date: shortArraySell[i].date, price: shortArraySell[i].close })
+          profit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
+          canTrade = false;
+          buyOrSell = 'Buy'
+        }
+        else if (i == longArrayLen - 1) {
+          orderLocations.push({ buySell: 'Sell', date: shortArray[i].date, price: shortArray[i].close })
+          profit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
+        }
+        else if((shortArray[i].close >= stopLossThreshold) && stopLoss < orderLocations[orderLocations.length - 1].price){
+          stopLoss = orderLocations[orderLocations.length - 1].price
+        }
+        else if((shortArray[i].close >= stopLossThreshold) && stopLoss >= orderLocations[orderLocations.length - 1].price){
+          stopLoss += shortArray[i].close - tradeHigh
+        }
+        if(shortArray[i].close > tradeHigh){
+          tradeHigh = shortArray[i].close
+        }
       }
-      else if (buyOrSell == 'Sell' && i == longArrayLen - 1) {
-        orderLocations.push({ buySell: 'Sell', date: shortArray[i].date, price: shortArray[i].close })
-        profit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
-      }
-      else if(buyOrSell == 'Sell' && (shortArray[i].close >= stopLossThreshold) && stopLoss < orderLocations[orderLocations.length - 1].price){
-        stopLoss = orderLocations[orderLocations.length - 1].price
-      }
-      else if(buyOrSell == 'Sell' && (shortArray[i].close >= stopLossThreshold) && stopLoss >= orderLocations[orderLocations.length - 1].price){
-        stopLoss += shortArray[i].close - tradeHigh
-      }
-      if(shortArray[i].close > tradeHigh){
-        tradeHigh = shortArray[i].close
-      }
+       
+      
     }
     return { orderLocations: orderLocations, profit: profit }
   }
