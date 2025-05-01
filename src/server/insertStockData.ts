@@ -187,7 +187,7 @@ export const socketCall = async (): Promise<void> => {
                             }
                             if (isBuy && stockInfo.canTrade) {
                                 //is buy and the algo is met
-                                if ((((stockData.last300sma - stockData.last1800sma) / stockData.last1800sma) < (stockDayTradeValues.Buy * -1)) && (((stockData.last300sma - stockData.last3600sma) / stockData.last3600sma) < stockDayTradeValues.Check200) && (data.askPrice <= userFinance?.spending!)) {
+                                if ((((stockData.last300sma - stockData.last1800sma) / stockData.last1800sma) < (stockDayTradeValues.Buy * -1)) && (((stockData.last300sma - stockData.last3600sma) / stockData.last3600sma) < stockDayTradeValues.Check200) && (stockData.last60Buysma > stockData.last300sma) && (data.askPrice <= userFinance?.spending!)) {
                                     console.log('Placing a buy order for: ' + data.stockName + ' - ' + data.askPrice)
                                     let orderId = Math.floor(Math.random() * 10000000000)
                                     await dbOrdersRepo.insert({
