@@ -16,6 +16,7 @@ export class SchwabController {
     }
     @BackendMethod({ allowed: true })
     static async getAccountInfoCall(accountNum: string, accessToken: string): Promise<any> {
+        console.log('here')
        return await SchwabController.getAccountInfo(accountNum, accessToken)
   
     }

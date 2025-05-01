@@ -23,7 +23,7 @@ export const getAccountNumbers = async (accessToken: string): Promise<any> => {
 //get the information for the account based on the above number
 export const getAccountInfo = async (accountNumber: string, accessToken: string): Promise<any> => {
     try {
-        
+        console.log('here 2')
         const url = `https://api.schwabapi.com/trader/v1/accounts/${accountNumber}`;
         const options = {
             method: 'GET',
@@ -33,6 +33,7 @@ export const getAccountInfo = async (accountNumber: string, accessToken: string)
         };
 
         const response = await fetch(url, options);
+        console.log('here 3')
         const result = await response.json();
         return result
     }
