@@ -41,7 +41,7 @@ import { DbListOfProfits } from '../shared/tasks/dbListOfProfits.js'
 import { SimulationController } from '../shared/controllers/SimulationController.js'
 import { runIntraDaySim } from './runIntraDaySim.js'
 import { SchwabController } from '../shared/controllers/SchwabController.js'
-import { getAccountNumbers } from './schwabApiCalls.js'
+import { getAccountInfo, getAccountNumbers } from './schwabApiCalls.js'
 import { LoggerController } from '../shared/controllers/LoggerController.js'
 import { emailer } from './log-emailer.js'
 import { createExcel } from './logReport.js'
@@ -54,6 +54,7 @@ AuthController.verify = verify
 OAuthContoller.sendCall = oauthCall;
 SimulationController.intraDaySimulation = runIntraDaySim
 SchwabController.getAccountNumbers = getAccountNumbers
+SchwabController.getAccountInfo = getAccountInfo
 LoggerController.sendEmail = emailer
 LoggerController.generateExcel = createExcel
 

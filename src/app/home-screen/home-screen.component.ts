@@ -994,6 +994,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     //this.getInitialVolumeData()
   }
   getInitalStochData(){
+    this.stochData.length = 0
     let tradeHigh = 0
     let tradeLow = 1000000
     if(this.chartInfo.length < 3600){
