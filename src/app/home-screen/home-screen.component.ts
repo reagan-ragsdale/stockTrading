@@ -404,6 +404,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       let newValue = (this.selectedStockCurrent - this.selectedStockLow) / (this.selectedStockHigh - this.selectedStockLow)
       this.stochData.push({value: newValue, time: this.chartData.time[this.chartData.time.length - 1]})
     }
+    console.log(this.stochData)
     this.stochChart.data.datasets[0].data = [...this.stochData.map(e => e.value)]
     this.stochChart.data.labels = [...this.stochData.map(e => new Date(e.time).toLocaleTimeString())]
     this.stochChart.update()
@@ -1021,6 +1022,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         this.stochData.push({value: newValue, time: this.chartInfo[i].time})
       }
     }
+    console.log(this.stochData)
     
   }
   userLeaderBoard: any[] = []
