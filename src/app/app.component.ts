@@ -8,6 +8,8 @@ import { MatButtonModule } from '@angular/material/button';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatIconModule} from '@angular/material/icon';
 import { SimFInance, simFinRepo } from '../shared/tasks/simFinance.js';
+import { SchwabController } from '../shared/controllers/SchwabController.js';
+import { dbTokenRepo } from '../shared/tasks/dbTokens.js';
 
 
 @Component({
@@ -41,8 +43,12 @@ export class AppComponent{
     this.router.navigate([`/serverTradeList`])
   }
   sharedFinance: SimFInance | undefined = undefined
+  schwabFinance: any[] = []
   async ngOnInit(){
     remult.initUser()
+    let tokens = await AuthController.getTokenUserByRemult()
     this.sharedFinance = await simFinRepo.findFirst({userId: 'Shared'})
+    this.schwabFinance = await SchwabController.getAccountsNumberCall(tokens?.accessToken!)
+    console.log(this.schwabFinance)
   }
 }

@@ -3,6 +3,8 @@ import { LogService } from '../../app/services/LogService.js'
 import { tradeLogDto } from '../../app/Dtos/TradingBotDtos'
 import { emailer } from '../../server/log-emailer'
 import { createExcel } from '../../server/logReport'
+import { dbOrdersRepo } from '../tasks/dbOrders.js'
+import { simFinRepo } from '../tasks/simFinance.js'
 
 
 
@@ -151,9 +153,23 @@ export class LoggerController {
                 time: 1745793639000
             }
         ]   */
-
+        
         let excelBuffer = await LoggerController.generateExcel(logData)
         await LoggerController.sendEmail(excelBuffer)
+        let listOfOrders = await dbOrdersRepo.find({orderBy: {orderTime: 'desc'}})
+        let distinctStocks = listOfOrders.map(e => e.stockName).filter((v,i,a) => a.indexOf(v) === i)
+        let totalProfit = 0
+        for(let i = 0; i < distinctStocks.length; i++){
+            let filteredOnStock = listOfOrders.filter(e => e.stockName == distinctStocks[i])
+            if(filteredOnStock.length > 0 && filteredOnStock[0].orderType == 'Sell'){
+                totalProfit += filteredOnStock[0].stockPrice
+            }
+        }
+        let sharedFinance = await simFinRepo.findFirst({userId: 'Shared'})
+        let newSpending = sharedFinance?.spending! + totalProfit
+        await simFinRepo.save({...sharedFinance, spending: newSpending})
+
+
 
     }
 

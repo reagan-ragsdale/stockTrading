@@ -53,7 +53,7 @@ AuthController.generate = generate;
 AuthController.verify = verify
 OAuthContoller.sendCall = oauthCall;
 SimulationController.intraDaySimulation = runIntraDaySim
-SchwabController.getAccounts = getAccountNumbers
+SchwabController.getAccountNumbers = getAccountNumbers
 LoggerController.sendEmail = emailer
 LoggerController.generateExcel = createExcel
 

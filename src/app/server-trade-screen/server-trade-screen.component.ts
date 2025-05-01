@@ -376,6 +376,7 @@ export class ServerTradeScreenComponent implements OnInit {
     if (this.intraDayChecked) {
       this.isLoading = true
       this.runSimulationIntraDay()
+      this.calcualateIntraDayRsi()
       this.isLoading = false
     }
     else {
@@ -1205,41 +1206,36 @@ export class ServerTradeScreenComponent implements OnInit {
   }
   calcualateIntraDayRsi() {
     this.rsiData.length = 0
-    this.rsiPeriodNum = 300
-    let rsiData = this.stockDataForSelectedDay.slice(this.intraDayLongSma - this.rsiPeriodNum - 2)
-
-
-    let rsiUps = []
-    let rsiDowns = []
-    for (let i = 1; i <= this.rsiPeriodNum; i++) {
-      let change = rsiData[i].stockPrice - rsiData[i - 1].stockPrice
-      if (change >= 0) {
-        rsiUps.push(change)
+    
+    let tradeHigh = 0
+    let tradeLow = 1000000
+    for(let i = 0; i < this.intraDayLongSma; i++){
+      if(this.stockDataForSelectedDay[i].stockPrice > tradeHigh){
+        tradeHigh = this.stockDataForSelectedDay[i].stockPrice
       }
-      else {
-        rsiDowns.push(Math.abs(change))
+      if(this.stockDataForSelectedDay[i].stockPrice < tradeLow){
+        tradeLow = this.stockDataForSelectedDay[i].stockPrice
       }
+      this.rsiData.push({value: null, time: this.stockDataForSelectedDay[i].time})
     }
-    let avgUp = rsiUps.reduce((sum, val) => sum + val, 0) / this.rsiPeriodNum
-    let avgDown = rsiDowns.reduce((sum, val) => sum + val, 0) / this.rsiPeriodNum
 
-    for (let i = this.rsiPeriodNum + 1; i < rsiData.length; i++) {
-      let change = rsiData[i].stockPrice - rsiData[i - 1].stockPrice;
-      let gain = change > 0 ? change : 0;
-      let loss = change < 0 ? Math.abs(change) : 0;
-
-      // Wilder's smoothing
-      avgUp = (avgUp * (this.rsiPeriodNum - 1) + gain) / this.rsiPeriodNum;
-      avgDown = (avgDown * (this.rsiPeriodNum - 1) + loss) / this.rsiPeriodNum;
-
-      const rs = avgDown === 0 ? 100 : avgUp / avgDown;
-      const rsi = 100 - (100 / (1 + rs));
-      this.rsiData.push({ rsiNum: rsi, date: new Date(rsiData[i].time).toLocaleTimeString() });
-
+    for (let j = this.intraDayLongSma; j < this.stockDataForSelectedDay.length; j++) {
+      if(this.stockDataForSelectedDay[j].stockPrice > tradeHigh){
+        tradeHigh = this.stockDataForSelectedDay[j].stockPrice
+      }
+      if(this.stockDataForSelectedDay[j].stockPrice < tradeLow){
+        tradeLow = this.stockDataForSelectedDay[j].stockPrice
+      }
+      let newValue = (this.stockDataForSelectedDay[j].stockPrice - tradeLow) / (tradeHigh - tradeLow)
+      this.rsiData.push({value: newValue, time: this.stockDataForSelectedDay[j].time})
     }
-    this.rsiChart.data.datasets[0].data = this.rsiData.map(e => e.rsiNum)
-    this.rsiChart.data.labels = this.rsiData.map(e => e.date)
+
+    this.rsiChart.data.datasets[0].data = this.rsiData.map(e => e.value)
+    this.rsiChart.data.labels = this.rsiData.map(e => new Date(e.time).toLocaleTimeString())
     this.rsiChart.update()
+    
+
+
   }
 
   selectedStockBasicHistoryData: DbStockBasicHistory[] = []
@@ -1296,6 +1292,7 @@ export class ServerTradeScreenComponent implements OnInit {
     this.interDayShortSma = 5
     this.createOrUpdateChart()
     this.runSimulation()
+    this.calcualateIntraDayRsi()
     await this.getStockHistoricalData()
     await this.getStockBasicHistoryData();
     this.isLoading = false;

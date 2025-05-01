@@ -3,35 +3,54 @@ import { tradeLogDto } from "../app/Dtos/TradingBotDtos";
 export const createExcel = async (logArray: tradeLogDto[]): Promise<excelJS.Buffer> => {
     const workbook = new excelJS.Workbook();
     const worksheet = workbook.addWorksheet("Log");
-    //const ResultsWorksheet = workbook.addWorksheet("Results")
+    const ResultsWorksheet = workbook.addWorksheet("Results")
+
+    ResultsWorksheet.columns = [
+        { header: "Stock Name", key: "stockName", width: 15, alignment: { horizontal: 'center' } },
+        { header: "Profit", key: "profit", width: 15, alignment: { horizontal: 'center' }, numFmt: '$#,##0.00' },
+        { header: "Wins", key: "wins", width: 15, alignment: { horizontal: 'center' } },
+        { header: "Losses", key: "losses", width: 15, alignment: { horizontal: 'center' } },
+        { header: "Avg Win", key: "avgWin", width: 15, alignment: { horizontal: 'center' }, numFmt: '$#,##0.00' },
+        { header: "Avg Loss", key: "avgLoss", width: 15, alignment: { horizontal: 'center' }, numFmt: '$#,##0.00' },
+    ]
+    let blankResultRow = {
+        stockName: '',
+        profit: '',
+        wins: '',
+        losses: '',
+        avgWin: '',
+        avgLoss: ''
+    }
+
+    let stockResults = []
 
     worksheet.columns = [
-        { header: "Stock Name", key: "stockName", width: 15, alignment: {horizontal: 'center'} },
-        { header: "Tading Amount", key: "tradingAmount", width: 15, alignment: {horizontal: 'center'} },
-        { header: "Order ID", key: "orderId", width: 20, alignment: {horizontal: 'center'} },
-        { header: "Time", key: "time", width: 20, alignment: {horizontal: 'center'} },
-        { header: "Description", key: "description", width: 30, alignment: {horizontal: 'center'} },
-        { header: "Shares", key: "shares", width: 10, alignment: {horizontal: 'center'} },
-        { header: "Last Price", key: "lastPrice", width: 10, alignment: {horizontal: 'center'} },
-        { header: "Last Ask/Buy", key: "lastAsk", width: 10, alignment: {horizontal: 'center'} },
-        { header: "Last Bid/Sell", key: "lastBid", width: 10, alignment: {horizontal: 'center'} },
-        { header: "Can Trade", key: "canTrade", width: 10, alignment: {horizontal: 'center'} },
-        { header: "Number Of Trades", key: "numberOfTrades", width: 10, alignment: {horizontal: 'center'} },
-        { header: "Stop Loss", key: "stopLoss", width: 10, alignment: {horizontal: 'center'} },
-        { header: "Stop Loss Gain Threshold", key: "stopLossGainThreshold", width: 10, alignment: {horizontal: 'center'} },
-        { header: "Trade High", key: "tradeHigh", width: 10, alignment: {horizontal: 'center'} },
-        { header: "Long SMA", key: "longSma", width: 10, alignment: {horizontal: 'center'} },
-        { header: "Medium SMA", key: "mediumSma", width: 10, alignment: {horizontal: 'center'} },
-        { header: "Short SMA Buy", key: "shortSmaBuy", width: 10, alignment: {horizontal: 'center'} },
-        { header: "Short SMA Minute Buy", key: "shortSmaMinuteBuy", width: 10, alignment: {horizontal: 'center'} },
-        { header: "Short SMA Sell", key: "shortSmaSell", width: 10, alignment: {horizontal: 'center'} },
-        { header: "Buy Param", key: "buyParam", width: 10, alignment: {horizontal: 'center'} },
-        { header: "Sell Param", key: "sellParam", width: 10, alignment: {horizontal: 'center'} },
-        { header: "Check Param", key: "checkParam", width: 10, alignment: {horizontal: 'center'} },
-        { header: "Long SMA Length", key: "longSmaLength", width: 10, alignment: {horizontal: 'center'} },
-        { header: "Medium SMA Length", key: "mediumSmaLength", width: 10, alignment: {horizontal: 'center'} },
-        { header: "Short SMA Buy Length", key: "shortSmaBuyLength", width: 10, alignment: {horizontal: 'center'} },
-        { header: "Short SMA Sell Length", key: "shortSmaSellLength", width: 10, alignment: {horizontal: 'center'} }
+        { header: "Stock Name", key: "stockName", width: 15, alignment: { horizontal: 'center' } },
+        { header: "Tading Amount", key: "tradingAmount", width: 15, alignment: { horizontal: 'center' }, numFmt: '$#,##0.00' },
+        { header: "Order ID", key: "orderId", width: 20, alignment: { horizontal: 'center' } },
+        { header: "Time", key: "time", width: 20, alignment: { horizontal: 'center' } },
+        { header: "Description", key: "description", width: 30, alignment: { horizontal: 'center' } },
+        { header: "Shares", key: "shares", width: 10, alignment: { horizontal: 'center' } },
+        { header: "Last Price", key: "lastPrice", width: 10, alignment: { horizontal: 'center' } },
+        { header: "Last Ask/Buy", key: "lastAsk", width: 10, alignment: { horizontal: 'center' } },
+        { header: "Last Bid/Sell", key: "lastBid", width: 10, alignment: { horizontal: 'center' } },
+        { header: "Can Trade", key: "canTrade", width: 10, alignment: { horizontal: 'center' } },
+        { header: "Number Of Trades", key: "numberOfTrades", width: 10, alignment: { horizontal: 'center' } },
+        { header: "Stop Loss", key: "stopLoss", width: 10, alignment: { horizontal: 'center' } },
+        { header: "Stop Loss Gain Threshold", key: "stopLossGainThreshold", width: 10, alignment: { horizontal: 'center' } },
+        { header: "Trade High", key: "tradeHigh", width: 10, alignment: { horizontal: 'center' } },
+        { header: "Long SMA", key: "longSma", width: 10, alignment: { horizontal: 'center' } },
+        { header: "Medium SMA", key: "mediumSma", width: 10, alignment: { horizontal: 'center' } },
+        { header: "Short SMA Buy", key: "shortSmaBuy", width: 10, alignment: { horizontal: 'center' } },
+        { header: "Short SMA Minute Buy", key: "shortSmaMinuteBuy", width: 10, alignment: { horizontal: 'center' } },
+        { header: "Short SMA Sell", key: "shortSmaSell", width: 10, alignment: { horizontal: 'center' } },
+        { header: "Buy Param", key: "buyParam", width: 10, alignment: { horizontal: 'center' } },
+        { header: "Sell Param", key: "sellParam", width: 10, alignment: { horizontal: 'center' } },
+        { header: "Check Param", key: "checkParam", width: 10, alignment: { horizontal: 'center' } },
+        { header: "Long SMA Length", key: "longSmaLength", width: 10, alignment: { horizontal: 'center' } },
+        { header: "Medium SMA Length", key: "mediumSmaLength", width: 10, alignment: { horizontal: 'center' } },
+        { header: "Short SMA Buy Length", key: "shortSmaBuyLength", width: 10, alignment: { horizontal: 'center' } },
+        { header: "Short SMA Sell Length", key: "shortSmaSellLength", width: 10, alignment: { horizontal: 'center' } }
     ];
     let blankRow = {
         stockName: '',
@@ -97,8 +116,71 @@ export const createExcel = async (logArray: tradeLogDto[]): Promise<excelJS.Buff
                 shortSmaBuyLength: filteredByOrder[j].dayTradeValues.SmaShort,
                 shortSmaSellLength: filteredByOrder[j].dayTradeValues.SmaShortSell
             })
+            if (filteredByOrder[j].shares == 1) {
+                stockResults.push({ stockName: filteredByOrder[j].stockName, orderType: filteredByOrder[j].logType, buyPrice: filteredByOrder[j].stockDataInfo.lastAsk, sellPrice: filteredByOrder[j].stockDataInfo.lastBid })
+            }
         }
         worksheet.addRow(blankRow)
+    }
+    let finalResults = []
+    let allProfit = 0
+    let allWins = 0
+    let allLosses = 0
+    let allTotalWinAmt = 0
+    let allTotalLossAmt = 0
+    let allAvgWinAmt = 0
+    let allAvgLossAmt = 0
+    let distinctStocks = stockResults.map(e => e.stockName).filter((v, i, a) => a.indexOf(v) === i)
+    for (let i = 0; i < distinctStocks.length; i++) {
+        let stockProfit = 0
+        let totalWins = 0
+        let totalLosses = 0
+        let totalLossAmt = 0
+        let totalWinAmt = 0
+        let avgWinAmt = 0
+        let avgLossAmt = 0
+        let filteredByStock = stockResults.filter(e => e.stockName == distinctStocks[i])
+        for (let j = 0; j < filteredByStock.length - 1; j++) {
+            //need to find each pair of buy and sells
+            if (filteredByStock[j].orderType == 'Sell' && filteredByStock[j + 1].orderType == 'Buy') {
+                let profit = filteredByStock[j].sellPrice - filteredByStock[j + 1].buyPrice
+                stockProfit += profit
+                allProfit += stockProfit
+                if (profit > 0) {
+                    totalWins++
+                    totalWinAmt += profit
+                }
+                else {
+                    totalLosses++
+                    totalLossAmt += profit
+                }
+            }
+
+        }
+        avgLossAmt = totalLosses == 0 ? 0 : totalLossAmt / totalLosses
+        avgWinAmt = totalWins == 0 ? 0 : totalWinAmt / totalWins
+
+        allProfit += stockProfit
+        allWins += totalWins
+        allLosses += totalLosses
+        allTotalWinAmt += totalWinAmt
+        allTotalLossAmt += totalLossAmt
+
+        finalResults.push({ stockName: distinctStocks[i], profit: stockProfit, numWins: totalWins, numLosses: totalLosses, winAmt: avgWinAmt, lossAmt: avgLossAmt })
+    }
+    allAvgWinAmt = allWins == 0 ? 0 : allTotalWinAmt / allWins
+    allAvgLossAmt = allLosses == 0 ? 0 : allTotalLossAmt / allLosses
+    finalResults.unshift({ stockName: 'All', profit: allProfit, numWins: allWins, numLosses: allLosses, winAmt: allAvgWinAmt, lossAmt: allAvgLossAmt })
+
+    for (let i = 0; i < finalResults.length; i++) {
+        ResultsWorksheet.addRow({
+            stockName: finalResults[i].stockName,
+            profit: finalResults[i].profit,
+            wins: finalResults[i].numWins,
+            losses: finalResults[i].numLosses,
+            avgWin: finalResults[i].winAmt,
+            avgLoss: finalResults[i].lossAmt
+        })
     }
 
     const buffer = await workbook.xlsx.writeBuffer();

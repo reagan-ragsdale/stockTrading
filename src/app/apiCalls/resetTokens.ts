@@ -5,6 +5,6 @@ export const resetTokens = async () => {
     let listOfUsers = await dbTokenRepo.find()
     for(let i = 0; i < listOfUsers.length; i++){
         let selectectedUser = listOfUsers[i]
-        await dbTokenRepo.update(selectectedUser.id!, {...selectectedUser, needsNewAuth: true})
+        await dbTokenRepo.save({...selectectedUser, needsNewAuth: true})
     }
 }

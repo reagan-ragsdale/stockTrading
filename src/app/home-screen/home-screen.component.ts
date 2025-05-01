@@ -68,6 +68,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   schwabWebsocket: WebSocket | null = null
   hasBeenSent: boolean = false
   stockChart: any
+  stochChart: any
   volumeChart: any
   moversData: any = []
   openOrder: boolean = false
@@ -308,6 +309,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     if (this.listOfAddedLines.length > 0) {
       this.refreshAddedLines()
     }
+    this.refreshStochData()
     /* if (this.isUserOrBot == 'Bot' && this.isBotAuthorized == true && !this.isOrderPending) {
       let shouldPlaceOrder: buySellDto = {
         shouldExecuteOrder: false
@@ -393,6 +395,18 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       let selectedDataSet = this.stockChart.data.datasets.filter((e: { label: string; }) => e.label == this.listOfAddedLines[i].smaLength.toString())[0]
       selectedDataSet.data.push(newVal / this.listOfAddedLines[i].smaLength)
     }
+  }
+  refreshStochData(){
+    if(this.chartData.history.length < 3600){
+      this.stochData.push({value: null, time: this.chartData.time[this.chartData.time.length - 1]})
+    }
+    else{
+      let newValue = (this.selectedStockCurrent - this.selectedStockLow) / (this.selectedStockHigh - this.selectedStockLow)
+      this.stochData.push({value: newValue, time: this.chartData.time[this.chartData.time.length - 1]})
+    }
+    this.stochChart.data.datasets[0].data = [...this.stochData.map(e => e.value)]
+    this.stochChart.data.labels = [...this.stochData.map(e => new Date(e.time).toLocaleTimeString())]
+    this.stochChart.update()
   }
   submitFollowUp() {
     this.isBotAuthorized = true;
@@ -647,6 +661,69 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       }
     })
 
+
+  }
+  createStochChart(){
+    console.log('create chart')
+    this.stochChart = new Chart("stoch-chart", {
+      type: 'line', //this denotes tha type of chart
+
+      data: {// values on X-Axis
+
+        labels: this.stochData.map(e => new Date(e.time).toLocaleTimeString()),
+
+        datasets: [
+          {
+            label: 'Stoch',
+            data: this.stochData.map(e => e.value),
+            backgroundColor: '#54C964',
+            hoverBackgroundColor: '#54C964',
+            borderColor: '#54C964',
+            pointBackgroundColor: '#54C964',
+            pointBorderColor: '#54C964',
+            pointRadius: 0,
+            spanGaps: true
+          }
+        ]
+      },
+      options: {
+
+        aspectRatio: 2,
+        color: '#DBD4D1',
+        font: {
+          weight: 'bold'
+        },
+        elements: {
+          line: {
+            backgroundColor: '#54C964',
+            borderColor: '#54C964'
+          },
+          point: {
+            radius: 1,
+            hitRadius: 3
+          }
+        },
+        animation: false,
+
+        scales: {
+          y: {
+            max: 100,
+            min: 0,
+            grid: {
+              color: 'hsl(18, 12%, 60%)'
+            },
+          },
+          x: {
+            grid: {
+              display: false,
+              color: 'hsl(18, 12%, 60%)'
+            },
+
+          }
+
+        }
+      }
+    })
 
   }
 
@@ -912,7 +989,39 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         break;
       }
     }
-    this.getInitialVolumeData()
+    this.getInitalStochData()
+    //this.getInitialVolumeData()
+  }
+  getInitalStochData(){
+    let tradeHigh = 0
+    let tradeLow = 1000000
+    if(this.chartInfo.length < 3600){
+      for(let i = 0; i < this.chartInfo.length; i++){
+        this.stochData.push({value: null, time: this.chartInfo[i].time})
+      }
+    }
+    else{
+      for(let i = 0; i < 3600; i++){
+        if(this.chartInfo[i].stockPrice > tradeHigh){
+          tradeHigh = this.chartInfo[i].stockPrice
+        }
+        if(this.chartInfo[i].stockPrice < tradeLow){
+          tradeLow = this.chartInfo[i].stockPrice
+        }
+        this.stochData.push({value: null, time: this.chartInfo[i].time})
+      }
+      for(let i = 3600; i < this.chartInfo.length; i++){
+        if(this.chartInfo[i].stockPrice > tradeHigh){
+          tradeHigh = this.chartInfo[i].stockPrice
+        }
+        if(this.chartInfo[i].stockPrice < tradeLow){
+          tradeLow = this.chartInfo[i].stockPrice
+        }
+        let newValue = (this.chartInfo[i].stockPrice - tradeLow) / (tradeHigh - tradeLow)
+        this.stochData.push({value: newValue, time: this.chartInfo[i].time})
+      }
+    }
+    
   }
   userLeaderBoard: any[] = []
   async getUserLeaderBoard() {
@@ -944,7 +1053,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     return dateTime
   }
 
-
+  stochData: any[] = []
 
   isLoading: boolean = false;
   async ngOnInit() {
@@ -955,8 +1064,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     await AuthController.resetUser()
     let userTokenData = await dbTokenRepo.findFirst({ userId: user?.id }) as DbTOkens
     if (userTokenData.accountNum == '') {
-      let accountNum = await SchwabController.getAccountsCall(userTokenData.accessToken)
-      console.log(accountNum)
+      //let accountNum = await SchwabController.getAccountsCall(userTokenData.accessToken)
+      //console.log(accountNum)
       //await dbTokenRepo.update(userTokenData.id!, {...userTokenData, accountNum: accountNum})
       //userTokenData = await dbTokenRepo.findFirst({userId: user?.id}) as DbTOkens
     }
@@ -968,7 +1077,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     await this.getStockInfo()
     this.userData = await dbTokenRepo.findFirst({ userId: remult.user?.id }) as DbTOkens
     this.createOrUpdateChart()
-    //this.createVolumeChart()
+    this.createStochChart()
     await this.getStockData()
     await this.loadStockVariance()
     this.startWebsocket()
