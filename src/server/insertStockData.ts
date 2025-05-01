@@ -174,6 +174,7 @@ export const socketCall = async (): Promise<void> => {
                                 stockInfo.canTrade = true
                                 let logMessage: tradeLogDto = {
                                     stockName: data.stockName,
+                                    tradingAmount: userFinance?.spending!,
                                     orderId: filteredOrderOnStock[0].orderId,
                                     shares: 0,
                                     dayTradeValues: structuredClone(stockDayTradeValues),
@@ -212,6 +213,7 @@ export const socketCall = async (): Promise<void> => {
                                     userFinance = await simFinRepo.findFirst({userId: 'Shared'})
                                     let logMessage: tradeLogDto = {
                                         stockName: data.stockName,
+                                        tradingAmount: userFinance?.spending!,
                                         orderId: orderId,
                                         shares:1,
                                         dayTradeValues: structuredClone(stockDayTradeValues),
@@ -248,6 +250,7 @@ export const socketCall = async (): Promise<void> => {
                                     orderPlaced = true;
                                     let logMessage: tradeLogDto = {
                                         stockName: data.stockName,
+                                        tradingAmount: userFinance?.spending!,
                                         orderId: filteredOrderOnStock[0].orderId,
                                         shares: 1,
                                         dayTradeValues: structuredClone(stockDayTradeValues),
@@ -279,6 +282,7 @@ export const socketCall = async (): Promise<void> => {
                                     //}
                                     let logMessage: tradeLogDto = {
                                         stockName: data.stockName,
+                                        tradingAmount: userFinance?.spending!,
                                         orderId: filteredOrderOnStock[0].orderId,
                                         shares: 1,
                                         dayTradeValues: structuredClone(stockDayTradeValues),
@@ -295,6 +299,7 @@ export const socketCall = async (): Promise<void> => {
                                     stockInfo.stopLoss = filteredOrderOnStock[0].stockPrice
                                     let logMessage: tradeLogDto = {
                                         stockName: data.stockName,
+                                        tradingAmount: userFinance?.spending!,
                                         orderId: filteredOrderOnStock[0].orderId,
                                         shares: 0,
                                         dayTradeValues: structuredClone(stockDayTradeValues),
@@ -314,6 +319,7 @@ export const socketCall = async (): Promise<void> => {
                                     }
                                     let logMessage: tradeLogDto = {
                                         stockName: data.stockName,
+                                        tradingAmount: userFinance?.spending!,
                                         orderId: filteredOrderOnStock[0].orderId,
                                         shares: 0,
                                         dayTradeValues: structuredClone(stockDayTradeValues),
@@ -342,6 +348,7 @@ export const socketCall = async (): Promise<void> => {
                                     orderPlaced = true;
                                     let logMessage: tradeLogDto = {
                                         stockName: data.stockName,
+                                        tradingAmount: userFinance?.spending!,
                                         orderId: filteredOrderOnStock[0].orderId,
                                         shares: 1,
                                         dayTradeValues: structuredClone(stockDayTradeValues),
@@ -369,6 +376,7 @@ export const socketCall = async (): Promise<void> => {
                                     orderPlaced = true;
                                     let logMessage: tradeLogDto = {
                                         stockName: data.stockName,
+                                        tradingAmount: userFinance?.spending!,
                                         orderId: filteredOrderOnStock[0].orderId,
                                         shares: 1,
                                         dayTradeValues: structuredClone(stockDayTradeValues),
@@ -384,6 +392,7 @@ export const socketCall = async (): Promise<void> => {
                                     stockInfo.tradeHigh = data.bidPrice
                                     let logMessage: tradeLogDto = {
                                         stockName: data.stockName,
+                                        tradingAmount: userFinance?.spending!,
                                         orderId: filteredOrderOnStock[0].orderId,
                                         shares: 0,
                                         dayTradeValues: structuredClone(stockDayTradeValues),

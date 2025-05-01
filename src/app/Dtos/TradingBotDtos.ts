@@ -29,6 +29,7 @@ export type stockDataInfo = {
 }
 export type tradeLogDto = {
     stockName: string;
+    tradingAmount: number;
     orderId: number;
     shares: number;
     dayTradeValues: DayTradeValues;

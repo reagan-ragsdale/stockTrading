@@ -3,9 +3,11 @@ import { tradeLogDto } from "../app/Dtos/TradingBotDtos";
 export const createExcel = async (logArray: tradeLogDto[]): Promise<excelJS.Buffer> => {
     const workbook = new excelJS.Workbook();
     const worksheet = workbook.addWorksheet("Log");
+    //const ResultsWorksheet = workbook.addWorksheet("Results")
 
     worksheet.columns = [
         { header: "Stock Name", key: "stockName", width: 15, alignment: {horizontal: 'center'} },
+        { header: "Tading Amount", key: "tradingAmount", width: 15, alignment: {horizontal: 'center'} },
         { header: "Order ID", key: "orderId", width: 20, alignment: {horizontal: 'center'} },
         { header: "Time", key: "time", width: 20, alignment: {horizontal: 'center'} },
         { header: "Description", key: "description", width: 30, alignment: {horizontal: 'center'} },
@@ -33,6 +35,7 @@ export const createExcel = async (logArray: tradeLogDto[]): Promise<excelJS.Buff
     ];
     let blankRow = {
         stockName: '',
+        tradingAmount: '',
         orderId: '',
         time: '',
         description: '',
@@ -71,6 +74,7 @@ export const createExcel = async (logArray: tradeLogDto[]): Promise<excelJS.Buff
                     timeZone: 'America/Chicago',
                 }),
                 description: filteredByOrder[j].logType,
+                tradingAmount: filteredByOrder[j].tradingAmount,
                 shares: filteredByOrder[j].shares,
                 lastPrice: filteredByOrder[j].stockDataInfo.lastPrice,
                 lastAsk: filteredByOrder[j].stockDataInfo.lastAsk,
