@@ -1274,7 +1274,6 @@ export class ServerTradeScreenComponent implements OnInit {
       this.rsiData.push({ rsiNum: rsi, date: new Date(this.rsiDateRange[i].date).toLocaleDateString() });
     }
     console.log(this.rsiData)
-    this.createOrUpdateRsiChart()
   }
 
 
@@ -1295,7 +1294,7 @@ export class ServerTradeScreenComponent implements OnInit {
     this.runSimulation()
     this.calcualateIntraDayRsi()
     await this.getStockHistoricalData()
-    await this.getStockBasicHistoryData();
+    //await this.getStockBasicHistoryData();
     this.isLoading = false;
 
   }
