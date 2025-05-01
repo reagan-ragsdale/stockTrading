@@ -24,7 +24,7 @@ export const getAccountNumbers = async (accessToken: string): Promise<any> => {
 export const getAccountInfo = async (accountNumber: string, accessToken: string): Promise<any> => {
     try {
         
-        const url = `https://api.schwabapi.com/v1/accounts/${accountNumber}`;
+        const url = `https://api.schwabapi.com/trader/v1/accounts/${accountNumber}`;
         const options = {
             method: 'GET',
             headers: {
