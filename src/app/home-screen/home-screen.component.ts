@@ -402,7 +402,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     }
     else{
       let newValue = (this.selectedStockCurrent - this.selectedStockLow) / (this.selectedStockHigh - this.selectedStockLow)
-      this.stochData.push({value: newValue, time: this.chartData.time[this.chartData.time.length - 1]})
+      this.stochData.push({value: newValue * 100, time: this.chartData.time[this.chartData.time.length - 1]})
     }
     console.log(this.stochData)
     this.stochChart.data.datasets[0].data = [...this.stochData.map(e => e.value)]
@@ -689,7 +689,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       },
       options: {
 
-        aspectRatio: 2,
+        aspectRatio: 8,
         color: '#DBD4D1',
         font: {
           weight: 'bold'
@@ -1019,7 +1019,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
           tradeLow = this.chartInfo[i].stockPrice
         }
         let newValue = (this.chartInfo[i].stockPrice - tradeLow) / (tradeHigh - tradeLow)
-        this.stochData.push({value: newValue, time: this.chartInfo[i].time})
+        this.stochData.push({value: newValue * 100, time: this.chartInfo[i].time})
       }
     }
     console.log(this.stochData)

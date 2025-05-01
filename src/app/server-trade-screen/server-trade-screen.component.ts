@@ -1230,8 +1230,8 @@ export class ServerTradeScreenComponent implements OnInit {
       this.rsiData.push({value: newValue, time: this.stockDataForSelectedDay[j].time})
     }
 
-    this.rsiChart.data.datasets[0].data = this.rsiData.map(e => e.value)
-    this.rsiChart.data.labels = this.rsiData.map(e => new Date(e.time).toLocaleTimeString())
+    this.rsiChart.data.datasets[0].data = [...this.rsiData.map(e => e.value)]
+    this.rsiChart.data.labels = [...this.rsiData.map(e => new Date(e.time).toLocaleTimeString())]
     this.rsiChart.update()
     
 
@@ -1291,6 +1291,7 @@ export class ServerTradeScreenComponent implements OnInit {
     this.interDayMediumSma = 40
     this.interDayShortSma = 5
     this.createOrUpdateChart()
+    this.createOrUpdateRsiChart()
     this.runSimulation()
     this.calcualateIntraDayRsi()
     await this.getStockHistoricalData()
