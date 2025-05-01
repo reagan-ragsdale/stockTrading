@@ -17,7 +17,7 @@ export class LoggerController {
 
     @BackendMethod({ allowed: true })
     static async sendEmailCall() {
-        let logData = LogService.getLogHistory()
+        //let logData = LogService.getLogHistory()
          /*  let logData: tradeLogDto[] = [
             {
                 stockName: 'Stock 1',
@@ -154,8 +154,8 @@ export class LoggerController {
             }
         ]   */
         
-        let excelBuffer = await LoggerController.generateExcel(logData)
-        await LoggerController.sendEmail(excelBuffer)
+        //let excelBuffer = await LoggerController.generateExcel(logData)
+        //await LoggerController.sendEmail(excelBuffer)
         let listOfOrders = await dbOrdersRepo.find({orderBy: {orderTime: 'desc'}})
         let distinctStocks = listOfOrders.map(e => e.stockName).filter((v,i,a) => a.indexOf(v) === i)
         let totalProfit = 0
