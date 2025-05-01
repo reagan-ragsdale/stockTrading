@@ -14,7 +14,7 @@
       (click)="navToOrderHistory()">Order History</button>
     <button mat-button style=" color: #DBD4D1; height:65%;margin: auto 0; width:auto" (click)="logout()">Log
       Out</button> -->
-   <!--  <h3 style="margin-right: 2rem; color: #DBD4D1;">Schwab Account: {{schwabFinance[0].spending | currency:'USD':'symbol' }}</h3> -->
+    <h3 style="margin-right: 2rem; color: #DBD4D1;">Schwab Account: {{schwabFinance.securitiesAccount.currentBalances.cashAvailableForTrading | currency:'USD':'symbol' }}</h3>
     <h3 style="margin-right: 2rem; color: #DBD4D1;">Paper Account: {{sharedFinance?.spending | currency:'USD':'symbol' }}</h3>
     
 

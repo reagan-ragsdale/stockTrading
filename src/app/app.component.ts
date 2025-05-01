@@ -43,7 +43,7 @@ export class AppComponent{
     this.router.navigate([`/serverTradeList`])
   }
   sharedFinance: SimFInance | undefined = undefined
-  schwabFinance: any[] = []
+  schwabFinance: any
   async ngOnInit(){
     remult.initUser()
     let tokens = await AuthController.getTokenUserByRemult()

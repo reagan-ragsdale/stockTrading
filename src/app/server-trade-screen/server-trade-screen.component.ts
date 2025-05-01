@@ -1227,7 +1227,7 @@ export class ServerTradeScreenComponent implements OnInit {
         tradeLow = this.stockDataForSelectedDay[j].stockPrice
       }
       let newValue = (this.stockDataForSelectedDay[j].stockPrice - tradeLow) / (tradeHigh - tradeLow)
-      this.rsiData.push({value: newValue, time: this.stockDataForSelectedDay[j].time})
+      this.rsiData.push({value: newValue * 100, time: this.stockDataForSelectedDay[j].time})
     }
 
     this.rsiChart.data.datasets[0].data = [...this.rsiData.map(e => e.value)]
