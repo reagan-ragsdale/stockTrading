@@ -17,7 +17,7 @@ export class LoggerController {
 
     @BackendMethod({ allowed: true })
     static async sendEmailCall() {
-        //let logData = LogService.getLogHistory()
+        let logData = LogService.getLogHistory()
          /*  let logData: tradeLogDto[] = [
             {
                 stockName: 'Stock 1',
@@ -154,16 +154,21 @@ export class LoggerController {
             }
         ]   */
         
-        //let excelBuffer = await LoggerController.generateExcel(logData)
-        //await LoggerController.sendEmail(excelBuffer)
-        let listOfOrders = await dbOrdersRepo.find({orderBy: {orderTime: 'desc'}})
+        let excelBuffer = await LoggerController.generateExcel(logData)
+        await LoggerController.sendEmail(excelBuffer)
+        let today = new Date()
+        today.setHours(5,0,0,0)
+        let listOfOrders = await dbOrdersRepo.find({where: {orderTime: {$gt: today.getTime()}}, orderBy: {orderTime: 'desc'}})
         let distinctStocks = listOfOrders.map(e => e.stockName).filter((v,i,a) => a.indexOf(v) === i)
         let totalProfit = 0
         for(let i = 0; i < distinctStocks.length; i++){
             let filteredOnStock = listOfOrders.filter(e => e.stockName == distinctStocks[i])
-            if(filteredOnStock.length > 0 && filteredOnStock[0].orderType == 'Sell'){
-                totalProfit += filteredOnStock[0].stockPrice
+            for(let j = 0; j < filteredOnStock.length; j++){
+                if(filteredOnStock[j].orderType == 'Sell'){
+                    totalProfit += filteredOnStock[j].stockPrice
+                }
             }
+            
         }
         let sharedFinance = await simFinRepo.findFirst({userId: 'Shared'})
         let newSpending = sharedFinance?.spending! + totalProfit
