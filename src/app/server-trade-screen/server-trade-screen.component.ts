@@ -591,10 +591,13 @@ export class ServerTradeScreenComponent implements OnInit {
     this.totalProfit = result.profit
   }
   runSimulationIntraDayNew() {
+    this.intraDayShortSellSma = 120
+    this.intraDayShortBuySma = 60
     this.calculateIntraDaySma()
     this.updateChartIntraDay()
     let result = this.calculateBuyAndSellPointsIntraDaySellAtEndNew(this.listOfLastHour, this.listOfLast30Minutes, this.listOfLast5Minutes, this.listOfLast2Minutes, this.listOfLastMinute, this.buyGutter, this.sellGutter, this.check200Gutter)
     this.updateGraphBuyAndSellPointsIntraDayNew(result.orderLocations)
+    console.log(result)
     this.totalProfit = result.profit
   }
   onRunEntireSimulation() {
@@ -823,16 +826,16 @@ export class ServerTradeScreenComponent implements OnInit {
   async runEntireSimulationIntraDayAllDaysSpecific() {
     this.intraDayShortSellSma = 120
     console.log(this.distinctDates)
-
+    
     let topAverages: any[] = []
-    for (let i = 1; i <= 60; i += 5) {
-      this.intraDayShortBuySma = i
+    //for (let i = 1; i <= 60; i += 5) {
+      //this.intraDayShortBuySma = i
       let listOfProfits = []
       for (let h = 0; h < this.distinctDates.length; h++) {
         let selectedDate = this.distinctDates[h]
         this.stockDataForSelectedDay = await this.updateStockChartDataNew(selectedDate)
         this.calculateIntraDaySma()
-        let result = this.calculateBuyAndSellPointsIntraDaySellAtEndNew(this.listOfLastHour, this.listOfLast30Minutes, this.listOfLast5Minutes, this.listOfLast2Minutes, this.listOfLastMinute, .003, .002, .001)
+        let result = this.calculateBuyAndSellPointsIntraDaySellAtEnd(this.listOfLastHour, this.listOfLast30Minutes, this.listOfLast5Minutes, this.listOfLast2Minutes, .003, .002, .001)
         listOfProfits.push({
           buyBuffer: .003,
           sellBuffer: .002,
@@ -841,7 +844,6 @@ export class ServerTradeScreenComponent implements OnInit {
           smaMedium: 1800,
           smaShort: 300,
           smaShortSell: 120,
-          smaShortBuy: i,
           profit: result.profit,
           numberOfTrades: result.orderLocations.length
         })
@@ -856,14 +858,13 @@ export class ServerTradeScreenComponent implements OnInit {
           smaMedium: 1800,
           smaShort: 300,
           smaShortSell: 120,
-          smaShortBuy: i,
           profit: avgProfit,
           numberOfTrades: avgNumTrades
       })
 
 
 
-    }
+   // }
     console.log(topAverages)
    /*  this.topAlgos = topAverages
     this.buyGutter = this.topAlgos[0].buyBuffer
