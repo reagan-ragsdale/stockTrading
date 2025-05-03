@@ -211,7 +211,7 @@ export const socketCall = async (): Promise<void> => {
                                     userFinance = await simFinRepo.findFirst({userId: 'Shared'})
                                     let logMessage: tradeLogDto = {
                                         stockName: data.stockName,
-                                        tradingAmount: userFinance?.spending!,
+                                        tradingAmount: structuredClone(userFinance?.spending!),
                                         orderId: orderId,
                                         shares:1,
                                         dayTradeValues: structuredClone(stockDayTradeValues),

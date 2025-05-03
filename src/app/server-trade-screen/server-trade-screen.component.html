@@ -8,7 +8,7 @@
       [checked]="algo.isSelected" class="example-margin">{{algo.name}}</mat-checkbox>
     <button style="margin-left:1rem;" mat-raised-button color="primary" (click)="saveAlgos()">Save</button> -->
     <mat-slide-toggle style="height: fit-content;" [(ngModel)]="intraDayChecked" (ngModelChange)="changeDayType()">Intra Day</mat-slide-toggle>
-    <mat-form-field class="example-full-width" style="max-width: 110px; height: fit-content;">
+     <mat-form-field class="example-full-width" style="max-width: 110px; height: fit-content;">
       <mat-label>Buy Gutter</mat-label>
       <input matInput type="number" [(ngModel)]="buyGutter" placeholder="0.00" [min]=".001" step=".01">
     </mat-form-field>
@@ -43,13 +43,54 @@
     <mat-form-field *ngIf="!intraDayChecked" class="example-full-width" style="max-width: 140px; height: fit-content;">
       <mat-label>Short Sma</mat-label>
       <input matInput type="number" [(ngModel)]="interDayShortSma" placeholder="0.00" [min]="1" [max]="15" step="1">
+    </mat-form-field> 
+    <!-- <h3>Buy when: </h3>
+    <mat-form-field *ngIf="intraDayChecked" class="example-full-width" style="max-width: 140px; height: fit-content;">
+      <mat-label>Moving Average</mat-label>
+      <input matInput type="number" [(ngModel)]="selectedBuyAvgOne" placeholder="0.00" [min]="1" [max]="3600" step="1">
     </mat-form-field>
+    <mat-form-field style="width:fit-content;">
+      <mat-label>Action</mat-label>
+      <mat-select disableRipple [(value)]="selectedBuyAction">
+        <mat-option *ngFor="let action of buyActions" value="{{action}}"
+          (onSelectionChange)="onSelectedBuyActionChange($event)">{{action}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field *ngIf="selectedBuyAction == 'Is X amount below:'" class="example-full-width" style="max-width: 140px; height: fit-content;">
+      <mat-label>Amount</mat-label>
+      <input matInput type="number" [(ngModel)]="buyParamOne" placeholder="0.00" [min]=".001" [max]=".1" step=".001">
+    </mat-form-field>
+    <mat-form-field *ngIf="selectedBuyAction == 'Is X amount below:'" class="example-full-width" style="max-width: 140px; height: fit-content;">
+      <mat-label>Compared Value</mat-label>
+      <input matInput type="number" [(ngModel)]="buyParamCompare" placeholder="0.00" [min]="1" [max]="3600" step="1">
+    </mat-form-field>
+
+    <h3>Sell when: </h3>
+    <mat-form-field *ngIf="intraDayChecked" class="example-full-width" style="max-width: 140px; height: fit-content;">
+      <mat-label>Moving Average</mat-label>
+      <input matInput type="number" [(ngModel)]="selectedSellAvgOne" placeholder="0.00" [min]="1" [max]="3600" step="1">
+    </mat-form-field>
+    <mat-form-field style="width:fit-content;">
+      <mat-label>Action</mat-label>
+      <mat-select disableRipple [(value)]="selectedSellAction">
+        <mat-option *ngFor="let action of sellActions" value="{{action}}"
+          (onSelectionChange)="onSelectedSellActionChange($event)">{{action}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field *ngIf="selectedBuyAction == 'Is X amount below:'" class="example-full-width" style="max-width: 140px; height: fit-content;">
+      <mat-label>Amount</mat-label>
+      <input matInput type="number" [(ngModel)]="sellParamOne" placeholder="0.00" [min]=".001" [max]=".1" step=".001">
+    </mat-form-field>
+    <mat-form-field *ngIf="selectedBuyAction == 'Is X amount below:'" class="example-full-width" style="max-width: 140px; height: fit-content;">
+      <mat-label>Compared Value</mat-label>
+      <input matInput type="number" [(ngModel)]="sellParamCompare" placeholder="0.00" [min]="1" [max]="3600" step="1">
+    </mat-form-field> -->
     <button style="margin-left:1rem;" mat-raised-button color="primary" (click)="onRunSimulation()">Run Sim</button>
     <button style="margin-left:1rem;" mat-raised-button color="primary" (click)="onRunSimulationNew()">Run Sim New</button>
     <!-- <h4 style="margin-left:1rem; color: #DBD4D1;">Total: {{bankTotal | currency:'USD':'symbol'}}</h4> -->
     <h4 style="margin-left:1rem; color: #DBD4D1;">Total Profit: {{totalProfit | currency:'USD':'symbol'}}</h4>
     <button *ngIf="false" style="margin-left:1rem;" mat-raised-button color="primary" (click)="onRunEntireSimulation()">Run Full Sim</button>
-    <button *ngIf="intraDayChecked && false" style="margin-left:1rem;" mat-raised-button color="primary" (click)="onRunEntireSimulationIntraDayAllDays()">Run Full Sim All Days</button>
+    <button *ngIf="intraDayChecked" style="margin-left:1rem;" mat-raised-button color="primary" (click)="onRunEntireSimulationIntraDayAllDays()">Run Full Sim All Days</button>
     <div *ngIf="topAlgos.length > 0" style="background-color:#3C3E3D;" >
       <mat-table [dataSource]="topAlgos"  style="height:inherit; background-color:#3C3E3D; border-radius: 8px; border: 1px solid #DBD4D1;">
           <!-- Position Column -->

@@ -142,8 +142,8 @@ export const createExcel = async (logArray: tradeLogDto[]): Promise<excelJS.Buff
         let filteredByStock = stockResults.filter(e => e.stockName == distinctStocks[i])
         for (let j = 0; j < filteredByStock.length - 1; j++) {
             //need to find each pair of buy and sells
-            if (filteredByStock[j].orderType == 'Sell' && filteredByStock[j + 1].orderType == 'Buy') {
-                let profit = filteredByStock[j].sellPrice - filteredByStock[j + 1].buyPrice
+            if (filteredByStock[j].orderType == 'Sell') {
+                let profit = filteredByStock[j].sellPrice - filteredByStock[j - 1].buyPrice
                 stockProfit += profit
                 allProfit += stockProfit
                 if (profit > 0) {
