@@ -1387,17 +1387,17 @@ export class ServerTradeScreenComponent implements OnInit {
   listOfBGCOlors: string[] = ['#1ca0de', '#eeb528', '#d82c2c']
   addNewLinesToGraph(lines: lineType[]){
     let linesNew = structuredClone(lines)
-    let lineData: any[] = []
+    
     for(let i = 0; i < linesNew.length; i++){
-      
+      let lineData: any[] = []
       if(linesNew[i].lineType == 'SMA'){
-        lineData.push(this.calculateSMA(linesNew[i].lineLength))
+        lineData = this.calculateSMA(linesNew[i].lineLength)
       }
       else if(linesNew[i].lineType == 'EMA'){
-        lineData.push(this.calculateEMA(linesNew[i].lineLength))
+        lineData = this.calculateEMA(linesNew[i].lineLength)
       }
       this.stockChart.data.datasets.push({
-            label: linesNew[i].lineType + ' - ' + linesNew[i].lineType,
+            label: linesNew[i].lineType + ' - ' + linesNew[i].lineLength,
             data: lineData.map(e => e.value),
             backgroundColor: this.listOfBGCOlors[i],
             hoverBackgroundColor: this.listOfBGCOlors[i],
@@ -1408,7 +1408,6 @@ export class ServerTradeScreenComponent implements OnInit {
             spanGaps: true
       })
     }
-    console.log(lineData)
     this.stockChart.update()
   }
 
@@ -1431,8 +1430,9 @@ export class ServerTradeScreenComponent implements OnInit {
 
     
   }
-  calculateEMA(lineLength: number){
-
+  calculateEMA(lineLength: number): {value: number | null}[]{
+    let returnValue: any[] = []
+    return returnValue
   }
   
   async ngOnInit() {
