@@ -9,13 +9,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { lineType } from '../../Dtos/ServerAlgoDto';
 
 
-type lineType = {
-  id: number;
-  smaLength: number;
-  lineType: string;
-}
 @Component({
   selector: 'app-add-line',
   imports: [CommonModule,MatDialogContent,MatCheckboxModule,MatSelectModule,MatIconModule,MatButtonToggleModule,MatDialogActions,MatDialogTitle,MatButtonModule,MatFormFieldModule,MatInputModule,FormsModule],
@@ -31,7 +27,7 @@ lineTypes: string[] = ['SMA', 'EMA']
 addLine(){
   this.listOfLinesIncoming.push({
     id: this.listOfLinesIncoming.length,
-    smaLength: 1,
+    lineLength: 1,
     lineType: ''
   })
 }

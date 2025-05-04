@@ -18,6 +18,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { AddLineComponent } from "./add-line/add-line.component";
+import { lineType } from '../Dtos/ServerAlgoDto';
 
 
 
@@ -49,11 +50,6 @@ type orderLocation = {
   date: number;
   price: number;
   dateString: string
-}
-type lineType = {
-  id: number;
-  smaLength: number;
-  lineType: string;
 }
 @Component({
   selector: 'app-server-trade-screen',
@@ -355,10 +351,10 @@ export class ServerTradeScreenComponent implements OnInit {
       this.intraDayMediumSma = 1800;
       this.intraDayShortSma = 300
       await this.updateStockChartData(this.selectedDate)
-      this.calculateIntraDaySma()
-      this.updateChartIntraDay()
-      this.runSimulationIntraDay()
-      this.calcualateIntraDayRsi()
+      //this.calculateIntraDaySma()
+      //this.updateChartIntraDay()
+      //this.runSimulationIntraDay()
+      //this.calcualateIntraDayRsi()
       this.isLoading = false
     }
     else {
@@ -1378,7 +1374,7 @@ export class ServerTradeScreenComponent implements OnInit {
     this.addLineDialogRef.afterClosed().subscribe(async (result: any) => {
       if (result.length > 0) {
         console.log(result)
-       // this.addNewLinesToGraph(result)
+        this.addNewLinesToGraph(result)
       }/* 
       else if (this.stockChart.data.datasets.length > 1) {
         this.listOfAddedLines = []
@@ -1387,6 +1383,42 @@ export class ServerTradeScreenComponent implements OnInit {
       } */
 
     });
+  }
+  addNewLinesToGraph(lines: lineType[]){
+    let linesNew = structuredClone(lines)
+    let lineData = []
+    for(let i = 0; i < linesNew.length; i++){
+      
+      if(linesNew[i].lineType == 'SMA'){
+        lineData.push(this.calculateSMA(linesNew[i].lineLength))
+      }
+      else if(linesNew[i].lineType == 'EMA'){
+        lineData.push(this.calculateEMA(linesNew[i].lineLength))
+      }
+    }
+    console.log(lineData)
+  }
+
+  calculateSMA(lineLength: number){
+    let returnData = []
+    let windowSum = 0
+    for(let i = 0; i < lineLength - 1; i++){
+      returnData.push({value: null})
+      windowSum += this.stockDataForSelectedDay[i].stockPrice
+    }
+    windowSum += this.stockDataForSelectedDay[lineLength - 1].stockPrice
+    returnData.push({value: windowSum / lineLength})
+    for(let j = lineLength; j < this.stockDataForSelectedDay.length; j++){
+      windowSum += this.stockDataForSelectedDay[j].stockPrice - this.stockDataForSelectedDay[j - lineLength].stockPrice
+      returnData.push({value: windowSum / lineLength})
+    }
+
+    
+
+    
+  }
+  calculateEMA(lineLength: number){
+
   }
   
   async ngOnInit() {
@@ -1403,7 +1435,7 @@ export class ServerTradeScreenComponent implements OnInit {
     this.interDayShortSma = 5
     this.createOrUpdateChart()
     this.createOrUpdateRsiChart()
-    this.runSimulation()
+    //this.runSimulation()
     this.calcualateIntraDayRsi()
     await this.getStockHistoricalData()
     //await this.getStockBasicHistoryData();
