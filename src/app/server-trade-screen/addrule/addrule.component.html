@@ -15,7 +15,7 @@
                     <mat-form-field style="width:fit-content;">
                         <mat-label>Primary Line</mat-label>
                         <mat-select disableRipple [(value)]="selectedBuyLine">
-                            <mat-option *ngFor="let line of availableLines" value="{{line}}"
+                            <mat-option *ngFor="let line of availableLines" value="{{line.id}}"
                                 (onSelectionChange)="onSelectedRuleTypeChange($event)">{{line.lineType + ' - ' + line.lineLength}}</mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -40,7 +40,7 @@
                     <mat-form-field style="width:fit-content;">
                         <mat-label>Primary Line</mat-label>
                         <mat-select disableRipple [(value)]="selectedSellLine">
-                            <mat-option *ngFor="let line of availableLines" value="{{line}}"
+                            <mat-option *ngFor="let line of availableLines" value="{{line.id}}"
                                 (onSelectionChange)="onSelectedRuleTypeChange($event)">{{line.lineType + ' - ' + line.lineLength}}</mat-option>
                         </mat-select>
                     </mat-form-field>

@@ -39,7 +39,7 @@ export class AddRuleComponent {
     })
   }
   addSellRule() {
-    this.listOfRulesIncoming.BuyRules.push({
+    this.listOfRulesIncoming.SellRules.push({
       id: this.listOfRulesIncoming.SellRules.length,
       primaryObject: '',
       desiredAction: '',
@@ -55,7 +55,7 @@ export class AddRuleComponent {
 
   onSelectedRuleTypeChange(event: any) {
     if (event.isUserInput == true) {
-      console.log(event.source.value)
+      console.log(event)
       //this.availableLines = this.availableLines.filter(e => e.id != event.source.value.id)
     }
   }
