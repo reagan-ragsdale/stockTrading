@@ -1384,6 +1384,7 @@ export class ServerTradeScreenComponent implements OnInit {
 
     });
   }
+  listOfBGCOlors: string[] = ['#1ca0de', '#eeb528', '#d82c2c']
   addNewLinesToGraph(lines: lineType[]){
     let linesNew = structuredClone(lines)
     let lineData = []
@@ -1395,8 +1396,20 @@ export class ServerTradeScreenComponent implements OnInit {
       else if(linesNew[i].lineType == 'EMA'){
         lineData.push(this.calculateEMA(linesNew[i].lineLength))
       }
+      this.stockChart.data.datasets.push({
+            label: linesNew[i].lineType + ' - ' + linesNew[i].lineType,
+            data: this.selectedInterDayStockData.map(e => e.close),
+            backgroundColor: this.listOfBGCOlors[i],
+            hoverBackgroundColor: this.listOfBGCOlors[i],
+            borderColor: this.listOfBGCOlors[i],
+            pointBackgroundColor: this.listOfBGCOlors[i],
+            pointBorderColor: this.listOfBGCOlors[i],
+            pointRadius: 0,
+            spanGaps: true
+      })
     }
     console.log(lineData)
+    this.stockChart.update()
   }
 
   calculateSMA(lineLength: number){
