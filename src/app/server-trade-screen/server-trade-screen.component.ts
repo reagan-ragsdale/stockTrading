@@ -1387,7 +1387,7 @@ export class ServerTradeScreenComponent implements OnInit {
   listOfBGCOlors: string[] = ['#1ca0de', '#eeb528', '#d82c2c']
   addNewLinesToGraph(lines: lineType[]){
     let linesNew = structuredClone(lines)
-    let lineData = []
+    let lineData: any[] = []
     for(let i = 0; i < linesNew.length; i++){
       
       if(linesNew[i].lineType == 'SMA'){
@@ -1398,7 +1398,7 @@ export class ServerTradeScreenComponent implements OnInit {
       }
       this.stockChart.data.datasets.push({
             label: linesNew[i].lineType + ' - ' + linesNew[i].lineType,
-            data: this.selectedInterDayStockData.map(e => e.close),
+            data: lineData.map(e => e.value),
             backgroundColor: this.listOfBGCOlors[i],
             hoverBackgroundColor: this.listOfBGCOlors[i],
             borderColor: this.listOfBGCOlors[i],
@@ -1412,7 +1412,7 @@ export class ServerTradeScreenComponent implements OnInit {
     this.stockChart.update()
   }
 
-  calculateSMA(lineLength: number){
+  calculateSMA(lineLength: number): {value: number | null}[]{
     let returnData = []
     let windowSum = 0
     for(let i = 0; i < lineLength - 1; i++){
