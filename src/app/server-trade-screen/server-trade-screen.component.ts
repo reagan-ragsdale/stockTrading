@@ -144,7 +144,7 @@ export class ServerTradeScreenComponent implements OnInit {
 
       data: {// values on X-Axis
 
-        labels: this.selectedInterDayStockData.map(e => e.date),
+        labels: this.selectedInterDayStockData.map(e => new Date(e.date).toLocaleDateString()),
 
         datasets: [
           {
@@ -1266,7 +1266,7 @@ export class ServerTradeScreenComponent implements OnInit {
     this.stockChart.data.datasets[2].label = this.interDayMediumSma
     this.stockChart.data.datasets[3].data = this.shortSmaResults.map(e => e.avg)
     this.stockChart.data.datasets[3].label = this.interDayShortSma */
-    this.stockChart.data.labels = this.selectedInterDayStockData.map(e => e.date)
+    this.stockChart.data.labels = this.selectedInterDayStockData.map(e => new Date(e.date).toLocaleDateString())
     this.stockChart.options.scales.y.max = this.getMaxForChart(this.selectedInterDayStockData.map(e => e.close))
     this.stockChart.options.scales.y.min = this.getMinForChart(this.selectedInterDayStockData.map(e => e.close))
     this.stockChart.update()
@@ -1413,6 +1413,7 @@ export class ServerTradeScreenComponent implements OnInit {
       returnData.push({value: windowSum / lineLength})
     }
 
+    return returnData
     
 
     
