@@ -55,7 +55,7 @@ export class AddRuleComponent {
 
   onSelectedRuleTypeChange(event: any) {
     if (event.isUserInput == true) {
-      console.log(event)
+      console.log(event.source.value)
       //this.availableLines = this.availableLines.filter(e => e.id != event.source.value.id)
     }
   }
