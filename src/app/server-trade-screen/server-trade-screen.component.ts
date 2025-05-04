@@ -144,12 +144,12 @@ export class ServerTradeScreenComponent implements OnInit {
 
       data: {// values on X-Axis
 
-        labels: this.longSmaResults.map(e => e.date),
+        labels: this.selectedInterDayStockData.map(e => e.date),
 
         datasets: [
           {
             label: 'Actual',
-            data: this.longSmaResults.map(e => e.close),
+            data: this.selectedInterDayStockData.map(e => e.close),
             backgroundColor: '#54C964',
             hoverBackgroundColor: '#54C964',
             borderColor: '#54C964',
@@ -157,7 +157,7 @@ export class ServerTradeScreenComponent implements OnInit {
             pointBorderColor: '#54C964',
             pointRadius: 0,
             spanGaps: true
-          },
+          }/* ,
           {
             label: '200',
             data: this.longSmaResults.map(e => e.avg),
@@ -191,7 +191,7 @@ export class ServerTradeScreenComponent implements OnInit {
             pointBorderColor: '#1ca0de',
             pointRadius: 0,
             spanGaps: true
-          }
+          } */
         ]
       },
       options: {
@@ -215,8 +215,8 @@ export class ServerTradeScreenComponent implements OnInit {
 
         scales: {
           y: {
-            max: this.getMaxForChart(this.longSmaResults),
-            min: this.getMinForChart(this.longSmaResults),
+            max: this.getMaxForChart(this.selectedInterDayStockData.map(e => e.close)),
+            min: this.getMinForChart(this.selectedInterDayStockData.map(e => e.close)),
             grid: {
               color: 'hsl(18, 12%, 60%)'
             },
@@ -242,21 +242,21 @@ export class ServerTradeScreenComponent implements OnInit {
 
   }
 
-  getMaxForChart(arr: sma200Array[]): number {
+  getMaxForChart(prices: number[]): number {
     let max = -1000000000
-    for (let i = 0; i < arr.length; i++) {
-      if (arr[i].close > max) {
-        max = arr[i].close
+    for (let i = 0; i < prices.length; i++) {
+      if (prices[i] > max) {
+        max = prices[i]
       }
     }
     return max + 2
 
   }
-  getMinForChart(arr: sma200Array[]): number {
+  getMinForChart(prices: number[]): number {
     let min = 1000000000
-    for (let i = 0; i < arr.length; i++) {
-      if (arr[i].close < min) {
-        min = arr[i].close
+    for (let i = 0; i < prices.length; i++) {
+      if (prices[i] < min) {
+        min = prices[i]
       }
     }
     return min - 2
@@ -352,7 +352,7 @@ export class ServerTradeScreenComponent implements OnInit {
       this.intraDayShortSma = 300
       await this.updateStockChartData(this.selectedDate)
       //this.calculateIntraDaySma()
-      //this.updateChartIntraDay()
+      this.updateChartIntraDay()
       //this.runSimulationIntraDay()
       //this.calcualateIntraDayRsi()
       this.isLoading = false
@@ -575,17 +575,17 @@ export class ServerTradeScreenComponent implements OnInit {
     return returnArray
   }
   updateChartIntraDay() {
-    this.stockChart.data.datasets[0].data = this.listOfLastHour.map(e => e.close)
+    this.stockChart.data.datasets[0].data = this.stockDataForSelectedDay.map(e => e.stockPrice)
     this.stockChart.data.datasets[0].label = 'Actual'
-    this.stockChart.data.datasets[1].data = this.listOfLastHour.map(e => e.avg)
+   /*  this.stockChart.data.datasets[1].data = this.listOfLastHour.map(e => e.avg)
     this.stockChart.data.datasets[1].label = (this.intraDayLongSma / 60) + " minutes"
     this.stockChart.data.datasets[2].data = this.listOfLast30Minutes.map(e => e.avg)
     this.stockChart.data.datasets[2].label = (this.intraDayMediumSma / 60) + " minutes"
     this.stockChart.data.datasets[3].data = this.listOfLast5Minutes.map(e => e.avg)
-    this.stockChart.data.datasets[3].label = (this.intraDayShortSma / 60) + " minutes"
-    this.stockChart.data.labels = this.listOfLastHour.map(e => e.dateString)
-    this.stockChart.options.scales.y.max = this.getMaxForChart(this.listOfLastHour)
-    this.stockChart.options.scales.y.min = this.getMinForChart(this.listOfLastHour)
+    this.stockChart.data.datasets[3].label = (this.intraDayShortSma / 60) + " minutes" */
+    this.stockChart.data.labels = this.stockDataForSelectedDay.map(e => new Date(e.time).toLocaleTimeString())
+    this.stockChart.options.scales.y.max = this.getMaxForChart(this.stockDataForSelectedDay.map(e => e.stockPrice))
+    this.stockChart.options.scales.y.min = this.getMinForChart(this.stockDataForSelectedDay.map(e => e.stockPrice))
     this.stockChart.update()
   }
   listOfProfits: bufferAlgo[] = []
@@ -1258,17 +1258,17 @@ export class ServerTradeScreenComponent implements OnInit {
     }
   }
   updateChart() {
-    this.stockChart.data.datasets[0].data = this.longSmaResults.map(e => e.close)
+    this.stockChart.data.datasets[0].data = this.selectedInterDayStockData.map(e => e.close)
     this.stockChart.data.datasets[0].label = 'Actual'
-    this.stockChart.data.datasets[1].data = this.longSmaResults.map(e => e.avg)
+    /* this.stockChart.data.datasets[1].data = this.longSmaResults.map(e => e.avg)
     this.stockChart.data.datasets[1].label = this.interDayLongSma
     this.stockChart.data.datasets[2].data = this.mediumSmaResults.map(e => e.avg)
     this.stockChart.data.datasets[2].label = this.interDayMediumSma
     this.stockChart.data.datasets[3].data = this.shortSmaResults.map(e => e.avg)
-    this.stockChart.data.datasets[3].label = this.interDayShortSma
-    this.stockChart.data.labels = this.longSmaResults.map(e => e.date)
-    this.stockChart.options.scales.y.max = this.getMaxForChart(this.longSmaResults)
-    this.stockChart.options.scales.y.min = this.getMinForChart(this.longSmaResults)
+    this.stockChart.data.datasets[3].label = this.interDayShortSma */
+    this.stockChart.data.labels = this.selectedInterDayStockData.map(e => e.date)
+    this.stockChart.options.scales.y.max = this.getMaxForChart(this.selectedInterDayStockData.map(e => e.close))
+    this.stockChart.options.scales.y.min = this.getMinForChart(this.selectedInterDayStockData.map(e => e.close))
     this.stockChart.update()
   }
   calcualateIntraDayRsi() {
