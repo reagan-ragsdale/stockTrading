@@ -18,7 +18,8 @@ import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { AddLineComponent } from "./add-line/add-line.component";
-import { lineType } from '../Dtos/ServerAlgoDto';
+import { BuyRule, lineType, RuleDto } from '../Dtos/ServerAlgoDto';
+import { AddRuleComponent } from './addrule/addrule.component';
 
 
 
@@ -53,7 +54,7 @@ type orderLocation = {
 }
 @Component({
   selector: 'app-server-trade-screen',
-  imports: [MatCheckboxModule, CommonModule, MatTableModule, MatIconModule, MatProgressSpinnerModule, MatFormFieldModule, MatSelectModule, MatButtonModule, MatInputModule, FormsModule, MatSlideToggleModule, AddLineComponent],
+  imports: [MatCheckboxModule, CommonModule, MatTableModule, MatIconModule, MatProgressSpinnerModule, MatFormFieldModule, MatSelectModule, MatButtonModule, MatInputModule, FormsModule, MatSlideToggleModule, AddLineComponent, AddRuleComponent],
   templateUrl: './server-trade-screen.component.html',
   styleUrl: './server-trade-screen.component.css'
 })
@@ -97,6 +98,7 @@ export class ServerTradeScreenComponent implements OnInit {
   stopLoss: number = 0
   readonly dialog = inject(MatDialog);
   @ViewChild('addLineTemplate', { static: true }) addLineTemplate!: TemplateRef<any>;
+  @ViewChild('addRuleTemplate', { static: true }) addRuleTemplate!: TemplateRef<any>;
 
 
   async saveAlgos() {
@@ -1367,7 +1369,7 @@ export class ServerTradeScreenComponent implements OnInit {
   listOfAddedLines: lineType[] = []
   addLineToGraph() {
     this.addLineDialogRef = this.dialog.open(this.addLineTemplate, {
-      width: '400px',
+      width: '500px',
       enterAnimationDuration: 0,
       exitAnimationDuration: 0
     });
@@ -1387,6 +1389,7 @@ export class ServerTradeScreenComponent implements OnInit {
   listOfBGCOlors: string[] = ['#1ca0de', '#eeb528', '#d82c2c']
   addNewLinesToGraph(lines: lineType[]){
     let linesNew = structuredClone(lines)
+    this.stockChart.data.datasets.filter((e: { label: string; }) => e.label == 'Actual')
     
     for(let i = 0; i < linesNew.length; i++){
       let lineData: any[] = []
@@ -1433,6 +1436,35 @@ export class ServerTradeScreenComponent implements OnInit {
   calculateEMA(lineLength: number): {value: number | null}[]{
     let returnValue: any[] = []
     return returnValue
+  }
+
+  addRuleDialogRef: any
+  listOfAddedRules: RuleDto = {
+    BuyRules: [],
+    SellRules: []
+  }
+  addRuleToGraph() {
+    this.addRuleDialogRef = this.dialog.open(this.addRuleTemplate, {
+      width: '800px',
+      enterAnimationDuration: 0,
+      exitAnimationDuration: 0
+    });
+    this.addRuleDialogRef.afterClosed().subscribe(async (result: any) => {
+      if (result.length > 0) {
+        console.log(result)
+        this.addNewLinesToGraph(result)
+      }/* 
+      else if (this.stockChart.data.datasets.length > 1) {
+        this.listOfAddedLines = []
+        this.stockChart.data.datasets = [this.stockChart.data.datasets[0]]
+        this.stockChart.update()
+      } */
+
+    });
+  }
+
+  addRule(rules: BuyRule){
+
   }
   
   async ngOnInit() {

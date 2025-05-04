@@ -44,8 +44,12 @@
       <mat-label>Short Sma</mat-label>
       <input matInput type="number" [(ngModel)]="interDayShortSma" placeholder="0.00" [min]="1" [max]="15" step="1">
     </mat-form-field>  -->
-    <h3>Add Indicator: </h3>
+    <h3 style="margin-left: 1rem;">Add Indicator: </h3>
     <button style=" margin-top:auto; margin-bottom:auto;" mat-icon-button aria-label="Add Line" (click)="addLineToGraph()">
+      <mat-icon style="color: #DBD4D1;">add</mat-icon>
+    </button>
+    <h3 style="margin-left: 1rem;">Add Rule: </h3>
+    <button style=" margin-top:auto; margin-bottom:auto;" mat-icon-button aria-label="Add Line" (click)="addRuleToGraph()">
       <mat-icon style="color: #DBD4D1;">add</mat-icon>
     </button>
      <!-- <h3>Buy when: </h3>
@@ -89,7 +93,7 @@
       <mat-label>Compared Value</mat-label>
       <input matInput type="number" [(ngModel)]="sellParamCompare" placeholder="0.00" [min]="1" [max]="3600" step="1">
     </mat-form-field>  -->
-    <button style="margin-left:1rem;" mat-raised-button color="primary" (click)="onRunSimulation()">Run Sim</button>
+    <button style="margin-left:auto;" mat-raised-button color="primary" (click)="onRunSimulation()">Run Sim</button>
     <button style="margin-left:1rem;" mat-raised-button color="primary" (click)="onRunSimulationNew()">Run Sim New</button>
     <!-- <h4 style="margin-left:1rem; color: #DBD4D1;">Total: {{bankTotal | currency:'USD':'symbol'}}</h4> -->
     <h4 style="margin-left:1rem; color: #DBD4D1;">Total Profit: {{totalProfit | currency:'USD':'symbol'}}</h4>
@@ -174,4 +178,7 @@
 </div>
 <ng-template #addLineTemplate>
   <app-add-line [listOfLinesIncoming]="listOfAddedLines"></app-add-line>
+</ng-template>
+<ng-template #addRuleTemplate>
+  <app-add-rule [listOfRulesIncoming]="listOfAddedRules" [listOfLinesIncoming]="listOfAddedLines"></app-add-rule>
 </ng-template>
