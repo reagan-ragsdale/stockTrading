@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { DbAlgorithmList, dbAlgorithmListRepo } from '../../shared/tasks/dbAlgorithmList';
 import { DbStockBasicHistory, dbStockBasicHistoryRepo } from '../../shared/tasks/dbStockBasicHistory';
@@ -15,6 +15,9 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { DbStockHistoryData, dbStockHistoryDataRepo } from '../../shared/tasks/dbStockHistoryData';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDialog } from '@angular/material/dialog';
+import { AddLineComponent } from "./add-line/add-line.component";
 
 
 
@@ -47,9 +50,14 @@ type orderLocation = {
   price: number;
   dateString: string
 }
+type lineType = {
+  id: number;
+  smaLength: number;
+  lineType: string;
+}
 @Component({
   selector: 'app-server-trade-screen',
-  imports: [MatCheckboxModule, CommonModule, MatTableModule, MatProgressSpinnerModule, MatFormFieldModule, MatSelectModule, MatButtonModule, MatInputModule, FormsModule, MatSlideToggleModule],
+  imports: [MatCheckboxModule, CommonModule, MatTableModule, MatIconModule, MatProgressSpinnerModule, MatFormFieldModule, MatSelectModule, MatButtonModule, MatInputModule, FormsModule, MatSlideToggleModule, AddLineComponent],
   templateUrl: './server-trade-screen.component.html',
   styleUrl: './server-trade-screen.component.css'
 })
@@ -91,6 +99,8 @@ export class ServerTradeScreenComponent implements OnInit {
   interDayMediumSma: number = 0
   interDayShortSma: number = 0
   stopLoss: number = 0
+  readonly dialog = inject(MatDialog);
+  @ViewChild('addLineTemplate', { static: true }) addLineTemplate!: TemplateRef<any>;
 
 
   async saveAlgos() {
@@ -363,10 +373,11 @@ export class ServerTradeScreenComponent implements OnInit {
     }
   }
   onRunSimulationNew() {
+    console.log()
     if (this.intraDayChecked) {
-      this.isLoading = true
-      this.runSimulationIntraDayNew()
-      this.isLoading = false
+      //this.isLoading = true
+      //this.runSimulationIntraDayNew()
+      //this.isLoading = false
     }
     else {
       //this.isLoading = true
@@ -1356,6 +1367,28 @@ export class ServerTradeScreenComponent implements OnInit {
     }
   }
 
+  addLineDialogRef: any
+  listOfAddedLines: lineType[] = []
+  addLineToGraph() {
+    this.addLineDialogRef = this.dialog.open(this.addLineTemplate, {
+      width: '400px',
+      enterAnimationDuration: 0,
+      exitAnimationDuration: 0
+    });
+    this.addLineDialogRef.afterClosed().subscribe(async (result: any) => {
+      if (result.length > 0) {
+        console.log(result)
+       // this.addNewLinesToGraph(result)
+      }/* 
+      else if (this.stockChart.data.datasets.length > 1) {
+        this.listOfAddedLines = []
+        this.stockChart.data.datasets = [this.stockChart.data.datasets[0]]
+        this.stockChart.update()
+      } */
+
+    });
+  }
+  
   async ngOnInit() {
     Chart.register(annotationPlugin);
     Chart.register(...registerables)
