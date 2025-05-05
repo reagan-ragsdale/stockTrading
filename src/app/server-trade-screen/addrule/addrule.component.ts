@@ -49,14 +49,17 @@ export class AddRuleComponent {
     })
   }
   removeBuyRule(id: number) {
+    this.selectedBuyLine = ''
     this.listOfRulesIncoming.BuyRules = this.listOfRulesIncoming.BuyRules.filter(e => e.id != id)
   }
   removeSellRule(id: number) {
+    this.selectedSellLine = ''
     this.listOfRulesIncoming.SellRules = this.listOfRulesIncoming.SellRules.filter(e => e.id != id)
   }
 
   onSelectedRuleTypeChange(event: any) {
     if (event.isUserInput == true) {
+      console.log(event)
       this.availableLines = this.availableLines.filter(e => e.id != event.source.value)
     }
   }
