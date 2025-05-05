@@ -59,6 +59,8 @@ export class AddRuleComponent {
 
   onSelectedRuleTypeChange(event: any, id: number) {
     if (event.isUserInput == true) {
+      console.log(this.selectedBuyLine)
+      console.log(this.selectedSellLine)
       //this.availableLines = this.availableLines.filter(e => e.id != id)
       console.log(this.availableLines)
     }
