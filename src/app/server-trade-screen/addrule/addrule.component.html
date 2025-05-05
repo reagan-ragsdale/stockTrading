@@ -14,9 +14,9 @@
                     <h4>Buy When: </h4>
                     <mat-form-field style="width:fit-content;">
                         <mat-label>Primary Line</mat-label>
-                        <mat-select disableRipple [(value)]="selectedBuyLine">
+                        <mat-select disableRipple [(value)]="buyRule.primaryObject">
                             <mat-option *ngFor="let line of availableLines" value="{{line}}"
-                                (onSelectionChange)="onSelectedRuleTypeChange($event, line.id)">{{line.lineType + ' - ' + line.lineLength}}</mat-option>
+                                (onSelectionChange)="onSelectedBuyRuleTypeChange($event, buyRule.id, line)">{{line.lineType + ' - ' + line.lineLength}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                     <button style="margin-top:auto; margin-bottom:auto;" mat-icon-button aria-label="Delete Line"
@@ -39,9 +39,9 @@
                     <h4>Sell When: </h4>
                     <mat-form-field style="width:fit-content;">
                         <mat-label>Primary Line</mat-label>
-                        <mat-select disableRipple [(value)]="selectedSellLine">
+                        <mat-select disableRipple [(value)]="sellRule.primaryObject">
                             <mat-option *ngFor="let line of availableLines" value="{{line}}"
-                                (onSelectionChange)="onSelectedRuleTypeChange($event, line.id)">{{line.lineType + ' - ' + line.lineLength}}</mat-option>
+                                (onSelectionChange)="onSelectedSellRuleTypeChange($event, sellRule.id, line)">{{line.lineType + ' - ' + line.lineLength}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                     <button style="margin-top:auto; margin-bottom:auto;" mat-icon-button aria-label="Delete Line"

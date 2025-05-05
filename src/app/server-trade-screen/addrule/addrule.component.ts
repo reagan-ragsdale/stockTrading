@@ -57,12 +57,16 @@ export class AddRuleComponent {
     this.listOfRulesIncoming.SellRules = this.listOfRulesIncoming.SellRules.filter(e => e.id != id)
   }
 
-  onSelectedRuleTypeChange(event: any, id: number) {
+  onSelectedBuyRuleTypeChange(event: any, id: number, line: lineType) {
     if (event.isUserInput == true) {
-      console.log(this.selectedBuyLine)
-      console.log(this.selectedSellLine)
-      //this.availableLines = this.availableLines.filter(e => e.id != id)
-      console.log(this.availableLines)
+      let selectedBuyRule = this.listOfRulesIncoming.BuyRules.filter(e => e.id == id)[0]
+      selectedBuyRule.primaryObject = line.lineType + ' - ' + line.lineLength
+    }
+  }
+  onSelectedSellRuleTypeChange(event: any, id: number, line: lineType) {
+    if (event.isUserInput == true) {
+      let selectedSellRule = this.listOfRulesIncoming.SellRules.filter(e => e.id == id)[0]
+      selectedSellRule.primaryObject = line.lineType + ' - ' + line.lineLength
     }
   }
 
