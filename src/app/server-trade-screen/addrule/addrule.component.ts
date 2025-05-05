@@ -29,6 +29,7 @@ export class AddRuleComponent {
   availableLines: lineType[] = []
   selectedBuyLine: string = ''
   selectedSellLine: string = ''
+  availableBuyActions: string[] = ['Crosses above:']
 
   addBuyRule() {
     this.listOfRulesIncoming.BuyRules.push({
@@ -63,12 +64,37 @@ export class AddRuleComponent {
       selectedBuyRule.primaryObject = line.lineType + ' - ' + line.lineLength
     }
   }
+  onSelectedBuyActionTypeChange(event: any, id: number, action: string) {
+    if (event.isUserInput == true) {
+      let selectedBuyRule = this.listOfRulesIncoming.BuyRules.filter(e => e.id == id)[0]
+      selectedBuyRule.desiredAction = action
+    }
+  }
+  onSelectedBuyReferencedObjectTypeChange(event: any, id: number, line: lineType) {
+    if (event.isUserInput == true) {
+      let selectedBuyRule = this.listOfRulesIncoming.BuyRules.filter(e => e.id == id)[0]
+      selectedBuyRule.referencedObject = line.lineType + ' - ' + line.lineLength
+    }
+  }
   onSelectedSellRuleTypeChange(event: any, id: number, line: lineType) {
     if (event.isUserInput == true) {
       let selectedSellRule = this.listOfRulesIncoming.SellRules.filter(e => e.id == id)[0]
       selectedSellRule.primaryObject = line.lineType + ' - ' + line.lineLength
     }
   }
+  onSelectedSellActionTypeChange(event: any, id: number, action: string) {
+    if (event.isUserInput == true) {
+      let selectedSellRule = this.listOfRulesIncoming.SellRules.filter(e => e.id == id)[0]
+      selectedSellRule.desiredAction = action
+    }
+  }
+  onSelectedSellReferencedObjectTypeChange(event: any, id: number, line: lineType) {
+    if (event.isUserInput == true) {
+      let selectedSellRule = this.listOfRulesIncoming.SellRules.filter(e => e.id == id)[0]
+      selectedSellRule.referencedObject = line.lineType + ' - ' + line.lineLength
+    }
+  }
+  
 
   onSubmit() {
     this.dialogRef.close(this.listOfRulesIncoming)
