@@ -59,7 +59,7 @@ export class AddRuleComponent {
 
   onSelectedRuleTypeChange(event: any, id: number) {
     if (event.isUserInput == true) {
-      this.availableLines = this.availableLines.filter(e => e.id != id)
+      //this.availableLines = this.availableLines.filter(e => e.id != id)
       console.log(this.availableLines)
     }
   }
