@@ -11,6 +11,7 @@ export type RuleDto = {
 }
 export type BuyRule = {
     id: number;
+    lineId: number;
     //buy when:
     //the primary line
     primaryObject: string;
@@ -23,6 +24,7 @@ export type BuyRule = {
 }
 export type SellRule = {
     id: number;
+    lineId: number;
     //sell when:
     //the primary line
     primaryObject: string;

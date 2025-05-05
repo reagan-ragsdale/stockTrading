@@ -11,13 +11,11 @@ export class SchwabController {
   
     @BackendMethod({ allowed: true })
     static async getAccountsNumberCall(accessToken: string): Promise<any> {
-        console.log('here account num')
        return await SchwabController.getAccountNumbers(accessToken)
   
     }
     @BackendMethod({ allowed: true })
     static async getAccountInfoCall(accountNum: string, accessToken: string): Promise<any> {
-        console.log('here')
        return await SchwabController.getAccountInfo(accountNum, accessToken)
   
     }

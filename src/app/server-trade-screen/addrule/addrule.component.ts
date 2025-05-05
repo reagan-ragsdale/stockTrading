@@ -33,6 +33,7 @@ export class AddRuleComponent {
   addBuyRule() {
     this.listOfRulesIncoming.BuyRules.push({
       id: this.listOfRulesIncoming.BuyRules.length,
+      lineId: 0,
       primaryObject: '',
       desiredAction: '',
       referencedObject: ''
@@ -41,6 +42,7 @@ export class AddRuleComponent {
   addSellRule() {
     this.listOfRulesIncoming.SellRules.push({
       id: this.listOfRulesIncoming.SellRules.length,
+      lineId: 0,
       primaryObject: '',
       desiredAction: '',
       referencedObject: ''

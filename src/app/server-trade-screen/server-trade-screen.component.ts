@@ -1389,7 +1389,7 @@ export class ServerTradeScreenComponent implements OnInit {
   listOfBGCOlors: string[] = ['#1ca0de', '#eeb528', '#d82c2c']
   addNewLinesToGraph(lines: lineType[]){
     let linesNew = structuredClone(lines)
-    this.stockChart.data.datasets.filter((e: { label: string; }) => e.label == 'Actual')
+    this.stockChart.data.datasets = this.stockChart.data.datasets.filter((e: { label: string; }) => e.label == 'Actual')
     
     for(let i = 0; i < linesNew.length; i++){
       let lineData: any[] = []

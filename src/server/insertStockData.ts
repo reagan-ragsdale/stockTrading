@@ -201,7 +201,7 @@ export const socketCall = async (): Promise<void> => {
                                         orderTime: data.time
                                     })
                                     stockInfo.stopLoss = data.askPrice - (data.askPrice * stockDayTradeValues.Buy)
-                                    stockInfo.stopLossGainThreshold = data.askPrice + (data.askPrice * .001)
+                                    stockInfo.stopLossGainThreshold = data.askPrice + (data.askPrice * .002)
                                     stockInfo.tradeHigh = data.askPrice
                                     console.log('stop loss for: ' + data.stockName + ' - ' + stockInfo.stopLoss)
                                     stockInfo.numberOfTrades++
