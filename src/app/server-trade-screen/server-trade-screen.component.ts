@@ -1472,7 +1472,7 @@ export class ServerTradeScreenComponent implements OnInit {
       let tempCounter = 0
       for(let j = 0; j < this.stockChart.data.datasets[i].data.length; j++){
         if(this.stockChart.data.datasets[i].data[j] == null){
-          tempCounter++;
+          tempCounter += 1;
         }
       }
       if(tempCounter > counter){
