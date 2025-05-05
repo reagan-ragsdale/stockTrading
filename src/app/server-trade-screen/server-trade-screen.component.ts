@@ -1451,6 +1451,7 @@ export class ServerTradeScreenComponent implements OnInit {
     });
     this.addRuleDialogRef.afterClosed().subscribe(async (result: any) => {
       console.log(result)
+      this.addRule(result)
       if (result.length > 0) {
         console.log(result)
         this.addRule(result)
