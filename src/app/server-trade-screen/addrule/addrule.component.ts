@@ -30,6 +30,7 @@ export class AddRuleComponent {
   selectedBuyLine: string = ''
   selectedSellLine: string = ''
   availableBuyActions: string[] = ['Crosses above:']
+  availableSellActions: string[] = ['Crosses below:']
 
   addBuyRule() {
     this.listOfRulesIncoming.BuyRules.push({

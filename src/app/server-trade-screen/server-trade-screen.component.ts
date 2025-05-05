@@ -1377,19 +1377,19 @@ export class ServerTradeScreenComponent implements OnInit {
       if (result.length > 0) {
         console.log(result)
         this.addNewLinesToGraph(result)
-      }/* 
+      }
       else if (this.stockChart.data.datasets.length > 1) {
         this.listOfAddedLines = []
         this.stockChart.data.datasets = [this.stockChart.data.datasets[0]]
         this.stockChart.update()
-      } */
+      } 
 
     });
   }
   listOfBGCOlors: string[] = ['#1ca0de', '#eeb528', '#d82c2c']
   addNewLinesToGraph(lines: lineType[]){
     let linesNew = structuredClone(lines)
-    this.stockChart.data.datasets = this.stockChart.data.datasets.filter((e: { label: string; }) => e.label == 'Actual')
+    this.stockChart.data.datasets = [this.stockChart.data.datasets[0]]
     
     for(let i = 0; i < linesNew.length; i++){
       let lineData: any[] = []
@@ -1452,7 +1452,7 @@ export class ServerTradeScreenComponent implements OnInit {
     this.addRuleDialogRef.afterClosed().subscribe(async (result: any) => {
       if (result.length > 0) {
         console.log(result)
-        this.addNewLinesToGraph(result)
+        this.addRule(result)
       }/* 
       else if (this.stockChart.data.datasets.length > 1) {
         this.listOfAddedLines = []
@@ -1463,8 +1463,21 @@ export class ServerTradeScreenComponent implements OnInit {
     });
   }
 
-  addRule(rules: BuyRule){
-
+  addRule(rules: RuleDto){
+    let buySell = 'Buy'
+    let counter = 0
+    for(let i = 1; i < this.stockChart.data.datasets.length; i++){
+      let tempCounter = 0
+      for(let j = 0; j < this.stockChart.data.datasets[i].data.length; j++){
+        if(this.stockChart.data.datasets[i].data[j] == null){
+          counter++;
+        }
+      }
+      if(tempCounter > counter){
+        counter = tempCounter
+      }
+    }
+    console.log(counter)
   }
   
   async ngOnInit() {
