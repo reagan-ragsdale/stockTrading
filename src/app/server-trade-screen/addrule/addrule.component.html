@@ -16,7 +16,7 @@
                         <mat-label>Primary Line</mat-label>
                         <mat-select disableRipple [(value)]="selectedBuyLine">
                             <mat-option *ngFor="let line of availableLines" value="{{line}}"
-                                (onSelectionChange)="onSelectedRuleTypeChange($event)">{{line.lineType + ' - ' + line.lineLength}}</mat-option>
+                                (onSelectionChange)="onSelectedRuleTypeChange($event, line.id)">{{line.lineType + ' - ' + line.lineLength}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                     <button style="margin-top:auto; margin-bottom:auto;" mat-icon-button aria-label="Delete Line"
@@ -41,7 +41,7 @@
                         <mat-label>Primary Line</mat-label>
                         <mat-select disableRipple [(value)]="selectedSellLine">
                             <mat-option *ngFor="let line of availableLines" value="{{line}}"
-                                (onSelectionChange)="onSelectedRuleTypeChange($event)">{{line.lineType + ' - ' + line.lineLength}}</mat-option>
+                                (onSelectionChange)="onSelectedRuleTypeChange($event, line.id)">{{line.lineType + ' - ' + line.lineLength}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                     <button style="margin-top:auto; margin-bottom:auto;" mat-icon-button aria-label="Delete Line"

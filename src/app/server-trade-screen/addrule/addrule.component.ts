@@ -57,10 +57,9 @@ export class AddRuleComponent {
     this.listOfRulesIncoming.SellRules = this.listOfRulesIncoming.SellRules.filter(e => e.id != id)
   }
 
-  onSelectedRuleTypeChange(event: any) {
+  onSelectedRuleTypeChange(event: any, id: number) {
     if (event.isUserInput == true) {
-      console.log(JSON.parse(event))
-      this.availableLines = this.availableLines.filter(e => e.id != event.source.value)
+      this.availableLines = this.availableLines.filter(e => e.id != id)
     }
   }
 
