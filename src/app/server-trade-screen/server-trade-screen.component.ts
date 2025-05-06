@@ -1477,8 +1477,21 @@ export class ServerTradeScreenComponent implements OnInit {
     
   }
   calculateEMA(lineLength: number): {value: number | null}[]{
-    let returnValue: any[] = []
-    return returnValue
+    let returnData: any[] = []
+    let windowSum = 0
+    for(let i = 0; i < lineLength - 1; i++){
+      returnData.push({value:null})
+      windowSum += this.stockDataForSelectedDay[i].stockPrice
+    }
+    windowSum += this.stockDataForSelectedDay[lineLength].stockPrice - this.stockDataForSelectedDay[0].stockPrice
+    returnData.push({value: windowSum/lineLength})
+
+    let multiplyFactor = 2/(lineLength + 1)
+    for(let i = lineLength+1; i < this.stockDataForSelectedDay.length; i++){
+      let newVal = (this.stockDataForSelectedDay[i].stockPrice * multiplyFactor) + (returnData[returnData.length - 1].value * (1 - multiplyFactor))
+      returnData.push({value: newVal})
+    }
+    return returnData
   }
 
   addRuleDialogRef: any

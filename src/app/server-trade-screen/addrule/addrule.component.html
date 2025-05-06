@@ -11,7 +11,8 @@
             </button>
             <div *ngIf="listOfRulesIncoming.BuyRules.length > 0" style="display:flex; flex-direction: column;">
                 <div *ngFor="let buyRule of listOfRulesIncoming.BuyRules">
-                    <h4>Buy When: </h4>
+                    <h4 *ngIf="buyRule.id == 0">Buy When:</h4>
+                    <h4 *ngIf="buyRule.id > 0">And</h4>
                     <mat-form-field style="width:fit-content;">
                         <mat-label>Primary Line</mat-label>
                         <mat-select disableRipple [(value)]="buyRule.primaryObject">
@@ -54,7 +55,8 @@
             </button>
             <div *ngIf="listOfRulesIncoming.SellRules.length > 0" style="display:flex; flex-direction: column;">
                 <div *ngFor="let sellRule of listOfRulesIncoming.SellRules">
-                    <h4>Sell When: </h4>
+                    <h4 *ngIf="sellRule.id == 0">Sell When: </h4>
+                    <h4 *ngIf="sellRule.id > 0">And</h4>
                     <mat-form-field style="width:fit-content;">
                         <mat-label>Primary Line</mat-label>
                         <mat-select disableRipple [(value)]="sellRule.primaryObject">
