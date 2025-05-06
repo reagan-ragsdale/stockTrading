@@ -392,7 +392,7 @@ export class ServerTradeScreenComponent implements OnInit {
       console.log(this.listOfAddedLines)
       let resultList = []
       for(let i = 0; i < this.distinctDates.length; i++){
-        await this.updateStockChartData(this.selectedDate)
+        await this.updateStockChartData(this.distinctDates[i])
         for(let j = 0; j < this.listOfAddedLines.length; j++){
           let smaData = this.calculateSMA(this.listOfAddedLines[j].lineLength)
           this.listOfAddedLines[j].data = smaData
