@@ -1487,6 +1487,9 @@ export class ServerTradeScreenComponent implements OnInit {
     let buySell = 'Buy'
     let orderLocations: orderLocation[] = []
     let profit = 0
+
+    console.log(rules.BuyRules[0].desiredAction)
+    console.log(rules.BuyRules[0].referencedObjectData[700])
     for(let i = counter; i < this.stockDataForSelectedDay.length; i++){
       if(buySell == 'Buy' && (this.operators[rules.BuyRules[0].desiredAction](rules.BuyRules[0].primaryObjectData[i], rules.BuyRules[0].primaryObjectData[i - 1], rules.BuyRules[0].referencedObjectData[i], rules.BuyRules[0].referencedObjectData[i - 1]))){
         orderLocations.push({buySell: 'Buy', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString()})
@@ -1496,6 +1499,7 @@ export class ServerTradeScreenComponent implements OnInit {
         profit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
       }
     }
+    console.log('orderLocations below')
     console.log(orderLocations)
   }
   
