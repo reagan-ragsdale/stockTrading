@@ -37,8 +37,10 @@ export class AddRuleComponent {
       id: this.listOfRulesIncoming.BuyRules.length,
       lineId: 0,
       primaryObject: '',
+      primaryObjectData: [],
       desiredAction: '',
-      referencedObject: ''
+      referencedObject: '',
+      referencedObjectData: []
     })
   }
   addSellRule() {
@@ -46,8 +48,10 @@ export class AddRuleComponent {
       id: this.listOfRulesIncoming.SellRules.length,
       lineId: 0,
       primaryObject: '',
+      primaryObjectData: [],
       desiredAction: '',
-      referencedObject: ''
+      referencedObject: '',
+      referencedObjectData: []
     })
   }
   removeBuyRule(id: number) {
@@ -63,6 +67,7 @@ export class AddRuleComponent {
     if (event.isUserInput == true) {
       let selectedBuyRule = this.listOfRulesIncoming.BuyRules.filter(e => e.id == id)[0]
       selectedBuyRule.primaryObject = line.lineType + ' - ' + line.lineLength
+      selectedBuyRule.primaryObjectData = line.data
     }
   }
   onSelectedBuyActionTypeChange(event: any, id: number, action: string) {
@@ -75,12 +80,14 @@ export class AddRuleComponent {
     if (event.isUserInput == true) {
       let selectedBuyRule = this.listOfRulesIncoming.BuyRules.filter(e => e.id == id)[0]
       selectedBuyRule.referencedObject = line.lineType + ' - ' + line.lineLength
+      selectedBuyRule.referencedObjectData = line.data
     }
   }
   onSelectedSellRuleTypeChange(event: any, id: number, line: lineType) {
     if (event.isUserInput == true) {
       let selectedSellRule = this.listOfRulesIncoming.SellRules.filter(e => e.id == id)[0]
       selectedSellRule.primaryObject = line.lineType + ' - ' + line.lineLength
+      selectedSellRule.primaryObjectData = line.data
     }
   }
   onSelectedSellActionTypeChange(event: any, id: number, action: string) {
@@ -93,6 +100,7 @@ export class AddRuleComponent {
     if (event.isUserInput == true) {
       let selectedSellRule = this.listOfRulesIncoming.SellRules.filter(e => e.id == id)[0]
       selectedSellRule.referencedObject = line.lineType + ' - ' + line.lineLength
+      selectedSellRule.referencedObjectData = line.data
     }
   }
   

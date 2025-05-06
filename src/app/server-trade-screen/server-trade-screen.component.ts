@@ -22,7 +22,7 @@ import { BuyRule, lineType, RuleDto } from '../Dtos/ServerAlgoDto';
 import { AddRuleComponent } from './addrule/addrule.component';
 
 
-
+type OperatorFunction = (a: number, aPrev: number | null, b: number, bPrev: number | null) => boolean;
 type serverAlgos = {
   name: string;
   isSelected: boolean;
@@ -1395,6 +1395,8 @@ export class ServerTradeScreenComponent implements OnInit {
       let lineData: any[] = []
       if(linesNew[i].lineType == 'SMA'){
         lineData = this.calculateSMA(linesNew[i].lineLength)
+        let filteredLine = this.listOfAddedLines.filter(e => e.id == linesNew[i].id)[0]
+        filteredLine.data = lineData
       }
       else if(linesNew[i].lineType == 'EMA'){
         lineData = this.calculateEMA(linesNew[i].lineLength)
@@ -1451,11 +1453,7 @@ export class ServerTradeScreenComponent implements OnInit {
     });
     this.addRuleDialogRef.afterClosed().subscribe(async (result: any) => {
       console.log(result)
-      this.addRule(result)
-      if (result.length > 0) {
-        console.log(result)
-        this.addRule(result)
-      }/* 
+      this.addRule(result)/* 
       else if (this.stockChart.data.datasets.length > 1) {
         this.listOfAddedLines = []
         this.stockChart.data.datasets = [this.stockChart.data.datasets[0]]
@@ -1465,8 +1463,13 @@ export class ServerTradeScreenComponent implements OnInit {
     });
   }
 
+  
+  operators: Record<string, OperatorFunction> = {
+    "Crosses above:" : (a: number, aPrev: number | null, b: number, bPrev: number | null) => a > b && (aPrev != null && bPrev != null) && (aPrev <= bPrev),
+    "Crosses below:" : (a: number, aPrev: number | null, b: number, bPrev: number | null) => a < b && (aPrev != null && bPrev != null) && (aPrev >= bPrev),
+  };
+
   addRule(rules: RuleDto){
-    let buySell = 'Buy'
     let counter = 0
     for(let i = 1; i < this.stockChart.data.datasets.length; i++){
       let tempCounter = 0
@@ -1479,7 +1482,21 @@ export class ServerTradeScreenComponent implements OnInit {
         counter = tempCounter
       }
     }
-    console.log(counter)
+    counter = counter + 1
+
+    let buySell = 'Buy'
+    let orderLocations: orderLocation[] = []
+    let profit = 0
+    for(let i = counter; i < this.stockDataForSelectedDay.length; i++){
+      if(buySell == 'Buy' && (this.operators[rules.BuyRules[0].desiredAction](rules.BuyRules[0].primaryObjectData[i], rules.BuyRules[0].primaryObjectData[i - 1], rules.BuyRules[0].referencedObjectData[i], rules.BuyRules[0].referencedObjectData[i - 1]))){
+        orderLocations.push({buySell: 'Buy', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString()})
+      }
+      else if(buySell == 'Sell' && (this.operators[rules.SellRules[0].desiredAction](rules.SellRules[0].primaryObjectData[i], rules.SellRules[0].primaryObjectData[i - 1], rules.SellRules[0].referencedObjectData[i], rules.SellRules[0].referencedObjectData[i - 1]))){
+        orderLocations.push({buySell: 'Sell', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString()})
+        profit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
+      }
+    }
+    console.log(orderLocations)
   }
   
   async ngOnInit() {

@@ -28,7 +28,8 @@ addLine(){
   this.listOfLinesIncoming.push({
     id: this.listOfLinesIncoming.length,
     lineLength: 1,
-    lineType: ''
+    lineType: '',
+    data: []
   })
 }
 removeLine(id:number){
