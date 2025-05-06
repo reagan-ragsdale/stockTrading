@@ -1546,14 +1546,10 @@ export class ServerTradeScreenComponent implements OnInit {
     let buySell = 'Buy'
     let orderLocations: orderLocation[] = []
     let profit = 0
-    console.log(this.listOfAddedLines)
-    console.log(counter)
     for(let i = counter; i < this.stockDataForSelectedDay.length; i++){
       if(buySell == 'Buy'){
         let buyArray = []
         for(let j = 0; j < this.listOfAddedRules.BuyRules.length; j++){
-          console.log([j,i])
-          console.log(this.listOfAddedRules.BuyRules[j].primaryObjectData)
           buyArray.push(this.operators[this.listOfAddedRules.BuyRules[j].desiredAction](this.listOfAddedRules.BuyRules[j].primaryObjectData[i].value, this.listOfAddedRules.BuyRules[j].primaryObjectData[i - 1].value, this.listOfAddedRules.BuyRules[j].referencedObjectData[i].value, this.listOfAddedRules.BuyRules[j].referencedObjectData[i - 1].value, this.listOfAddedRules.BuyRules[j].desiredActionAmnt))
         }
         if(!buyArray.includes(false)){
