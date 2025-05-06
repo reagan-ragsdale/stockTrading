@@ -1550,6 +1550,7 @@ export class ServerTradeScreenComponent implements OnInit {
         }
         if(!buyArray.includes(false)){
           orderLocations.push({buySell: 'Sell', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString()})
+          profit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
           buySell = 'Buy'
         }
       }
