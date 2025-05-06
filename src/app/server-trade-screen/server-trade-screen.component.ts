@@ -1501,8 +1501,8 @@ export class ServerTradeScreenComponent implements OnInit {
         buySell = 'Buy'
       }
     }
-    console.log('orderLocations below')
-    console.log(orderLocations)
+    this.updateGraphBuyAndSellPointsIntraDayNew(orderLocations)
+    this.totalProfit = profit
   }
   
   async ngOnInit() {
