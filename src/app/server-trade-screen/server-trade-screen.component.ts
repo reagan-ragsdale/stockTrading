@@ -1533,14 +1533,25 @@ export class ServerTradeScreenComponent implements OnInit {
     let profit = 0
 
     for(let i = counter; i < this.stockDataForSelectedDay.length; i++){
-      if(buySell == 'Buy' && (this.operators[this.listOfAddedRules.BuyRules[0].desiredAction](this.listOfAddedRules.BuyRules[0].primaryObjectData[i].value, this.listOfAddedRules.BuyRules[0].primaryObjectData[i - 1].value, this.listOfAddedRules.BuyRules[0].referencedObjectData[i].value, this.listOfAddedRules.BuyRules[0].referencedObjectData[i - 1].value, this.listOfAddedRules.BuyRules[0].desiredActionAmnt))){
-        orderLocations.push({buySell: 'Buy', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString()})
-        buySell = 'Sell'
+      if(buySell == 'Buy'){
+        let buyArray = []
+        for(let j = 0; j < this.listOfAddedRules.BuyRules.length; j++){
+          buyArray.push(this.operators[this.listOfAddedRules.BuyRules[j].desiredAction](this.listOfAddedRules.BuyRules[j].primaryObjectData[i].value, this.listOfAddedRules.BuyRules[j].primaryObjectData[i - 1].value, this.listOfAddedRules.BuyRules[j].referencedObjectData[i].value, this.listOfAddedRules.BuyRules[j].referencedObjectData[i - 1].value, this.listOfAddedRules.BuyRules[j].desiredActionAmnt))
+        }
+        if(!buyArray.includes(false)){
+          orderLocations.push({buySell: 'Buy', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString()})
+          buySell = 'Sell'
+        }
       }
-      else if(buySell == 'Sell' && (this.operators[this.listOfAddedRules.SellRules[0].desiredAction](this.listOfAddedRules.SellRules[0].primaryObjectData[i].value, this.listOfAddedRules.SellRules[0].primaryObjectData[i - 1].value, this.listOfAddedRules.SellRules[0].referencedObjectData[i].value, this.listOfAddedRules.SellRules[0].referencedObjectData[i - 1].value, this.listOfAddedRules.SellRules[0].desiredActionAmnt))){
-        orderLocations.push({buySell: 'Sell', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString()})
-        profit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
-        buySell = 'Buy'
+      else{
+        let buyArray = []
+        for(let j = 0; j < this.listOfAddedRules.SellRules.length; j++){
+          buyArray.push(this.operators[this.listOfAddedRules.SellRules[j].desiredAction](this.listOfAddedRules.SellRules[j].primaryObjectData[i].value, this.listOfAddedRules.SellRules[j].primaryObjectData[i - 1].value, this.listOfAddedRules.SellRules[j].referencedObjectData[i].value, this.listOfAddedRules.SellRules[j].referencedObjectData[i - 1].value, this.listOfAddedRules.SellRules[j].desiredActionAmnt))
+        }
+        if(!buyArray.includes(false)){
+          orderLocations.push({buySell: 'Sell', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString()})
+          buySell = 'Buy'
+        }
       }
     }
     return{orderLocations: orderLocations, profit: profit}
