@@ -370,7 +370,7 @@ export class ServerTradeScreenComponent implements OnInit {
       this.isLoading = false
     }
   }
-  onRunSimulationNew() {
+  onRunSimulation() {
     console.log()
     if (this.intraDayChecked) {
       this.isLoading = true
@@ -386,7 +386,7 @@ export class ServerTradeScreenComponent implements OnInit {
       //this.isLoading = false
     }
   }
-  async onRunSimulation() {
+  async onRunSimulationNew() {
     if (this.intraDayChecked) {
       this.isLoading = true
       console.log(this.listOfAddedLines)
@@ -414,7 +414,7 @@ export class ServerTradeScreenComponent implements OnInit {
           }
         }
         let result = this.addRule()
-        resultList.push({profit: result.profit, numberOfTrades: result.orderLocations.length})
+        resultList.push({profit: result.profit, numberOfTrades: result.orderLocations.length, orders: result.orderLocations})
 
       }
       let finalsResultData: any = {}
@@ -422,6 +422,8 @@ export class ServerTradeScreenComponent implements OnInit {
       finalsResultData.avgNumTrades = resultList.reduce((sum, val) => sum + val.numberOfTrades, 0) / resultList.length
       console.log('All Day Results below')
       console.log(finalsResultData)
+      console.log('result list below')
+      console.log(resultList)
       //let result = this.addRule()
       //this.updateGraphBuyAndSellPointsIntraDayNew(result.orderLocations)
       //this.totalProfit = result.profit
