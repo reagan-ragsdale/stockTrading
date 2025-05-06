@@ -1546,7 +1546,8 @@ export class ServerTradeScreenComponent implements OnInit {
     let buySell = 'Buy'
     let orderLocations: orderLocation[] = []
     let profit = 0
-
+    console.log(this.listOfAddedLines)
+    console.log(counter)
     for(let i = counter; i < this.stockDataForSelectedDay.length; i++){
       if(buySell == 'Buy'){
         let buyArray = []
