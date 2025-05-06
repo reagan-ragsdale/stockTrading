@@ -22,14 +22,14 @@
                     <mat-form-field style="width:fit-content;">
                         <mat-label>Action</mat-label>
                         <mat-select disableRipple [(value)]="buyRule.desiredAction">
-                            <mat-option *ngFor="let buyAction of availableBuyActions" value="{{buyAction}}"
+                            <mat-option *ngFor="let buyAction of availableBuyActions" [value]="buyAction"
                                 (onSelectionChange)="onSelectedBuyActionTypeChange($event, buyRule.id, buyAction)">{{buyAction}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                     <mat-form-field style="width:fit-content;">
                         <mat-label>Referenced Object</mat-label>
                         <mat-select disableRipple [(value)]="buyRule.referencedObject">
-                            <mat-option *ngFor="let line of availableLines" value="{{line}}"
+                            <mat-option *ngFor="let line of availableLines" [value]="line.lineType + ' - ' + line.lineLength"
                                 (onSelectionChange)="onSelectedBuyReferencedObjectTypeChange($event, buyRule.id, line)">{{line.lineType + ' - ' + line.lineLength}}</mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -58,21 +58,21 @@
                     <mat-form-field style="width:fit-content;">
                         <mat-label>Primary Line</mat-label>
                         <mat-select disableRipple [(value)]="sellRule.primaryObject">
-                            <mat-option *ngFor="let line of availableLines" value="{{line}}"
+                            <mat-option *ngFor="let line of availableLines" [value]="line.lineType + ' - ' + line.lineLength"
                                 (onSelectionChange)="onSelectedSellRuleTypeChange($event, sellRule.id, line)">{{line.lineType + ' - ' + line.lineLength}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                     <mat-form-field style="width:fit-content;">
                         <mat-label>Action</mat-label>
                         <mat-select disableRipple [(value)]="sellRule.desiredAction">
-                            <mat-option *ngFor="let buyAction of availableSellActions" value="{{buyAction}}"
+                            <mat-option *ngFor="let buyAction of availableSellActions" [value]="buyAction"
                                 (onSelectionChange)="onSelectedSellActionTypeChange($event, sellRule.id, buyAction)">{{buyAction}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                     <mat-form-field style="width:fit-content;">
                         <mat-label>Referenced Object</mat-label>
                         <mat-select disableRipple [(value)]="sellRule.referencedObject">
-                            <mat-option *ngFor="let line of availableLines" value="{{line}}"
+                            <mat-option *ngFor="let line of availableLines" [value]="line.lineType + ' - ' + line.lineLength"
                                 (onSelectionChange)="onSelectedSellReferencedObjectTypeChange($event, sellRule.id, line)">{{line.lineType + ' - ' + line.lineLength}}</mat-option>
                         </mat-select>
                     </mat-form-field>
