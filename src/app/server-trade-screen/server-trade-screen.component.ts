@@ -1485,11 +1485,11 @@ export class ServerTradeScreenComponent implements OnInit {
       returnData.push({value:null})
       windowSum += this.stockDataForSelectedDay[i].stockPrice
     }
-    windowSum += this.stockDataForSelectedDay[lineLength].stockPrice - this.stockDataForSelectedDay[0].stockPrice
+    windowSum += this.stockDataForSelectedDay[lineLength - 1].stockPrice - this.stockDataForSelectedDay[0].stockPrice
     returnData.push({value: windowSum/lineLength})
 
     let multiplyFactor = 2/(lineLength + 1)
-    for(let i = lineLength+1; i < this.stockDataForSelectedDay.length; i++){
+    for(let i = lineLength; i < this.stockDataForSelectedDay.length; i++){
       let newVal = (this.stockDataForSelectedDay[i].stockPrice * multiplyFactor) + (returnData[returnData.length - 1].value * (1 - multiplyFactor))
       returnData.push({value: newVal})
     }
