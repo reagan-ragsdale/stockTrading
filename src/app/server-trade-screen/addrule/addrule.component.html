@@ -15,7 +15,7 @@
                     <mat-form-field style="width:fit-content;">
                         <mat-label>Primary Line</mat-label>
                         <mat-select disableRipple [(value)]="buyRule.primaryObject">
-                            <mat-option *ngFor="let line of availableLines" value="{{line}}"
+                            <mat-option *ngFor="let line of availableLines" [value]="line.lineType + ' - ' + line.lineLength"
                                 (onSelectionChange)="onSelectedBuyRuleTypeChange($event, buyRule.id, line)">{{line.lineType + ' - ' + line.lineLength}}</mat-option>
                         </mat-select>
                     </mat-form-field>

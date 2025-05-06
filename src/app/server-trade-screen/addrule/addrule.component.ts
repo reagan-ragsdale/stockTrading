@@ -76,6 +76,7 @@ export class AddRuleComponent {
   onSelectedBuyRuleTypeChange(event: any, id: number, line: lineType) {
     if (event.isUserInput == true) {
       let selectedBuyRule = this.listOfRulesIncoming.BuyRules.filter(e => e.id == id)[0]
+      console.log(selectedBuyRule)
       console.log(this.listOfRulesIncoming)
       selectedBuyRule.primaryObject = line.lineType + ' - ' + line.lineLength
       selectedBuyRule.primaryObjectType = line.lineType
