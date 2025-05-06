@@ -1491,10 +1491,10 @@ export class ServerTradeScreenComponent implements OnInit {
     console.log(rules.BuyRules[0].desiredAction)
     console.log(rules.BuyRules[0].referencedObjectData[700])
     for(let i = counter; i < this.stockDataForSelectedDay.length; i++){
-      if(buySell == 'Buy' && (this.operators[rules.BuyRules[0].desiredAction](rules.BuyRules[0].primaryObjectData[i], rules.BuyRules[0].primaryObjectData[i - 1], rules.BuyRules[0].referencedObjectData[i], rules.BuyRules[0].referencedObjectData[i - 1]))){
+      if(buySell == 'Buy' && (this.operators[rules.BuyRules[0].desiredAction](rules.BuyRules[0].primaryObjectData[i].value, rules.BuyRules[0].primaryObjectData[i - 1].value, rules.BuyRules[0].referencedObjectData[i].value, rules.BuyRules[0].referencedObjectData[i - 1].value))){
         orderLocations.push({buySell: 'Buy', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString()})
       }
-      else if(buySell == 'Sell' && (this.operators[rules.SellRules[0].desiredAction](rules.SellRules[0].primaryObjectData[i], rules.SellRules[0].primaryObjectData[i - 1], rules.SellRules[0].referencedObjectData[i], rules.SellRules[0].referencedObjectData[i - 1]))){
+      else if(buySell == 'Sell' && (this.operators[rules.SellRules[0].desiredAction](rules.SellRules[0].primaryObjectData[i].value, rules.SellRules[0].primaryObjectData[i - 1].value, rules.SellRules[0].referencedObjectData[i].value, rules.SellRules[0].referencedObjectData[i - 1].value))){
         orderLocations.push({buySell: 'Sell', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString()})
         profit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
       }
