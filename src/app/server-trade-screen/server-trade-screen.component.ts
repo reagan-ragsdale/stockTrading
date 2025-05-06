@@ -22,7 +22,7 @@ import { BuyRule, lineType, RuleDto } from '../Dtos/ServerAlgoDto';
 import { AddRuleComponent } from './addrule/addrule.component';
 
 
-type OperatorFunction = (a: number, aPrev: number | null, b: number, bPrev: number | null) => boolean;
+type OperatorFunction = (a: number, aPrev: number | null, b: number, bPrev: number | null, difference: number) => boolean;
 type serverAlgos = {
   name: string;
   isSelected: boolean;
@@ -112,9 +112,9 @@ export class ServerTradeScreenComponent implements OnInit {
       this.selectedStockName = event.source.value
       if (!this.intraDayChecked) {
         this.isLoading = true
-        this.intraDayLongSma = 3600;
-        this.intraDayMediumSma = 1800;
-        this.intraDayShortSma = 300
+        //this.intraDayLongSma = 3600;
+        //this.intraDayMediumSma = 1800;
+        //this.intraDayShortSma = 300
         this.selectedInterDayStockData = this.allHistory.filter(e => e.stockName = this.selectedStockName)
         this.calculateSmaValuesInterDaySingleRun()
         this.updateChart()
@@ -125,9 +125,9 @@ export class ServerTradeScreenComponent implements OnInit {
         this.isLoading = true
         await this.getStockHistoricalData()
         await this.updateStockChartData(this.selectedDate)
-        this.calculateIntraDaySma()
+        //this.calculateIntraDaySma()
         this.updateChartIntraDay()
-        this.runSimulationIntraDay()
+        //this.runSimulationIntraDay()
         this.isLoading = false
       }
 
@@ -373,9 +373,12 @@ export class ServerTradeScreenComponent implements OnInit {
   onRunSimulationNew() {
     console.log()
     if (this.intraDayChecked) {
-      //this.isLoading = true
+      this.isLoading = true
+      let result = this.addRule()
+      this.updateGraphBuyAndSellPointsIntraDayNew(result.orderLocations)
+      this.totalProfit = result.profit
       //this.runSimulationIntraDayNew()
-      //this.isLoading = false
+      this.isLoading = false
     }
     else {
       //this.isLoading = true
@@ -383,11 +386,46 @@ export class ServerTradeScreenComponent implements OnInit {
       //this.isLoading = false
     }
   }
-  onRunSimulation() {
+  async onRunSimulation() {
     if (this.intraDayChecked) {
       this.isLoading = true
-      this.runSimulationIntraDay()
-      this.calcualateIntraDayRsi()
+      console.log(this.listOfAddedLines)
+      let resultList = []
+      for(let i = 0; i < this.distinctDates.length; i++){
+        await this.updateStockChartData(this.selectedDate)
+        for(let j = 0; j < this.listOfAddedLines.length; j++){
+          let smaData = this.calculateSMA(this.listOfAddedLines[j].lineLength)
+          this.listOfAddedLines[j].data = smaData
+          for(let k = 0; k < this.listOfAddedRules.BuyRules.length; k++){
+            if(this.listOfAddedRules.BuyRules[k].primaryObjectType == this.listOfAddedLines[j].lineType && this.listOfAddedRules.BuyRules[k].primaryObjectLength == this.listOfAddedLines[j].lineLength){
+              this.listOfAddedRules.BuyRules[k].primaryObjectData = smaData
+            }
+            if(this.listOfAddedRules.BuyRules[k].referencedObjectType == this.listOfAddedLines[j].lineType && this.listOfAddedRules.BuyRules[k].referencedObjectLength == this.listOfAddedLines[j].lineLength){
+              this.listOfAddedRules.BuyRules[k].referencedObjectData = smaData
+            }
+          }
+          for(let k = 0; k < this.listOfAddedRules.SellRules.length; k++){
+            if(this.listOfAddedRules.SellRules[k].primaryObjectType == this.listOfAddedLines[j].lineType && this.listOfAddedRules.SellRules[k].primaryObjectLength == this.listOfAddedLines[j].lineLength){
+              this.listOfAddedRules.SellRules[k].primaryObjectData = smaData
+            }
+            if(this.listOfAddedRules.SellRules[k].referencedObjectType == this.listOfAddedLines[j].lineType && this.listOfAddedRules.SellRules[k].referencedObjectLength == this.listOfAddedLines[j].lineLength){
+              this.listOfAddedRules.SellRules[k].referencedObjectData = smaData
+            }
+          }
+        }
+        let result = this.addRule()
+        resultList.push({profit: result.profit, numberOfTrades: result.orderLocations.length})
+
+      }
+      let finalsResultData: any = {}
+      finalsResultData.avgProfit = resultList.reduce((sum, val) => sum + val.profit, 0) / resultList.length
+      finalsResultData.avgNumTrades = resultList.reduce((sum, val) => sum + val.numberOfTrades, 0) / resultList.length
+      console.log('All Day Results below')
+      console.log(finalsResultData)
+      //let result = this.addRule()
+      //this.updateGraphBuyAndSellPointsIntraDayNew(result.orderLocations)
+      //this.totalProfit = result.profit
+      //this.runSimulationIntraDayNew()
       this.isLoading = false
     }
     else {
@@ -407,10 +445,10 @@ export class ServerTradeScreenComponent implements OnInit {
       this.isLoading = true
       this.selectedDate = event.source.value
       await this.updateStockChartData(this.selectedDate)
-      this.calculateIntraDaySma()
+      //this.calculateIntraDaySma()
       this.updateChartIntraDay()
-      this.runSimulationIntraDay()
-      this.topAlgos = []
+      //this.runSimulationIntraDay()
+      //this.topAlgos = []
       this.isLoading = false
     }
   }
@@ -1453,7 +1491,8 @@ export class ServerTradeScreenComponent implements OnInit {
     });
     this.addRuleDialogRef.afterClosed().subscribe(async (result: any) => {
       console.log(result)
-      this.addRule(result)/* 
+      //this.addRule(result)
+      /* 
       else if (this.stockChart.data.datasets.length > 1) {
         this.listOfAddedLines = []
         this.stockChart.data.datasets = [this.stockChart.data.datasets[0]]
@@ -1465,16 +1504,18 @@ export class ServerTradeScreenComponent implements OnInit {
 
   
   operators: Record<string, OperatorFunction> = {
-    "Crosses above:" : (a: number, aPrev: number | null, b: number, bPrev: number | null) => a > b && (aPrev != null && bPrev != null) && (aPrev <= bPrev),
-    "Crosses below:" : (a: number, aPrev: number | null, b: number, bPrev: number | null) => a < b && (aPrev != null && bPrev != null) && (aPrev >= bPrev),
+    "Crosses above:" : (a: number, aPrev: number | null, b: number, bPrev: number | null, difference: number) => a > b && (aPrev != null && bPrev != null) && (aPrev <= bPrev),
+    "Crosses below:" : (a: number, aPrev: number | null, b: number, bPrev: number | null, difference: number) => a < b && (aPrev != null && bPrev != null) && (aPrev >= bPrev),
+    "Dips below:" : (a: number, aPrev: number | null, b: number, bPrev: number | null, difference: number) => (((a - b) / b) < (difference * -1)) && (aPrev != null && bPrev != null) && (aPrev >= bPrev),
+    "Rises above:" : (a: number, aPrev: number | null, b: number, bPrev: number | null, difference: number) => (((a - b) / b) > difference) && (aPrev != null && bPrev != null) && (aPrev >= bPrev),
   };
 
-  addRule(rules: RuleDto){
+  addRule(){
     let counter = 0
-    for(let i = 1; i < this.stockChart.data.datasets.length; i++){
+    for(let i = 1; i < this.listOfAddedLines.length; i++){
       let tempCounter = 0
-      for(let j = 0; j < this.stockChart.data.datasets[i].data.length; j++){
-        if(this.stockChart.data.datasets[i].data[j] == null){
+      for(let j = 0; j < this.listOfAddedLines[i].data.length; j++){
+        if(this.listOfAddedLines[i].data[j].value == null){
           tempCounter += 1;
         }
       }
@@ -1488,21 +1529,18 @@ export class ServerTradeScreenComponent implements OnInit {
     let orderLocations: orderLocation[] = []
     let profit = 0
 
-    console.log(rules.BuyRules[0].desiredAction)
-    console.log(rules.BuyRules[0].referencedObjectData[700])
     for(let i = counter; i < this.stockDataForSelectedDay.length; i++){
-      if(buySell == 'Buy' && (this.operators[rules.BuyRules[0].desiredAction](rules.BuyRules[0].primaryObjectData[i].value, rules.BuyRules[0].primaryObjectData[i - 1].value, rules.BuyRules[0].referencedObjectData[i].value, rules.BuyRules[0].referencedObjectData[i - 1].value))){
+      if(buySell == 'Buy' && (this.operators[this.listOfAddedRules.BuyRules[0].desiredAction](this.listOfAddedRules.BuyRules[0].primaryObjectData[i].value, this.listOfAddedRules.BuyRules[0].primaryObjectData[i - 1].value, this.listOfAddedRules.BuyRules[0].referencedObjectData[i].value, this.listOfAddedRules.BuyRules[0].referencedObjectData[i - 1].value, this.listOfAddedRules.BuyRules[0].desiredActionAmnt))){
         orderLocations.push({buySell: 'Buy', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString()})
         buySell = 'Sell'
       }
-      else if(buySell == 'Sell' && (this.operators[rules.SellRules[0].desiredAction](rules.SellRules[0].primaryObjectData[i].value, rules.SellRules[0].primaryObjectData[i - 1].value, rules.SellRules[0].referencedObjectData[i].value, rules.SellRules[0].referencedObjectData[i - 1].value))){
+      else if(buySell == 'Sell' && (this.operators[this.listOfAddedRules.SellRules[0].desiredAction](this.listOfAddedRules.SellRules[0].primaryObjectData[i].value, this.listOfAddedRules.SellRules[0].primaryObjectData[i - 1].value, this.listOfAddedRules.SellRules[0].referencedObjectData[i].value, this.listOfAddedRules.SellRules[0].referencedObjectData[i - 1].value, this.listOfAddedRules.SellRules[0].desiredActionAmnt))){
         orderLocations.push({buySell: 'Sell', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString()})
         profit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
         buySell = 'Buy'
       }
     }
-    this.updateGraphBuyAndSellPointsIntraDayNew(orderLocations)
-    this.totalProfit = profit
+    return{orderLocations: orderLocations, profit: profit}
   }
   
   async ngOnInit() {

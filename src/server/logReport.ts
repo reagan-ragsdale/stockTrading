@@ -130,6 +130,8 @@ export const createExcel = async (logArray: tradeLogDto[]): Promise<excelJS.Buff
     let allTotalLossAmt = 0
     let allAvgWinAmt = 0
     let allAvgLossAmt = 0
+    console.log('stock results below')
+    console.log(stockResults)
     let distinctStocks = stockResults.map(e => e.stockName).filter((v, i, a) => a.indexOf(v) === i)
     for (let i = 0; i < distinctStocks.length; i++) {
         let stockProfit = 0
@@ -140,7 +142,7 @@ export const createExcel = async (logArray: tradeLogDto[]): Promise<excelJS.Buff
         let avgWinAmt = 0
         let avgLossAmt = 0
         let filteredByStock = stockResults.filter(e => e.stockName == distinctStocks[i])
-        for (let j = 0; j < filteredByStock.length - 1; j++) {
+        for (let j = 0; j < filteredByStock.length; j++) {
             //need to find each pair of buy and sells
             if (filteredByStock[j].orderType == 'Sell') {
                 let profit = filteredByStock[j].sellPrice - filteredByStock[j - 1].buyPrice
@@ -171,7 +173,8 @@ export const createExcel = async (logArray: tradeLogDto[]): Promise<excelJS.Buff
     allAvgWinAmt = allWins == 0 ? 0 : allTotalWinAmt / allWins
     allAvgLossAmt = allLosses == 0 ? 0 : allTotalLossAmt / allLosses
     finalResults.unshift({ stockName: 'All', profit: allProfit, numWins: allWins, numLosses: allLosses, winAmt: allAvgWinAmt, lossAmt: allAvgLossAmt })
-
+    console.log('final results below')
+    console.log(finalResults)
     for (let i = 0; i < finalResults.length; i++) {
         ResultsWorksheet.addRow({
             stockName: finalResults[i].stockName,

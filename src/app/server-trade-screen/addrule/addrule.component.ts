@@ -29,17 +29,22 @@ export class AddRuleComponent {
   availableLines: lineType[] = []
   selectedBuyLine: string = ''
   selectedSellLine: string = ''
-  availableBuyActions: string[] = ['Crosses above:']
-  availableSellActions: string[] = ['Crosses below:']
+  availableBuyActions: string[] = ['Crosses above:', 'Dips below:']
+  availableSellActions: string[] = ['Crosses below:', 'Rises above:']
 
   addBuyRule() {
     this.listOfRulesIncoming.BuyRules.push({
       id: this.listOfRulesIncoming.BuyRules.length,
       lineId: 0,
       primaryObject: '',
+      primaryObjectType: '',
+      primaryObjectLength: 0,
       primaryObjectData: [],
       desiredAction: '',
+      desiredActionAmnt: 0,
       referencedObject: '',
+      referencedObjectType: '',
+      referencedObjectLength: 0,
       referencedObjectData: []
     })
   }
@@ -48,9 +53,14 @@ export class AddRuleComponent {
       id: this.listOfRulesIncoming.SellRules.length,
       lineId: 0,
       primaryObject: '',
+      primaryObjectType: '',
+      primaryObjectLength: 0,
       primaryObjectData: [],
       desiredAction: '',
+      desiredActionAmnt: 0,
       referencedObject: '',
+      referencedObjectType: '',
+      referencedObjectLength: 0,
       referencedObjectData: []
     })
   }
@@ -67,6 +77,8 @@ export class AddRuleComponent {
     if (event.isUserInput == true) {
       let selectedBuyRule = this.listOfRulesIncoming.BuyRules.filter(e => e.id == id)[0]
       selectedBuyRule.primaryObject = line.lineType + ' - ' + line.lineLength
+      selectedBuyRule.primaryObjectType = line.lineType
+      selectedBuyRule.primaryObjectLength = line.lineLength
       selectedBuyRule.primaryObjectData = line.data
     }
   }
@@ -80,6 +92,8 @@ export class AddRuleComponent {
     if (event.isUserInput == true) {
       let selectedBuyRule = this.listOfRulesIncoming.BuyRules.filter(e => e.id == id)[0]
       selectedBuyRule.referencedObject = line.lineType + ' - ' + line.lineLength
+      selectedBuyRule.referencedObjectType = line.lineType
+      selectedBuyRule.referencedObjectLength = line.lineLength
       selectedBuyRule.referencedObjectData = line.data
     }
   }
@@ -87,6 +101,8 @@ export class AddRuleComponent {
     if (event.isUserInput == true) {
       let selectedSellRule = this.listOfRulesIncoming.SellRules.filter(e => e.id == id)[0]
       selectedSellRule.primaryObject = line.lineType + ' - ' + line.lineLength
+      selectedSellRule.primaryObjectType = line.lineType
+      selectedSellRule.primaryObjectLength = line.lineLength
       selectedSellRule.primaryObjectData = line.data
     }
   }
@@ -100,6 +116,8 @@ export class AddRuleComponent {
     if (event.isUserInput == true) {
       let selectedSellRule = this.listOfRulesIncoming.SellRules.filter(e => e.id == id)[0]
       selectedSellRule.referencedObject = line.lineType + ' - ' + line.lineLength
+      selectedSellRule.referencedObjectType = line.lineType
+      selectedSellRule.referencedObjectLength = line.lineLength
       selectedSellRule.referencedObjectData = line.data
     }
   }

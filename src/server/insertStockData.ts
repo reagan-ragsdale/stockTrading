@@ -207,7 +207,7 @@ export const socketCall = async (): Promise<void> => {
                                     stockInfo.numberOfTrades++
                                     orderPlaced = true;
                                     let newSpending = userFinance?.spending! - data.askPrice
-                                    simFinRepo.save({...userFinance, spending: newSpending})
+                                    await simFinRepo.save({...userFinance, spending: newSpending})
                                     userFinance = await simFinRepo.findFirst({userId: 'Shared'})
                                     let logMessage: tradeLogDto = {
                                         stockName: data.stockName,
