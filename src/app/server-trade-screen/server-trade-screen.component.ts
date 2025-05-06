@@ -413,6 +413,7 @@ export class ServerTradeScreenComponent implements OnInit {
             }
           }
         }
+        console.log(this.listOfAddedRules)
         let result = this.addRule()
         resultList.push({profit: result.profit, numberOfTrades: result.orderLocations.length, orders: result.orderLocations})
 
