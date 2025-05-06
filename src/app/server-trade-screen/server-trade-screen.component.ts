@@ -1008,8 +1008,8 @@ export class ServerTradeScreenComponent implements OnInit {
         type: 'line',
         //display: this.selectedStockHistoryData.length > 0,
 
-        xMin: this.listOfLastHour.findIndex(x => x.date == orderLocations[i].date),
-        xMax: this.listOfLastHour.findIndex(x => x.date == orderLocations[i].date),
+        xMin: this.stockDataForSelectedDay.findIndex(x => x.time == orderLocations[i].date),
+        xMax: this.stockDataForSelectedDay.findIndex(x => x.time == orderLocations[i].date),
         borderColor: '#7874ff',
         borderWidth: 2,
         label: {
