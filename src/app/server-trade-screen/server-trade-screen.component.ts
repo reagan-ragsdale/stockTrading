@@ -1509,8 +1509,8 @@ export class ServerTradeScreenComponent implements OnInit {
   operators: Record<string, OperatorFunction> = {
     "Crosses above:" : (a: number, aPrev: number | null, b: number, bPrev: number | null, difference: number) => a > b && (aPrev != null && bPrev != null) && (aPrev <= bPrev),
     "Crosses below:" : (a: number, aPrev: number | null, b: number, bPrev: number | null, difference: number) => a < b && (aPrev != null && bPrev != null) && (aPrev >= bPrev),
-    "Dips below:" : (a: number, aPrev: number | null, b: number, bPrev: number | null, difference: number) => (((a - b) / b) < (difference * -1)) && (aPrev != null && bPrev != null) && (aPrev >= bPrev),
-    "Rises above:" : (a: number, aPrev: number | null, b: number, bPrev: number | null, difference: number) => (((a - b) / b) > difference) && (aPrev != null && bPrev != null) && (aPrev >= bPrev),
+    "Dips below:" : (a: number, aPrev: number | null, b: number, bPrev: number | null, difference: number) => (((a - b) / b) < (difference * -1)),
+    "Rises above:" : (a: number, aPrev: number | null, b: number, bPrev: number | null, difference: number) => (((a - b) / b) > difference),
   };
 
   addRule(){
