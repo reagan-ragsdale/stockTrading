@@ -1441,6 +1441,8 @@ export class ServerTradeScreenComponent implements OnInit {
       }
       else if(linesNew[i].lineType == 'EMA'){
         lineData = this.calculateEMA(linesNew[i].lineLength)
+        let filteredLine = this.listOfAddedLines.filter(e => e.id == linesNew[i].id)[0]
+        filteredLine.data = lineData
       }
       this.stockChart.data.datasets.push({
             label: linesNew[i].lineType + ' - ' + linesNew[i].lineLength,
