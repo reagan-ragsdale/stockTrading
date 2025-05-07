@@ -18,11 +18,11 @@ import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { AddLineComponent } from "./add-line/add-line.component";
-import { BuyRule, lineType, RuleDto } from '../Dtos/ServerAlgoDto';
+import { BuyRule, lineType, RuleDto, SellRule } from '../Dtos/ServerAlgoDto';
 import { AddRuleComponent } from './addrule/addrule.component';
 
 
-type OperatorFunction = (a: number, aPrev: number | null, b: number, bPrev: number | null, difference: number) => boolean;
+type OperatorFunction = (rule: BuyRule | SellRule, index: number, currentPrice?: number, buyPrice?: number) => boolean;
 type serverAlgos = {
   name: string;
   isSelected: boolean;
@@ -1385,26 +1385,6 @@ export class ServerTradeScreenComponent implements OnInit {
     }
     console.log(this.rsiData)
   }
-  buyActions: string[] = ['Crosses Below', 'Is X amount below:']
-  selectedBuyAction: string = ''
-  selectedBuyAvgOne: number = 1
-  buyParamOne: number = .001
-  buyParamCompare: number = 300
-  sellActions: string[] = ['Crosses Above', 'Is X amount above:']
-  selectedSellAction: string = ''
-  selectedSellAvgOne: number = 1
-  sellParamOne: number = .001
-  sellParamCompare: number = 300
-  onSelectedBuyActionChange(event: any){
-    if (event.isUserInput == true) {
-      this.selectedBuyAction = event.source.value
-    }
-  }
-  onSelectedSellActionChange(event: any){
-    if (event.isUserInput == true) {
-      this.selectedSellAction = event.source.value
-    }
-  }
 
   addLineDialogRef: any
   listOfAddedLines: lineType[] = []
@@ -1522,10 +1502,11 @@ export class ServerTradeScreenComponent implements OnInit {
 
   
   operators: Record<string, OperatorFunction> = {
-    "Crosses above:" : (a: number, aPrev: number | null, b: number, bPrev: number | null, difference: number) => a > b && (aPrev != null && bPrev != null) && (aPrev <= bPrev),
-    "Crosses below:" : (a: number, aPrev: number | null, b: number, bPrev: number | null, difference: number) => a < b && (aPrev != null && bPrev != null) && (aPrev >= bPrev),
-    "Dips below:" : (a: number, aPrev: number | null, b: number, bPrev: number | null, difference: number) => (((a - b) / b) < (difference * -1)),
-    "Rises above:" : (a: number, aPrev: number | null, b: number, bPrev: number | null, difference: number) => (((a - b) / b) > difference),
+    "Crosses above:" : (rule, index) => rule.referencedObjectData[index].value > rule.referencedObjectData[index].value && (rule.referencedObjectData[index - 1].value != null && rule.referencedObjectData[index - 1].value != null) && (rule.referencedObjectData[index - 1].value <= rule.referencedObjectData[index - 1].value),
+    "Crosses below:" : (rule, index) => rule.referencedObjectData[index].value < rule.referencedObjectData[index].value && (rule.referencedObjectData[index - 1].value != null && rule.referencedObjectData[index - 1].value != null) && (rule.referencedObjectData[index - 1].value >= rule.referencedObjectData[index - 1].value),
+    "Dips below:" : (rule, index) => (((rule.referencedObjectData[index].value - rule.referencedObjectData[index].value) / rule.referencedObjectData[index].value) < (rule.desiredActionAmnt * -1)),
+    "Rises above:" : (rule, index) => (((rule.referencedObjectData[index].value - rule.referencedObjectData[index].value) / rule.referencedObjectData[index].value) > (rule.desiredActionAmnt)),
+    "Take Profit": (rule, index, currentPrice, buyPrice) => (currentPrice! == (buyPrice! * (1 + rule.desiredActionAmnt))),
   };
 
   addRule(){
@@ -1550,7 +1531,7 @@ export class ServerTradeScreenComponent implements OnInit {
       if(buySell == 'Buy'){
         let buyArray = []
         for(let j = 0; j < this.listOfAddedRules.BuyRules.length; j++){
-          buyArray.push(this.operators[this.listOfAddedRules.BuyRules[j].desiredAction](this.listOfAddedRules.BuyRules[j].primaryObjectData[i].value, this.listOfAddedRules.BuyRules[j].primaryObjectData[i - 1].value, this.listOfAddedRules.BuyRules[j].referencedObjectData[i].value, this.listOfAddedRules.BuyRules[j].referencedObjectData[i - 1].value, this.listOfAddedRules.BuyRules[j].desiredActionAmnt))
+          buyArray.push(this.operators[this.listOfAddedRules.BuyRules[j].desiredAction](this.listOfAddedRules.BuyRules[j], i))
         }
         if(!buyArray.includes(false)){
           orderLocations.push({buySell: 'Buy', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString()})
@@ -1560,7 +1541,7 @@ export class ServerTradeScreenComponent implements OnInit {
       else{
         let buyArray = []
         for(let j = 0; j < this.listOfAddedRules.SellRules.length; j++){
-          buyArray.push(this.operators[this.listOfAddedRules.SellRules[j].desiredAction](this.listOfAddedRules.SellRules[j].primaryObjectData[i].value, this.listOfAddedRules.SellRules[j].primaryObjectData[i - 1].value, this.listOfAddedRules.SellRules[j].referencedObjectData[i].value, this.listOfAddedRules.SellRules[j].referencedObjectData[i - 1].value, this.listOfAddedRules.SellRules[j].desiredActionAmnt))
+          buyArray.push(this.operators[this.listOfAddedRules.SellRules[j].desiredAction](this.listOfAddedRules.SellRules[j], i, this.stockDataForSelectedDay[i].stockPrice, orderLocations[orderLocations.length - 1].price))
         }
         if(!buyArray.includes(false)){
           orderLocations.push({buySell: 'Sell', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString()})
