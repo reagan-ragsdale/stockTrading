@@ -29,8 +29,10 @@ export class AddRuleComponent {
   availableLines: lineType[] = []
   selectedBuyLine: string = ''
   selectedSellLine: string = ''
-  availableBuyActions: string[] = ['Crosses above:', 'Dips below:']
-  availableSellActions: string[] = ['Crosses below:', 'Rises above:']
+  availableBuyActions: string[] = ['Crosses above:', 'Dips below:', 'Rises above:']
+  availableSellActions: string[] = ['Crosses below:', 'Dips below:', 'Rises above:', 'Take Profit', 'Stop Loss']
+  sellConditionTypes: string[] = ['Line Action', 'Price Action']
+  andOrList: string[] = ['And', 'Or']
 
   addBuyRule() {
     this.listOfRulesIncoming.BuyRules.push({
@@ -52,6 +54,8 @@ export class AddRuleComponent {
     this.listOfRulesIncoming.SellRules.push({
       id: this.listOfRulesIncoming.SellRules.length,
       lineId: 0,
+      andOr: '',
+      conditionType: '',
       primaryObject: '',
       primaryObjectType: '',
       primaryObjectLength: 0,
@@ -97,6 +101,18 @@ export class AddRuleComponent {
       selectedBuyRule.referencedObjectType = line.lineType
       selectedBuyRule.referencedObjectLength = line.lineLength
       selectedBuyRule.referencedObjectData = line.data
+    }
+  }
+  onSelectedSellRuleAndOrTypeChange(event: any, id: number, andOr: string){
+    if (event.isUserInput == true) {
+      let selectedSellRule = this.listOfRulesIncoming.SellRules.filter(e => e.id == id)[0]
+      selectedSellRule.andOr = andOr
+    }
+  }
+  onSelectedSellRuleConditionTypeChange(event: any, id: number, type: string){
+    if (event.isUserInput == true) {
+      let selectedSellRule = this.listOfRulesIncoming.SellRules.filter(e => e.id == id)[0]
+      selectedSellRule.conditionType = type
     }
   }
   onSelectedSellRuleTypeChange(event: any, id: number, line: lineType) {

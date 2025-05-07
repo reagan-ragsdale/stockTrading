@@ -1,5 +1,6 @@
 import excelJS from "exceljs"
 import { tradeLogDto } from "../app/Dtos/TradingBotDtos";
+import { dbOrdersRepo } from "../shared/tasks/dbOrders";
 export const createExcel = async (logArray: tradeLogDto[]): Promise<excelJS.Buffer> => {
     const workbook = new excelJS.Workbook();
     const worksheet = workbook.addWorksheet("Log");
@@ -132,7 +133,10 @@ export const createExcel = async (logArray: tradeLogDto[]): Promise<excelJS.Buff
     let allAvgLossAmt = 0
     console.log('stock results below')
     console.log(stockResults)
-    let distinctStocks = stockResults.map(e => e.stockName).filter((v, i, a) => a.indexOf(v) === i)
+    let today = new Date()
+    today.setHours(5,0,0,0)
+    let orders = await dbOrdersRepo.find({where: {orderTime: {$gt: today.getTime()}}})
+    let distinctStocks = orders.map(e => e.stockName).filter((v, i, a) => a.indexOf(v) === i)
     for (let i = 0; i < distinctStocks.length; i++) {
         let stockProfit = 0
         let totalWins = 0
@@ -141,11 +145,11 @@ export const createExcel = async (logArray: tradeLogDto[]): Promise<excelJS.Buff
         let totalWinAmt = 0
         let avgWinAmt = 0
         let avgLossAmt = 0
-        let filteredByStock = stockResults.filter(e => e.stockName == distinctStocks[i])
+        let filteredByStock = orders.filter(e => e.stockName == distinctStocks[i])
         for (let j = 0; j < filteredByStock.length; j++) {
             //need to find each pair of buy and sells
             if (filteredByStock[j].orderType == 'Sell') {
-                let profit = filteredByStock[j].sellPrice - filteredByStock[j - 1].buyPrice
+                let profit = filteredByStock[j].stockPrice - filteredByStock[j - 1].stockPrice
                 stockProfit += profit
                 allProfit += stockProfit
                 if (profit > 0) {

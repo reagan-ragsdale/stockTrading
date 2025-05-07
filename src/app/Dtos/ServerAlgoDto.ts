@@ -35,6 +35,8 @@ export type SellRule = {
     lineId: number;
     //sell when:
     //the primary line
+    andOr: string;
+    conditionType: string;
     primaryObject: string;
     primaryObjectType: string;
     primaryObjectLength: number;

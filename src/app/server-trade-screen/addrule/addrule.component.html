@@ -56,29 +56,43 @@
             <div *ngIf="listOfRulesIncoming.SellRules.length > 0" style="display:flex; flex-direction: column;">
                 <div *ngFor="let sellRule of listOfRulesIncoming.SellRules">
                     <h4 *ngIf="sellRule.id == 0">Sell When: </h4>
-                    <h4 *ngIf="sellRule.id > 0">And</h4>
+                    <!-- <h4 *ngIf="sellRule.id > 0">And</h4> -->
+                    <mat-form-field *ngIf="sellRule.id > 0" style="width:fit-content;">
+                        <mat-label>And/Or</mat-label>
+                        <mat-select disableRipple [(value)]="sellRule.andOr">
+                            <mat-option *ngFor="let andOr of andOrList" [value]="andOr"
+                                (onSelectionChange)="onSelectedSellRuleAndOrTypeChange($event, sellRule.id, andOr)">{{andOr}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
                     <mat-form-field style="width:fit-content;">
+                        <mat-label>Condition Type</mat-label>
+                        <mat-select disableRipple [(value)]="sellRule.primaryObject">
+                            <mat-option *ngFor="let type of sellConditionTypes" [value]="type"
+                                (onSelectionChange)="onSelectedSellRuleConditionTypeChange($event, sellRule.id, type)">{{type}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field *ngIf="sellRule.conditionType == 'Line Action'" style="width:fit-content;">
                         <mat-label>Primary Line</mat-label>
                         <mat-select disableRipple [(value)]="sellRule.primaryObject">
                             <mat-option *ngFor="let line of availableLines" [value]="line.lineType + ' - ' + line.lineLength"
                                 (onSelectionChange)="onSelectedSellRuleTypeChange($event, sellRule.id, line)">{{line.lineType + ' - ' + line.lineLength}}</mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <mat-form-field style="width:fit-content;">
+                    <mat-form-field *ngIf="sellRule.conditionType != ''" style="width:fit-content;">
                         <mat-label>Action</mat-label>
                         <mat-select disableRipple [(value)]="sellRule.desiredAction">
                             <mat-option *ngFor="let buyAction of availableSellActions" [value]="buyAction"
                                 (onSelectionChange)="onSelectedSellActionTypeChange($event, sellRule.id, buyAction)">{{buyAction}}</mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <mat-form-field style="width:fit-content;">
+                    <mat-form-field *ngIf="sellRule.conditionType == 'Line Action'" style="width:fit-content;">
                         <mat-label>Referenced Object</mat-label>
                         <mat-select disableRipple [(value)]="sellRule.referencedObject">
                             <mat-option *ngFor="let line of availableLines" [value]="line.lineType + ' - ' + line.lineLength"
                                 (onSelectionChange)="onSelectedSellReferencedObjectTypeChange($event, sellRule.id, line)">{{line.lineType + ' - ' + line.lineLength}}</mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <mat-form-field *ngIf="sellRule.desiredAction == 'Rises above:'" class="example-full-width" style="width:fit-content;">
+                    <mat-form-field *ngIf="(sellRule.desiredAction == 'Rises above:' && sellRule.conditionType == 'Line Action') || sellRule.conditionType == 'Price Action'" class="example-full-width" style="width:fit-content;">
                         <mat-label>By Amount:</mat-label>
                         <input matInput type="number" [(ngModel)]="sellRule.desiredActionAmnt" placeholder="0.00" [min]=".001" [max]="1" step=".001">
                     </mat-form-field>
