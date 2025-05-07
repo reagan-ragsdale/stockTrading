@@ -1547,7 +1547,7 @@ export class ServerTradeScreenComponent implements OnInit {
           buyArray.push(this.operators[this.listOfAddedRules.SellRules[j].desiredAction](this.listOfAddedRules.SellRules[j], i, this.stockDataForSelectedDay[i].stockPrice, orderLocations[orderLocations.length - 1].price))
         }
         if(this.listOfAddedRules.SellRules[this.listOfAddedRules.SellRules.length - 1].andOr == 'Or'){
-          andOr == 'Or'
+          andOr = 'Or'
         }
         if(andOr == 'Or'){
           if(buyArray.includes(true)){
