@@ -30,7 +30,8 @@ export class AddRuleComponent {
   selectedBuyLine: string = ''
   selectedSellLine: string = ''
   availableBuyActions: string[] = ['Crosses above:', 'Dips below:', 'Rises above:']
-  availableSellActions: string[] = ['Crosses below:', 'Dips below:', 'Rises above:', 'Take Profit', 'Stop Loss']
+  availableSellPriceActions: string[] = ['Take Profit', 'Stop Loss']
+  availableSellLineActions: string[] = ['Crosses below:', 'Dips below:', 'Rises above:']
   sellConditionTypes: string[] = ['Line Action', 'Price Action']
   andOrList: string[] = ['And', 'Or']
 

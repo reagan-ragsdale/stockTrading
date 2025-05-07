@@ -78,10 +78,17 @@
                                 (onSelectionChange)="onSelectedSellRuleTypeChange($event, sellRule.id, line)">{{line.lineType + ' - ' + line.lineLength}}</mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <mat-form-field *ngIf="sellRule.conditionType != ''" style="width:fit-content;">
+                    <mat-form-field *ngIf="sellRule.conditionType == 'Line Action'" style="width:fit-content;">
                         <mat-label>Action</mat-label>
                         <mat-select disableRipple [(value)]="sellRule.desiredAction">
-                            <mat-option *ngFor="let buyAction of availableSellActions" [value]="buyAction"
+                            <mat-option *ngFor="let buyAction of availableSellLineActions" [value]="buyAction"
+                                (onSelectionChange)="onSelectedSellActionTypeChange($event, sellRule.id, buyAction)">{{buyAction}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field *ngIf="sellRule.conditionType == 'Price Action'" style="width:fit-content;">
+                        <mat-label>Action</mat-label>
+                        <mat-select disableRipple [(value)]="sellRule.desiredAction">
+                            <mat-option *ngFor="let buyAction of availableSellPriceActions" [value]="buyAction"
                                 (onSelectionChange)="onSelectedSellActionTypeChange($event, sellRule.id, buyAction)">{{buyAction}}</mat-option>
                         </mat-select>
                     </mat-form-field>
