@@ -1,6 +1,6 @@
 import excelJS from "exceljs"
 import { tradeLogDto } from "../app/Dtos/TradingBotDtos";
-import { dbOrdersRepo } from "../shared/tasks/dbOrders";
+import { dbOrdersRepo } from "../shared/tasks/dbOrders.js";
 export const createExcel = async (logArray: tradeLogDto[]): Promise<excelJS.Buffer> => {
     const workbook = new excelJS.Workbook();
     const worksheet = workbook.addWorksheet("Log");
@@ -131,8 +131,6 @@ export const createExcel = async (logArray: tradeLogDto[]): Promise<excelJS.Buff
     let allTotalLossAmt = 0
     let allAvgWinAmt = 0
     let allAvgLossAmt = 0
-    console.log('stock results below')
-    console.log(stockResults)
     let today = new Date()
     today.setHours(5,0,0,0)
     let orders = await dbOrdersRepo.find({where: {orderTime: {$gt: today.getTime()}}})
@@ -177,8 +175,6 @@ export const createExcel = async (logArray: tradeLogDto[]): Promise<excelJS.Buff
     allAvgWinAmt = allWins == 0 ? 0 : allTotalWinAmt / allWins
     allAvgLossAmt = allLosses == 0 ? 0 : allTotalLossAmt / allLosses
     finalResults.unshift({ stockName: 'All', profit: allProfit, numWins: allWins, numLosses: allLosses, winAmt: allAvgWinAmt, lossAmt: allAvgLossAmt })
-    console.log('final results below')
-    console.log(finalResults)
     for (let i = 0; i < finalResults.length; i++) {
         ResultsWorksheet.addRow({
             stockName: finalResults[i].stockName,
