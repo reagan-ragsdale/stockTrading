@@ -1506,7 +1506,7 @@ export class ServerTradeScreenComponent implements OnInit {
     "Crosses below:" : (rule, index) => rule.primaryObjectData[index].value < rule.referencedObjectData[index].value && (rule.primaryObjectData[index - 1].value != null && rule.referencedObjectData[index - 1].value != null) && (rule.primaryObjectData[index - 1].value >= rule.referencedObjectData[index - 1].value),
     "Dips below:" : (rule, index) => (((rule.primaryObjectData[index].value - rule.referencedObjectData[index].value) / rule.referencedObjectData[index].value) < (rule.desiredActionAmnt * -1)),
     "Rises above:" : (rule, index) => (((rule.primaryObjectData[index].value - rule.referencedObjectData[index].value) / rule.referencedObjectData[index].value) > (rule.desiredActionAmnt)),
-    "Take Profit": (rule, index, currentPrice, buyPrice) => (currentPrice! == (buyPrice! * (1 + rule.desiredActionAmnt))),
+    "Take Profit": (rule, index, currentPrice, buyPrice) => (currentPrice! >= (buyPrice! * (1 + rule.desiredActionAmnt))),
   };
 
   addRule(){
