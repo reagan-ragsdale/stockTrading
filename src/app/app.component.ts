@@ -46,10 +46,10 @@ export class AppComponent{
   schwabFinance: any
   async ngOnInit(){
     remult.initUser()
-    let tokens = await AuthController.getTokenUserByRemult()
-    this.sharedFinance = await simFinRepo.findFirst({userId: 'Shared'})
-    let accountNum = await SchwabController.getAccountsNumberCall(tokens?.accessToken!)
-    this.schwabFinance = await SchwabController.getAccountInfoCall(accountNum[0].hashValue, tokens?.accessToken!)
+    //let tokens = await AuthController.getTokenUserByRemult()
+    //this.sharedFinance = await simFinRepo.findFirst({userId: 'Shared'})
+    //let accountNum = await SchwabController.getAccountsNumberCall(tokens?.accessToken!)
+    //this.schwabFinance = await SchwabController.getAccountInfoCall(accountNum[0].hashValue, tokens?.accessToken!)
     console.log(this.schwabFinance)
   }
 }
