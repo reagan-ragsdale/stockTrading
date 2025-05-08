@@ -43,8 +43,9 @@ export class AuthComponent implements OnInit {
 
         remult.user = await AuthController.logIn(this.signInUsername, this.signInPassword)
         if (remult.authenticated()) {
-          
+          console.log('here 1')
           let user = await AuthController.getTokenUser(remult.user?.id)
+          console.log(user)
           if(user){
             if (user?.needsNewAuth == false) {
               this.router.navigate(['/home'])

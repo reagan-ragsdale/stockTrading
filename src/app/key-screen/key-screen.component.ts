@@ -73,6 +73,7 @@ export class KeyScreenComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     this.isKeysGenerated = await AuthController.checkKeyGeneration()
     this.user = await remult.initUser()
+    console.log(this.user)
     if (this.isKeysGenerated) {
       let userKeys = await AuthController.getKeyPairs()
       //let user = remult.context.request!.session!["user"].id
