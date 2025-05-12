@@ -1512,7 +1512,7 @@ export class ServerTradeScreenComponent implements OnInit {
     for(let i = 0; i < lineLength - 1; i++){
       returnData.push(null)
     }
-    for (let i = 0; i < this.stockDataForSelectedDay.length; i++) {
+    for (let i = lineLength; i < this.stockDataForSelectedDay.length; i++) {
       cumulativePV += (this.stockDataForSelectedDay[i].stockPrice * this.stockDataForSelectedDay[i].volume) - (this.stockDataForSelectedDay[i - lineLength].stockPrice * this.stockDataForSelectedDay[i - lineLength].volume);
       cumulativeVolume += this.stockDataForSelectedDay[i].volume - this.stockDataForSelectedDay[i - lineLength].volume;
       const vwap = cumulativePV / cumulativeVolume;
