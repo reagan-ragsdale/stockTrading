@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -18,7 +18,7 @@ import { lineType } from '../../Dtos/ServerAlgoDto';
   templateUrl: './add-line.component.html',
   styleUrl: './add-line.component.css'
 })
-export class AddLineComponent {
+export class AddLineComponent implements OnInit{
 @Input() listOfLinesIncoming: lineType[] = []
 readonly dialogRef = inject(MatDialogRef<AddLineComponent>);
 
@@ -42,6 +42,10 @@ onSelectedLineTypeChange(event: any){
 
 onSubmit(){
   this.dialogRef.close(this.listOfLinesIncoming)
+}
+
+ngOnInit(){
+  this.listOfLinesIncoming = this.listOfLinesIncoming.filter(e => e.lineType != 'Price')
 }
 
 

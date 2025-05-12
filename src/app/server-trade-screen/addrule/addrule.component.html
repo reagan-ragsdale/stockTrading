@@ -16,8 +16,8 @@
                     <mat-form-field style="width:fit-content;">
                         <mat-label>Primary Line</mat-label>
                         <mat-select disableRipple [(value)]="buyRule.primaryObject">
-                            <mat-option *ngFor="let line of availableLines" [value]="isAllLine(line.lineType) ? line.lineType : line.lineType + line.lineLength"
-                                (onSelectionChange)="onSelectedBuyRuleTypeChange($event, buyRule.id, line)">{{line.lineType + ' - ' + line.lineLength}}</mat-option>
+                            <mat-option *ngFor="let line of availableLines" [value]="line.lineType + ' - ' + line.lineLength"
+                                (onSelectionChange)="onSelectedBuyRuleTypeChange($event, buyRule.id, line)">{{isAllLine(line.lineType) ? line.lineType : line.lineType + ' - ' + line.lineLength}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                     <mat-form-field style="width:fit-content;">
@@ -75,7 +75,7 @@
                         <mat-label>Primary Line</mat-label>
                         <mat-select disableRipple [(value)]="sellRule.primaryObject">
                             <mat-option *ngFor="let line of availableLines" [value]="line.lineType + ' - ' + line.lineLength"
-                                (onSelectionChange)="onSelectedSellRuleTypeChange($event, sellRule.id, line)">{{line.lineType + ' - ' + line.lineLength}}</mat-option>
+                                (onSelectionChange)="onSelectedSellRuleTypeChange($event, sellRule.id, line)">{{isAllLine(line.lineType) ? line.lineType : line.lineType + ' - ' + line.lineLength}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                     <mat-form-field *ngIf="sellRule.conditionType == 'Line Action'" style="width:fit-content;">
