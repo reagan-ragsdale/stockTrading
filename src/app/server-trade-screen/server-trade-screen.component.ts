@@ -391,38 +391,38 @@ export class ServerTradeScreenComponent implements OnInit {
       this.isLoading = true
       console.log(this.listOfAddedLines)
       let resultList = []
-      for(let i = 0; i < this.distinctDates.length; i++){
+      for (let i = 0; i < this.distinctDates.length; i++) {
         await this.updateStockChartData(this.distinctDates[i])
-        for(let j = 0; j < this.listOfAddedLines.length; j++){
+        for (let j = 0; j < this.listOfAddedLines.length; j++) {
           let data: any[] = []
-          if(this.listOfAddedLines[j].lineType == 'SMA'){
+          if (this.listOfAddedLines[j].lineType == 'SMA') {
             data = this.calculateSMA(this.listOfAddedLines[j].lineLength)
           }
-          else if(this.listOfAddedLines[j].lineType == 'EMA'){
+          else if (this.listOfAddedLines[j].lineType == 'EMA') {
             data = this.calculateEMA(this.listOfAddedLines[j].lineLength)
           }
-          
+
           this.listOfAddedLines[j].data = data
-          for(let k = 0; k < this.listOfAddedRules.BuyRules.length; k++){
-            if(this.listOfAddedRules.BuyRules[k].primaryObjectType == this.listOfAddedLines[j].lineType && this.listOfAddedRules.BuyRules[k].primaryObjectLength == this.listOfAddedLines[j].lineLength){
+          for (let k = 0; k < this.listOfAddedRules.BuyRules.length; k++) {
+            if (this.listOfAddedRules.BuyRules[k].primaryObjectType == this.listOfAddedLines[j].lineType && this.listOfAddedRules.BuyRules[k].primaryObjectLength == this.listOfAddedLines[j].lineLength) {
               this.listOfAddedRules.BuyRules[k].primaryObjectData = data
             }
-            if(this.listOfAddedRules.BuyRules[k].referencedObjectType == this.listOfAddedLines[j].lineType && this.listOfAddedRules.BuyRules[k].referencedObjectLength == this.listOfAddedLines[j].lineLength){
+            if (this.listOfAddedRules.BuyRules[k].referencedObjectType == this.listOfAddedLines[j].lineType && this.listOfAddedRules.BuyRules[k].referencedObjectLength == this.listOfAddedLines[j].lineLength) {
               this.listOfAddedRules.BuyRules[k].referencedObjectData = data
             }
           }
-          for(let k = 0; k < this.listOfAddedRules.SellRules.length; k++){
-            if(this.listOfAddedRules.SellRules[k].primaryObjectType == this.listOfAddedLines[j].lineType && this.listOfAddedRules.SellRules[k].primaryObjectLength == this.listOfAddedLines[j].lineLength){
+          for (let k = 0; k < this.listOfAddedRules.SellRules.length; k++) {
+            if (this.listOfAddedRules.SellRules[k].primaryObjectType == this.listOfAddedLines[j].lineType && this.listOfAddedRules.SellRules[k].primaryObjectLength == this.listOfAddedLines[j].lineLength) {
               this.listOfAddedRules.SellRules[k].primaryObjectData = data
             }
-            if(this.listOfAddedRules.SellRules[k].referencedObjectType == this.listOfAddedLines[j].lineType && this.listOfAddedRules.SellRules[k].referencedObjectLength == this.listOfAddedLines[j].lineLength){
+            if (this.listOfAddedRules.SellRules[k].referencedObjectType == this.listOfAddedLines[j].lineType && this.listOfAddedRules.SellRules[k].referencedObjectLength == this.listOfAddedLines[j].lineLength) {
               this.listOfAddedRules.SellRules[k].referencedObjectData = data
             }
           }
         }
         console.log(this.listOfAddedRules)
         let result = this.addRule()
-        resultList.push({profit: result.profit, numberOfTrades: result.orderLocations.length, orders: result.orderLocations})
+        resultList.push({ profit: result.profit, numberOfTrades: result.orderLocations.length, orders: result.orderLocations })
 
       }
       let finalsResultData: any = {}
@@ -627,12 +627,12 @@ export class ServerTradeScreenComponent implements OnInit {
   updateChartIntraDay() {
     this.stockChart.data.datasets[0].data = this.stockDataForSelectedDay.map(e => e.stockPrice)
     this.stockChart.data.datasets[0].label = 'Actual'
-   /*  this.stockChart.data.datasets[1].data = this.listOfLastHour.map(e => e.avg)
-    this.stockChart.data.datasets[1].label = (this.intraDayLongSma / 60) + " minutes"
-    this.stockChart.data.datasets[2].data = this.listOfLast30Minutes.map(e => e.avg)
-    this.stockChart.data.datasets[2].label = (this.intraDayMediumSma / 60) + " minutes"
-    this.stockChart.data.datasets[3].data = this.listOfLast5Minutes.map(e => e.avg)
-    this.stockChart.data.datasets[3].label = (this.intraDayShortSma / 60) + " minutes" */
+    /*  this.stockChart.data.datasets[1].data = this.listOfLastHour.map(e => e.avg)
+     this.stockChart.data.datasets[1].label = (this.intraDayLongSma / 60) + " minutes"
+     this.stockChart.data.datasets[2].data = this.listOfLast30Minutes.map(e => e.avg)
+     this.stockChart.data.datasets[2].label = (this.intraDayMediumSma / 60) + " minutes"
+     this.stockChart.data.datasets[3].data = this.listOfLast5Minutes.map(e => e.avg)
+     this.stockChart.data.datasets[3].label = (this.intraDayShortSma / 60) + " minutes" */
     this.stockChart.data.labels = this.stockDataForSelectedDay.map(e => new Date(e.time).toLocaleTimeString())
     this.stockChart.options.scales.y.max = this.getMaxForChart(this.stockDataForSelectedDay.map(e => e.stockPrice))
     this.stockChart.options.scales.y.min = this.getMinForChart(this.stockDataForSelectedDay.map(e => e.stockPrice))
@@ -883,54 +883,54 @@ export class ServerTradeScreenComponent implements OnInit {
   async runEntireSimulationIntraDayAllDaysSpecific() {
     this.intraDayShortSellSma = 120
     console.log(this.distinctDates)
-    
+
     let topAverages: any[] = []
     //for (let i = 1; i <= 60; i += 5) {
-      //this.intraDayShortBuySma = i
-      let listOfProfits = []
-      for (let h = 0; h < this.distinctDates.length; h++) {
-        let selectedDate = this.distinctDates[h]
-        this.stockDataForSelectedDay = await this.updateStockChartDataNew(selectedDate)
-        this.calculateIntraDaySma()
-        let result = this.calculateBuyAndSellPointsIntraDaySellAtEnd(this.listOfLastHour, this.listOfLast30Minutes, this.listOfLast5Minutes, this.listOfLast2Minutes, .003, .002, .001)
-        listOfProfits.push({
-          buyBuffer: .003,
-          sellBuffer: .002,
-          checkBuffer: .001,
-          smaLong: 3600,
-          smaMedium: 1800,
-          smaShort: 300,
-          smaShortSell: 120,
-          profit: result.profit,
-          numberOfTrades: result.orderLocations.length
-        })
-      }
-      let avgProfit = listOfProfits.map(e => e.profit).reduce((sum, val) => sum + val, 0) / listOfProfits.length
-      let avgNumTrades = listOfProfits.map(e => e.numberOfTrades).reduce((sum, val) => sum + val, 0) / listOfProfits.length
-      topAverages.push({
+    //this.intraDayShortBuySma = i
+    let listOfProfits = []
+    for (let h = 0; h < this.distinctDates.length; h++) {
+      let selectedDate = this.distinctDates[h]
+      this.stockDataForSelectedDay = await this.updateStockChartDataNew(selectedDate)
+      this.calculateIntraDaySma()
+      let result = this.calculateBuyAndSellPointsIntraDaySellAtEnd(this.listOfLastHour, this.listOfLast30Minutes, this.listOfLast5Minutes, this.listOfLast2Minutes, .003, .002, .001)
+      listOfProfits.push({
         buyBuffer: .003,
-          sellBuffer: .002,
-          checkBuffer: .001,
-          smaLong: 3600,
-          smaMedium: 1800,
-          smaShort: 300,
-          smaShortSell: 120,
-          profit: avgProfit,
-          numberOfTrades: avgNumTrades
+        sellBuffer: .002,
+        checkBuffer: .001,
+        smaLong: 3600,
+        smaMedium: 1800,
+        smaShort: 300,
+        smaShortSell: 120,
+        profit: result.profit,
+        numberOfTrades: result.orderLocations.length
       })
+    }
+    let avgProfit = listOfProfits.map(e => e.profit).reduce((sum, val) => sum + val, 0) / listOfProfits.length
+    let avgNumTrades = listOfProfits.map(e => e.numberOfTrades).reduce((sum, val) => sum + val, 0) / listOfProfits.length
+    topAverages.push({
+      buyBuffer: .003,
+      sellBuffer: .002,
+      checkBuffer: .001,
+      smaLong: 3600,
+      smaMedium: 1800,
+      smaShort: 300,
+      smaShortSell: 120,
+      profit: avgProfit,
+      numberOfTrades: avgNumTrades
+    })
 
 
 
-   // }
+    // }
     console.log(topAverages)
-   /*  this.topAlgos = topAverages
-    this.buyGutter = this.topAlgos[0].buyBuffer
-    this.sellGutter = this.topAlgos[0].sellBuffer
-    this.check200Gutter = this.topAlgos[0].checkBuffer
-    this.intraDayLongSma = this.topAlgos[0].smaLong
-    this.intraDayMediumSma = this.topAlgos[0].smaMedium
-    this.intraDayShortSma = this.topAlgos[0].smaShort
-    this.runSimulationIntraDay() */
+    /*  this.topAlgos = topAverages
+     this.buyGutter = this.topAlgos[0].buyBuffer
+     this.sellGutter = this.topAlgos[0].sellBuffer
+     this.check200Gutter = this.topAlgos[0].checkBuffer
+     this.intraDayLongSma = this.topAlgos[0].smaLong
+     this.intraDayMediumSma = this.topAlgos[0].smaMedium
+     this.intraDayShortSma = this.topAlgos[0].smaShort
+     this.runSimulationIntraDay() */
   }
 
 
@@ -1410,76 +1410,115 @@ export class ServerTradeScreenComponent implements OnInit {
         this.listOfAddedLines = []
         this.stockChart.data.datasets = [this.stockChart.data.datasets[0]]
         this.stockChart.update()
-      } 
+      }
 
     });
   }
   listOfBGCOlors: string[] = ['#1ca0de', '#eeb528', '#d82c2c']
-  addNewLinesToGraph(lines: lineType[]){
+  addNewLinesToGraph(lines: lineType[]) {
     let linesNew = structuredClone(lines)
     this.stockChart.data.datasets = [this.stockChart.data.datasets[0]]
-    
-    for(let i = 0; i < linesNew.length; i++){
+
+    for (let i = 0; i < linesNew.length; i++) {
       let lineData: any[] = []
-      if(linesNew[i].lineType == 'SMA'){
+      if (linesNew[i].lineType == 'SMA') {
         lineData = this.calculateSMA(linesNew[i].lineLength)
         let filteredLine = this.listOfAddedLines.filter(e => e.id == linesNew[i].id)[0]
         filteredLine.data = lineData
       }
-      else if(linesNew[i].lineType == 'EMA'){
+      else if (linesNew[i].lineType == 'EMA') {
         lineData = this.calculateEMA(linesNew[i].lineLength)
         let filteredLine = this.listOfAddedLines.filter(e => e.id == linesNew[i].id)[0]
         filteredLine.data = lineData
       }
+      else if (linesNew[i].lineType == 'Cumulative VWAP') {
+        lineData = this.calculateCumulativeVWAP();
+        let filteredLine = this.listOfAddedLines.filter(e => e.id == linesNew[i].id)[0]
+        filteredLine.data = lineData
+      }
+      else if (linesNew[i].lineType == 'Rolling VWAP') {
+        lineData = this.calculateRollingVWAP(linesNew[i].lineLength);
+        let filteredLine = this.listOfAddedLines.filter(e => e.id == linesNew[i].id)[0]
+        filteredLine.data = lineData
+      }
       this.stockChart.data.datasets.push({
-            label: linesNew[i].lineType + ' - ' + linesNew[i].lineLength,
-            data: lineData.map(e => e.value),
-            backgroundColor: this.listOfBGCOlors[i],
-            hoverBackgroundColor: this.listOfBGCOlors[i],
-            borderColor: this.listOfBGCOlors[i],
-            pointBackgroundColor: this.listOfBGCOlors[i],
-            pointBorderColor: this.listOfBGCOlors[i],
-            pointRadius: 0,
-            spanGaps: true
+        label: linesNew[i].lineType + ' - ' + linesNew[i].lineLength,
+        data: lineData.map(e => e),
+        backgroundColor: this.listOfBGCOlors[i],
+        hoverBackgroundColor: this.listOfBGCOlors[i],
+        borderColor: this.listOfBGCOlors[i],
+        pointBackgroundColor: this.listOfBGCOlors[i],
+        pointBorderColor: this.listOfBGCOlors[i],
+        pointRadius: 0,
+        spanGaps: true
       })
     }
     this.stockChart.update()
   }
 
-  calculateSMA(lineLength: number): {value: number | null}[]{
-    let returnData = []
+  calculateSMA(lineLength: number): (number | null)[] {
+    let returnData: (number | null)[] = []
     let windowSum = 0
-    for(let i = 0; i < lineLength - 1; i++){
-      returnData.push({value: null})
+    for (let i = 0; i < lineLength - 1; i++) {
+      returnData.push(null)
       windowSum += this.stockDataForSelectedDay[i].stockPrice
     }
     windowSum += this.stockDataForSelectedDay[lineLength - 1].stockPrice
-    returnData.push({value: windowSum / lineLength})
-    for(let j = lineLength; j < this.stockDataForSelectedDay.length; j++){
+    returnData.push(windowSum / lineLength)
+    for (let j = lineLength; j < this.stockDataForSelectedDay.length; j++) {
       windowSum += this.stockDataForSelectedDay[j].stockPrice - this.stockDataForSelectedDay[j - lineLength].stockPrice
-      returnData.push({value: windowSum / lineLength})
+      returnData.push(windowSum / lineLength)
     }
 
     return returnData
-    
 
-    
+
+
   }
-  calculateEMA(lineLength: number): {value: number | null}[]{
-    let returnData: any[] = []
+  calculateEMA(lineLength: number): (number | null)[] {
+    let returnData: (number | null)[] = []
     let windowSum = 0
-    for(let i = 0; i < lineLength - 1; i++){
-      returnData.push({value:null})
+    for (let i = 0; i < lineLength - 1; i++) {
+      returnData.push(null)
       windowSum += this.stockDataForSelectedDay[i].stockPrice
     }
     windowSum += this.stockDataForSelectedDay[lineLength - 1].stockPrice - this.stockDataForSelectedDay[0].stockPrice
-    returnData.push({value: windowSum/lineLength})
+    returnData.push(windowSum / lineLength)
 
-    let multiplyFactor = 2/(lineLength + 1)
-    for(let i = lineLength; i < this.stockDataForSelectedDay.length; i++){
-      let newVal = (this.stockDataForSelectedDay[i].stockPrice * multiplyFactor) + (returnData[returnData.length - 1].value * (1 - multiplyFactor))
-      returnData.push({value: newVal})
+    let multiplyFactor = 2 / (lineLength + 1)
+    for (let i = lineLength; i < this.stockDataForSelectedDay.length; i++) {
+      let newVal = (this.stockDataForSelectedDay[i].stockPrice * multiplyFactor) + (returnData[returnData.length - 1]! * (1 - multiplyFactor))
+      returnData.push(newVal)
     }
+    return returnData
+  }
+  calculateCumulativeVWAP(): number[] {
+    let returnData: number[] = []
+    let cumulativePV = 0;
+    let cumulativeVolume = 0;
+    for (let i = 0; i < this.stockDataForSelectedDay.length; i++) {
+      cumulativePV += this.stockDataForSelectedDay[i].stockPrice * this.stockDataForSelectedDay[i].volume;
+      cumulativeVolume += this.stockDataForSelectedDay[i].volume;
+      const vwap = cumulativePV / cumulativeVolume;
+      returnData.push(vwap);
+    }
+
+    return returnData
+  }
+  calculateRollingVWAP(lineLength: number): (number | null)[] {
+    let returnData: (number | null)[] = []
+    let cumulativePV = 0;
+    let cumulativeVolume = 0;
+    for(let i = 0; i < lineLength - 1; i++){
+      returnData.push(null)
+    }
+    for (let i = 0; i < this.stockDataForSelectedDay.length; i++) {
+      cumulativePV += (this.stockDataForSelectedDay[i].stockPrice * this.stockDataForSelectedDay[i].volume) - (this.stockDataForSelectedDay[i - lineLength].stockPrice * this.stockDataForSelectedDay[i - lineLength].volume);
+      cumulativeVolume += this.stockDataForSelectedDay[i].volume - this.stockDataForSelectedDay[i - lineLength].volume;
+      const vwap = cumulativePV / cumulativeVolume;
+      returnData.push(vwap);
+    }
+
     return returnData
   }
 
@@ -1507,26 +1546,26 @@ export class ServerTradeScreenComponent implements OnInit {
     });
   }
 
-  
+
   operators: Record<string, OperatorFunction> = {
-    "Crosses above:" : (rule, index) => rule.primaryObjectData[index].value > rule.referencedObjectData[index].value && (rule.primaryObjectData[index - 1].value != null && rule.referencedObjectData[index - 1].value != null) && (rule.primaryObjectData[index - 1].value <= rule.referencedObjectData[index - 1].value),
-    "Crosses below:" : (rule, index) => rule.primaryObjectData[index].value < rule.referencedObjectData[index].value && (rule.primaryObjectData[index - 1].value != null && rule.referencedObjectData[index - 1].value != null) && (rule.primaryObjectData[index - 1].value >= rule.referencedObjectData[index - 1].value),
-    "Dips below:" : (rule, index) => (((rule.primaryObjectData[index].value - rule.referencedObjectData[index].value) / rule.referencedObjectData[index].value) < (rule.desiredActionAmnt * -1)),
-    "Rises above:" : (rule, index) => (((rule.primaryObjectData[index].value - rule.referencedObjectData[index].value) / rule.referencedObjectData[index].value) > (rule.desiredActionAmnt)),
+    "Crosses above:": (rule, index) => rule.primaryObjectData[index] > rule.referencedObjectData[index] && (rule.primaryObjectData[index - 1] != null && rule.referencedObjectData[index - 1] != null) && (rule.primaryObjectData[index - 1] <= rule.referencedObjectData[index - 1]),
+    "Crosses below:": (rule, index) => rule.primaryObjectData[index] < rule.referencedObjectData[index] && (rule.primaryObjectData[index - 1] != null && rule.referencedObjectData[index - 1] != null) && (rule.primaryObjectData[index - 1] >= rule.referencedObjectData[index - 1]),
+    "Dips below:": (rule, index) => (((rule.primaryObjectData[index] - rule.referencedObjectData[index]) / rule.referencedObjectData[index]) < (rule.desiredActionAmnt * -1)),
+    "Rises above:": (rule, index) => (((rule.primaryObjectData[index] - rule.referencedObjectData[index]) / rule.referencedObjectData[index]) > (rule.desiredActionAmnt)),
     "Take Profit": (rule, index, currentPrice, buyPrice) => (currentPrice! >= (buyPrice! * (1 + rule.desiredActionAmnt))),
     "Stop Loss": (rule, index, currentPrice, buyPrice) => (currentPrice! <= (buyPrice! * (1 - rule.desiredActionAmnt))),
   };
 
-  addRule(){
+  addRule() {
     let counter = 0
-    for(let i = 1; i < this.listOfAddedLines.length; i++){
+    for (let i = 1; i < this.listOfAddedLines.length; i++) {
       let tempCounter = 0
-      for(let j = 0; j < this.listOfAddedLines[i].data.length; j++){
-        if(this.listOfAddedLines[i].data[j].value == null){
+      for (let j = 0; j < this.listOfAddedLines[i].data.length; j++) {
+        if (this.listOfAddedLines[i].data[j] == null) {
           tempCounter += 1;
         }
       }
-      if(tempCounter > counter){
+      if (tempCounter > counter) {
         counter = tempCounter
       }
     }
@@ -1535,47 +1574,47 @@ export class ServerTradeScreenComponent implements OnInit {
     let buySell = 'Buy'
     let orderLocations: orderLocation[] = []
     let profit = 0
-    for(let i = counter; i < this.stockDataForSelectedDay.length; i++){
-      if(buySell == 'Buy'){
+    for (let i = counter; i < this.stockDataForSelectedDay.length; i++) {
+      if (buySell == 'Buy') {
         let buyArray = []
-        for(let j = 0; j < this.listOfAddedRules.BuyRules.length; j++){
+        for (let j = 0; j < this.listOfAddedRules.BuyRules.length; j++) {
           buyArray.push(this.operators[this.listOfAddedRules.BuyRules[j].desiredAction](this.listOfAddedRules.BuyRules[j], i))
         }
-        if(!buyArray.includes(false)){
-          orderLocations.push({buySell: 'Buy', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString()})
+        if (!buyArray.includes(false)) {
+          orderLocations.push({ buySell: 'Buy', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString() })
           buySell = 'Sell'
         }
       }
-      else{
+      else {
         let buyArray = []
-        
+
         let andOr = 'And'
-        for(let j = 0; j < this.listOfAddedRules.SellRules.length; j++){
+        for (let j = 0; j < this.listOfAddedRules.SellRules.length; j++) {
           buyArray.push(this.operators[this.listOfAddedRules.SellRules[j].desiredAction](this.listOfAddedRules.SellRules[j], i, this.stockDataForSelectedDay[i].stockPrice, orderLocations[orderLocations.length - 1].price))
         }
-        if(this.listOfAddedRules.SellRules[this.listOfAddedRules.SellRules.length - 1].andOr == 'Or'){
+        if (this.listOfAddedRules.SellRules[this.listOfAddedRules.SellRules.length - 1].andOr == 'Or') {
           andOr = 'Or'
         }
-        if(andOr == 'Or'){
-          if(buyArray.includes(true)){
-            orderLocations.push({buySell: 'Sell', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString()})
+        if (andOr == 'Or') {
+          if (buyArray.includes(true)) {
+            orderLocations.push({ buySell: 'Sell', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString() })
             profit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
             buySell = 'Buy'
           }
         }
-        else{
-          if(!buyArray.includes(false)){
-            orderLocations.push({buySell: 'Sell', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString()})
+        else {
+          if (!buyArray.includes(false)) {
+            orderLocations.push({ buySell: 'Sell', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString() })
             profit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
             buySell = 'Buy'
           }
         }
-        
+
       }
     }
-    return{orderLocations: orderLocations, profit: profit}
+    return { orderLocations: orderLocations, profit: profit }
   }
-  
+
   async ngOnInit() {
     Chart.register(annotationPlugin);
     Chart.register(...registerables)

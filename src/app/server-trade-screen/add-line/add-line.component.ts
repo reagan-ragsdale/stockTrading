@@ -22,7 +22,7 @@ export class AddLineComponent {
 @Input() listOfLinesIncoming: lineType[] = []
 readonly dialogRef = inject(MatDialogRef<AddLineComponent>);
 
-lineTypes: string[] = ['SMA', 'EMA']
+lineTypes: string[] = ['SMA', 'EMA', 'Cumulative VWAP', 'Rolling VWAP']
 
 addLine(){
   this.listOfLinesIncoming.push({

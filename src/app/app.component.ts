@@ -49,9 +49,9 @@ export class AppComponent{
     await AuthController.resetUser()
     
     //let tokens = await AuthController.getTokenUserByRemult()
-    //this.sharedFinance = await simFinRepo.findFirst({userId: 'Shared'})
+    this.sharedFinance = await simFinRepo.findFirst({userId: 'Shared'})
     //let accountNum = await SchwabController.getAccountsNumberCall(tokens?.accessToken!)
     //this.schwabFinance = await SchwabController.getAccountInfoCall(accountNum[0].hashValue, tokens?.accessToken!)
-    console.log(this.schwabFinance)
+    //console.log(this.schwabFinance)
   }
 }

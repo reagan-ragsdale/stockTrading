@@ -13,6 +13,7 @@ export const loadDailyDataIntoHistory = async () => {
         stockData.push({
             stockName: dailyStockData[i].stockName,
             stockPrice: dailyStockData[i].stockPrice,
+            volume: dailyStockData[i].volume,
             askPrice: dailyStockData[i].askPrice,
             bidPrice: dailyStockData[i].bidPrice,
             time: dailyStockData[i].time,

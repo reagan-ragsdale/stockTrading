@@ -12,4 +12,7 @@ export class LogService {
     static getLogHistory(): any[]{
         return this.dailyLogHistory
     }
+    static clearLogHistory(): void {
+        this.dailyLogHistory.length = 0
+    }
 }

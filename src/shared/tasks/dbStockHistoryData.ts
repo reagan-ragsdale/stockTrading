@@ -21,6 +21,9 @@ export class DbStockHistoryData {
     bidPrice = 0
 
     @Fields.number()
+    volume = 0
+
+    @Fields.number()
     time = 0
 
     @Fields.string()

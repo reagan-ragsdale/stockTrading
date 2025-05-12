@@ -168,6 +168,7 @@ export class LoggerController {
         let sharedFinance = await simFinRepo.findFirst({ userId: 'Shared' })
         let newSpending = sharedFinance?.spending! + totalProfit
         await simFinRepo.save({ ...sharedFinance, spending: newSpending })
+        LogService.clearLogHistory()
 
 
 
