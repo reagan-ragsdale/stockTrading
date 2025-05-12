@@ -12,7 +12,7 @@
             <mat-form-field style="width:fit-content;">
                 <mat-label>Line Type</mat-label>
                 <mat-select disableRipple [(value)]="line.lineType">
-                  <mat-option *ngFor="let lineType of lineTypes" value="{{lineType}}"
+                  <mat-option *ngFor="let lineType of lineTypes" [value]="lineType"
                     (onSelectionChange)="onSelectedLineTypeChange($event)">{{lineType}}</mat-option>
                 </mat-select>
               </mat-form-field>

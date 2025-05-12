@@ -150,7 +150,7 @@ export class ServerTradeScreenComponent implements OnInit {
 
         datasets: [
           {
-            label: 'Actual',
+            label: 'Price',
             data: this.selectedInterDayStockData.map(e => e.close),
             backgroundColor: '#54C964',
             hoverBackgroundColor: '#54C964',
@@ -276,7 +276,7 @@ export class ServerTradeScreenComponent implements OnInit {
 
         datasets: [
           {
-            label: 'Actual',
+            label: 'Price',
             data: this.rsiData.map(e => e.rsiNum),
             backgroundColor: '#54C964',
             hoverBackgroundColor: '#54C964',
@@ -626,7 +626,7 @@ export class ServerTradeScreenComponent implements OnInit {
   }
   updateChartIntraDay() {
     this.stockChart.data.datasets[0].data = this.stockDataForSelectedDay.map(e => e.stockPrice)
-    this.stockChart.data.datasets[0].label = 'Actual'
+    this.stockChart.data.datasets[0].label = 'Price'
     /*  this.stockChart.data.datasets[1].data = this.listOfLastHour.map(e => e.avg)
      this.stockChart.data.datasets[1].label = (this.intraDayLongSma / 60) + " minutes"
      this.stockChart.data.datasets[2].data = this.listOfLast30Minutes.map(e => e.avg)
@@ -1309,7 +1309,7 @@ export class ServerTradeScreenComponent implements OnInit {
   }
   updateChart() {
     this.stockChart.data.datasets[0].data = this.selectedInterDayStockData.map(e => e.close)
-    this.stockChart.data.datasets[0].label = 'Actual'
+    this.stockChart.data.datasets[0].label = 'Price'
     /* this.stockChart.data.datasets[1].data = this.longSmaResults.map(e => e.avg)
     this.stockChart.data.datasets[1].label = this.interDayLongSma
     this.stockChart.data.datasets[2].data = this.mediumSmaResults.map(e => e.avg)
@@ -1418,6 +1418,12 @@ export class ServerTradeScreenComponent implements OnInit {
   addNewLinesToGraph(lines: lineType[]) {
     let linesNew = structuredClone(lines)
     this.stockChart.data.datasets = [this.stockChart.data.datasets[0]]
+    this.listOfAddedLines.push({
+      lineType: 'Price',
+      lineLength: 1,
+      id: -1,
+      data: this.stockDataForSelectedDay.map(e => e.stockPrice)
+    })
 
     for (let i = 0; i < linesNew.length; i++) {
       let lineData: any[] = []

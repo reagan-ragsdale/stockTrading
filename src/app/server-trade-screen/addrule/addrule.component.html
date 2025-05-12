@@ -66,7 +66,7 @@
                     </mat-form-field>
                     <mat-form-field style="width:fit-content;">
                         <mat-label>Condition Type</mat-label>
-                        <mat-select disableRipple [(value)]="sellRule.primaryObject">
+                        <mat-select disableRipple [(value)]="sellRule.conditionType">
                             <mat-option *ngFor="let type of sellConditionTypes" [value]="type"
                                 (onSelectionChange)="onSelectedSellRuleConditionTypeChange($event, sellRule.id, type)">{{type}}</mat-option>
                         </mat-select>
