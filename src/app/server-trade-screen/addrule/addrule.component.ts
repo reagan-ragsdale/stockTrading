@@ -140,6 +140,13 @@ export class AddRuleComponent {
       selectedSellRule.referencedObjectData = line.data
     }
   }
+
+  isAllLine(lineType: string): boolean {
+    if(lineType == 'Price' || lineType == 'Cumulative VWAP'){
+      return true
+    }
+    return false
+  }
   
 
   onSubmit() {
