@@ -396,10 +396,10 @@ export class ServerTradeScreenComponent implements OnInit {
           let proft = result.orderLocations[i].price - result.orderLocations[i - 1].price
           if(proft < 0){
             grossLoss += proft
-            wins++
+            losses++
           }
           else{
-            losses++
+            wins++
             grossProfit += proft
           }
         }
@@ -411,7 +411,7 @@ export class ServerTradeScreenComponent implements OnInit {
       this.resultsInfo.push({
         profit: result.profit,
         numberOfTrades: result.orderLocations.length/2,
-        profitFactor: grossProfit/grossLoss,
+        profitFactor: grossLoss == 0 ? grossProfit: grossProfit/grossLoss,
         wins: wins,
         losses: losses,
         avgWinAmt: avgWinAmt,
