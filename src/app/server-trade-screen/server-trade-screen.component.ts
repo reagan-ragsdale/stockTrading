@@ -382,7 +382,7 @@ export class ServerTradeScreenComponent implements OnInit {
       this.updateGraphBuyAndSellPointsIntraDayNew(result.orderLocations)
       this.totalProfit = result.profit
 
-      this.resultsInfo.length = 0
+      this.resultsInfo = []
       let grossProfit = 0
       let grossLoss = 0
       let wins = 0
@@ -411,7 +411,7 @@ export class ServerTradeScreenComponent implements OnInit {
       this.resultsInfo.push({
         profit: result.profit,
         numberOfTrades: result.orderLocations.length/2,
-        profitFactor: grossLoss == 0 ? grossProfit: grossProfit/grossLoss,
+        profitFactor: grossLoss == 0 ? grossProfit : grossProfit/grossLoss,
         wins: wins,
         losses: losses,
         avgWinAmt: avgWinAmt,
