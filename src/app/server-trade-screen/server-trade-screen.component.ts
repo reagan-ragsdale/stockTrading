@@ -505,6 +505,10 @@ export class ServerTradeScreenComponent implements OnInit {
       this.updateVolumeChartIntraDay()
       this.addNewLinesToGraph(this.listOfAddedLines)
       this.refreshRules()
+      if(this.listOfAddedRules.BuyRules.length > 0 && this.listOfAddedRules.SellRules.length > 0){
+        this.addRule()
+      }
+      
       //this.runSimulationIntraDay()
       //this.topAlgos = []
       this.isLoading = false
