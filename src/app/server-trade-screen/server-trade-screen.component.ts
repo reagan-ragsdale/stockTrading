@@ -500,6 +500,7 @@ export class ServerTradeScreenComponent implements OnInit {
       //this.calculateIntraDaySma()
       this.updateChartIntraDay()
       this.updateVolumeChartIntraDay()
+      this.addNewLinesToGraph(this.listOfAddedLines)
       //this.runSimulationIntraDay()
       //this.topAlgos = []
       this.isLoading = false
