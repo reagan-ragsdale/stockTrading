@@ -31,7 +31,7 @@
                         <mat-label>Referenced Object</mat-label>
                         <mat-select disableRipple [(value)]="buyRule.referencedObject">
                             <mat-option *ngFor="let line of availableLines" [value]="line.lineType + ' - ' + line.lineLength"
-                                (onSelectionChange)="onSelectedBuyReferencedObjectTypeChange($event, buyRule.id, line)">{{line.lineType + ' - ' + line.lineLength}}</mat-option>
+                                (onSelectionChange)="onSelectedBuyReferencedObjectTypeChange($event, buyRule.id, line)">{{isAllLine(line.lineType) ? line.lineType : line.lineType + ' - ' + line.lineLength}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                     <mat-form-field *ngIf="buyRule.desiredAction == 'Dips below:'" class="example-full-width" style="width:fit-content;">
@@ -96,7 +96,7 @@
                         <mat-label>Referenced Object</mat-label>
                         <mat-select disableRipple [(value)]="sellRule.referencedObject">
                             <mat-option *ngFor="let line of availableLines" [value]="line.lineType + ' - ' + line.lineLength"
-                                (onSelectionChange)="onSelectedSellReferencedObjectTypeChange($event, sellRule.id, line)">{{line.lineType + ' - ' + line.lineLength}}</mat-option>
+                                (onSelectionChange)="onSelectedSellReferencedObjectTypeChange($event, sellRule.id, line)">{{isAllLine(line.lineType) ? line.lineType : line.lineType + ' - ' + line.lineLength}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                     <mat-form-field *ngIf="(sellRule.desiredAction == 'Rises above:' && sellRule.conditionType == 'Line Action') || sellRule.conditionType == 'Price Action'" class="example-full-width" style="width:fit-content;">
