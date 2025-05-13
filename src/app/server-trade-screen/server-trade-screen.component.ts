@@ -373,7 +373,7 @@ export class ServerTradeScreenComponent implements OnInit {
     }
   }
   resultsInfo: any[] = []
-  resultsColums: string[] = ["Profit", "NoTrades","Profit Factor","Wins","Losses","AvgWinAmt","AvgLossAmt","Expectancy"]
+  resultsColums: string[] = ["Profit", "NoTrades", "Profit Factor", "Wins", "Losses", "AvgWinAmt", "AvgLossAmt", "Expectancy"]
   onRunSimulation() {
     console.log()
     if (this.intraDayChecked) {
@@ -391,27 +391,27 @@ export class ServerTradeScreenComponent implements OnInit {
       let lossRate = 0
       let avgWinAmt = 0
       let avgLossAmt = 0
-      for(let i = 0; i < result.orderLocations.length; i++){
-        if(result.orderLocations[i].buySell == 'Sell'){
+      for (let i = 0; i < result.orderLocations.length; i++) {
+        if (result.orderLocations[i].buySell == 'Sell') {
           let proft = result.orderLocations[i].price - result.orderLocations[i - 1].price
-          if(proft < 0){
+          if (proft < 0) {
             grossLoss += proft
             losses++
           }
-          else{
+          else {
             wins++
             grossProfit += proft
           }
         }
       }
-      winRate = wins == 0 ? 0 : wins / result.orderLocations.length/2
-      lossRate = losses == 0 ? 0 : losses / result.orderLocations.length/2
-      avgWinAmt = wins == 0 ? 0 : grossProfit/wins
-      avgLossAmt = losses == 0 ? 0 : grossLoss/losses
+      winRate = wins == 0 ? 0 : wins / result.orderLocations.length / 2
+      lossRate = losses == 0 ? 0 : losses / result.orderLocations.length / 2
+      avgWinAmt = wins == 0 ? 0 : grossProfit / wins
+      avgLossAmt = losses == 0 ? 0 : grossLoss / losses
       this.resultsInfo.push({
         profit: result.profit,
-        numberOfTrades: result.orderLocations.length/2,
-        profitFactor: grossLoss == 0 ? grossProfit : grossProfit/grossLoss,
+        numberOfTrades: result.orderLocations.length / 2,
+        profitFactor: grossLoss == 0 ? grossProfit : grossProfit / grossLoss,
         wins: wins,
         losses: losses,
         avgWinAmt: avgWinAmt,
@@ -1696,18 +1696,27 @@ export class ServerTradeScreenComponent implements OnInit {
     }
     return { orderLocations: orderLocations, profit: profit }
   }
-  refreshRules(){
-    for(let i = 0; i < this.listOfAddedRules.BuyRules.length; i++){
+  refreshRules() {
+    for (let i = 0; i < this.listOfAddedRules.BuyRules.length; i++) {
       let filteredLineData = this.listOfAddedLines.filter(e => e.lineType == this.listOfAddedRules.BuyRules[i].primaryObjectType && e.lineLength == this.listOfAddedRules.BuyRules[i].primaryObjectLength)
-      this.listOfAddedRules.BuyRules[i].primaryObjectData = filteredLineData[0].data
+      if (filteredLineData.length > 0) {
+        this.listOfAddedRules.BuyRules[i].primaryObjectData = filteredLineData[0].data
+      }
       filteredLineData = this.listOfAddedLines.filter(e => e.lineType == this.listOfAddedRules.BuyRules[i].referencedObjectType && e.lineLength == this.listOfAddedRules.BuyRules[i].referencedObjectLength)
-      this.listOfAddedRules.BuyRules[i].referencedObjectData = filteredLineData[0].data
+      if (filteredLineData.length > 0) {
+        this.listOfAddedRules.BuyRules[i].referencedObjectData = filteredLineData[0].data
+      }
+
     }
-    for(let i = 0; i < this.listOfAddedRules.SellRules.length; i++){
+    for (let i = 0; i < this.listOfAddedRules.SellRules.length; i++) {
       let filteredLineData = this.listOfAddedLines.filter(e => e.lineType == this.listOfAddedRules.SellRules[i].primaryObjectType && e.lineLength == this.listOfAddedRules.SellRules[i].primaryObjectLength)
-      this.listOfAddedRules.SellRules[i].primaryObjectData = filteredLineData[0].data
+      if (filteredLineData.length > 0) {
+        this.listOfAddedRules.SellRules[i].primaryObjectData = filteredLineData[0].data
+      }
       filteredLineData = this.listOfAddedLines.filter(e => e.lineType == this.listOfAddedRules.SellRules[i].referencedObjectType && e.lineLength == this.listOfAddedRules.SellRules[i].referencedObjectLength)
-      this.listOfAddedRules.SellRules[i].referencedObjectData = filteredLineData[0].data
+      if (filteredLineData.length > 0) {
+        this.listOfAddedRules.SellRules[i].referencedObjectData = filteredLineData[0].data
+      }
     }
   }
 
