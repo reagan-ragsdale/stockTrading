@@ -382,6 +382,7 @@ export class ServerTradeScreenComponent implements OnInit {
       this.updateGraphBuyAndSellPointsIntraDayNew(result.orderLocations)
       this.totalProfit = result.profit
 
+      this.resultsInfo.length = 0
       let grossProfit = 0
       let grossLoss = 0
       let wins = 0
