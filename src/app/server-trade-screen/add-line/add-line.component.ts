@@ -26,15 +26,15 @@ lineTypes: string[] = ['SMA', 'EMA', 'Cumulative VWAP', 'Rolling VWAP']
 addedListOfLines: lineType[] = []
 
 addLine(){
-  this.listOfLinesIncoming.push({
-    id: this.listOfLinesIncoming.length,
+  this.addedListOfLines.push({
+    id: this.addedListOfLines.length,
     lineLength: 1,
     lineType: '',
     data: []
   })
 }
 removeLine(id:number){
-  this.listOfLinesIncoming = this.listOfLinesIncoming.filter(e => e.id != id)
+  this.addedListOfLines = this.addedListOfLines.filter(e => e.id != id)
 }
 
 onSelectedLineTypeChange(event: any){
@@ -42,7 +42,7 @@ onSelectedLineTypeChange(event: any){
 }
 
 onSubmit(){
-  this.dialogRef.close(this.listOfLinesIncoming)
+  this.dialogRef.close(this.addedListOfLines)
 }
 
 ngOnInit(){

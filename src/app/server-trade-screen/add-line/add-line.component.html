@@ -7,8 +7,8 @@
             <mat-icon style="color: black;">add</mat-icon>
           </button>
     </div>
-    <div *ngIf="listOfLinesIncoming.length > 0" style="display: flex; flex-direction: column;  align-items: flex-end;">
-        <div *ngFor="let line of listOfLinesIncoming" style="display: flex;">
+    <div *ngIf="addedListOfLines.length > 0" style="display: flex; flex-direction: column;  align-items: flex-end;">
+        <div *ngFor="let line of addedListOfLines" style="display: flex;">
             <mat-form-field style="width:fit-content;">
                 <mat-label>Line Type</mat-label>
                 <mat-select disableRipple [(value)]="line.lineType">
