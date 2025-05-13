@@ -47,6 +47,8 @@ export type SellRule = {
     //does an action: ex crosses over, is dips x amount below
     desiredAction: string;
     desiredActionAmnt: number;
+    desiredActionCurrent: number;
+    tradeHigh: number;
     //the referenced line
     referencedObject: string;
     referencedObjectType: string;

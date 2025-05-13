@@ -98,7 +98,7 @@
     <!-- <h4 style="margin-left:1rem; color: #DBD4D1;">Total: {{bankTotal | currency:'USD':'symbol'}}</h4> -->
     <h4 style="margin-left:1rem; color: #DBD4D1;">Total Profit: {{totalProfit | currency:'USD':'symbol'}}</h4>
     <button *ngIf="false" style="margin-left:1rem;" mat-raised-button color="primary" (click)="onRunEntireSimulation()">Run Full Sim</button>
-    <button *ngIf="intraDayChecked" style="margin-left:1rem;" mat-raised-button color="primary" (click)="onRunEntireSimulationIntraDayAllDays()">Run Full Sim All Days</button>
+    <button *ngIf="false" style="margin-left:1rem;" mat-raised-button color="primary" (click)="onRunEntireSimulationIntraDayAllDays()">Run Full Sim All Days</button>
     <div *ngIf="topAlgos.length > 0" style="background-color:#3C3E3D;" >
       <mat-table [dataSource]="topAlgos"  style="height:inherit; background-color:#3C3E3D; border-radius: 8px; border: 1px solid #DBD4D1;">
           <!-- Position Column -->
@@ -152,6 +152,60 @@
       
   </div>
   
+  </div>
+  <div style="display: flex; flex-direction: column;">
+    <div *ngIf="resultsInfo.length > 0" style="width: 100%;">
+      <mat-table [dataSource]="resultsInfo"  style="height:inherit; background-color:#3C3E3D; border-radius: 8px; border: 1px solid #DBD4D1;">
+          <!-- Position Column -->
+          <ng-container matColumnDef="Profit">
+            <mat-header-cell *matHeaderCellDef> Profit </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.profit | currency:'USD':'symbol'}} </mat-cell>
+          </ng-container>
+        
+          <!-- Name Column -->
+          <ng-container matColumnDef="NoTrades">
+            <mat-header-cell *matHeaderCellDef> No. Trades </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.numberOfTrades}} </mat-cell>
+          </ng-container>
+
+          <!-- Weight Column -->
+          <ng-container matColumnDef="Profit Factor">
+            <mat-header-cell *matHeaderCellDef> Buy Gutter </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.profitFactor | number:'1.2-5'}} </mat-cell>
+          </ng-container>
+        
+          <!-- Weight Column -->
+          <ng-container matColumnDef="Wins">
+            <mat-header-cell *matHeaderCellDef> Buy Gutter </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.wins | number:'1.2-5'}} </mat-cell>
+          </ng-container>
+        
+          <!-- Symbol Column -->
+          <ng-container matColumnDef="Losses">
+            <mat-header-cell *matHeaderCellDef> Sell Gutter </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.losses | number:'1.2-5'}} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="AvgWinAmt">
+            <mat-header-cell *matHeaderCellDef> Check Gutter </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.avgWinAmt | number:'1.2-5'}} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="AvgLossAmt">
+            <mat-header-cell *matHeaderCellDef> Long Sma </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.avgLossAmt | number:'1.2-5'}} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="Expectancy">
+            <mat-header-cell *matHeaderCellDef> Medium Sma </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.expectancy | number:'1.2-5'}} </mat-cell>
+          </ng-container>
+        
+          <mat-header-row *matHeaderRowDef="resultsColums;" style="min-height:fit-content; background-color:#3C3E3D; color: #DBD4D1;" ></mat-header-row>
+          <mat-row *matRowDef="let row; columns: resultsColums;" style="min-height:fit-content; background-color:#3C3E3D; color: #DBD4D1;"></mat-row>
+        </mat-table>
+    </div>
+
   </div>
   <div style="display: flex; flex-direction: column;">
     <div style="display:flex; gap: 1rem;">

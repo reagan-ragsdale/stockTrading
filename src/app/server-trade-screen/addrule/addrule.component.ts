@@ -30,7 +30,7 @@ export class AddRuleComponent {
   selectedBuyLine: string = ''
   selectedSellLine: string = ''
   availableBuyActions: string[] = ['Crosses above:', 'Dips below:', 'Rises above:']
-  availableSellPriceActions: string[] = ['Take Profit', 'Stop Loss']
+  availableSellPriceActions: string[] = ['Take Profit', 'Stop Loss', 'Trailing Stop']
   availableSellLineActions: string[] = ['Crosses below:', 'Dips below:', 'Rises above:']
   sellConditionTypes: string[] = ['Line Action', 'Price Action']
   buyConditionTypes: string[] = ['Line', 'Time']
@@ -68,6 +68,8 @@ export class AddRuleComponent {
       primaryObjectData: [],
       desiredAction: '',
       desiredActionAmnt: 0,
+      desiredActionCurrent: 0,
+      tradeHigh: 0,
       referencedObject: '',
       referencedObjectType: '',
       referencedObjectLength: 0,
