@@ -1572,7 +1572,7 @@ export class ServerTradeScreenComponent implements OnInit {
     "Rises above:": (rule, index) => (((rule.primaryObjectData[index] - rule.referencedObjectData[index]) / rule.referencedObjectData[index]) > (rule.desiredActionAmnt)),
     "Take Profit": (rule, index, buyPrice) => (this.stockDataForSelectedDay[index].stockPrice >= (buyPrice! * (1 + rule.desiredActionAmnt))),
     "Stop Loss": (rule, index, buyPrice) => (this.stockDataForSelectedDay[index].stockPrice <= (buyPrice! * (1 - rule.desiredActionAmnt))),
-    "Buy After": (rule , index) => ('buyTime' in rule ? (this.stockDataForSelectedDay[index].time > (this.stockDataForSelectedDay[0].time + rule.buyTime)) : false ) 
+    "After": (rule , index) => ('buyTime' in rule ? (this.stockDataForSelectedDay[index].time > (this.stockDataForSelectedDay[0].time + rule.buyTime)) : false ) 
   };
 
   addRule() {
