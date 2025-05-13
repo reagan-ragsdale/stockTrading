@@ -1515,7 +1515,7 @@ export class ServerTradeScreenComponent implements OnInit {
     let returnData: (number | null)[] = []
     let cumulativePV = 0;
     let cumulativeVolume = 0;
-    for(let i = 0; i < lineLength - 1; i++){
+    for (let i = 0; i < lineLength - 1; i++) {
       returnData.push(null)
     }
     for (let i = lineLength; i < this.stockDataForSelectedDay.length; i++) {
@@ -1601,20 +1601,28 @@ export class ServerTradeScreenComponent implements OnInit {
         if (this.listOfAddedRules.SellRules[this.listOfAddedRules.SellRules.length - 1].andOr == 'Or') {
           andOr = 'Or'
         }
-        if (andOr == 'Or') {
-          if (buyArray.includes(true)) {
-            orderLocations.push({ buySell: 'Sell', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString() })
-            profit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
-            buySell = 'Buy'
-          }
+        if (i == this.stockDataForSelectedDay.length - 1) {
+          orderLocations.push({ buySell: 'Sell', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString() })
+          profit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
+          buySell = 'Buy'
         }
         else {
-          if (!buyArray.includes(false)) {
-            orderLocations.push({ buySell: 'Sell', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString() })
-            profit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
-            buySell = 'Buy'
+          if (andOr == 'Or') {
+            if (buyArray.includes(true)) {
+              orderLocations.push({ buySell: 'Sell', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString() })
+              profit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
+              buySell = 'Buy'
+            }
+          }
+          else {
+            if (!buyArray.includes(false)) {
+              orderLocations.push({ buySell: 'Sell', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString() })
+              profit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
+              buySell = 'Buy'
+            }
           }
         }
+
 
       }
     }
