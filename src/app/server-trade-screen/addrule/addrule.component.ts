@@ -33,12 +33,17 @@ export class AddRuleComponent {
   availableSellPriceActions: string[] = ['Take Profit', 'Stop Loss']
   availableSellLineActions: string[] = ['Crosses below:', 'Dips below:', 'Rises above:']
   sellConditionTypes: string[] = ['Line Action', 'Price Action']
+  buyConditionTypes: string[] = ['Line', 'Time']
+  timeConditions: string[] = ['After']
   andOrList: string[] = ['And', 'Or']
 
   addBuyRule() {
     this.listOfRulesIncoming.BuyRules.push({
       id: this.listOfRulesIncoming.BuyRules.length,
       lineId: 0,
+      conditionType: '',
+      buyTimeType: '',
+      buyTime: 0,
       primaryObject: '',
       primaryObjectType: '',
       primaryObjectLength: 0,
@@ -77,6 +82,24 @@ export class AddRuleComponent {
     this.selectedSellLine = ''
     this.listOfRulesIncoming.SellRules = this.listOfRulesIncoming.SellRules.filter(e => e.id != id)
   }
+  onSelectedBuyConditionTypeChange(event: any, id: number, type: string){
+    if (event.isUserInput == true) {
+      let selectedBuyRule = this.listOfRulesIncoming.BuyRules.filter(e => e.id == id)[0]
+      selectedBuyRule.conditionType = type
+    }
+  }
+  onSelectedBuyTimeTypeChange(event: any, id: number, time: string){
+    if (event.isUserInput == true) {
+      let selectedBuyRule = this.listOfRulesIncoming.BuyRules.filter(e => e.id == id)[0]
+      selectedBuyRule.desiredAction = time
+    }
+  }
+ /*  onSelectedBuyTimeChange(event: any, id: number, time: number){
+    if (event.isUserInput == true) {
+      let selectedBuyRule = this.listOfRulesIncoming.BuyRules.filter(e => e.id == id)[0]
+      selectedBuyRule.buyTime = time
+    }
+  } */
 
   onSelectedBuyRuleTypeChange(event: any, id: number, line: lineType) {
     if (event.isUserInput == true) {

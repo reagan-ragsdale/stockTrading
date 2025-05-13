@@ -14,27 +14,45 @@
                     <h4 *ngIf="buyRule.id == 0">Buy When:</h4>
                     <h4 *ngIf="buyRule.id > 0">And</h4>
                     <mat-form-field style="width:fit-content;">
+                        <mat-label>Condition</mat-label>
+                        <mat-select disableRipple [(value)]="buyRule.conditionType">
+                            <mat-option *ngFor="let type of buyConditionTypes" [value]="type"
+                                (onSelectionChange)="onSelectedBuyConditionTypeChange($event, buyRule.id, type)">{{type}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field *ngIf="buyRule.conditionType == 'Time'" style="width:fit-content;">
+                        <mat-label>Time Period</mat-label>
+                        <mat-select disableRipple [(value)]="buyRule.primaryObject">
+                            <mat-option *ngFor="let time of timeConditions" [value]="time"
+                                (onSelectionChange)="onSelectedBuyTimeTypeChange($event, buyRule.id, time)">{{time}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field *ngIf="buyRule.conditionType == 'Time'" class="example-full-width" style="width:fit-content;">
+                        <mat-label>MilliSeconds</mat-label>
+                        <input matInput type="number" [(ngModel)]="buyRule.buyTime" placeholder="0.00" [min]="0"  step="1000">
+                    </mat-form-field>
+                    <mat-form-field *ngIf="buyRule.conditionType == 'Line'" style="width:fit-content;">
                         <mat-label>Primary Line</mat-label>
                         <mat-select disableRipple [(value)]="buyRule.primaryObject">
                             <mat-option *ngFor="let line of availableLines" [value]="line.lineType + ' - ' + line.lineLength"
                                 (onSelectionChange)="onSelectedBuyRuleTypeChange($event, buyRule.id, line)">{{isAllLine(line.lineType) ? line.lineType : line.lineType + ' - ' + line.lineLength}}</mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <mat-form-field style="width:fit-content;">
+                    <mat-form-field *ngIf="buyRule.conditionType == 'Line'" style="width:fit-content;">
                         <mat-label>Action</mat-label>
                         <mat-select disableRipple [(value)]="buyRule.desiredAction">
                             <mat-option *ngFor="let buyAction of availableBuyActions" [value]="buyAction"
                                 (onSelectionChange)="onSelectedBuyActionTypeChange($event, buyRule.id, buyAction)">{{buyAction}}</mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <mat-form-field style="width:fit-content;">
+                    <mat-form-field *ngIf="buyRule.conditionType == 'Line'" style="width:fit-content;">
                         <mat-label>Referenced Object</mat-label>
                         <mat-select disableRipple [(value)]="buyRule.referencedObject">
                             <mat-option *ngFor="let line of availableLines" [value]="line.lineType + ' - ' + line.lineLength"
                                 (onSelectionChange)="onSelectedBuyReferencedObjectTypeChange($event, buyRule.id, line)">{{isAllLine(line.lineType) ? line.lineType : line.lineType + ' - ' + line.lineLength}}</mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <mat-form-field *ngIf="buyRule.desiredAction == 'Dips below:'" class="example-full-width" style="width:fit-content;">
+                    <mat-form-field *ngIf="buyRule.desiredAction == 'Dips below:' && buyRule.conditionType == 'Line'" class="example-full-width" style="width:fit-content;">
                         <mat-label>By Amount:</mat-label>
                         <input matInput type="number" [(ngModel)]="buyRule.desiredActionAmnt" placeholder="0.00" [min]="0.001" [max]="1" step=".001">
                     </mat-form-field>

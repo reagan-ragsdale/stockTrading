@@ -22,7 +22,7 @@ import { BuyRule, lineType, RuleDto, SellRule } from '../Dtos/ServerAlgoDto';
 import { AddRuleComponent } from './addrule/addrule.component';
 
 
-type OperatorFunction = (rule: BuyRule | SellRule, index: number, currentPrice?: number, buyPrice?: number) => boolean;
+type OperatorFunction = (rule: BuyRule | SellRule, index: number, buyPrice?: number) => boolean;
 type serverAlgos = {
   name: string;
   isSelected: boolean;
@@ -630,12 +630,6 @@ export class ServerTradeScreenComponent implements OnInit {
   updateChartIntraDay() {
     this.stockChart.data.datasets[0].data = this.stockDataForSelectedDay.map(e => e.stockPrice)
     this.stockChart.data.datasets[0].label = 'Price'
-    /*  this.stockChart.data.datasets[1].data = this.listOfLastHour.map(e => e.avg)
-     this.stockChart.data.datasets[1].label = (this.intraDayLongSma / 60) + " minutes"
-     this.stockChart.data.datasets[2].data = this.listOfLast30Minutes.map(e => e.avg)
-     this.stockChart.data.datasets[2].label = (this.intraDayMediumSma / 60) + " minutes"
-     this.stockChart.data.datasets[3].data = this.listOfLast5Minutes.map(e => e.avg)
-     this.stockChart.data.datasets[3].label = (this.intraDayShortSma / 60) + " minutes" */
     this.stockChart.data.labels = this.stockDataForSelectedDay.map(e => new Date(e.time).toLocaleTimeString())
     this.stockChart.options.scales.y.max = this.getMaxForChart(this.stockDataForSelectedDay.map(e => e.stockPrice))
     this.stockChart.options.scales.y.min = this.getMinForChart(this.stockDataForSelectedDay.map(e => e.stockPrice))
@@ -1576,8 +1570,9 @@ export class ServerTradeScreenComponent implements OnInit {
     "Crosses below:": (rule, index) => rule.primaryObjectData[index] < rule.referencedObjectData[index] && (rule.primaryObjectData[index - 1] != null && rule.referencedObjectData[index - 1] != null) && (rule.primaryObjectData[index - 1] >= rule.referencedObjectData[index - 1]),
     "Dips below:": (rule, index) => (((rule.primaryObjectData[index] - rule.referencedObjectData[index]) / rule.referencedObjectData[index]) < (rule.desiredActionAmnt * -1)),
     "Rises above:": (rule, index) => (((rule.primaryObjectData[index] - rule.referencedObjectData[index]) / rule.referencedObjectData[index]) > (rule.desiredActionAmnt)),
-    "Take Profit": (rule, index, currentPrice, buyPrice) => (currentPrice! >= (buyPrice! * (1 + rule.desiredActionAmnt))),
-    "Stop Loss": (rule, index, currentPrice, buyPrice) => (currentPrice! <= (buyPrice! * (1 - rule.desiredActionAmnt))),
+    "Take Profit": (rule, index, buyPrice) => (this.stockDataForSelectedDay[index].stockPrice >= (buyPrice! * (1 + rule.desiredActionAmnt))),
+    "Stop Loss": (rule, index, buyPrice) => (this.stockDataForSelectedDay[index].stockPrice <= (buyPrice! * (1 - rule.desiredActionAmnt))),
+    "Buy After": (rule , index) => ('buyTime' in rule ? (this.stockDataForSelectedDay[index].time > (this.stockDataForSelectedDay[0].time + rule.buyTime)) : false ) 
   };
 
   addRule() {
@@ -1614,7 +1609,7 @@ export class ServerTradeScreenComponent implements OnInit {
 
         let andOr = 'And'
         for (let j = 0; j < this.listOfAddedRules.SellRules.length; j++) {
-          buyArray.push(this.operators[this.listOfAddedRules.SellRules[j].desiredAction](this.listOfAddedRules.SellRules[j], i, this.stockDataForSelectedDay[i].stockPrice, orderLocations[orderLocations.length - 1].price))
+          buyArray.push(this.operators[this.listOfAddedRules.SellRules[j].desiredAction](this.listOfAddedRules.SellRules[j], i, orderLocations[orderLocations.length - 1].price))
         }
         if (this.listOfAddedRules.SellRules[this.listOfAddedRules.SellRules.length - 1].andOr == 'Or') {
           andOr = 'Or'

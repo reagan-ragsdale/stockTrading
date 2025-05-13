@@ -15,6 +15,9 @@ export type BuyRule = {
     lineId: number;
     //buy when:
     //the primary line
+    conditionType: string;
+    buyTimeType: string;
+    buyTime: number;
     primaryObject: string;
     primaryObjectType: string;
     primaryObjectLength: number;
