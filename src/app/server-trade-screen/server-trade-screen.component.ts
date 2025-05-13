@@ -501,6 +501,7 @@ export class ServerTradeScreenComponent implements OnInit {
       this.updateChartIntraDay()
       this.updateVolumeChartIntraDay()
       this.addNewLinesToGraph(this.listOfAddedLines)
+      this.refreshRules()
       //this.runSimulationIntraDay()
       //this.topAlgos = []
       this.isLoading = false
@@ -1694,6 +1695,20 @@ export class ServerTradeScreenComponent implements OnInit {
       }
     }
     return { orderLocations: orderLocations, profit: profit }
+  }
+  refreshRules(){
+    for(let i = 0; i < this.listOfAddedRules.BuyRules.length; i++){
+      let filteredLineData = this.listOfAddedLines.filter(e => e.lineType == this.listOfAddedRules.BuyRules[i].primaryObjectType && e.lineLength == this.listOfAddedRules.BuyRules[i].primaryObjectLength)
+      this.listOfAddedRules.BuyRules[i].primaryObjectData = filteredLineData[0].data
+      filteredLineData = this.listOfAddedLines.filter(e => e.lineType == this.listOfAddedRules.BuyRules[i].referencedObjectType && e.lineLength == this.listOfAddedRules.BuyRules[i].referencedObjectLength)
+      this.listOfAddedRules.BuyRules[i].referencedObjectData = filteredLineData[0].data
+    }
+    for(let i = 0; i < this.listOfAddedRules.SellRules.length; i++){
+      let filteredLineData = this.listOfAddedLines.filter(e => e.lineType == this.listOfAddedRules.SellRules[i].primaryObjectType && e.lineLength == this.listOfAddedRules.SellRules[i].primaryObjectLength)
+      this.listOfAddedRules.SellRules[i].primaryObjectData = filteredLineData[0].data
+      filteredLineData = this.listOfAddedLines.filter(e => e.lineType == this.listOfAddedRules.SellRules[i].referencedObjectType && e.lineLength == this.listOfAddedRules.SellRules[i].referencedObjectLength)
+      this.listOfAddedRules.SellRules[i].referencedObjectData = filteredLineData[0].data
+    }
   }
 
   async ngOnInit() {
