@@ -378,46 +378,48 @@ export class ServerTradeScreenComponent implements OnInit {
     console.log()
     if (this.intraDayChecked) {
       this.isLoading = true
-      let result = this.addRule()
-      this.updateGraphBuyAndSellPointsIntraDayNew(result.orderLocations)
-      this.totalProfit = result.profit
+      if (this.listOfAddedRules.BuyRules.length > 0 && this.listOfAddedRules.SellRules.length > 0) {
+        let result = this.addRule()
+        this.updateGraphBuyAndSellPointsIntraDayNew(result.orderLocations)
+        this.totalProfit = result.profit
 
-      this.resultsInfo = []
-      let grossProfit = 0
-      let grossLoss = 0
-      let wins = 0
-      let losses = 0
-      let winRate = 0
-      let lossRate = 0
-      let avgWinAmt = 0
-      let avgLossAmt = 0
-      for (let i = 0; i < result.orderLocations.length; i++) {
-        if (result.orderLocations[i].buySell == 'Sell') {
-          let proft = result.orderLocations[i].price - result.orderLocations[i - 1].price
-          if (proft < 0) {
-            grossLoss += proft
-            losses++
-          }
-          else {
-            wins++
-            grossProfit += proft
+        this.resultsInfo = []
+        let grossProfit = 0
+        let grossLoss = 0
+        let wins = 0
+        let losses = 0
+        let winRate = 0
+        let lossRate = 0
+        let avgWinAmt = 0
+        let avgLossAmt = 0
+        for (let i = 0; i < result.orderLocations.length; i++) {
+          if (result.orderLocations[i].buySell == 'Sell') {
+            let proft = result.orderLocations[i].price - result.orderLocations[i - 1].price
+            if (proft < 0) {
+              grossLoss += proft
+              losses++
+            }
+            else {
+              wins++
+              grossProfit += proft
+            }
           }
         }
+        winRate = wins == 0 ? 0 : wins / result.orderLocations.length / 2
+        lossRate = losses == 0 ? 0 : losses / result.orderLocations.length / 2
+        avgWinAmt = wins == 0 ? 0 : grossProfit / wins
+        avgLossAmt = losses == 0 ? 0 : grossLoss / losses
+        this.resultsInfo.push({
+          profit: result.profit,
+          numberOfTrades: result.orderLocations.length / 2,
+          profitFactor: grossLoss == 0 ? grossProfit : grossProfit / grossLoss,
+          wins: wins,
+          losses: losses,
+          avgWinAmt: avgWinAmt,
+          avgLossAmt: avgLossAmt,
+          expectancy: (avgWinAmt * winRate) - (avgLossAmt * lossRate)
+        })
       }
-      winRate = wins == 0 ? 0 : wins / result.orderLocations.length / 2
-      lossRate = losses == 0 ? 0 : losses / result.orderLocations.length / 2
-      avgWinAmt = wins == 0 ? 0 : grossProfit / wins
-      avgLossAmt = losses == 0 ? 0 : grossLoss / losses
-      this.resultsInfo.push({
-        profit: result.profit,
-        numberOfTrades: result.orderLocations.length / 2,
-        profitFactor: grossLoss == 0 ? grossProfit : grossProfit / grossLoss,
-        wins: wins,
-        losses: losses,
-        avgWinAmt: avgWinAmt,
-        avgLossAmt: avgLossAmt,
-        expectancy: (avgWinAmt * winRate) - (avgLossAmt * lossRate)
-      })
 
       //this.runSimulationIntraDayNew()
       this.isLoading = false
@@ -463,6 +465,7 @@ export class ServerTradeScreenComponent implements OnInit {
           }
         }
         console.log(this.listOfAddedRules)
+
         let result = this.addRule()
         resultList.push({ profit: result.profit, numberOfTrades: result.orderLocations.length, orders: result.orderLocations })
 
@@ -1471,6 +1474,7 @@ export class ServerTradeScreenComponent implements OnInit {
   addNewLinesToGraph(lines: lineType[]) {
     let linesNew = structuredClone(lines)
     this.stockChart.data.datasets = [this.stockChart.data.datasets[0]]
+    this.listOfAddedLines = this.listOfAddedLines.filter(e => e.lineType == 'Price')
     this.listOfAddedLines.push({
       lineType: 'Price',
       lineLength: 1,
@@ -1619,6 +1623,7 @@ export class ServerTradeScreenComponent implements OnInit {
   };
 
   addRule() {
+
     let counter = 0
     for (let i = 1; i < this.listOfAddedLines.length; i++) {
       let tempCounter = 0
@@ -1695,6 +1700,8 @@ export class ServerTradeScreenComponent implements OnInit {
       }
     }
     return { orderLocations: orderLocations, profit: profit }
+
+
   }
   refreshRules() {
     for (let i = 0; i < this.listOfAddedRules.BuyRules.length; i++) {
