@@ -127,6 +127,7 @@ export class ServerTradeScreenComponent implements OnInit {
         await this.updateStockChartData(this.selectedDate)
         //this.calculateIntraDaySma()
         this.updateChartIntraDay()
+        this.updateVolumeChartIntraDay()
         //this.runSimulationIntraDay()
         this.isLoading = false
       }
@@ -309,7 +310,7 @@ export class ServerTradeScreenComponent implements OnInit {
 
         scales: {
           y: {
-            max: 100,
+            max: Math.max(...this.rsiData.map(e => e.rsiNum)),
             min: 0,
             grid: {
               color: 'hsl(18, 12%, 60%)'
@@ -355,6 +356,7 @@ export class ServerTradeScreenComponent implements OnInit {
       await this.updateStockChartData(this.selectedDate)
       //this.calculateIntraDaySma()
       this.updateChartIntraDay()
+      this.updateVolumeChartIntraDay()
       //this.runSimulationIntraDay()
       //this.calcualateIntraDayRsi()
       this.isLoading = false
@@ -457,6 +459,7 @@ export class ServerTradeScreenComponent implements OnInit {
       await this.updateStockChartData(this.selectedDate)
       //this.calculateIntraDaySma()
       this.updateChartIntraDay()
+      this.updateVolumeChartIntraDay()
       //this.runSimulationIntraDay()
       //this.topAlgos = []
       this.isLoading = false
@@ -637,6 +640,14 @@ export class ServerTradeScreenComponent implements OnInit {
     this.stockChart.options.scales.y.max = this.getMaxForChart(this.stockDataForSelectedDay.map(e => e.stockPrice))
     this.stockChart.options.scales.y.min = this.getMinForChart(this.stockDataForSelectedDay.map(e => e.stockPrice))
     this.stockChart.update()
+  }
+  updateVolumeChartIntraDay(){
+    this.rsiChart.data.datasets[0].data = this.stockDataForSelectedDay.map(e => e.volume)
+    this.rsiChart.data.datasets[0].label = 'Volume'
+    this.rsiChart.data.labels = this.stockDataForSelectedDay.map(e => new Date(e.time).toLocaleTimeString())
+    this.rsiChart.options.scales.y.max = this.getMaxForChart(this.stockDataForSelectedDay.map(e => e.volume))
+    this.rsiChart.options.scales.y.min = this.getMinForChart(this.stockDataForSelectedDay.map(e => e.volume))
+    this.rsiChart.update()
   }
   listOfProfits: bufferAlgo[] = []
   topAlgos: bufferAlgo[] = []
@@ -1324,7 +1335,7 @@ export class ServerTradeScreenComponent implements OnInit {
   calcualateIntraDayRsi() {
     this.rsiData.length = 0
 
-    let tradeHigh = 0
+    /* let tradeHigh = 0
     let tradeLow = 1000000
     for (let i = 0; i < this.intraDayLongSma; i++) {
       if (this.stockDataForSelectedDay[i].stockPrice > tradeHigh) {
@@ -1345,11 +1356,11 @@ export class ServerTradeScreenComponent implements OnInit {
       }
       let newValue = (this.stockDataForSelectedDay[j].stockPrice - tradeLow) / (tradeHigh - tradeLow)
       this.rsiData.push({ value: newValue * 100, time: this.stockDataForSelectedDay[j].time })
-    }
+    } */
 
-    this.rsiChart.data.datasets[0].data = [...this.rsiData.map(e => e.value)]
+    /* this.rsiChart.data.datasets[0].data = [...this.rsiData.map(e => e.value)]
     this.rsiChart.data.labels = [...this.rsiData.map(e => new Date(e.time).toLocaleTimeString())]
-    this.rsiChart.update()
+    this.rsiChart.update() */
 
 
 
