@@ -23,6 +23,7 @@ export class AddLineComponent implements OnInit{
 readonly dialogRef = inject(MatDialogRef<AddLineComponent>);
 
 lineTypes: string[] = ['SMA', 'EMA', 'Cumulative VWAP', 'Rolling VWAP']
+addedListOfLines: lineType[] = []
 
 addLine(){
   this.listOfLinesIncoming.push({
@@ -45,7 +46,8 @@ onSubmit(){
 }
 
 ngOnInit(){
-  this.listOfLinesIncoming = this.listOfLinesIncoming.filter(e => e.lineType != 'Price')
+  this.addedListOfLines = structuredClone(this.listOfLinesIncoming)
+  this.addedListOfLines = this.addedListOfLines.filter(e => e.lineType != 'Price')
 }
 
 
