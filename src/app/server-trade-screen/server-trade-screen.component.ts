@@ -642,11 +642,16 @@ export class ServerTradeScreenComponent implements OnInit {
     this.stockChart.update()
   }
   updateVolumeChartIntraDay(){
-    this.rsiChart.data.datasets[0].data = this.stockDataForSelectedDay.map(e => e.volume)
+    let volumeData: (number | null)[] = []
+    volumeData.push(null)
+    for(let i = 1; i < this.stockDataForSelectedDay.length; i++){
+      volumeData.push(this.stockDataForSelectedDay[i].volume - this.stockDataForSelectedDay[i - 1].volume)
+    }
+    this.rsiChart.data.datasets[0].data = [...volumeData]
     this.rsiChart.data.datasets[0].label = 'Volume'
     this.rsiChart.data.labels = this.stockDataForSelectedDay.map(e => new Date(e.time).toLocaleTimeString())
-    this.rsiChart.options.scales.y.max = this.getMaxForChart(this.stockDataForSelectedDay.map(e => e.volume))
-    this.rsiChart.options.scales.y.min = this.getMinForChart(this.stockDataForSelectedDay.map(e => e.volume))
+    this.rsiChart.options.scales.y.max = this.getMaxForChart(volumeData.slice(1) as number[])
+    this.rsiChart.options.scales.y.min = this.getMinForChart(volumeData.slice(1) as number[])
     this.rsiChart.update()
   }
   listOfProfits: bufferAlgo[] = []
