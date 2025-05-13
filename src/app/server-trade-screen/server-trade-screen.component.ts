@@ -1474,7 +1474,7 @@ export class ServerTradeScreenComponent implements OnInit {
   addNewLinesToGraph(lines: lineType[]) {
     let linesNew = structuredClone(lines)
     this.stockChart.data.datasets = [this.stockChart.data.datasets[0]]
-    this.listOfAddedLines = this.listOfAddedLines.filter(e => e.lineType == 'Price')
+    this.listOfAddedLines = this.listOfAddedLines.filter(e => e.lineType != 'Price')
     this.listOfAddedLines.push({
       lineType: 'Price',
       lineLength: 1,
