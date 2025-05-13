@@ -1404,6 +1404,7 @@ export class ServerTradeScreenComponent implements OnInit {
     this.addLineDialogRef.afterClosed().subscribe(async (result: any) => {
       if (result.length > 0) {
         console.log(result)
+        this.listOfAddedLines = result
         this.addNewLinesToGraph(result)
       }
       else if (this.stockChart.data.datasets.length > 1) {
@@ -1434,6 +1435,7 @@ export class ServerTradeScreenComponent implements OnInit {
       }
       else if (linesNew[i].lineType == 'EMA') {
         lineData = this.calculateEMA(linesNew[i].lineLength)
+        console.log(this.listOfAddedLines)
         let filteredLine = this.listOfAddedLines.filter(e => e.id == linesNew[i].id)[0]
         filteredLine.data = lineData
       }
