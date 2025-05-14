@@ -128,6 +128,9 @@ export class ServerTradeScreenComponent implements OnInit {
         //this.calculateIntraDaySma()
         this.updateChartIntraDay()
         this.updateVolumeChartIntraDay()
+        this.addNewLinesToGraph(this.listOfAddedLines)
+        this.refreshRules()
+        this.onRunSimulation()
         //this.runSimulationIntraDay()
         this.isLoading = false
       }
@@ -412,7 +415,7 @@ export class ServerTradeScreenComponent implements OnInit {
         this.resultsInfo.push({
           profit: result.profit,
           numberOfTrades: result.orderLocations.length / 2,
-          profitFactor: grossLoss == 0 ? grossProfit : grossProfit / grossLoss,
+          profitFactor: grossLoss == 0 ? grossProfit : grossProfit / Math.abs(grossLoss),
           wins: wins,
           losses: losses,
           avgWinAmt: avgWinAmt,
@@ -506,7 +509,7 @@ export class ServerTradeScreenComponent implements OnInit {
       this.addNewLinesToGraph(this.listOfAddedLines)
       this.refreshRules()
       this.onRunSimulation()
-      
+
       //this.runSimulationIntraDay()
       //this.topAlgos = []
       this.isLoading = false
@@ -1104,6 +1107,10 @@ export class ServerTradeScreenComponent implements OnInit {
       }
     }
     return { orderLocations: orderLocations, profit: profit }
+  }
+  clearGraphBuyAndSellPoints() {
+    this.stockChart.options.plugins.annotation.annotations = []
+    this.stockChart.update()
   }
   updateGraphBuyAndSellPointsIntraDayNew(orderLocations: orderLocation[]) {
     console.log(orderLocations)
