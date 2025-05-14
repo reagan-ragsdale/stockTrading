@@ -378,7 +378,6 @@ export class ServerTradeScreenComponent implements OnInit {
   resultsInfo: any[] = []
   resultsColums: string[] = ["Profit", "NoTrades", "Profit Factor", "Wins", "Losses", "AvgWinAmt", "AvgLossAmt", "Expectancy"]
   onRunSimulation() {
-    console.log()
     if (this.intraDayChecked) {
       this.isLoading = true
       if (this.listOfAddedRules.BuyRules.length > 0 && this.listOfAddedRules.SellRules.length > 0) {
@@ -412,6 +411,7 @@ export class ServerTradeScreenComponent implements OnInit {
         lossRate = losses == 0 ? 0 : losses / result.orderLocations.length / 2
         avgWinAmt = wins == 0 ? 0 : grossProfit / wins
         avgLossAmt = losses == 0 ? 0 : grossLoss / losses
+        console.log([winRate, avgWinAmt, lossRate, avgLossAmt])
         this.resultsInfo.push({
           profit: result.profit,
           numberOfTrades: result.orderLocations.length / 2,
@@ -1628,7 +1628,7 @@ export class ServerTradeScreenComponent implements OnInit {
     "Rises above:": (rule, index) => (((rule.primaryObjectData[index] - rule.referencedObjectData[index]) / rule.referencedObjectData[index]) > (rule.desiredActionAmnt)),
     "Take Profit": (rule, index, buyPrice) => (this.stockDataForSelectedDay[index].stockPrice >= (buyPrice! * (1 + rule.desiredActionAmnt))),
     "Stop Loss": (rule, index, buyPrice) => (this.stockDataForSelectedDay[index].stockPrice <= (buyPrice! * (1 - rule.desiredActionAmnt))),
-    "After": (rule, index) => ('buyTime' in rule ? (this.stockDataForSelectedDay[index].time > (this.stockDataForSelectedDay[0].time + rule.buyTime)) : false),
+    "After": (rule, index) => ('buyTime' in rule ? (this.stockDataForSelectedDay[index].time > (this.stockDataForSelectedDay[0].time + (rule.buyTime * 1000 * 60))) : false),
     "Trailing Stop": (rule, index) => ('desiredActionCurrent' in rule ? (this.stockDataForSelectedDay[index].stockPrice <= rule.desiredActionCurrent) : false)
   };
 
