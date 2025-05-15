@@ -41,7 +41,8 @@ export class TradeComponent {
     stockName: '',
     orderTime: 0,
     orderType: '',
-    orderId: 0
+    orderId: 0,
+    tradeStrategy: ''
   }
 
   buyOrSell: string = 'Buy'

@@ -41,7 +41,8 @@ export class TestTradeComponent {
     shareQty: 0,
     stockName: '',
     orderTime: 0,
-    orderType: ''
+    orderType: '',
+    tradeStrategy: ''
   }
 
   buyOrSell: string = 'Buy'
