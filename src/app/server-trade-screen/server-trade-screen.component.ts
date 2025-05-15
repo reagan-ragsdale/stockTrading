@@ -143,7 +143,9 @@ export class ServerTradeScreenComponent implements OnInit {
   }
 
 
-
+  resetZoom() {
+    this.stockChart.resetZoom()
+  }
 
   createOrUpdateChart() {
 
@@ -1503,8 +1505,8 @@ export class ServerTradeScreenComponent implements OnInit {
     this.listOfAddedLines = this.listOfAddedLines.filter(e => e.lineType != 'Price')
     linesNew = linesNew.filter(e => e.lineType != 'Price')
     let priceData: LineData[] = []
-    for(let i = 0; i < this.stockDataForSelectedDay.length; i++){
-      priceData.push({value: this.stockDataForSelectedDay[i].stockPrice, time: this.stockDataForSelectedDay[i].time})
+    for (let i = 0; i < this.stockDataForSelectedDay.length; i++) {
+      priceData.push({ value: this.stockDataForSelectedDay[i].stockPrice, time: this.stockDataForSelectedDay[i].time })
     }
     this.listOfAddedLines.push({
       lineType: 'Price',
@@ -1555,14 +1557,14 @@ export class ServerTradeScreenComponent implements OnInit {
     let returnData: LineData[] = []
     let windowSum = 0
     for (let i = 0; i < lineLength - 1; i++) {
-      returnData.push({value: null, time: this.stockDataForSelectedDay[i].time})
+      returnData.push({ value: null, time: this.stockDataForSelectedDay[i].time })
       windowSum += this.stockDataForSelectedDay[i].stockPrice
     }
     windowSum += this.stockDataForSelectedDay[lineLength - 1].stockPrice
-    returnData.push({value: windowSum / lineLength, time: this.stockDataForSelectedDay[lineLength - 1].time})
+    returnData.push({ value: windowSum / lineLength, time: this.stockDataForSelectedDay[lineLength - 1].time })
     for (let j = lineLength; j < this.stockDataForSelectedDay.length; j++) {
       windowSum += this.stockDataForSelectedDay[j].stockPrice - this.stockDataForSelectedDay[j - lineLength].stockPrice
-      returnData.push({value: windowSum / lineLength, time: this.stockDataForSelectedDay[j].time})
+      returnData.push({ value: windowSum / lineLength, time: this.stockDataForSelectedDay[j].time })
     }
 
     return returnData
@@ -1574,16 +1576,16 @@ export class ServerTradeScreenComponent implements OnInit {
     let returnData: LineData[] = []
     let windowSum = 0
     for (let i = 0; i < lineLength - 1; i++) {
-      returnData.push({value: null, time: this.stockDataForSelectedDay[i].time})
+      returnData.push({ value: null, time: this.stockDataForSelectedDay[i].time })
       windowSum += this.stockDataForSelectedDay[i].stockPrice
     }
     windowSum += this.stockDataForSelectedDay[lineLength - 1].stockPrice - this.stockDataForSelectedDay[0].stockPrice
-    returnData.push({value: windowSum / lineLength, time: this.stockDataForSelectedDay[lineLength - 1].time})
+    returnData.push({ value: windowSum / lineLength, time: this.stockDataForSelectedDay[lineLength - 1].time })
 
     let multiplyFactor = 2 / (lineLength + 1)
     for (let i = lineLength; i < this.stockDataForSelectedDay.length; i++) {
       let newVal = (this.stockDataForSelectedDay[i].stockPrice * multiplyFactor) + (returnData[returnData.length - 1].value! * (1 - multiplyFactor))
-      returnData.push({value: newVal, time: this.stockDataForSelectedDay[i].time})
+      returnData.push({ value: newVal, time: this.stockDataForSelectedDay[i].time })
     }
     return returnData
   }
@@ -1595,7 +1597,7 @@ export class ServerTradeScreenComponent implements OnInit {
       cumulativePV += this.stockDataForSelectedDay[i].stockPrice * this.stockDataForSelectedDay[i].volume;
       cumulativeVolume += this.stockDataForSelectedDay[i].volume;
       const vwap = cumulativePV / cumulativeVolume;
-      returnData.push({value: vwap, time: this.stockDataForSelectedDay[i].time});
+      returnData.push({ value: vwap, time: this.stockDataForSelectedDay[i].time });
     }
 
     return returnData
@@ -1607,13 +1609,13 @@ export class ServerTradeScreenComponent implements OnInit {
     for (let i = 0; i < lineLength - 1; i++) {
       cumulativePV += this.stockDataForSelectedDay[i].stockPrice * this.stockDataForSelectedDay[i].volume
       cumulativeVolume += this.stockDataForSelectedDay[i].volume
-      returnData.push({value: null, time: this.stockDataForSelectedDay[i].time})
+      returnData.push({ value: null, time: this.stockDataForSelectedDay[i].time })
     }
     for (let i = lineLength; i < this.stockDataForSelectedDay.length; i++) {
       cumulativePV += (this.stockDataForSelectedDay[i].stockPrice * this.stockDataForSelectedDay[i].volume) - (this.stockDataForSelectedDay[i - lineLength].stockPrice * this.stockDataForSelectedDay[i - lineLength].volume);
       cumulativeVolume += this.stockDataForSelectedDay[i].volume - this.stockDataForSelectedDay[i - lineLength].volume;
       const vwap = cumulativePV / cumulativeVolume;
-      returnData.push({value: vwap, time: this.stockDataForSelectedDay[i].time});
+      returnData.push({ value: vwap, time: this.stockDataForSelectedDay[i].time });
     }
 
     return returnData
@@ -1653,7 +1655,7 @@ export class ServerTradeScreenComponent implements OnInit {
     "Stop Loss": (rule, index, buyPrice) => (this.stockDataForSelectedDay[index].stockPrice <= (buyPrice! * (1 - rule.desiredActionAmnt))),
     "After": (rule, index) => ('buyTime' in rule ? (this.stockDataForSelectedDay[index].time > (this.stockDataForSelectedDay[0].time + (rule.buyTime * 1000 * 60))) : false),
     "Trailing Stop": (rule, index) => ('desiredActionCurrent' in rule ? (this.stockDataForSelectedDay[index].stockPrice <= rule.desiredActionCurrent) : false),
-    "Trend Crosses Below:": (rule, index) => (('desiredActionLength' in rule && index >= (rule.primaryObjectLength + rule.desiredActionLength) - 2 ) ? (this.getTrend(rule.primaryObjectData, rule.desiredActionLength, index) < rule.desiredActionAmnt) : false)
+    "Trend Crosses Below:": (rule, index) => (('desiredActionLength' in rule && index >= (rule.primaryObjectLength + rule.desiredActionLength) - 2) ? (this.getTrend(rule.primaryObjectData, rule.desiredActionLength, index) < rule.desiredActionAmnt) : false)
   };
 
   addRule() {
@@ -1763,7 +1765,7 @@ export class ServerTradeScreenComponent implements OnInit {
 
   getTrend(data: LineData[], length: number, index: number): number {
     let trend = 0
-    let selectedData = data.slice(index - length, index+1)
+    let selectedData = data.slice(index - length, index + 1)
 
     let sumOfTime = selectedData.reduce((sum, val) => sum + val.time, 0) / length
     let sumOfValue = selectedData.reduce((sum, val) => sum + val.value!, 0) / length
