@@ -1611,6 +1611,7 @@ export class ServerTradeScreenComponent implements OnInit {
       cumulativeVolume += this.stockDataForSelectedDay[i].volume
       returnData.push({ value: null, time: this.stockDataForSelectedDay[i].time })
     }
+    returnData.push({ value: cumulativePV / cumulativeVolume, time: this.stockDataForSelectedDay[lineLength - 1].time });
     for (let i = lineLength; i < this.stockDataForSelectedDay.length; i++) {
       cumulativePV += (this.stockDataForSelectedDay[i].stockPrice * this.stockDataForSelectedDay[i].volume) - (this.stockDataForSelectedDay[i - lineLength].stockPrice * this.stockDataForSelectedDay[i - lineLength].volume);
       cumulativeVolume += this.stockDataForSelectedDay[i].volume - this.stockDataForSelectedDay[i - lineLength].volume;
