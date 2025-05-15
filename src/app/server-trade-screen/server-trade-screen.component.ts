@@ -1502,11 +1502,15 @@ export class ServerTradeScreenComponent implements OnInit {
     this.stockChart.data.datasets = [this.stockChart.data.datasets[0]]
     this.listOfAddedLines = this.listOfAddedLines.filter(e => e.lineType != 'Price')
     linesNew = linesNew.filter(e => e.lineType != 'Price')
+    let priceData: LineData[] = []
+    for(let i = 0; i < this.stockDataForSelectedDay.length; i++){
+      priceData.push({value: this.stockDataForSelectedDay[i].stockPrice, time: this.stockDataForSelectedDay[i].time})
+    }
     this.listOfAddedLines.push({
       lineType: 'Price',
       lineLength: 1,
       id: -1,
-      data: this.stockDataForSelectedDay.map(e => e.stockPrice)
+      data: priceData
     })
 
     for (let i = 0; i < linesNew.length; i++) {
