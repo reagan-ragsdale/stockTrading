@@ -44,13 +44,16 @@
       <mat-label>Short Sma</mat-label>
       <input matInput type="number" [(ngModel)]="interDayShortSma" placeholder="0.00" [min]="1" [max]="15" step="1">
     </mat-form-field>  -->
-    <h3 style="margin-left: 1rem;">Add Indicator: </h3>
+    <h3 style="margin-left: 1rem; color: #DBD4D1;">Add Indicator: </h3>
     <button style=" margin-top:auto; margin-bottom:auto;" mat-icon-button aria-label="Add Line" (click)="addLineToGraph()">
       <mat-icon style="color: #DBD4D1;">add</mat-icon>
     </button>
-    <h3 style="margin-left: 1rem;">Add Rule: </h3>
+    <h3 style="margin-left: 1rem; color: #DBD4D1;">Add Rule: </h3>
     <button style=" margin-top:auto; margin-bottom:auto;" mat-icon-button aria-label="Add Line" (click)="addRuleToGraph()">
       <mat-icon style="color: #DBD4D1;">add</mat-icon>
+    </button>
+    <button style=" margin-top:auto; margin-bottom:auto;" mat-icon-button aria-label="Clear Graph" (click)="clearGraphBuyAndSellPoints()">
+      Clear
     </button>
      <!-- <h3>Buy when: </h3>
     <mat-form-field *ngIf="intraDayChecked" class="example-full-width" style="max-width: 140px; height: fit-content;">

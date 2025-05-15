@@ -28,6 +28,7 @@
     "buffer": "^6.0.3",
     "chart.js": "^4.4.7",
     "chartjs-plugin-annotation": "^3.1.0",
+    "chartjs-plugin-zoom": "^2.2.0",
     "cookie-session": "^2.1.0",
     "cors": "^2.8.5",
     "curl": "^0.1.4",

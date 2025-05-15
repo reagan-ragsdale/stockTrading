@@ -5,30 +5,11 @@ export type StockInfo = {
     stopLossGainThreshold: number;
     tradeHigh: number;
 };
-export type DayTradeValues = {
-    Buy: number;
-    Sell: number;
-    Check200: number;
-    SmaLong: number;
-    SmaMedium: number;
-    SmaShort: number;
-    SmaShortSell: number;
-    SmaShortMinuteBuy: number;
-}
-export type stockDataInfo = {
-    history: number[];
-    last3600: number[];
-    last3600sma: number;
-    last1800sma: number;
-    last300sma: number;
-    last300Sellsma: number;
-    last60Buysma: number;
-    lastPrice: number;
-    lastAsk: number;
-    lastBid: number;
-}
+export type DayTradeValues = MovingAvergeCrossoverDto
+export type stockDataInfo = stockMACrossData;
 export type tradeLogDto = {
     stockName: string;
+    strategy: string;
     tradingAmount: number;
     orderId: number;
     shares: number;
@@ -38,4 +19,20 @@ export type tradeLogDto = {
     logType: string;
     time: number;
 
+}
+export type MovingAvergeCrossoverDto = {
+    MovingAverageLength: number;
+    WaitTime: number;
+    TrailingStopAmt: number;
+}
+export type stockMACrossData = {
+    priceHistory: number[];
+    volumeHistory: number[];
+    EMA: number;
+    VWAP: number;
+    cumulativePV: number;
+    cumulativeV: number;
+    lastPrice: number;
+    lastBid: number;
+    lastAsk: number;
 }

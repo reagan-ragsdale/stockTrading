@@ -27,6 +27,7 @@ export const createExcel = async (logArray: tradeLogDto[]): Promise<excelJS.Buff
 
     worksheet.columns = [
         { header: "Stock Name", key: "stockName", width: 15, alignment: { horizontal: 'center' } },
+        { header: "Strategy", key: "strategy", width: 15, alignment: { horizontal: 'center' } },
         { header: "Tading Amount", key: "tradingAmount", width: 15, alignment: { horizontal: 'center' }, numFmt: '$#,##0.00' },
         { header: "Order ID", key: "orderId", width: 20, alignment: { horizontal: 'center' } },
         { header: "Time", key: "time", width: 20, alignment: { horizontal: 'center' } },
@@ -39,7 +40,7 @@ export const createExcel = async (logArray: tradeLogDto[]): Promise<excelJS.Buff
         { header: "Number Of Trades", key: "numberOfTrades", width: 10, alignment: { horizontal: 'center' } },
         { header: "Stop Loss", key: "stopLoss", width: 10, alignment: { horizontal: 'center' } },
         { header: "Stop Loss Gain Threshold", key: "stopLossGainThreshold", width: 10, alignment: { horizontal: 'center' } },
-        { header: "Trade High", key: "tradeHigh", width: 10, alignment: { horizontal: 'center' } },
+        { header: "Trade High", key: "tradeHigh", width: 10, alignment: { horizontal: 'center' } }/* ,
         { header: "Long SMA", key: "longSma", width: 10, alignment: { horizontal: 'center' } },
         { header: "Medium SMA", key: "mediumSma", width: 10, alignment: { horizontal: 'center' } },
         { header: "Short SMA Buy", key: "shortSmaBuy", width: 10, alignment: { horizontal: 'center' } },
@@ -51,10 +52,11 @@ export const createExcel = async (logArray: tradeLogDto[]): Promise<excelJS.Buff
         { header: "Long SMA Length", key: "longSmaLength", width: 10, alignment: { horizontal: 'center' } },
         { header: "Medium SMA Length", key: "mediumSmaLength", width: 10, alignment: { horizontal: 'center' } },
         { header: "Short SMA Buy Length", key: "shortSmaBuyLength", width: 10, alignment: { horizontal: 'center' } },
-        { header: "Short SMA Sell Length", key: "shortSmaSellLength", width: 10, alignment: { horizontal: 'center' } }
+        { header: "Short SMA Sell Length", key: "shortSmaSellLength", width: 10, alignment: { horizontal: 'center' } } */
     ];
     let blankRow = {
         stockName: '',
+        strategy: '',
         tradingAmount: '',
         orderId: '',
         time: '',
@@ -67,7 +69,7 @@ export const createExcel = async (logArray: tradeLogDto[]): Promise<excelJS.Buff
         numberOfTrades: '',
         stopLoss: '',
         stopLossGainThreshold: '',
-        tradeHigh: '',
+        tradeHigh: ''/* ,
         longSma: '',
         mediumSma: '',
         shortSmaBuy: '',
@@ -79,7 +81,7 @@ export const createExcel = async (logArray: tradeLogDto[]): Promise<excelJS.Buff
         longSmaLength: '',
         mediumSmaLength: '',
         shortSmaBuyLength: '',
-        shortSmaSellLength: ''
+        shortSmaSellLength: '' */
     }
 
     let distinctOrders = logArray.map(e => e.orderId).filter((v, i, a) => a.indexOf(v) === i)
@@ -89,6 +91,7 @@ export const createExcel = async (logArray: tradeLogDto[]): Promise<excelJS.Buff
         for (let j = 0; j < filteredByOrder.length; j++) {
             worksheet.addRow({
                 stockName: filteredByOrder[j].stockName,
+                strategy: filteredByOrder[j].strategy,
                 orderId: filteredByOrder[j].orderId,
                 time: new Date(filteredByOrder[j].time).toLocaleTimeString('en-US', {
                     timeZone: 'America/Chicago',
@@ -103,7 +106,7 @@ export const createExcel = async (logArray: tradeLogDto[]): Promise<excelJS.Buff
                 numberOfTrades: filteredByOrder[j].stockInfo.numberOfTrades,
                 stopLoss: filteredByOrder[j].stockInfo.stopLoss,
                 stopLossGainThreshold: filteredByOrder[j].stockInfo.stopLossGainThreshold,
-                tradeHigh: filteredByOrder[j].stockInfo.tradeHigh,
+                tradeHigh: filteredByOrder[j].stockInfo.tradeHigh/* ,
                 longSma: filteredByOrder[j].stockDataInfo.last3600sma,
                 mediumSma: filteredByOrder[j].stockDataInfo.last1800sma,
                 shortSmaBuy: filteredByOrder[j].stockDataInfo.last300sma,
@@ -115,7 +118,7 @@ export const createExcel = async (logArray: tradeLogDto[]): Promise<excelJS.Buff
                 longSmaLength: filteredByOrder[j].dayTradeValues.SmaLong,
                 mediumSmaLength: filteredByOrder[j].dayTradeValues.SmaMedium,
                 shortSmaBuyLength: filteredByOrder[j].dayTradeValues.SmaShort,
-                shortSmaSellLength: filteredByOrder[j].dayTradeValues.SmaShortSell
+                shortSmaSellLength: filteredByOrder[j].dayTradeValues.SmaShortSell */
             })
             if (filteredByOrder[j].shares == 1) {
                 stockResults.push({ stockName: filteredByOrder[j].stockName, orderType: filteredByOrder[j].logType, buyPrice: filteredByOrder[j].stockDataInfo.lastAsk, sellPrice: filteredByOrder[j].stockDataInfo.lastBid })

@@ -52,7 +52,7 @@
                                 (onSelectionChange)="onSelectedBuyReferencedObjectTypeChange($event, buyRule.id, line)">{{isAllLine(line.lineType) ? line.lineType : line.lineType + ' - ' + line.lineLength}}</mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <mat-form-field *ngIf="buyRule.desiredAction == 'Dips below:' && buyRule.conditionType == 'Line'" class="example-full-width" style="width:fit-content;">
+                    <mat-form-field *ngIf="(buyRule.desiredAction == 'Dips below:' || buyRule.desiredAction == 'Rises Above:') && buyRule.conditionType == 'Line'" class="example-full-width" style="width:fit-content;">
                         <mat-label>By Amount:</mat-label>
                         <input matInput type="number" [(ngModel)]="buyRule.desiredActionAmnt" placeholder="0.00" [min]="0.001" [max]="1" step=".001">
                     </mat-form-field>
@@ -117,7 +117,11 @@
                                 (onSelectionChange)="onSelectedSellReferencedObjectTypeChange($event, sellRule.id, line)">{{isAllLine(line.lineType) ? line.lineType : line.lineType + ' - ' + line.lineLength}}</mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <mat-form-field *ngIf="(sellRule.desiredAction == 'Rises above:' && sellRule.conditionType == 'Line Action') || sellRule.conditionType == 'Price Action'" class="example-full-width" style="width:fit-content;">
+                    <mat-form-field *ngIf="sellRule.desiredAction == 'Trend Crosses Below:'" class="example-full-width" style="width:fit-content;">
+                        <mat-label>Trend Length</mat-label>
+                        <input matInput type="number" [(ngModel)]="sellRule.desiredActionAmnt" placeholder="0.00" [min]=".001" step=".001">
+                    </mat-form-field>
+                    <mat-form-field *ngIf="((sellRule.desiredAction == 'Rises above:' || sellRule.desiredAction == 'Trend Crosses Below:') && sellRule.conditionType == 'Line Action') || sellRule.conditionType == 'Price Action'" class="example-full-width" style="width:fit-content;">
                         <mat-label>By Amount:</mat-label>
                         <input matInput type="number" [(ngModel)]="sellRule.desiredActionAmnt" placeholder="0.00" [min]=".001" step=".001">
                     </mat-form-field>

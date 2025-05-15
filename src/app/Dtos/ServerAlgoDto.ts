@@ -10,6 +10,10 @@ export type RuleDto = {
     SellRules: SellRule[];
 
 }
+export type LineData = {
+  value: number | null;
+  time: number;
+}
 export type BuyRule = {
     id: number;
     lineId: number;
@@ -21,7 +25,7 @@ export type BuyRule = {
     primaryObject: string;
     primaryObjectType: string;
     primaryObjectLength: number;
-    primaryObjectData: any[];
+    primaryObjectData: LineData[];
     //does an action: ex crosses over, is dips x amount below
     desiredAction: string;
     desiredActionAmnt: number;
@@ -29,7 +33,7 @@ export type BuyRule = {
     referencedObject: string;
     referencedObjectType: string;
     referencedObjectLength: number;
-    referencedObjectData: any[];
+    referencedObjectData: LineData[];
 
 
 }
@@ -43,16 +47,17 @@ export type SellRule = {
     primaryObject: string;
     primaryObjectType: string;
     primaryObjectLength: number;
-    primaryObjectData: any[];
+    primaryObjectData: LineData[];
     //does an action: ex crosses over, is dips x amount below
     desiredAction: string;
     desiredActionAmnt: number;
+    desiredActionLength: number;
     desiredActionCurrent: number;
     tradeHigh: number;
     //the referenced line
     referencedObject: string;
     referencedObjectType: string;
     referencedObjectLength: number;
-    referencedObjectData: any[];
+    referencedObjectData: LineData[];
 
 }

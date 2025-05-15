@@ -18,8 +18,10 @@ import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { AddLineComponent } from "./add-line/add-line.component";
-import { BuyRule, lineType, RuleDto, SellRule } from '../Dtos/ServerAlgoDto';
+import { BuyRule, LineData, lineType, RuleDto, SellRule } from '../Dtos/ServerAlgoDto';
 import { AddRuleComponent } from './addrule/addrule.component';
+import { dbOrdersRepo } from '../../shared/tasks/dbOrders';
+import zoomPlugin from 'chartjs-plugin-zoom';
 
 
 type OperatorFunction = (rule: BuyRule | SellRule, index: number, buyPrice?: number) => boolean;
@@ -52,6 +54,7 @@ type orderLocation = {
   price: number;
   dateString: string
 }
+
 @Component({
   selector: 'app-server-trade-screen',
   imports: [MatCheckboxModule, CommonModule, MatTableModule, MatIconModule, MatProgressSpinnerModule, MatFormFieldModule, MatSelectModule, MatButtonModule, MatInputModule, FormsModule, MatSlideToggleModule, AddLineComponent, AddRuleComponent],
@@ -237,6 +240,20 @@ export class ServerTradeScreenComponent implements OnInit {
 
         },
         plugins: {
+          zoom: {
+            pan: {
+              enabled: true
+            },
+            zoom: {
+              wheel: {
+                enabled: true,
+              },
+              pinch: {
+                enabled: true
+              },
+              mode: 'xy',
+            }
+          },
           annotation: {
             annotations: this.annotationsArray
 
@@ -407,8 +424,8 @@ export class ServerTradeScreenComponent implements OnInit {
             }
           }
         }
-        winRate = wins == 0 ? 0 : wins / result.orderLocations.length / 2
-        lossRate = losses == 0 ? 0 : losses / result.orderLocations.length / 2
+        winRate = wins == 0 ? 0 : wins / (result.orderLocations.length / 2)
+        lossRate = losses == 0 ? 0 : losses / (result.orderLocations.length / 2)
         avgWinAmt = wins == 0 ? 0 : grossProfit / wins
         avgLossAmt = losses == 0 ? 0 : grossLoss / losses
         console.log([winRate, avgWinAmt, lossRate, avgLossAmt])
@@ -1493,7 +1510,7 @@ export class ServerTradeScreenComponent implements OnInit {
     })
 
     for (let i = 0; i < linesNew.length; i++) {
-      let lineData: any[] = []
+      let lineData: LineData[] = []
       if (linesNew[i].lineType == 'SMA') {
         lineData = this.calculateSMA(linesNew[i].lineLength)
         let filteredLine = this.listOfAddedLines.filter(e => e.id == linesNew[i].id)[0]
@@ -1517,7 +1534,7 @@ export class ServerTradeScreenComponent implements OnInit {
       }
       this.stockChart.data.datasets.push({
         label: linesNew[i].lineType + ' - ' + linesNew[i].lineLength,
-        data: lineData.map(e => e),
+        data: lineData.map(e => e.value),
         backgroundColor: this.listOfBGCOlors[i],
         hoverBackgroundColor: this.listOfBGCOlors[i],
         borderColor: this.listOfBGCOlors[i],
@@ -1530,18 +1547,18 @@ export class ServerTradeScreenComponent implements OnInit {
     this.stockChart.update()
   }
 
-  calculateSMA(lineLength: number): (number | null)[] {
-    let returnData: (number | null)[] = []
+  calculateSMA(lineLength: number): LineData[] {
+    let returnData: LineData[] = []
     let windowSum = 0
     for (let i = 0; i < lineLength - 1; i++) {
-      returnData.push(null)
+      returnData.push({value: null, time: this.stockDataForSelectedDay[i].time})
       windowSum += this.stockDataForSelectedDay[i].stockPrice
     }
     windowSum += this.stockDataForSelectedDay[lineLength - 1].stockPrice
-    returnData.push(windowSum / lineLength)
+    returnData.push({value: windowSum / lineLength, time: this.stockDataForSelectedDay[lineLength - 1].time})
     for (let j = lineLength; j < this.stockDataForSelectedDay.length; j++) {
       windowSum += this.stockDataForSelectedDay[j].stockPrice - this.stockDataForSelectedDay[j - lineLength].stockPrice
-      returnData.push(windowSum / lineLength)
+      returnData.push({value: windowSum / lineLength, time: this.stockDataForSelectedDay[j].time})
     }
 
     return returnData
@@ -1549,48 +1566,50 @@ export class ServerTradeScreenComponent implements OnInit {
 
 
   }
-  calculateEMA(lineLength: number): (number | null)[] {
-    let returnData: (number | null)[] = []
+  calculateEMA(lineLength: number): LineData[] {
+    let returnData: LineData[] = []
     let windowSum = 0
     for (let i = 0; i < lineLength - 1; i++) {
-      returnData.push(null)
+      returnData.push({value: null, time: this.stockDataForSelectedDay[i].time})
       windowSum += this.stockDataForSelectedDay[i].stockPrice
     }
     windowSum += this.stockDataForSelectedDay[lineLength - 1].stockPrice - this.stockDataForSelectedDay[0].stockPrice
-    returnData.push(windowSum / lineLength)
+    returnData.push({value: windowSum / lineLength, time: this.stockDataForSelectedDay[lineLength - 1].time})
 
     let multiplyFactor = 2 / (lineLength + 1)
     for (let i = lineLength; i < this.stockDataForSelectedDay.length; i++) {
-      let newVal = (this.stockDataForSelectedDay[i].stockPrice * multiplyFactor) + (returnData[returnData.length - 1]! * (1 - multiplyFactor))
-      returnData.push(newVal)
+      let newVal = (this.stockDataForSelectedDay[i].stockPrice * multiplyFactor) + (returnData[returnData.length - 1].value! * (1 - multiplyFactor))
+      returnData.push({value: newVal, time: this.stockDataForSelectedDay[i].time})
     }
     return returnData
   }
-  calculateCumulativeVWAP(): number[] {
-    let returnData: number[] = []
+  calculateCumulativeVWAP(): LineData[] {
+    let returnData: LineData[] = []
     let cumulativePV = 0;
     let cumulativeVolume = 0;
     for (let i = 0; i < this.stockDataForSelectedDay.length; i++) {
       cumulativePV += this.stockDataForSelectedDay[i].stockPrice * this.stockDataForSelectedDay[i].volume;
       cumulativeVolume += this.stockDataForSelectedDay[i].volume;
       const vwap = cumulativePV / cumulativeVolume;
-      returnData.push(vwap);
+      returnData.push({value: vwap, time: this.stockDataForSelectedDay[i].time});
     }
 
     return returnData
   }
-  calculateRollingVWAP(lineLength: number): (number | null)[] {
-    let returnData: (number | null)[] = []
+  calculateRollingVWAP(lineLength: number): LineData[] {
+    let returnData: LineData[] = []
     let cumulativePV = 0;
     let cumulativeVolume = 0;
     for (let i = 0; i < lineLength - 1; i++) {
-      returnData.push(null)
+      cumulativePV += this.stockDataForSelectedDay[i].stockPrice * this.stockDataForSelectedDay[i].volume
+      cumulativeVolume += this.stockDataForSelectedDay[i].volume
+      returnData.push({value: null, time: this.stockDataForSelectedDay[i].time})
     }
     for (let i = lineLength; i < this.stockDataForSelectedDay.length; i++) {
       cumulativePV += (this.stockDataForSelectedDay[i].stockPrice * this.stockDataForSelectedDay[i].volume) - (this.stockDataForSelectedDay[i - lineLength].stockPrice * this.stockDataForSelectedDay[i - lineLength].volume);
       cumulativeVolume += this.stockDataForSelectedDay[i].volume - this.stockDataForSelectedDay[i - lineLength].volume;
       const vwap = cumulativePV / cumulativeVolume;
-      returnData.push(vwap);
+      returnData.push({value: vwap, time: this.stockDataForSelectedDay[i].time});
     }
 
     return returnData
@@ -1622,14 +1641,15 @@ export class ServerTradeScreenComponent implements OnInit {
 
 
   operators: Record<string, OperatorFunction> = {
-    "Crosses above:": (rule, index) => rule.primaryObjectData[index] > rule.referencedObjectData[index] && (rule.primaryObjectData[index - 1] != null && rule.referencedObjectData[index - 1] != null) && (rule.primaryObjectData[index - 1] <= rule.referencedObjectData[index - 1]),
-    "Crosses below:": (rule, index) => rule.primaryObjectData[index] < rule.referencedObjectData[index] && (rule.primaryObjectData[index - 1] != null && rule.referencedObjectData[index - 1] != null) && (rule.primaryObjectData[index - 1] >= rule.referencedObjectData[index - 1]),
-    "Dips below:": (rule, index) => (((rule.primaryObjectData[index] - rule.referencedObjectData[index]) / rule.referencedObjectData[index]) < (rule.desiredActionAmnt * -1)),
-    "Rises above:": (rule, index) => (((rule.primaryObjectData[index] - rule.referencedObjectData[index]) / rule.referencedObjectData[index]) > (rule.desiredActionAmnt)),
+    "Crosses above:": (rule, index) => rule.primaryObjectData[index].value! > rule.referencedObjectData[index].value! && (rule.primaryObjectData[index - 1].value != null && rule.referencedObjectData[index - 1].value != null) && (rule.primaryObjectData[index - 1].value! <= rule.referencedObjectData[index - 1].value!),
+    "Crosses below:": (rule, index) => rule.primaryObjectData[index].value! < rule.referencedObjectData[index].value! && (rule.primaryObjectData[index - 1].value != null && rule.referencedObjectData[index - 1].value != null) && (rule.primaryObjectData[index - 1].value! >= rule.referencedObjectData[index - 1].value!),
+    "Dips below:": (rule, index) => (((rule.primaryObjectData[index].value! - rule.referencedObjectData[index].value!) / rule.referencedObjectData[index].value!) < (rule.desiredActionAmnt * -1)),
+    "Rises above:": (rule, index) => (((rule.primaryObjectData[index].value! - rule.referencedObjectData[index].value!) / rule.referencedObjectData[index].value!) > (rule.desiredActionAmnt)),
     "Take Profit": (rule, index, buyPrice) => (this.stockDataForSelectedDay[index].stockPrice >= (buyPrice! * (1 + rule.desiredActionAmnt))),
     "Stop Loss": (rule, index, buyPrice) => (this.stockDataForSelectedDay[index].stockPrice <= (buyPrice! * (1 - rule.desiredActionAmnt))),
     "After": (rule, index) => ('buyTime' in rule ? (this.stockDataForSelectedDay[index].time > (this.stockDataForSelectedDay[0].time + (rule.buyTime * 1000 * 60))) : false),
-    "Trailing Stop": (rule, index) => ('desiredActionCurrent' in rule ? (this.stockDataForSelectedDay[index].stockPrice <= rule.desiredActionCurrent) : false)
+    "Trailing Stop": (rule, index) => ('desiredActionCurrent' in rule ? (this.stockDataForSelectedDay[index].stockPrice <= rule.desiredActionCurrent) : false),
+    "Trend Crosses Below:": (rule, index) => (('desiredActionLength' in rule && index >= (rule.primaryObjectLength + rule.desiredActionLength) - 2 ) ? (this.getTrend(rule.primaryObjectData, rule.desiredActionLength, index) < rule.desiredActionAmnt) : false)
   };
 
   addRule() {
@@ -1737,9 +1757,23 @@ export class ServerTradeScreenComponent implements OnInit {
     }
   }
 
+  getTrend(data: LineData[], length: number, index: number): number {
+    let trend = 0
+    let selectedData = data.slice(index - length, index+1)
+
+    let sumOfTime = selectedData.reduce((sum, val) => sum + val.time, 0) / length
+    let sumOfValue = selectedData.reduce((sum, val) => sum + val.value!, 0) / length
+    let sumOfTimeSquared = selectedData.reduce((sum, val) => sum + (val.time * val.time), 0) / length
+    let sumOfTimeValue = selectedData.reduce((sum, val) => sum + (val.time * val.value!), 0) / length
+
+    trend = ((length * sumOfTimeValue) - (sumOfTime * sumOfValue)) / ((length * sumOfTimeSquared) - (sumOfTime * sumOfTime))
+    return trend
+  }
+
   async ngOnInit() {
     Chart.register(annotationPlugin);
     Chart.register(...registerables)
+    Chart.register(zoomPlugin)
     this.isLoading = true
     this.allHistory = await dbStockBasicHistoryRepo.find({ where: {}, orderBy: { stockName: 'asc', date: 'asc' } })
     this.distinctStocks = this.allHistory.map(e => e.stockName).filter((v, i, a) => a.indexOf(v) === i)
@@ -1755,6 +1789,10 @@ export class ServerTradeScreenComponent implements OnInit {
     this.calcualateIntraDayRsi()
     await this.getStockHistoricalData()
     //await this.getStockBasicHistoryData();
+    let today = new Date()
+    today.setHours(5, 0, 0, 0)
+    let listOfOrders = await dbOrdersRepo.find({ where: { orderTime: { $gt: today.getTime() } }, orderBy: { orderTime: 'desc' } })
+    console.log(listOfOrders)
     this.isLoading = false;
 
   }
