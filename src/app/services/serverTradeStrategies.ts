@@ -22,14 +22,14 @@ export class ServerTradeStrategies {
 
     static initialize() {
         this.stockMovingAverageCrossoverMap.set('TSLA', { MovingAverageLength: 600, WaitTime: 3600000, TrailingStopAmt: .6 })
-        this.stockMovingAverageCrossoverMap.set('AAPL', { MovingAverageLength: 600, WaitTime: 0, TrailingStopAmt: .5 })
-        this.stockMovingAverageCrossoverMap.set('MSFT', { MovingAverageLength: 600, WaitTime: 0, TrailingStopAmt: .6 })
-        this.stockMovingAverageCrossoverMap.set('AMD', { MovingAverageLength: 600, WaitTime: 0, TrailingStopAmt: .4 })
-        this.stockMovingAverageCrossoverMap.set('PLTR', { MovingAverageLength: 600, WaitTime: 0, TrailingStopAmt: .4 })
+        this.stockMovingAverageCrossoverMap.set('AAPL', { MovingAverageLength: 600, WaitTime: 3600000, TrailingStopAmt: .5 })
+        this.stockMovingAverageCrossoverMap.set('MSFT', { MovingAverageLength: 600, WaitTime: 3600000, TrailingStopAmt: .6 })
+        this.stockMovingAverageCrossoverMap.set('AMD', { MovingAverageLength: 600, WaitTime: 3600000, TrailingStopAmt: .4 })
+        this.stockMovingAverageCrossoverMap.set('PLTR', { MovingAverageLength: 600, WaitTime: 3600000, TrailingStopAmt: .4 })
         this.stockMovingAverageCrossoverMap.set('XOM', { MovingAverageLength: 600, WaitTime: 0, TrailingStopAmt: .25 })
         this.stockMovingAverageCrossoverMap.set('NVO', { MovingAverageLength: 600, WaitTime: 0, TrailingStopAmt: .25 })
         this.stockMovingAverageCrossoverMap.set('NEE', { MovingAverageLength: 600, WaitTime: 0, TrailingStopAmt: .25 })
-        this.stockMovingAverageCrossoverMap.set('NVDA', { MovingAverageLength: 600, WaitTime: 0, TrailingStopAmt: .5 })
+        this.stockMovingAverageCrossoverMap.set('NVDA', { MovingAverageLength: 600, WaitTime: 3600000, TrailingStopAmt: .5 })
 
         this.stockMACrossDataMap.set('AAPL', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, cumulativePV: 0, cumulativeV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
         this.stockMACrossDataMap.set('MSFT', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, cumulativePV: 0, cumulativeV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
