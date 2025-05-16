@@ -110,7 +110,7 @@
                                 (onSelectionChange)="onSelectedSellActionTypeChange($event, sellRule.id, buyAction)">{{buyAction}}</mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <mat-form-field *ngIf="sellRule.conditionType == 'Line Action'" style="width:fit-content;">
+                    <mat-form-field *ngIf="sellRule.conditionType == 'Line Action' && sellRule.desiredAction != 'Trend Crosses Below:'" style="width:fit-content;">
                         <mat-label>Referenced Object</mat-label>
                         <mat-select disableRipple [(value)]="sellRule.referencedObject">
                             <mat-option *ngFor="let line of availableLines" [value]="line.lineType + ' - ' + line.lineLength"
@@ -119,7 +119,7 @@
                     </mat-form-field>
                     <mat-form-field *ngIf="sellRule.desiredAction == 'Trend Crosses Below:'" class="example-full-width" style="width:fit-content;">
                         <mat-label>Trend Length</mat-label>
-                        <input matInput type="number" [(ngModel)]="sellRule.desiredActionAmnt" placeholder="0.00" [min]=".001" step=".001">
+                        <input matInput type="number" [(ngModel)]="sellRule.desiredActionLength" placeholder="0.00" [min]=".001" step=".001">
                     </mat-form-field>
                     <mat-form-field *ngIf="((sellRule.desiredAction == 'Rises above:' || sellRule.desiredAction == 'Trend Crosses Below:') && sellRule.conditionType == 'Line Action') || sellRule.conditionType == 'Price Action'" class="example-full-width" style="width:fit-content;">
                         <mat-label>By Amount:</mat-label>

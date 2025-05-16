@@ -136,7 +136,7 @@ export const createExcel = async (logArray: tradeLogDto[]): Promise<excelJS.Buff
     let allAvgLossAmt = 0
     let today = new Date()
     today.setHours(5,0,0,0)
-    let orders = await dbOrdersRepo.find({where: {orderTime: {$gt: today.getTime()}}})
+    let orders = await dbOrdersRepo.find({where: {orderTime: {$gt: today.getTime()}}, orderBy: { orderTime : 'asc'}})
     let distinctStocks = orders.map(e => e.stockName).filter((v, i, a) => a.indexOf(v) === i)
     for (let i = 0; i < distinctStocks.length; i++) {
         let stockProfit = 0

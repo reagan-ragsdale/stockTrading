@@ -38,11 +38,9 @@ import { userRepo } from '../../shared/tasks/Users';
 import { dbStockBasicHistoryRepo } from '../../shared/tasks/dbStockBasicHistory';
 import { AddGraphComponent } from "./add-graph/add-graph.component";
 import { SchwabController } from '../../shared/controllers/SchwabController';
+import { LineData, lineType } from '../Dtos/ServerAlgoDto';
 
-type lineType = {
-  id: number,
-  smaLength: number
-}
+
 //import { WebSocket } from 'ws';
 @Component({
   selector: 'app-home-screen',
@@ -310,77 +308,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       this.refreshAddedLines()
     }
     this.refreshStochData()
-    /* if (this.isUserOrBot == 'Bot' && this.isBotAuthorized == true && !this.isOrderPending) {
-      let shouldPlaceOrder: buySellDto = {
-        shouldExecuteOrder: false
-      }
-      if (this.selectedAlgo == 'highLow') {
-        shouldPlaceOrder = AnalysisService.checkIsLowBuyIsHighSell(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1), this.selectedStockHistoryData, this.stopLossPrice, this.tradeInitialAverage, this.tradeCurrentHigh, this.trendGutterFinal, this.stopLossLagFinal)
-      }
-      else if(this.selectedAlgo == 'trend'){
-        shouldPlaceOrder = AnalysisService.trendTrading(this.chartData.history.slice((this.chartData.history.length - this.trendAlgoStartingPoint) * -1), this.selectedStockHistoryData, this.stopLossPrice, this.tradeCurrentHigh, this.tradeInitialAverage, this.trendGutterFinal, this.stopLossLagFinal)
-      }
-      else if(this.selectedAlgo == 'followUp'){
-        shouldPlaceOrder = AnalysisService.followUp(this.chartData.history[this.chartData.history.length - 1], this.selectedStockHistoryData, this.stopLossPrice, this.tradeCurrentHigh, this.tradeInitialAverage, this.selectedStopLossAdjustmentAmt)
-      }
-
-      //add check to see when the last order was placed. Don't want to be placing order every 3 seconds
-      //maybe wait 30 seconds
-      if (shouldPlaceOrder.shouldExecuteOrder == true) {
-        if (!this.isOrderPending) {
-          await this.placeOrder(shouldPlaceOrder.isBuyOrSell!)
-          this.stopLossPrice = shouldPlaceOrder.stopLossPrice!
-          this.tradeCurrentHigh = shouldPlaceOrder.tradeHigh!
-          this.tradeInitialAverage = shouldPlaceOrder.initialAverage!
-          this.stockChart.options.plugins.annotation.annotations.orderLine.yMin = this.selectedStockHistoryData[0]?.stockPrice
-          this.stockChart.options.plugins.annotation.annotations.orderLine.yMax = this.selectedStockHistoryData[0]?.stockPrice
-          this.stockChart.options.plugins.annotation.annotations.avgLine.yMin = this.tradeInitialAverage
-          this.stockChart.options.plugins.annotation.annotations.avgLine.yMax = this.tradeInitialAverage
-          if (shouldPlaceOrder.soldAtStopLoss == true) {
-            this.isBotAuthorized = false;
-          }
-        }
-
-      }
-      else {
-
-        if (shouldPlaceOrder.stopLossPrice !== undefined) {
-          this.stopLossPrice = shouldPlaceOrder.stopLossPrice
-          this.stockChart.options.plugins.annotation.annotations.stopLossLine.yMin = this.stopLossPrice
-          this.stockChart.options.plugins.annotation.annotations.stopLossLine.yMax = this.stopLossPrice
-        }
-        if (shouldPlaceOrder.tradeHigh !== undefined) {
-          this.tradeCurrentHigh = shouldPlaceOrder.tradeHigh
-        }
-      }
-      if (shouldPlaceOrder.targetPrice !== undefined) {
-        this.targetPrice = shouldPlaceOrder.targetPrice
-        this.stockChart.options.plugins.annotation.annotations.targetLine.yMin = this.targetPrice
-        this.stockChart.options.plugins.annotation.annotations.targetLine.yMax = this.targetPrice
-      }
-      if(shouldPlaceOrder.containsTrendInfo == true){
-         this.stockChart.options.plugins.annotation.annotations.trendLine.xMin = shouldPlaceOrder.xMin! + this.trendAlgoStartingPoint
-         this.stockChart.options.plugins.annotation.annotations.trendLine.xMax = shouldPlaceOrder.xMax! + this.trendAlgoStartingPoint
-         this.stockChart.options.plugins.annotation.annotations.trendLine.yMin = shouldPlaceOrder.yMin
-         this.stockChart.options.plugins.annotation.annotations.trendLine.yMax = shouldPlaceOrder.yMax
-         this.stockChart.options.plugins.annotation.annotations.trendLineAbove.xMin = shouldPlaceOrder.xMin! + this.trendAlgoStartingPoint
-         this.stockChart.options.plugins.annotation.annotations.trendLineAbove.xMax = shouldPlaceOrder.xMax! + this.trendAlgoStartingPoint
-         this.stockChart.options.plugins.annotation.annotations.trendLineAbove.yMin = shouldPlaceOrder.aboveyMin!
-         this.stockChart.options.plugins.annotation.annotations.trendLineAbove.yMax = shouldPlaceOrder.aboveyMax!
-         this.stockChart.options.plugins.annotation.annotations.trendLineBelow.xMin = shouldPlaceOrder.xMin! + this.trendAlgoStartingPoint
-         this.stockChart.options.plugins.annotation.annotations.trendLineBelow.xMax = shouldPlaceOrder.xMax! + this.trendAlgoStartingPoint
-         this.stockChart.options.plugins.annotation.annotations.trendLineBelow.yMin = shouldPlaceOrder.belowyMin!
-         this.stockChart.options.plugins.annotation.annotations.trendLineBelow.yMax = shouldPlaceOrder.belowyMax!
-         this.stockChart.options.plugins.annotation.annotations.gutterLineAbove.xMin = shouldPlaceOrder.xMin! + this.trendAlgoStartingPoint
-         this.stockChart.options.plugins.annotation.annotations.gutterLineAbove.xMax = shouldPlaceOrder.xMax! + this.trendAlgoStartingPoint
-         this.stockChart.options.plugins.annotation.annotations.gutterLineAbove.yMin = shouldPlaceOrder.gutterLineAboveMin!
-         this.stockChart.options.plugins.annotation.annotations.gutterLineAbove.yMax = shouldPlaceOrder.gutterLineAboveMax!
-         this.stockChart.options.plugins.annotation.annotations.gutterLineBelow.xMin = shouldPlaceOrder.xMin! + this.trendAlgoStartingPoint
-         this.stockChart.options.plugins.annotation.annotations.gutterLineBelow.xMax = shouldPlaceOrder.xMax! + this.trendAlgoStartingPoint
-         this.stockChart.options.plugins.annotation.annotations.gutterLineBelow.yMin = shouldPlaceOrder.gutterLineBelowMin!
-         this.stockChart.options.plugins.annotation.annotations.gutterLineBelow.yMax = shouldPlaceOrder.gutterLineBelowMax! 
-      }
-    } */
+    
     this.updateChart()
 
 
@@ -389,11 +317,11 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   refreshAddedLines() {
     for (let i = 0; i < this.listOfAddedLines.length; i++) {
       let newVal = 0
-      for (let j = this.chartData.history.length - 1; j >= this.chartData.history.length - this.listOfAddedLines[i].smaLength; j--) {
+      for (let j = this.chartData.history.length - 1; j >= this.chartData.history.length - this.listOfAddedLines[i].lineLength; j--) {
         newVal += this.chartData.history[j]
       }
-      let selectedDataSet = this.stockChart.data.datasets.filter((e: { label: string; }) => e.label == this.listOfAddedLines[i].smaLength.toString())[0]
-      selectedDataSet.data.push(newVal / this.listOfAddedLines[i].smaLength)
+      let selectedDataSet = this.stockChart.data.datasets.filter((e: { label: string; }) => e.label == this.listOfAddedLines[i].lineLength.toString())[0]
+      selectedDataSet.data.push(newVal / this.listOfAddedLines[i].lineLength)
     }
   }
   refreshStochData(){
@@ -438,27 +366,30 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
   listOfBGCOlors: string[] = ['#1ca0de', '#eeb528', '#d82c2c']
   listOfAddedLines: lineType[] = []
   listOfSmaLines: any[] = []
-  addNewLinesToGraph(listOfLines: any[]) {
+  addNewLinesToGraph(listOfLines: lineType[]) {
     this.listOfAddedLines = []
     let newLines = [...listOfLines]
-    console.log('here addNewLinesToGraph')
     this.stockChart.data.datasets = [this.stockChart.data.datasets[0]]
-    console.log(this.stockChart.data.datasets)
-
-    console.log(newLines.length)
     for (let i = 0; i < newLines.length; i++) {
-      console.log('here 2: ' + i)
-      this.listOfAddedLines.push({ id: i, smaLength: newLines[i].smaLength })
-      let smaResult = this.calculateSma(newLines[i].smaLength)
-      this.listOfSmaLines.push({ smaLength: newLines[i].smaLength, smaValues: smaResult })
-      let newData: any[] = []
-      for (let j = 0; j < newLines[i].smaLength - 1; j++) {
-        newData.push(null)
+      let lineData: LineData[] = []
+
+      if(newLines[i].lineType == 'SMA'){
+        lineData = this.calculateSMA(newLines[i].lineLength)
       }
-      newData.push(...smaResult.map(e => e.avg))
+      else if(newLines[i].lineType == 'EMA'){
+        lineData = this.calculateEMA(newLines[i].lineLength)
+      }
+      else if(newLines[i].lineType == 'Cumulative VWAP'){
+        lineData = this.calculateCumulativeVWAP()
+      }
+      else if(newLines[i].lineType == 'Rolling VWAP'){
+        lineData = this.calculateRollingVWAP(newLines[i].lineLength)
+      }
+      this.listOfAddedLines.push({ id: newLines[i].id, lineType: newLines[i].lineType, lineLength: newLines[i].lineLength, data: lineData })
+
       this.stockChart.data.datasets.push({
-        label: newLines[i].smaLength.toString(),
-        data: newData,
+        label: newLines[i].lineType + ' - ' + newLines[i].lineLength.toString(),
+        data: lineData.map(e => e.value),
         backgroundColor: this.listOfBGCOlors[i],
         hoverBackgroundColor: this.listOfBGCOlors[i],
         borderColor: this.listOfBGCOlors[i],
@@ -471,7 +402,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     console.log('done addNewLinesToGraph')
     this.stockChart.update()
   }
-  calculateSma(lengthOfSma: number) {
+  calculateSMA(lengthOfSma: number) {
     console.log('here 3')
     let returnArray: any[] = []
     let windowSum = 0
@@ -485,6 +416,55 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     }
     console.log('here 4')
     return returnArray
+  }
+  calculateEMA(lineLength: number): LineData[] {
+    let returnData: LineData[] = []
+    let windowSum = 0
+    for (let i = 0; i < lineLength - 1; i++) {
+      returnData.push({ value: null, time: this.chartInfo[i].time })
+      windowSum += this.chartInfo[i].stockPrice
+    }
+    windowSum += this.chartInfo[lineLength - 1].stockPrice
+    returnData.push({ value: windowSum / lineLength, time: this.chartInfo[lineLength - 1].time })
+
+    let multiplyFactor = 2 / (lineLength + 1)
+    for (let i = lineLength; i < this.chartInfo.length; i++) {
+      let newVal = (this.chartInfo[i].stockPrice * multiplyFactor) + (returnData[returnData.length - 1].value! * (1 - multiplyFactor))
+      returnData.push({ value: newVal, time: this.chartInfo[i].time })
+    }
+    return returnData
+  }
+  calculateCumulativeVWAP(): LineData[] {
+    let returnData: LineData[] = []
+    let cumulativePV = 0;
+    let cumulativeVolume = 0;
+    for (let i = 0; i < this.chartInfo.length; i++) {
+      cumulativePV += this.chartInfo[i].stockPrice * this.chartInfo[i].volume;
+      cumulativeVolume += this.chartInfo[i].volume;
+      const vwap = cumulativePV / cumulativeVolume;
+      returnData.push({ value: vwap, time: this.chartInfo[i].time });
+    }
+
+    return returnData
+  }
+  calculateRollingVWAP(lineLength: number): LineData[] {
+    let returnData: LineData[] = []
+    let cumulativePV = 0;
+    let cumulativeVolume = 0;
+    for (let i = 0; i < lineLength - 1; i++) {
+      cumulativePV += this.chartInfo[i].stockPrice * this.chartInfo[i].volume
+      cumulativeVolume += this.chartInfo[i].volume
+      returnData.push({ value: null, time: this.chartInfo[i].time })
+    }
+    returnData.push({ value: cumulativePV / cumulativeVolume, time: this.chartInfo[lineLength - 1].time });
+    for (let i = lineLength; i < this.chartInfo.length; i++) {
+      cumulativePV += (this.chartInfo[i].stockPrice * this.chartInfo[i].volume) - (this.chartInfo[i - lineLength].stockPrice * this.chartInfo[i - lineLength].volume);
+      cumulativeVolume += this.chartInfo[i].volume - this.chartInfo[i - lineLength].volume;
+      const vwap = cumulativePV / cumulativeVolume;
+      returnData.push({ value: vwap, time: this.chartInfo[i].time });
+    }
+
+    return returnData
   }
   createOrUpdateChart() {
 
@@ -1080,9 +1060,9 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     await this.getStockInfo()
     this.userData = await dbTokenRepo.findFirst({ userId: remult.user?.id }) as DbTOkens
     this.createOrUpdateChart()
-    this.createStochChart()
+    //this.createStochChart()
     await this.getStockData()
-    await this.loadStockVariance()
+    //await this.loadStockVariance()
     this.startWebsocket()
 
 

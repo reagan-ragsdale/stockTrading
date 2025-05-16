@@ -8,14 +8,13 @@ import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDi
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { lineType } from '../../Dtos/ServerAlgoDto';
 
-type lineType = {
-  id: number,
-  smaLength: number
-}
+
 @Component({
   selector: 'app-add-graph',
-  imports: [CommonModule,MatDialogContent,MatCheckboxModule,MatIconModule,MatButtonToggleModule,MatDialogActions,MatDialogTitle,MatButtonModule,MatFormFieldModule,MatInputModule,FormsModule],
+  imports: [CommonModule,MatDialogContent,MatCheckboxModule,MatIconModule,MatButtonToggleModule,MatDialogActions,MatDialogTitle,MatButtonModule,MatFormFieldModule,MatInputModule,FormsModule,MatSelectModule],
   templateUrl: './add-graph.component.html',
   styleUrl: './add-graph.component.css'
 })
@@ -27,12 +26,15 @@ export class AddGraphComponent {
 
   readonly dialogRef = inject(MatDialogRef<AddGraphComponent>);
 
+  lineTypes: string[] = ['SMA', 'EMA', 'Cumulative VWAP', 'Rolling VWAP']
 
 
   addLine(){
     this.listOfLinesIncoming.push({
       id: this.listOfLinesIncoming.length,
-      smaLength: 60
+      lineType: '',
+      lineLength: 0,
+      data: []
     })
   }
   removeLine(id: number){
