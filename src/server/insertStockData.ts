@@ -21,7 +21,7 @@ export const socketCall = async (): Promise<void> => {
     let startTime = startDate.getTime()
     let endingTime = startTime + 53990000
 
-    let activeStrategies: string[] = ['MACrossover', 'Scalp']
+    let activeStrategies: string[] = ['MACrossover']
 
     //admin user to start websocket
     const userData = await dbTokenRepo.findFirst({ id: 'asdfghjkl' }) as DbTOkens

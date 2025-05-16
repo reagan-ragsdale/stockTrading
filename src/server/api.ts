@@ -105,6 +105,7 @@ export const api = remultExpress({
       cron.schedule('45 20 * * 1-5 ', () => loadDailyDataIntoHistory()),
       cron.schedule('10 20 * * 1-5 ', () => LoggerController.sendEmailCall())
       //LoggerController.sendEmailCall()
+      loadDailyDataIntoHistory()
       
       //getDailyStockInfo()
       
