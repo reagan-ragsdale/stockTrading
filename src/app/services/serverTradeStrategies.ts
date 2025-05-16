@@ -30,35 +30,35 @@ export class ServerTradeStrategies {
 
 
     static initialize() {
-        this.stockMovingAverageCrossoverMap.set('TSLA', { MovingAverageLength: 900, WaitTime: 3600000, TrailingStopAmt: .6 })
-        this.stockMovingAverageCrossoverMap.set('AAPL', { MovingAverageLength: 300, WaitTime: 1800000, TrailingStopAmt: .5 })
-        this.stockMovingAverageCrossoverMap.set('MSFT', { MovingAverageLength: 600, WaitTime: 3600000, TrailingStopAmt: .6 })
-        this.stockMovingAverageCrossoverMap.set('AMD', { MovingAverageLength: 600, WaitTime: 3600000, TrailingStopAmt: .4 })
-        this.stockMovingAverageCrossoverMap.set('PLTR', { MovingAverageLength: 600, WaitTime: 3600000, TrailingStopAmt: .4 })
-        this.stockMovingAverageCrossoverMap.set('XOM', { MovingAverageLength: 600, WaitTime: 1800000, TrailingStopAmt: .25 })
-        this.stockMovingAverageCrossoverMap.set('NVO', { MovingAverageLength: 600, WaitTime: 1800000, TrailingStopAmt: .25 })
-        this.stockMovingAverageCrossoverMap.set('NEE', { MovingAverageLength: 600, WaitTime: 1800000, TrailingStopAmt: .25 })
-        this.stockMovingAverageCrossoverMap.set('NVDA', { MovingAverageLength: 600, WaitTime: 3600000, TrailingStopAmt: .5 })
+        this.stockMovingAverageCrossoverMap.set('TSLA', { MovingAverageLength: 900, RollingVWAPLength: 1800, WaitTime: 3600000, TrailingStopAmt: .6, StopLossAmt: 0.002 })
+        this.stockMovingAverageCrossoverMap.set('AAPL', { MovingAverageLength: 300, RollingVWAPLength: 1800, WaitTime: 1800000, TrailingStopAmt: .5, StopLossAmt: 0.002 })
+        this.stockMovingAverageCrossoverMap.set('MSFT', { MovingAverageLength: 600, RollingVWAPLength: 1800, WaitTime: 1800000, TrailingStopAmt: .6, StopLossAmt: 0.002 })
+        this.stockMovingAverageCrossoverMap.set('AMD', { MovingAverageLength: 600, RollingVWAPLength: 1800, WaitTime: 3600000, TrailingStopAmt: .4, StopLossAmt: 0.003 })
+        this.stockMovingAverageCrossoverMap.set('PLTR', { MovingAverageLength: 600, RollingVWAPLength: 1800, WaitTime: 3600000, TrailingStopAmt: .4, StopLossAmt: 0.003 })
+        this.stockMovingAverageCrossoverMap.set('XOM', { MovingAverageLength: 600, RollingVWAPLength: 1800, WaitTime: 1800000, TrailingStopAmt: .25, StopLossAmt: 0.003 })
+        this.stockMovingAverageCrossoverMap.set('NVO', { MovingAverageLength: 600, RollingVWAPLength: 1800, WaitTime: 1800000, TrailingStopAmt: .25, StopLossAmt: 0.003 })
+        this.stockMovingAverageCrossoverMap.set('NEE', { MovingAverageLength: 600, RollingVWAPLength: 1800, WaitTime: 1800000, TrailingStopAmt: .25, StopLossAmt: 0.003 })
+        this.stockMovingAverageCrossoverMap.set('NVDA', { MovingAverageLength: 600, RollingVWAPLength: 1800, WaitTime: 3600000, TrailingStopAmt: .5, StopLossAmt: 0.003 })
 
-        this.stockMACrossDataMap.set('AAPL', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, cumulativePV: 0, cumulativeV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
-        this.stockMACrossDataMap.set('MSFT', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, cumulativePV: 0, cumulativeV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
-        this.stockMACrossDataMap.set('PLTR', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, cumulativePV: 0, cumulativeV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
-        this.stockMACrossDataMap.set('AMD', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, cumulativePV: 0, cumulativeV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
-        this.stockMACrossDataMap.set('TSLA', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, cumulativePV: 0, cumulativeV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
-        this.stockMACrossDataMap.set('XOM', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, cumulativePV: 0, cumulativeV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
-        this.stockMACrossDataMap.set('NVO', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, cumulativePV: 0, cumulativeV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
-        this.stockMACrossDataMap.set('NEE', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, cumulativePV: 0, cumulativeV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
-        this.stockMACrossDataMap.set('NVDA', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, cumulativePV: 0, cumulativeV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+        this.stockMACrossDataMap.set('AAPL', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+        this.stockMACrossDataMap.set('MSFT', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+        this.stockMACrossDataMap.set('PLTR', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+        this.stockMACrossDataMap.set('AMD', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+        this.stockMACrossDataMap.set('TSLA', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+        this.stockMACrossDataMap.set('XOM', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+        this.stockMACrossDataMap.set('NVO', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+        this.stockMACrossDataMap.set('NEE', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+        this.stockMACrossDataMap.set('NVDA', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
 
-        this.stockScalpingMap.set('TSLA', { MovingAverageLength: 600, WaitTime: 3600000, TrailingStopAmt: .6 })
-        this.stockScalpingMap.set('AAPL', { MovingAverageLength: 600, WaitTime: 0, TrailingStopAmt: .6 })
-        this.stockScalpingMap.set('MSFT', { MovingAverageLength: 600, WaitTime: 0, TrailingStopAmt: .6 })
-        this.stockScalpingMap.set('AMD', { MovingAverageLength: 600, WaitTime: 0, TrailingStopAmt: .6 })
-        this.stockScalpingMap.set('PLTR', { MovingAverageLength: 600, WaitTime: 0, TrailingStopAmt: .6 })
-        this.stockScalpingMap.set('XOM', { MovingAverageLength: 600, WaitTime: 0, TrailingStopAmt: .6 })
-        this.stockScalpingMap.set('NVO', { MovingAverageLength: 600, WaitTime: 0, TrailingStopAmt: .6 })
-        this.stockScalpingMap.set('NEE', { MovingAverageLength: 600, WaitTime: 0, TrailingStopAmt: .6 })
-        this.stockScalpingMap.set('NVDA', { MovingAverageLength: 600, WaitTime: 0, TrailingStopAmt: .6 })
+     /*    this.stockScalpingMap.set('TSLA', { MovingAverageLength: 600, RollingVWAPLength: 1800, WaitTime: 3600000, TrailingStopAmt: .6 })
+        this.stockScalpingMap.set('AAPL', { MovingAverageLength: 600, RollingVWAPLength: 1800, WaitTime: 0, TrailingStopAmt: .6 })
+        this.stockScalpingMap.set('MSFT', { MovingAverageLength: 600, RollingVWAPLength: 1800, WaitTime: 0, TrailingStopAmt: .6 })
+        this.stockScalpingMap.set('AMD', { MovingAverageLength: 600, RollingVWAPLength: 1800, WaitTime: 0, TrailingStopAmt: .6 })
+        this.stockScalpingMap.set('PLTR', { MovingAverageLength: 600, RollingVWAPLength: 1800, WaitTime: 0, TrailingStopAmt: .6 })
+        this.stockScalpingMap.set('XOM', { MovingAverageLength: 600, RollingVWAPLength: 1800, WaitTime: 0, TrailingStopAmt: .6 })
+        this.stockScalpingMap.set('NVO', { MovingAverageLength: 600, RollingVWAPLength: 1800, WaitTime: 0, TrailingStopAmt: .6 })
+        this.stockScalpingMap.set('NEE', { MovingAverageLength: 600, RollingVWAPLength: 1800, WaitTime: 0, TrailingStopAmt: .6 })
+        this.stockScalpingMap.set('NVDA', { MovingAverageLength: 600, RollingVWAPLength: 1800, WaitTime: 0, TrailingStopAmt: .6 }) */
 
         for (let i = 0; i < this.listOfTradableStocks.length; i++) {
             for (let j = 0; j < this.activeStrategies.length; j++) {
@@ -113,6 +113,14 @@ export class ServerTradeStrategies {
             stockStrategyData.EMA = (stockData.stockPrice * multiplyer) + (stockStrategyData.EMA * (1 - multiplyer))
             stockStrategyData.VWAP = stockStrategyData.cumulativePV / stockStrategyData.cumulativeV
         }
+        if(stockStrategyData.priceHistory.length == stockStrategyInfo.RollingVWAPLength){
+            stockStrategyData.RollingVWAP = stockStrategyData.cumulativePV / stockStrategyData.cumulativeV
+        }
+        else if(stockStrategyData.priceHistory.length > stockStrategyInfo.RollingVWAPLength){
+            let tempCumulativePV = stockStrategyData.cumulativePV - (stockStrategyData.priceHistory[stockStrategyData.priceHistory.length - stockStrategyInfo.RollingVWAPLength] * stockStrategyData.volumeHistory[stockStrategyData.volumeHistory.length - stockStrategyInfo.RollingVWAPLength])
+            let tempCumulativeV = stockStrategyData.cumulativeV - stockStrategyData.volumeHistory[stockStrategyData.volumeHistory.length - stockStrategyInfo.RollingVWAPLength]
+            stockStrategyData.RollingVWAP = tempCumulativePV / tempCumulativeV
+        }
 
         let nonTradeLog: tradeLogDto | null = null
         let isBuy = true;
@@ -162,7 +170,7 @@ export class ServerTradeStrategies {
         if (isBuy && stockInfo.canTrade) {
             if (stockStrategyData.EMA > stockStrategyData.VWAP) {
                 stockInfo.numberOfTrades++
-                stockInfo.stopLoss = stockData.askPrice * (1 - .002)
+                stockInfo.stopLoss = stockData.askPrice * (1 - stockStrategyInfo.TrailingStopAmt)
                 stockInfo.tradeHigh = stockData.askPrice
                 stockInfo.stopLossGainThreshold = 0
                 return {
@@ -215,7 +223,7 @@ export class ServerTradeStrategies {
                 nonTradeLog.logType += 'Increased Trailing Stop - '
             } */
 
-            if (stockStrategyData.EMA < stockStrategyData.VWAP) {
+            if (stockStrategyData.EMA < stockStrategyData.RollingVWAP) {
                 stockInfo.numberOfTrades++
                 stockInfo.stopLoss = 0
                 stockInfo.tradeHigh = 0

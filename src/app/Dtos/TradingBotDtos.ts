@@ -22,14 +22,17 @@ export type tradeLogDto = {
 }
 export type MovingAvergeCrossoverDto = {
     MovingAverageLength: number;
+    RollingVWAPLength: number;
     WaitTime: number;
     TrailingStopAmt: number;
+    StopLossAmt: number;
 }
 export type stockMACrossData = {
     priceHistory: number[];
     volumeHistory: number[];
     EMA: number;
     VWAP: number;
+    RollingVWAP: number;
     cumulativePV: number;
     cumulativeV: number;
     lastPrice: number;
