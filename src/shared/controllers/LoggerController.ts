@@ -23,7 +23,7 @@ export class LoggerController {
             await LoggerController.sendEmail(excelBuffer)
             let today = new Date()
             today.setHours(5, 0, 0, 0)
-            let listOfOrders = await dbOrdersRepo.find({ where: { orderTime: { $gt: today.getTime() } }, orderBy: { orderTime: 'desc' } })
+            let listOfOrders = await dbOrdersRepo.find({ where: { orderTime: { $gt: today.getTime() } }, orderBy: { orderTime: 'asc' } })
             let totalProfit = 0
             for (let i = 0; i < listOfOrders.length; i++) {
                 if (listOfOrders[i].orderType == 'Sell') {
