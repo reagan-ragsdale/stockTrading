@@ -18,17 +18,26 @@ export class ServerTradeStrategies {
 
 
 
+    ////
+    /////
+    ////
+    ////
+    //Buy when respective ema moves above the cumulative vwap and sell when ema moves belwo the 1800 rolling vwap
+    //
+    ////
+    /////
+    ////
 
 
     static initialize() {
-        this.stockMovingAverageCrossoverMap.set('TSLA', { MovingAverageLength: 600, WaitTime: 3600000, TrailingStopAmt: .6 })
-        this.stockMovingAverageCrossoverMap.set('AAPL', { MovingAverageLength: 600, WaitTime: 3600000, TrailingStopAmt: .5 })
+        this.stockMovingAverageCrossoverMap.set('TSLA', { MovingAverageLength: 900, WaitTime: 3600000, TrailingStopAmt: .6 })
+        this.stockMovingAverageCrossoverMap.set('AAPL', { MovingAverageLength: 300, WaitTime: 1800000, TrailingStopAmt: .5 })
         this.stockMovingAverageCrossoverMap.set('MSFT', { MovingAverageLength: 600, WaitTime: 3600000, TrailingStopAmt: .6 })
         this.stockMovingAverageCrossoverMap.set('AMD', { MovingAverageLength: 600, WaitTime: 3600000, TrailingStopAmt: .4 })
         this.stockMovingAverageCrossoverMap.set('PLTR', { MovingAverageLength: 600, WaitTime: 3600000, TrailingStopAmt: .4 })
-        this.stockMovingAverageCrossoverMap.set('XOM', { MovingAverageLength: 600, WaitTime: 0, TrailingStopAmt: .25 })
-        this.stockMovingAverageCrossoverMap.set('NVO', { MovingAverageLength: 600, WaitTime: 0, TrailingStopAmt: .25 })
-        this.stockMovingAverageCrossoverMap.set('NEE', { MovingAverageLength: 600, WaitTime: 0, TrailingStopAmt: .25 })
+        this.stockMovingAverageCrossoverMap.set('XOM', { MovingAverageLength: 600, WaitTime: 1800000, TrailingStopAmt: .25 })
+        this.stockMovingAverageCrossoverMap.set('NVO', { MovingAverageLength: 600, WaitTime: 1800000, TrailingStopAmt: .25 })
+        this.stockMovingAverageCrossoverMap.set('NEE', { MovingAverageLength: 600, WaitTime: 1800000, TrailingStopAmt: .25 })
         this.stockMovingAverageCrossoverMap.set('NVDA', { MovingAverageLength: 600, WaitTime: 3600000, TrailingStopAmt: .5 })
 
         this.stockMACrossDataMap.set('AAPL', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, cumulativePV: 0, cumulativeV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
@@ -189,7 +198,7 @@ export class ServerTradeStrategies {
                 }
                 nonTradeLog.logType += 'Increased Trade High - '
             }
-            if (stockInfo.tradeHigh > (lastOrder[0].stockPrice + stockStrategyInfo.TrailingStopAmt)) {
+            /* if (stockInfo.tradeHigh > (lastOrder[0].stockPrice + stockStrategyInfo.TrailingStopAmt)) {
                 stockInfo.stopLossGainThreshold = stockInfo.tradeHigh - stockStrategyInfo.TrailingStopAmt
                 nonTradeLog ??= {
                     stockName: stockData.stockName,
@@ -204,7 +213,7 @@ export class ServerTradeStrategies {
                     time: stockData.time,
                 }
                 nonTradeLog.logType += 'Increased Trailing Stop - '
-            }
+            } */
 
             if (stockStrategyData.EMA < stockStrategyData.VWAP) {
                 stockInfo.numberOfTrades++
@@ -227,7 +236,7 @@ export class ServerTradeStrategies {
                 }
             }
 
-            if (stockData.bidPrice <= stockInfo.stopLossGainThreshold) {
+            /* if (stockData.bidPrice <= stockInfo.stopLossGainThreshold) {
                 stockInfo.numberOfTrades++
                 stockInfo.stopLoss = 0
                 stockInfo.tradeHigh = 0
@@ -246,7 +255,7 @@ export class ServerTradeStrategies {
                         time: stockData.time,
                     }
                 }
-            }
+            } */
             if (stockData.bidPrice <= stockInfo.stopLoss) {
                 stockInfo.numberOfTrades++
                 stockInfo.stopLoss = 0
