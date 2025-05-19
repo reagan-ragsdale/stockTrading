@@ -128,9 +128,9 @@ export const socketCall = async (): Promise<void> => {
                                     isBuy = lastOrder[0].orderType == 'Sell' ? true : false;
                                 }
 
-                                if (isBuy && (data.askPrice > (userFinance?.spending!  + 1))) {
+                                if (isBuy) {
                                     let result = ServerTradeStrategies.shouldExecuteOrder(data, activeStrategies[strategy], lastOrder)
-                                    if (result.shouldTrade) {
+                                    if (result.shouldTrade  && (data.askPrice > (userFinance?.spending!  + 1))) {
                                         let orderId = Math.floor(Math.random() * 10000000000)
                                         await dbOrdersRepo.insert({
                                             userId: 'Shared',
@@ -156,7 +156,7 @@ export const socketCall = async (): Promise<void> => {
                                     }
 
                                 }
-                                else {
+                                else{
                                     let result = ServerTradeStrategies.shouldExecuteOrder(data, activeStrategies[strategy], lastOrder)
                                     if (result.shouldTrade) {
                                         await dbOrdersRepo.insert({
