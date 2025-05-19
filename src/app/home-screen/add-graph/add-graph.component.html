@@ -16,7 +16,7 @@
                   <mat-option *ngFor="let lineType of lineTypes" [value]="lineType">{{lineType}}</mat-option>
                 </mat-select>
               </mat-form-field>
-            <mat-form-field  class="example-full-width" style="max-width: 110px;">
+            <mat-form-field *ngIf="line.lineType != 'Cumulative VWAP'"  class="example-full-width" style="max-width: 110px;">
                 <mat-label>Length</mat-label>
                 <input matInput type="number" required [(ngModel)]="line.lineLength" placeholder="0.00" [max]="5400" [min]="1">
             </mat-form-field>

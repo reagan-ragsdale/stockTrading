@@ -2,7 +2,7 @@ export type lineType = {
     id: number;
     lineLength: number;
     lineType: string;
-    data: any[];
+    data: LineData[];
 }
 
 export type RuleDto = {

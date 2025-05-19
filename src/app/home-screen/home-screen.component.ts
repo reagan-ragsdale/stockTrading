@@ -185,7 +185,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     }
     this.stockHistoryData = await OrderController.getAllSharedOrders()
     this.selectedStockHistoryData = this.stockHistoryData.filter(e => e.stockName == this.selectedStockName)
-    
+
 
     //below is most likely not the best wat to find the net but it'll work for now
     for (let i = 0; i < this.selectedStockHistoryData.length - 1; i++) {
@@ -308,29 +308,49 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       this.refreshAddedLines()
     }
     this.refreshStochData()
-    
+
     this.updateChart()
-
-
-
   }
   refreshAddedLines() {
     for (let i = 0; i < this.listOfAddedLines.length; i++) {
-      let newVal = 0
-      for (let j = this.chartData.history.length - 1; j >= this.chartData.history.length - this.listOfAddedLines[i].lineLength; j--) {
-        newVal += this.chartData.history[j]
+      
+      if (this.listOfAddedLines[i].lineType == 'SMA') {
+        let addedData: LineData = { value: 0, time: 0 }
+        addedData = {
+          value: (this.listOfAddedLines[i].data[this.listOfAddedLines[i].data.length - 1].value! + this.chartInfo[this.chartInfo.length - 1].stockPrice) - this.listOfAddedLines[i].data[this.listOfAddedLines[i].data.length - this.listOfAddedLines[i].lineLength].value!,
+          time: this.chartInfo[this.chartInfo.length - 1].time
+        }
+        this.listOfAddedLines[i].data.push(addedData)
       }
-      let selectedDataSet = this.stockChart.data.datasets.filter((e: { label: string; }) => e.label == this.listOfAddedLines[i].lineLength.toString())[0]
-      selectedDataSet.data.push(newVal / this.listOfAddedLines[i].lineLength)
+      else if (this.listOfAddedLines[i].lineType == 'EMA') {
+        let addedData: LineData = { value: 0, time: 0 }
+        let multiplyFactor = 2 / (this.listOfAddedLines[i].lineLength + 1)
+        let newVal = (this.chartInfo[this.chartInfo.length - 1].stockPrice * multiplyFactor) + (this.listOfAddedLines[i].data[this.listOfAddedLines[i].data.length - 1].value! * (1 - multiplyFactor))
+        addedData = {
+          value: newVal,
+          time: this.chartInfo[this.chartInfo.length - 1].time
+        }
+        this.listOfAddedLines[i].data.push(addedData)
+      }
+      else if (this.listOfAddedLines[i].lineType == 'Cumulative VWAP') {
+        let newData: LineData[] = this.calculateCumulativeVWAP()
+        this.listOfAddedLines[i].data = newData
+      }
+      else if (this.listOfAddedLines[i].lineType == 'Rolling VWAP') {
+        let newData: LineData[] = this.calculateRollingVWAP(this.listOfAddedLines[i].lineLength)
+        this.listOfAddedLines[i].data = newData
+      }
+      let selectedDataSet = this.stockChart.data.datasets.filter((e: { label: string; }) => e.label == this.listOfAddedLines[i].lineType + ' - ' + this.listOfAddedLines[i].lineLength.toString())[0]
+      selectedDataSet.data = this.listOfAddedLines[i].data.map(e => e.value)
     }
   }
-  refreshStochData(){
-    if(this.chartData.history.length < 3600){
-      this.stochData.push({value: null, time: this.chartData.time[this.chartData.time.length - 1]})
+  refreshStochData() {
+    if (this.chartData.history.length < 3600) {
+      this.stochData.push({ value: null, time: this.chartData.time[this.chartData.time.length - 1] })
     }
-    else{
+    else {
       let newValue = (this.selectedStockCurrent - this.selectedStockLow) / (this.selectedStockHigh - this.selectedStockLow)
-      this.stochData.push({value: newValue * 100, time: this.chartData.time[this.chartData.time.length - 1]})
+      this.stochData.push({ value: newValue * 100, time: this.chartData.time[this.chartData.time.length - 1] })
     }
     console.log(this.stochData)
     this.stochChart.data.datasets[0].data = [...this.stochData.map(e => e.value)]
@@ -373,16 +393,16 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     for (let i = 0; i < newLines.length; i++) {
       let lineData: LineData[] = []
 
-      if(newLines[i].lineType == 'SMA'){
+      if (newLines[i].lineType == 'SMA') {
         lineData = this.calculateSMA(newLines[i].lineLength)
       }
-      else if(newLines[i].lineType == 'EMA'){
+      else if (newLines[i].lineType == 'EMA') {
         lineData = this.calculateEMA(newLines[i].lineLength)
       }
-      else if(newLines[i].lineType == 'Cumulative VWAP'){
+      else if (newLines[i].lineType == 'Cumulative VWAP') {
         lineData = this.calculateCumulativeVWAP()
       }
-      else if(newLines[i].lineType == 'Rolling VWAP'){
+      else if (newLines[i].lineType == 'Rolling VWAP') {
         lineData = this.calculateRollingVWAP(newLines[i].lineLength)
       }
       this.listOfAddedLines.push({ id: newLines[i].id, lineType: newLines[i].lineType, lineLength: newLines[i].lineLength, data: lineData })
@@ -644,7 +664,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
 
 
   }
-  createStochChart(){
+  createStochChart() {
     console.log('create chart')
     this.stochChart = new Chart("stoch-chart", {
       type: 'line', //this denotes tha type of chart
@@ -973,38 +993,38 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.getInitalStochData()
     //this.getInitialVolumeData()
   }
-  getInitalStochData(){
+  getInitalStochData() {
     this.stochData.length = 0
     let tradeHigh = 0
     let tradeLow = 1000000
-    if(this.chartInfo.length < 3600){
-      for(let i = 0; i < this.chartInfo.length; i++){
-        this.stochData.push({value: null, time: this.chartInfo[i].time})
+    if (this.chartInfo.length < 3600) {
+      for (let i = 0; i < this.chartInfo.length; i++) {
+        this.stochData.push({ value: null, time: this.chartInfo[i].time })
       }
     }
-    else{
-      for(let i = 0; i < 3600; i++){
-        if(this.chartInfo[i].stockPrice > tradeHigh){
+    else {
+      for (let i = 0; i < 3600; i++) {
+        if (this.chartInfo[i].stockPrice > tradeHigh) {
           tradeHigh = this.chartInfo[i].stockPrice
         }
-        if(this.chartInfo[i].stockPrice < tradeLow){
+        if (this.chartInfo[i].stockPrice < tradeLow) {
           tradeLow = this.chartInfo[i].stockPrice
         }
-        this.stochData.push({value: null, time: this.chartInfo[i].time})
+        this.stochData.push({ value: null, time: this.chartInfo[i].time })
       }
-      for(let i = 3600; i < this.chartInfo.length; i++){
-        if(this.chartInfo[i].stockPrice > tradeHigh){
+      for (let i = 3600; i < this.chartInfo.length; i++) {
+        if (this.chartInfo[i].stockPrice > tradeHigh) {
           tradeHigh = this.chartInfo[i].stockPrice
         }
-        if(this.chartInfo[i].stockPrice < tradeLow){
+        if (this.chartInfo[i].stockPrice < tradeLow) {
           tradeLow = this.chartInfo[i].stockPrice
         }
         let newValue = (this.chartInfo[i].stockPrice - tradeLow) / (tradeHigh - tradeLow)
-        this.stochData.push({value: newValue * 100, time: this.chartInfo[i].time})
+        this.stochData.push({ value: newValue * 100, time: this.chartInfo[i].time })
       }
     }
     console.log(this.stochData)
-    
+
   }
   userLeaderBoard: any[] = []
   async getUserLeaderBoard() {

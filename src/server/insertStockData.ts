@@ -128,7 +128,7 @@ export const socketCall = async (): Promise<void> => {
                                     isBuy = lastOrder[0].orderType == 'Sell' ? true : false;
                                 }
 
-                                if (isBuy) {
+                                if (isBuy && (data.askPrice > (userFinance?.spending!  + 1))) {
                                     let result = ServerTradeStrategies.shouldExecuteOrder(data, activeStrategies[strategy], lastOrder)
                                     if (result.shouldTrade) {
                                         let orderId = Math.floor(Math.random() * 10000000000)
