@@ -1768,13 +1768,13 @@ export class ServerTradeScreenComponent implements OnInit {
   count = 0
   getTrend(data: LineData[], length: number, index: number): number {
     let trend = 0
-    let selectedData = data.slice(index - length, index + 1)
+    let selectedData = data.slice(index - length + 1, index + 1)
 
 
-    let sumOfTime = selectedData.reduce((sum, val) => sum + val.time, 0) / length
-    let sumOfValue = selectedData.reduce((sum, val) => sum + val.value!, 0) / length
-    let sumOfTimeSquared = selectedData.reduce((sum, val) => sum + (val.time * val.time), 0) / length
-    let sumOfTimeValue = selectedData.reduce((sum, val) => sum + (val.time * val.value!), 0) / length
+    let sumOfTime = selectedData.reduce((sum, val) => sum + val.time, 0)
+    let sumOfValue = selectedData.reduce((sum, val) => sum + val.value!, 0)
+    let sumOfTimeSquared = selectedData.reduce((sum, val) => sum + (val.time * val.time), 0)
+    let sumOfTimeValue = selectedData.reduce((sum, val) => sum + (val.time * val.value!), 0)
 
 
     trend = ((length * sumOfTimeValue) - (sumOfTime * sumOfValue)) / ((length * sumOfTimeSquared) - (sumOfTime * sumOfTime))
