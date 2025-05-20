@@ -1778,7 +1778,7 @@ export class ServerTradeScreenComponent implements OnInit {
 
 
     trend = ((length * sumOfTimeValue) - (sumOfTime * sumOfValue)) / ((length * sumOfTimeSquared) - (sumOfTime * sumOfTime))
-    if (this.count == 0) {
+    /* if (this.count == 0) {
       console.log(index - length)
       console.log(selectedData)
       console.log({
@@ -1786,10 +1786,10 @@ export class ServerTradeScreenComponent implements OnInit {
         sumValue: sumOfValue,
         sumTimeSq: sumOfTimeSquared,
         sumTimeV: sumOfTimeValue
-      })
+      }) */
       console.log(trend)
-      this.count++
-    }
+      //this.count++
+    //}
     return trend
   }
 
