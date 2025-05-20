@@ -1498,7 +1498,7 @@ export class ServerTradeScreenComponent implements OnInit {
 
     });
   }
-  listOfBGCOlors: string[] = ['#1ca0de', '#eeb528', '#d82c2c']
+  listOfBGCOlors: string[] = ['#1ca0de', '#eeb528', '#d82c2c', '#00BFFF', '#A8FF60', '#FF2ECC', '#FFD700', '#00FFFF', '#FF7F7F', '#DA70D6', '#FFA500', '#98FF98', '#C3B1E1']
   addNewLinesToGraph(lines: lineType[]) {
     let linesNew = structuredClone(lines)
     this.stockChart.data.datasets = [this.stockChart.data.datasets[0]]
@@ -1538,6 +1538,7 @@ export class ServerTradeScreenComponent implements OnInit {
         let filteredLine = this.listOfAddedLines.filter(e => e.id == linesNew[i].id)[0]
         filteredLine.data = lineData
       }
+
       this.stockChart.data.datasets.push({
         label: linesNew[i].lineType + ' - ' + linesNew[i].lineLength,
         data: lineData.map(e => e.value),
@@ -1549,6 +1550,23 @@ export class ServerTradeScreenComponent implements OnInit {
         pointRadius: 0,
         spanGaps: true
       })
+      if (linesNew[i].lineType == 'Bollinger Bands') {
+        let bollingerData: LineData[][] = this.calculateBollingerBands(linesNew[i].lineLength)
+        //let filteredLine = this.listOfAddedLines.filter(e => e.id == linesNew[i].id)[0]
+        //filteredLine.data = lineData
+        
+        this.stockChart.data.datasets.push({
+          label: linesNew[i].lineType + ' - ' + linesNew[i].lineLength + ' Upper',
+          data: bollingerData[1].map(e => e.value),
+          backgroundColor: this.listOfBGCOlors[i],
+          hoverBackgroundColor: this.listOfBGCOlors[i],
+          borderColor: this.listOfBGCOlors[i],
+          pointBackgroundColor: this.listOfBGCOlors[i],
+          pointBorderColor: this.listOfBGCOlors[i],
+          pointRadius: 0,
+          spanGaps: true
+        })
+      }
     }
     this.stockChart.update()
   }
@@ -1619,6 +1637,50 @@ export class ServerTradeScreenComponent implements OnInit {
       returnData.push({ value: vwap, time: this.stockDataForSelectedDay[i].time });
     }
 
+    return returnData
+  }
+  calculateBollingerBands(lineLength: number): LineData[][] {
+    let returnData: LineData[][] = []
+    let windowSum = 0
+    let mean = 0
+    let window: number[] = []
+    let listOfDeviations: number[] = []
+    let averageOfSqDev: number = 0
+    let standardDeviation: number = 0
+    for (let i = 0; i < lineLength - 1; i++) {
+      window.push(this.stockDataForSelectedDay[i].stockPrice)
+      returnData[0].push({ value: null, time: this.stockDataForSelectedDay[i].time })
+      returnData[1].push({ value: null, time: this.stockDataForSelectedDay[i].time })
+      returnData[2].push({ value: null, time: this.stockDataForSelectedDay[i].time })
+      windowSum += this.stockDataForSelectedDay[i].stockPrice
+    }
+    mean = windowSum / lineLength
+    for (let i = 0; i < window.length; i++) {
+      listOfDeviations.push((window[i] - mean) * (window[i] - mean))
+    }
+    averageOfSqDev = listOfDeviations.reduce((sum, val) => sum + val, 0) / listOfDeviations.length
+    standardDeviation = Math.sqrt(averageOfSqDev)
+    windowSum += this.stockDataForSelectedDay[lineLength - 1].stockPrice
+    returnData[0].push({ value: windowSum / lineLength, time: this.stockDataForSelectedDay[lineLength - 1].time })
+    returnData[1].push({ value: (windowSum / lineLength) + (2 * standardDeviation), time: this.stockDataForSelectedDay[lineLength - 1].time })
+    returnData[2].push({ value: (windowSum / lineLength) - (2 * standardDeviation), time: this.stockDataForSelectedDay[lineLength - 1].time })
+
+    let multiplyFactor = 2 / (lineLength + 1)
+    for (let i = lineLength; i < this.stockDataForSelectedDay.length; i++) {
+      window.shift()
+      window.push(this.stockDataForSelectedDay[i].stockPrice)
+      let newVal = (this.stockDataForSelectedDay[i].stockPrice * multiplyFactor) + (returnData[0][returnData.length - 1].value! * (1 - multiplyFactor))
+      returnData[0].push({ value: newVal, time: this.stockDataForSelectedDay[i].time })
+      let sumOfWindow = window.reduce((sum, val) => sum + val, 0)
+      mean = sumOfWindow / lineLength
+      for (let i = 0; i < window.length; i++) {
+        listOfDeviations.push((window[i] - mean) * (window[i] - mean))
+      }
+      averageOfSqDev = listOfDeviations.reduce((sum, val) => sum + val, 0) / listOfDeviations.length
+      standardDeviation = Math.sqrt(averageOfSqDev)
+      returnData[1].push({ value: newVal + (2 * standardDeviation), time: this.stockDataForSelectedDay[i].time })
+      returnData[2].push({ value: newVal - (2 * standardDeviation), time: this.stockDataForSelectedDay[i].time })
+    }
     return returnData
   }
 
@@ -1774,22 +1836,16 @@ export class ServerTradeScreenComponent implements OnInit {
     let sumOfValue = selectedData.reduce((sum, val) => sum + val.value!, 0)
     let sumOfTimeSquared = selectedData.reduce((sum, val) => sum + (val.time * val.time), 0)
     let sumOfTimeValue = selectedData.reduce((sum, val) => sum + (val.time * val.value!), 0) */
-    
+
 
 
     //trend = ((length * sumOfTimeValue) - (sumOfTime * sumOfValue)) / ((length * sumOfTimeSquared) - (sumOfTime * sumOfTime))
     trend = (data[index].value! - data[index - length].value!) / 120
-    /*  if (trend > 1) {
+    if (this.count == 1) {
       console.log(index - length)
-      console.log(selectedData) */
-      /* console.log({
-        sumTime: sumOfTime,
-        sumValue: sumOfValue,
-        sumTimeSq: sumOfTimeSquared,
-        sumTimeV: sumOfTimeValue
-      })  */
       console.log(trend)
-    //}
+      this.count++
+    }
     return trend
   }
 
