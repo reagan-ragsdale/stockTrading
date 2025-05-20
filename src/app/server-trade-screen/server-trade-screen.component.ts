@@ -1699,6 +1699,7 @@ export class ServerTradeScreenComponent implements OnInit {
 
     let multiplyFactor = 2 / (lineLength + 1)
     for (let i = lineLength; i < this.stockDataForSelectedDay.length; i++) {
+      listOfDeviations.length = 0
       window.shift()
       window.push(this.stockDataForSelectedDay[i].stockPrice)
       let newVal = (this.stockDataForSelectedDay[i].stockPrice * multiplyFactor) + (returnData[0][returnData.length - 1].value! * (1 - multiplyFactor))
