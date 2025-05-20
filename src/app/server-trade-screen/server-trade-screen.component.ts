@@ -1771,24 +1771,26 @@ export class ServerTradeScreenComponent implements OnInit {
     let selectedData = data.slice(index - length + 1, index + 1)
 
 
-    let sumOfTime = selectedData.reduce((sum, val) => sum + val.time, 0)
+    /* let sumOfTime = selectedData.reduce((sum, val) => sum + val.time, 0)
     let sumOfValue = selectedData.reduce((sum, val) => sum + val.value!, 0)
     let sumOfTimeSquared = selectedData.reduce((sum, val) => sum + (val.time * val.time), 0)
-    let sumOfTimeValue = selectedData.reduce((sum, val) => sum + (val.time * val.value!), 0)
+    let sumOfTimeValue = selectedData.reduce((sum, val) => sum + (val.time * val.value!), 0) */
+    
 
 
-    trend = ((length * sumOfTimeValue) - (sumOfTime * sumOfValue)) / ((length * sumOfTimeSquared) - (sumOfTime * sumOfTime))
-     if (trend > 1) {
+    //trend = ((length * sumOfTimeValue) - (sumOfTime * sumOfValue)) / ((length * sumOfTimeSquared) - (sumOfTime * sumOfTime))
+    trend = (selectedData[selectedData.length - 1].time - selectedData[0].time) / (selectedData[selectedData.length - 1].value! - selectedData[0].value!)
+    /*  if (trend > 1) {
       console.log(index - length)
-      console.log(selectedData)
-      console.log({
+      console.log(selectedData) */
+      /* console.log({
         sumTime: sumOfTime,
         sumValue: sumOfValue,
         sumTimeSq: sumOfTimeSquared,
         sumTimeV: sumOfTimeValue
-      }) 
+      })  */
       console.log(trend)
-    }
+    //}
     return trend
   }
 
