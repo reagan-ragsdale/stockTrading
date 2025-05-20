@@ -45,14 +45,18 @@
                                 (onSelectionChange)="onSelectedBuyActionTypeChange($event, buyRule.id, buyAction)">{{buyAction}}</mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <mat-form-field *ngIf="buyRule.conditionType == 'Line'" style="width:fit-content;">
+                    <mat-form-field *ngIf="buyRule.conditionType == 'Line' && buyRule.desiredAction != 'Trend Crosses Above:'" style="width:fit-content;">
                         <mat-label>Referenced Object</mat-label>
                         <mat-select disableRipple [(value)]="buyRule.referencedObject">
                             <mat-option *ngFor="let line of availableLines" [value]="line.lineType + ' - ' + line.lineLength"
                                 (onSelectionChange)="onSelectedBuyReferencedObjectTypeChange($event, buyRule.id, line)">{{isAllLine(line.lineType) ? line.lineType : line.lineType + ' - ' + line.lineLength}}</mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <mat-form-field *ngIf="(buyRule.desiredAction == 'Dips below:' || buyRule.desiredAction == 'Rises above:') && buyRule.conditionType == 'Line'" class="example-full-width" style="width:fit-content;">
+                    <mat-form-field *ngIf="buyRule.desiredAction == 'Trend Crosses Above:'" class="example-full-width" style="width:fit-content;">
+                        <mat-label>Trend Length</mat-label>
+                        <input matInput type="number" [(ngModel)]="buyRule.desiredActionLength" placeholder="0.00" [min]=".001" step=".001">
+                    </mat-form-field>
+                    <mat-form-field *ngIf="(buyRule.desiredAction == 'Dips below:' || buyRule.desiredAction == 'Rises above:' || buyRule.desiredAction == 'Trend Crosses Above:') && buyRule.conditionType == 'Line'" class="example-full-width" style="width:fit-content;">
                         <mat-label>By Amount:</mat-label>
                         <input matInput type="number" [(ngModel)]="buyRule.desiredActionAmnt" placeholder="0.00" [min]="0.001" [max]="1" step=".001">
                     </mat-form-field>

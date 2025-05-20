@@ -29,6 +29,7 @@ export type BuyRule = {
     //does an action: ex crosses over, is dips x amount below
     desiredAction: string;
     desiredActionAmnt: number;
+    desiredActionLength: number;
     //the referenced line
     referencedObject: string;
     referencedObjectType: string;
