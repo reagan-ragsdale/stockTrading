@@ -1641,6 +1641,12 @@ export class ServerTradeScreenComponent implements OnInit {
   }
   calculateBollingerBands(lineLength: number): LineData[][] {
     let returnData: LineData[][] = []
+    let averageData: LineData[] = []
+    returnData.push(averageData)
+    let upperData: LineData[] = []
+    returnData.push(upperData)
+    let lowerData: LineData[] = []
+    returnData.push(lowerData)
     let windowSum = 0
     let mean = 0
     let window: number[] = []
