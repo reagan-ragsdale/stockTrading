@@ -21,7 +21,7 @@ export const socketCall = async (): Promise<void> => {
     let startTime = startDate.getTime()
     let endingTime = startTime + 53990000
 
-    let activeStrategies: string[] = ['MACrossover']
+    let activeStrategies: string[] = ['MACrossover', 'VWAP Trend']
 
     //admin user to start websocket
     const userData = await dbTokenRepo.findFirst({ id: 'asdfghjkl' }) as DbTOkens
@@ -31,15 +31,15 @@ export const socketCall = async (): Promise<void> => {
     let userOrders = await dbOrdersRepo.find({ where: { userId: 'Shared' }, orderBy: { orderTime: 'desc' } })
 
     let stockLastTradesMap = new Map<string, lastTrade>()
-    stockLastTradesMap.set('AAPL', { lastPrice: 0, lastAsk: 0, lastBid: 0})
-    stockLastTradesMap.set('MSFT', { lastPrice: 0, lastAsk: 0, lastBid: 0})
-    stockLastTradesMap.set('PLTR', { lastPrice: 0, lastAsk: 0, lastBid: 0})
-    stockLastTradesMap.set('AMD', { lastPrice: 0, lastAsk: 0, lastBid: 0})
-    stockLastTradesMap.set('TSLA', { lastPrice: 0, lastAsk: 0, lastBid: 0})
-    stockLastTradesMap.set('XOM', { lastPrice: 0, lastAsk: 0, lastBid: 0})
-    stockLastTradesMap.set('NVO', { lastPrice: 0, lastAsk: 0, lastBid: 0})
-    stockLastTradesMap.set('NEE', { lastPrice: 0, lastAsk: 0, lastBid: 0})
-    stockLastTradesMap.set('NVDA', { lastPrice: 0, lastAsk: 0, lastBid: 0})
+    stockLastTradesMap.set('AAPL', { lastPrice: 0, lastAsk: 0, lastBid: 0 })
+    stockLastTradesMap.set('MSFT', { lastPrice: 0, lastAsk: 0, lastBid: 0 })
+    stockLastTradesMap.set('PLTR', { lastPrice: 0, lastAsk: 0, lastBid: 0 })
+    stockLastTradesMap.set('AMD', { lastPrice: 0, lastAsk: 0, lastBid: 0 })
+    stockLastTradesMap.set('TSLA', { lastPrice: 0, lastAsk: 0, lastBid: 0 })
+    stockLastTradesMap.set('XOM', { lastPrice: 0, lastAsk: 0, lastBid: 0 })
+    stockLastTradesMap.set('NVO', { lastPrice: 0, lastAsk: 0, lastBid: 0 })
+    stockLastTradesMap.set('NEE', { lastPrice: 0, lastAsk: 0, lastBid: 0 })
+    stockLastTradesMap.set('NVDA', { lastPrice: 0, lastAsk: 0, lastBid: 0 })
 
     ServerTradeStrategies.initialize()
 
@@ -130,7 +130,7 @@ export const socketCall = async (): Promise<void> => {
 
                                 if (isBuy) {
                                     let result = ServerTradeStrategies.shouldExecuteOrder(data, activeStrategies[strategy], lastOrder)
-                                    if (result.shouldTrade  && (data.askPrice > (userFinance?.spending!  + 1))) {
+                                    if (result.shouldTrade && (data.askPrice > (userFinance?.spending! + 1))) {
                                         let orderId = Math.floor(Math.random() * 10000000000)
                                         await dbOrdersRepo.insert({
                                             userId: 'Shared',
@@ -156,7 +156,7 @@ export const socketCall = async (): Promise<void> => {
                                     }
 
                                 }
-                                else{
+                                else {
                                     let result = ServerTradeStrategies.shouldExecuteOrder(data, activeStrategies[strategy], lastOrder)
                                     if (result.shouldTrade) {
                                         await dbOrdersRepo.insert({
@@ -176,7 +176,7 @@ export const socketCall = async (): Promise<void> => {
                                             LoggerController.addToLog(result.log)
                                         }
                                     }
-                                    else if(result.shouldTrade == false && result.log !== null){
+                                    else if (result.shouldTrade == false && result.log !== null) {
                                         result.log.tradingAmount = userFinance?.spending!
                                         LoggerController.addToLog(result.log)
                                     }

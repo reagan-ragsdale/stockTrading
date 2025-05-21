@@ -5,8 +5,8 @@ export type StockInfo = {
     stopLossGainThreshold: number;
     tradeHigh: number;
 };
-export type DayTradeValues = MovingAvergeCrossoverDto
-export type stockDataInfo = stockMACrossData;
+export type DayTradeValues = MovingAvergeCrossoverDto | VWAPTrendCrossDto
+export type stockDataInfo = stockMACrossData | stockVWAPCrossData;
 export type tradeLogDto = {
     stockName: string;
     strategy: string;
@@ -34,6 +34,27 @@ export type stockMACrossData = {
     VWAP: number;
     RollingVWAP: number;
     cumulativePV: number;
+    cumulativeV: number;
+    lastPrice: number;
+    lastBid: number;
+    lastAsk: number;
+}
+export type VWAPTrendCrossDto = {
+    RollingVWAPLength: number;
+    VWAPTrendLength: number;
+    WaitTime: number;
+    StopLossAmt: number;
+}
+export type stockVWAPCrossData = {
+    priceHistory: number[];
+    volumeHistory: number[];
+    CumulativeVWAP: number;
+    RollingVWAP: number;
+    RollingVWAPTrend: number;
+    RollingVWAPTrendData: number[];
+    cumulativePV: number;
+    rollingPV: number;
+    rollingV: number;
     cumulativeV: number;
     lastPrice: number;
     lastBid: number;
