@@ -20,7 +20,7 @@ import { lineType, RuleDto } from '../../Dtos/ServerAlgoDto';
 })
 export class AddRuleComponent {
   @Input() listOfRulesIncoming: RuleDto = {
-    BuyRules:[],
+    BuyRules: [],
     SellRules: []
   }
   @Input() listOfLinesIncoming: lineType[] = []
@@ -86,24 +86,24 @@ export class AddRuleComponent {
     this.selectedSellLine = ''
     this.listOfRulesIncoming.SellRules = this.listOfRulesIncoming.SellRules.filter(e => e.id != id)
   }
-  onSelectedBuyConditionTypeChange(event: any, id: number, type: string){
+  onSelectedBuyConditionTypeChange(event: any, id: number, type: string) {
     if (event.isUserInput == true) {
       let selectedBuyRule = this.listOfRulesIncoming.BuyRules.filter(e => e.id == id)[0]
       selectedBuyRule.conditionType = type
     }
   }
-  onSelectedBuyTimeTypeChange(event: any, id: number, time: string){
+  onSelectedBuyTimeTypeChange(event: any, id: number, time: string) {
     if (event.isUserInput == true) {
       let selectedBuyRule = this.listOfRulesIncoming.BuyRules.filter(e => e.id == id)[0]
       selectedBuyRule.desiredAction = time
     }
   }
- /*  onSelectedBuyTimeChange(event: any, id: number, time: number){
-    if (event.isUserInput == true) {
-      let selectedBuyRule = this.listOfRulesIncoming.BuyRules.filter(e => e.id == id)[0]
-      selectedBuyRule.buyTime = time
-    }
-  } */
+  /*  onSelectedBuyTimeChange(event: any, id: number, time: number){
+     if (event.isUserInput == true) {
+       let selectedBuyRule = this.listOfRulesIncoming.BuyRules.filter(e => e.id == id)[0]
+       selectedBuyRule.buyTime = time
+     }
+   } */
 
   onSelectedBuyRuleTypeChange(event: any, id: number, line: lineType) {
     if (event.isUserInput == true) {
@@ -129,13 +129,13 @@ export class AddRuleComponent {
       selectedBuyRule.referencedObjectData = line.data
     }
   }
-  onSelectedSellRuleAndOrTypeChange(event: any, id: number, andOr: string){
+  onSelectedSellRuleAndOrTypeChange(event: any, id: number, andOr: string) {
     if (event.isUserInput == true) {
       let selectedSellRule = this.listOfRulesIncoming.SellRules.filter(e => e.id == id)[0]
       selectedSellRule.andOr = andOr
     }
   }
-  onSelectedSellRuleConditionTypeChange(event: any, id: number, type: string){
+  onSelectedSellRuleConditionTypeChange(event: any, id: number, type: string) {
     if (event.isUserInput == true) {
       let selectedSellRule = this.listOfRulesIncoming.SellRules.filter(e => e.id == id)[0]
       selectedSellRule.conditionType = type
@@ -167,18 +167,19 @@ export class AddRuleComponent {
   }
 
   isAllLine(lineType: string): boolean {
-    if(lineType == 'Price' || lineType == 'Cumulative VWAP'){
+    if (lineType == 'Price' || lineType == 'Cumulative VWAP') {
       return true
     }
     return false
   }
-  
+
 
   onSubmit() {
     this.dialogRef.close(this.listOfRulesIncoming)
   }
-  ngOnInit(){
+  ngOnInit() {
     this.availableLines = structuredClone(this.listOfLinesIncoming)
+    this.availableLines = this.availableLines.filter(e => e.lineType != 'Bollinger Bands')
   }
 
 
