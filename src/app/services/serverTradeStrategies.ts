@@ -339,18 +339,37 @@ export class ServerTradeStrategies {
             stockStrategyData.rollingPV += (stockData.stockPrice * stockData.volume)
             stockStrategyData.rollingV += stockData.volume
         }
-        if (stockStrategyData.priceHistory.length == stockStrategyInfo.RollingVWAPLength) {
+        else if (stockStrategyData.priceHistory.length == stockStrategyInfo.RollingVWAPLength) {
             stockStrategyData.rollingPV += (stockData.stockPrice * stockData.volume)
             stockStrategyData.rollingV += stockData.volume
             stockStrategyData.RollingVWAP = stockStrategyData.rollingPV / stockStrategyData.rollingV
             stockStrategyData.CumulativeVWAP = stockStrategyData.cumulativePV / stockStrategyData.cumulativeV
             stockStrategyData.RollingVWAPTrendData.push(stockStrategyData.RollingVWAP)
         }
-        if (stockStrategyData.priceHistory.length >= stockStrategyInfo.RollingVWAPLength + stockStrategyInfo.VWAPTrendLength) {
+        else if (stockStrategyData.priceHistory.length > stockStrategyInfo.RollingVWAPLength && stockStrategyData.priceHistory.length < stockStrategyInfo.RollingVWAPLength + stockStrategyInfo.VWAPTrendLength) {
             stockStrategyData.rollingPV += (stockData.stockPrice * stockData.volume) - (stockStrategyData.priceHistory[stockStrategyData.priceHistory.length - stockStrategyInfo.RollingVWAPLength] * stockStrategyData.volumeHistory[stockStrategyData.volumeHistory.length - stockStrategyInfo.RollingVWAPLength])
             stockStrategyData.rollingV += stockData.volume - stockStrategyData.volumeHistory[stockStrategyData.volumeHistory.length - stockStrategyInfo.RollingVWAPLength]
             stockStrategyData.RollingVWAP = stockStrategyData.rollingPV / stockStrategyData.rollingV
             stockStrategyData.CumulativeVWAP = stockStrategyData.cumulativePV / stockStrategyData.cumulativeV
+
+            stockStrategyData.RollingVWAPTrendData.push(stockStrategyData.RollingVWAP)
+            //stockStrategyData.RollingVWAPTrend = (stockStrategyData.RollingVWAPTrendData[stockStrategyData.RollingVWAPTrendData.length - 1] - stockStrategyData.RollingVWAPTrendData[0]) / stockStrategyInfo.VWAPTrendLength
+        }
+        else if (stockStrategyData.priceHistory.length == stockStrategyInfo.RollingVWAPLength + stockStrategyInfo.VWAPTrendLength) {
+            stockStrategyData.rollingPV += (stockData.stockPrice * stockData.volume) - (stockStrategyData.priceHistory[stockStrategyData.priceHistory.length - stockStrategyInfo.RollingVWAPLength] * stockStrategyData.volumeHistory[stockStrategyData.volumeHistory.length - stockStrategyInfo.RollingVWAPLength])
+            stockStrategyData.rollingV += stockData.volume - stockStrategyData.volumeHistory[stockStrategyData.volumeHistory.length - stockStrategyInfo.RollingVWAPLength]
+            stockStrategyData.RollingVWAP = stockStrategyData.rollingPV / stockStrategyData.rollingV
+            stockStrategyData.CumulativeVWAP = stockStrategyData.cumulativePV / stockStrategyData.cumulativeV
+
+            stockStrategyData.RollingVWAPTrendData.push(stockStrategyData.RollingVWAP)
+            stockStrategyData.RollingVWAPTrend = (stockStrategyData.RollingVWAPTrendData[stockStrategyData.RollingVWAPTrendData.length - 1] - stockStrategyData.RollingVWAPTrendData[0]) / stockStrategyInfo.VWAPTrendLength
+        }
+        else if (stockStrategyData.priceHistory.length > stockStrategyInfo.RollingVWAPLength + stockStrategyInfo.VWAPTrendLength) {
+            stockStrategyData.rollingPV += (stockData.stockPrice * stockData.volume) - (stockStrategyData.priceHistory[stockStrategyData.priceHistory.length - stockStrategyInfo.RollingVWAPLength] * stockStrategyData.volumeHistory[stockStrategyData.volumeHistory.length - stockStrategyInfo.RollingVWAPLength])
+            stockStrategyData.rollingV += stockData.volume - stockStrategyData.volumeHistory[stockStrategyData.volumeHistory.length - stockStrategyInfo.RollingVWAPLength]
+            stockStrategyData.RollingVWAP = stockStrategyData.rollingPV / stockStrategyData.rollingV
+            stockStrategyData.CumulativeVWAP = stockStrategyData.cumulativePV / stockStrategyData.cumulativeV
+            stockStrategyData.RollingVWAPTrendData.shift()
             stockStrategyData.RollingVWAPTrendData.push(stockStrategyData.RollingVWAP)
             stockStrategyData.RollingVWAPTrend = (stockStrategyData.RollingVWAPTrendData[stockStrategyData.RollingVWAPTrendData.length - 1] - stockStrategyData.RollingVWAPTrendData[0]) / stockStrategyInfo.VWAPTrendLength
         }
