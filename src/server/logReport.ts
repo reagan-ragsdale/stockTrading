@@ -69,7 +69,7 @@ export const createExcel = async (logArray: tradeLogDto[]): Promise<excelJS.Buff
         numberOfTrades: '',
         stopLoss: '',
         stopLossGainThreshold: '',
-        tradeHigh: '' ,
+        tradeHigh: '',
         ema: '',
         cumulativeVWAP: '',
         rollingVWAP: ''/*,
@@ -106,9 +106,9 @@ export const createExcel = async (logArray: tradeLogDto[]): Promise<excelJS.Buff
                 numberOfTrades: filteredByOrder[j].stockInfo.numberOfTrades,
                 stopLoss: filteredByOrder[j].stockInfo.stopLoss,
                 stopLossGainThreshold: filteredByOrder[j].stockInfo.stopLossGainThreshold,
-                tradeHigh: filteredByOrder[j].stockInfo.tradeHigh ,
-                ema: filteredByOrder[j].stockDataInfo.EMA,
-                cumulativeVWAP: filteredByOrder[j].stockDataInfo.VWAP,
+                tradeHigh: filteredByOrder[j].stockInfo.tradeHigh,
+                ema: 0,
+                cumulativeVWAP: 0,
                 rollingVWAP: filteredByOrder[j].stockDataInfo.RollingVWAP/*,
                 shortSmaMinuteBuy: filteredByOrder[j].stockDataInfo.last60Buysma,
                 shortSmaSell: filteredByOrder[j].stockDataInfo.last300Sellsma,
@@ -135,8 +135,8 @@ export const createExcel = async (logArray: tradeLogDto[]): Promise<excelJS.Buff
     let allAvgWinAmt = 0
     let allAvgLossAmt = 0
     let today = new Date()
-    today.setHours(5,0,0,0)
-    let orders = await dbOrdersRepo.find({where: {orderTime: {$gt: today.getTime()}}, orderBy: { orderTime : 'asc'}})
+    today.setHours(5, 0, 0, 0)
+    let orders = await dbOrdersRepo.find({ where: { orderTime: { $gt: today.getTime() } }, orderBy: { orderTime: 'asc' } })
     let distinctStocks = orders.map(e => e.stockName).filter((v, i, a) => a.indexOf(v) === i)
     for (let i = 0; i < distinctStocks.length; i++) {
         let stockProfit = 0
