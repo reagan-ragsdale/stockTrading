@@ -1706,7 +1706,7 @@ export class ServerTradeScreenComponent implements OnInit {
       listOfDeviations.length = 0
       window.shift()
       window.push(this.stockDataForSelectedDay[i].stockPrice)
-      let newVal = (this.stockDataForSelectedDay[i].stockPrice * multiplyFactor) + (returnData[0][returnData.length - 1].value! * (1 - multiplyFactor))
+      let newVal = (this.stockDataForSelectedDay[i].stockPrice * multiplyFactor) + (returnData[0][returnData[0].length - 1].value! * (1 - multiplyFactor))
       returnData[0].push({ value: newVal, time: this.stockDataForSelectedDay[i].time })
       let sumOfWindow = window.reduce((sum, val) => sum + val, 0)
       mean = sumOfWindow / lineLength
