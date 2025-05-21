@@ -1545,6 +1545,24 @@ export class ServerTradeScreenComponent implements OnInit {
         //let filteredLine = this.listOfAddedLines.filter(e => e.id == linesNew[i].id)[0]
         //filteredLine.data = lineData
         console.log(bollingerData)
+        this.listOfAddedLines.push({
+          id: -10,
+          lineType: 'Bollinger Band EMA',
+          lineLength: linesNew[i].lineLength,
+          data: bollingerData[0]
+        })
+        this.listOfAddedLines.push({
+          id: -11,
+          lineType: 'Bollinger Band Upper',
+          lineLength: linesNew[i].lineLength,
+          data: bollingerData[1]
+        })
+        this.listOfAddedLines.push({
+          id: -12,
+          lineType: 'Bollinger Band Lower',
+          lineLength: linesNew[i].lineLength,
+          data: bollingerData[2]
+        })
         this.stockChart.data.datasets.push({
           label: linesNew[i].lineType + ' - ' + linesNew[i].lineLength + ' EMA',
           data: bollingerData[0].map(e => e.value),
