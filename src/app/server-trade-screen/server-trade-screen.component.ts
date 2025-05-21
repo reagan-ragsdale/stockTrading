@@ -1688,13 +1688,15 @@ export class ServerTradeScreenComponent implements OnInit {
       returnData[2].push({ value: null, time: this.stockDataForSelectedDay[i].time })
       windowSum += this.stockDataForSelectedDay[i].stockPrice
     }
+    windowSum += this.stockDataForSelectedDay[lineLength - 1].stockPrice
+    window.push(this.stockDataForSelectedDay[lineLength - 1].stockPrice)
     mean = windowSum / lineLength
     for (let i = 0; i < window.length; i++) {
       listOfDeviations.push((window[i] - mean) * (window[i] - mean))
     }
     averageOfSqDev = listOfDeviations.reduce((sum, val) => sum + val, 0) / listOfDeviations.length
     standardDeviation = Math.sqrt(averageOfSqDev)
-    windowSum += this.stockDataForSelectedDay[lineLength - 1].stockPrice
+
     returnData[0].push({ value: windowSum / lineLength, time: this.stockDataForSelectedDay[lineLength - 1].time })
     returnData[1].push({ value: (windowSum / lineLength) + (2 * standardDeviation), time: this.stockDataForSelectedDay[lineLength - 1].time })
     returnData[2].push({ value: (windowSum / lineLength) - (2 * standardDeviation), time: this.stockDataForSelectedDay[lineLength - 1].time })
@@ -1722,7 +1724,8 @@ export class ServerTradeScreenComponent implements OnInit {
           mean: mean,
           listOfDeviations: listOfDeviations,
           averageOfSqDev: averageOfSqDev,
-          standardDeviation: standardDeviation
+          standardDeviation: standardDeviation,
+          newVal: newVal
         })
         this.count++
       }
