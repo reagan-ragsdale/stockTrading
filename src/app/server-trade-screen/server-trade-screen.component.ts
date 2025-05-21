@@ -1665,7 +1665,9 @@ export class ServerTradeScreenComponent implements OnInit {
 
     return returnData
   }
+
   calculateBollingerBands(lineLength: number): LineData[][] {
+    this.count = 0
     let returnData: LineData[][] = []
     let averageData: LineData[] = []
     returnData.push(averageData)
@@ -1713,6 +1715,17 @@ export class ServerTradeScreenComponent implements OnInit {
       standardDeviation = Math.sqrt(averageOfSqDev)
       returnData[1].push({ value: newVal + (2 * standardDeviation), time: this.stockDataForSelectedDay[i].time })
       returnData[2].push({ value: newVal - (2 * standardDeviation), time: this.stockDataForSelectedDay[i].time })
+      if (this.count == 0) {
+        console.log({
+          window: window,
+          sumOfWindow: sumOfWindow,
+          mean: mean,
+          listOfDeviations: listOfDeviations,
+          averageOfSqDev: averageOfSqDev,
+          standardDeviation: standardDeviation
+        })
+        this.count++
+      }
     }
     return returnData
   }
