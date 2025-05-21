@@ -14,41 +14,41 @@ import { lineType } from '../../Dtos/ServerAlgoDto';
 
 @Component({
   selector: 'app-add-line',
-  imports: [CommonModule,MatDialogContent,MatCheckboxModule,MatSelectModule,MatIconModule,MatButtonToggleModule,MatDialogActions,MatDialogTitle,MatButtonModule,MatFormFieldModule,MatInputModule,FormsModule],
+  imports: [CommonModule, MatDialogContent, MatCheckboxModule, MatSelectModule, MatIconModule, MatButtonToggleModule, MatDialogActions, MatDialogTitle, MatButtonModule, MatFormFieldModule, MatInputModule, FormsModule],
   templateUrl: './add-line.component.html',
   styleUrl: './add-line.component.css'
 })
-export class AddLineComponent implements OnInit{
-@Input() listOfLinesIncoming: lineType[] = []
-readonly dialogRef = inject(MatDialogRef<AddLineComponent>);
+export class AddLineComponent implements OnInit {
+  @Input() listOfLinesIncoming: lineType[] = []
+  readonly dialogRef = inject(MatDialogRef<AddLineComponent>);
 
-lineTypes: string[] = ['SMA', 'EMA', 'Cumulative VWAP', 'Rolling VWAP', 'Bollinger Bands']
-addedListOfLines: lineType[] = []
+  lineTypes: string[] = ['SMA', 'EMA', 'Cumulative VWAP', 'Rolling VWAP', 'Bollinger Bands']
+  addedListOfLines: lineType[] = []
 
-addLine(){
-  this.addedListOfLines.push({
-    id: this.addedListOfLines.length,
-    lineLength: 1,
-    lineType: '',
-    data: []
-  })
-}
-removeLine(id:number){
-  this.addedListOfLines = this.addedListOfLines.filter(e => e.id != id)
-}
+  addLine() {
+    this.addedListOfLines.push({
+      id: this.addedListOfLines.length,
+      lineLength: 1,
+      lineType: '',
+      data: []
+    })
+  }
+  removeLine(id: number) {
+    this.addedListOfLines = this.addedListOfLines.filter(e => e.id != id)
+  }
 
-onSelectedLineTypeChange(event: any){
+  onSelectedLineTypeChange(event: any) {
 
-}
+  }
 
-onSubmit(){
-  this.dialogRef.close(this.addedListOfLines)
-}
+  onSubmit() {
+    this.dialogRef.close(this.addedListOfLines)
+  }
 
-ngOnInit(){
-  this.addedListOfLines = structuredClone(this.listOfLinesIncoming)
-  this.addedListOfLines = this.addedListOfLines.filter(e => e.lineType != 'Price')
-}
+  ngOnInit() {
+    this.addedListOfLines = structuredClone(this.listOfLinesIncoming)
+    this.addedListOfLines = this.addedListOfLines.filter(e => e.lineType != 'Price' && e.id != -10 && e.id != -11 && e.id != -12)
+  }
 
 
 }
