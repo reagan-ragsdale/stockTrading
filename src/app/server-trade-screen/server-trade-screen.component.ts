@@ -1706,8 +1706,8 @@ export class ServerTradeScreenComponent implements OnInit {
       returnData[0].push({ value: newVal, time: this.stockDataForSelectedDay[i].time })
       let sumOfWindow = window.reduce((sum, val) => sum + val, 0)
       mean = sumOfWindow / lineLength
-      for (let i = 0; i < window.length; i++) {
-        listOfDeviations.push((window[i] - mean) * (window[i] - mean))
+      for (let j = 0; j < window.length; j++) {
+        listOfDeviations.push((window[j] - mean) * (window[j] - mean))
       }
       averageOfSqDev = listOfDeviations.reduce((sum, val) => sum + val, 0) / listOfDeviations.length
       standardDeviation = Math.sqrt(averageOfSqDev)
