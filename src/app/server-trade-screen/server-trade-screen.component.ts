@@ -1787,7 +1787,7 @@ export class ServerTradeScreenComponent implements OnInit {
     "Trailing Stop": (rule, index) => ('desiredActionCurrent' in rule ? (this.stockDataForSelectedDay[index].stockPrice <= rule.desiredActionCurrent) : false),
     "Trend Crosses Below:": (rule, index) => (('desiredActionLength' in rule && index >= (rule.primaryObjectLength + rule.desiredActionLength) - 2) ? (this.getTrend(rule.primaryObjectData, rule.desiredActionLength, index) < rule.desiredActionAmnt) : false),
     "Trend Crosses Above:": (rule, index) => (('desiredActionLength' in rule && index >= (rule.primaryObjectLength + rule.desiredActionLength) - 2) ? (this.getTrend(rule.primaryObjectData, rule.desiredActionLength, index) > rule.desiredActionAmnt) : false),
-    "Is greater than": (rule, index) => (rule.primaryObjectData[index].value == null || rule.referencedObjectData[index].value == null) ? false : (rule.primaryObjectData[index].value > rule.referencedObjectData[index].value),
+    "Is greater than:": (rule, index) => (rule.primaryObjectData[index].value == null || rule.referencedObjectData[index].value == null) ? false : (rule.primaryObjectData[index].value > rule.referencedObjectData[index].value),
     "Is less than:": (rule, index) => (rule.primaryObjectData[index].value == null || rule.referencedObjectData[index].value == null) ? false : (rule.primaryObjectData[index].value < rule.referencedObjectData[index].value)
   };
 
