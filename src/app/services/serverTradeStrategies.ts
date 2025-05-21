@@ -11,7 +11,7 @@ export class ServerTradeStrategies {
     private static stockScalpingMap = new Map<string, MovingAvergeCrossoverDto>()
     private static stockInfoMap = new Map<string, StockInfo>()
     private static listOfTradableStocks: string[] = ['AAPL', 'TSLA', 'MSFT', 'AMD', 'PLTR', 'XOM', 'NVO', 'NEE', 'NVDA']
-    private static activeStrategies: string[] = ['MACrossover', 'Scalp']
+    private static activeStrategies: string[] = ['MACrossover', 'VWAP Trend']
     private static today = new Date()
     private static startTime: number = 0
     private static endTime: number = 0
@@ -50,15 +50,15 @@ export class ServerTradeStrategies {
         this.stockMACrossDataMap.set('NEE', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
         this.stockMACrossDataMap.set('NVDA', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
 
-     /*    this.stockScalpingMap.set('TSLA', { MovingAverageLength: 600, RollingVWAPLength: 1800, WaitTime: 3600000, TrailingStopAmt: .6 })
-        this.stockScalpingMap.set('AAPL', { MovingAverageLength: 600, RollingVWAPLength: 1800, WaitTime: 0, TrailingStopAmt: .6 })
-        this.stockScalpingMap.set('MSFT', { MovingAverageLength: 600, RollingVWAPLength: 1800, WaitTime: 0, TrailingStopAmt: .6 })
-        this.stockScalpingMap.set('AMD', { MovingAverageLength: 600, RollingVWAPLength: 1800, WaitTime: 0, TrailingStopAmt: .6 })
-        this.stockScalpingMap.set('PLTR', { MovingAverageLength: 600, RollingVWAPLength: 1800, WaitTime: 0, TrailingStopAmt: .6 })
-        this.stockScalpingMap.set('XOM', { MovingAverageLength: 600, RollingVWAPLength: 1800, WaitTime: 0, TrailingStopAmt: .6 })
-        this.stockScalpingMap.set('NVO', { MovingAverageLength: 600, RollingVWAPLength: 1800, WaitTime: 0, TrailingStopAmt: .6 })
-        this.stockScalpingMap.set('NEE', { MovingAverageLength: 600, RollingVWAPLength: 1800, WaitTime: 0, TrailingStopAmt: .6 })
-        this.stockScalpingMap.set('NVDA', { MovingAverageLength: 600, RollingVWAPLength: 1800, WaitTime: 0, TrailingStopAmt: .6 }) */
+        /*    this.stockScalpingMap.set('TSLA', { MovingAverageLength: 600, RollingVWAPLength: 1800, WaitTime: 3600000, TrailingStopAmt: .6 })
+           this.stockScalpingMap.set('AAPL', { MovingAverageLength: 600, RollingVWAPLength: 1800, WaitTime: 0, TrailingStopAmt: .6 })
+           this.stockScalpingMap.set('MSFT', { MovingAverageLength: 600, RollingVWAPLength: 1800, WaitTime: 0, TrailingStopAmt: .6 })
+           this.stockScalpingMap.set('AMD', { MovingAverageLength: 600, RollingVWAPLength: 1800, WaitTime: 0, TrailingStopAmt: .6 })
+           this.stockScalpingMap.set('PLTR', { MovingAverageLength: 600, RollingVWAPLength: 1800, WaitTime: 0, TrailingStopAmt: .6 })
+           this.stockScalpingMap.set('XOM', { MovingAverageLength: 600, RollingVWAPLength: 1800, WaitTime: 0, TrailingStopAmt: .6 })
+           this.stockScalpingMap.set('NVO', { MovingAverageLength: 600, RollingVWAPLength: 1800, WaitTime: 0, TrailingStopAmt: .6 })
+           this.stockScalpingMap.set('NEE', { MovingAverageLength: 600, RollingVWAPLength: 1800, WaitTime: 0, TrailingStopAmt: .6 })
+           this.stockScalpingMap.set('NVDA', { MovingAverageLength: 600, RollingVWAPLength: 1800, WaitTime: 0, TrailingStopAmt: .6 }) */
 
         for (let i = 0; i < this.listOfTradableStocks.length; i++) {
             for (let j = 0; j < this.activeStrategies.length; j++) {
@@ -83,7 +83,7 @@ export class ServerTradeStrategies {
                 stockStrategyInfo = this.stockMovingAverageCrossoverMap.get(stockData.stockName)!
                 stockStrategyData = this.stockMACrossDataMap.get(stockData.stockName)!
                 return this.shouldExecuteMovingAverageCrossover(stockData, stockStrategy, stockStrategyInfo, stockStrategyData, lastOrder)
-            case 'Scalp':
+            case 'VWAP Trend':
                 stockStrategyInfo = this.stockScalpingMap.get(stockData.stockName)!
                 stockStrategyData = this.stockMACrossDataMap.get(stockData.stockName)!
                 return this.shouldExecuteScalp(stockData, stockStrategy, stockStrategyInfo, stockStrategyData, lastOrder)
@@ -113,10 +113,10 @@ export class ServerTradeStrategies {
             stockStrategyData.EMA = (stockData.stockPrice * multiplyer) + (stockStrategyData.EMA * (1 - multiplyer))
             stockStrategyData.VWAP = stockStrategyData.cumulativePV / stockStrategyData.cumulativeV
         }
-        if(stockStrategyData.priceHistory.length == stockStrategyInfo.RollingVWAPLength){
+        if (stockStrategyData.priceHistory.length == stockStrategyInfo.RollingVWAPLength) {
             stockStrategyData.RollingVWAP = stockStrategyData.cumulativePV / stockStrategyData.cumulativeV
         }
-        else if(stockStrategyData.priceHistory.length > stockStrategyInfo.RollingVWAPLength){
+        else if (stockStrategyData.priceHistory.length > stockStrategyInfo.RollingVWAPLength) {
             let tempCumulativePV = stockStrategyData.cumulativePV - (stockStrategyData.priceHistory[stockStrategyData.priceHistory.length - stockStrategyInfo.RollingVWAPLength] * stockStrategyData.volumeHistory[stockStrategyData.volumeHistory.length - stockStrategyInfo.RollingVWAPLength])
             let tempCumulativeV = stockStrategyData.cumulativeV - stockStrategyData.volumeHistory[stockStrategyData.volumeHistory.length - stockStrategyInfo.RollingVWAPLength]
             stockStrategyData.RollingVWAP = tempCumulativePV / tempCumulativeV
@@ -309,6 +309,11 @@ export class ServerTradeStrategies {
         }
         return { shouldTrade: false, log: nonTradeLog }
     }
+
+    //cheange to vwap trend
+    //buy when the 1800 rolling vwap dips below the cumulative vwap by .002
+    //and when the rolling wap last 120 ticks trend turns positive
+    //sell when the rolling 1800 vwap crosses above the cumulative vwap
     private static shouldExecuteScalp(stockData: DbCurrentDayStockData, stockInfo: StockInfo, stockStrategyInfo: stockStrategyType, stockStrategyData: stockStrategyDataType, lastOrder: DbOrders[]): { shouldTrade: boolean, log: tradeLogDto | null } {
 
         return { shouldTrade: false, log: null }
