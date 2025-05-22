@@ -42,9 +42,9 @@ export class AddLineComponent implements OnInit {
   }
   hasLength(lineType: string): boolean {
     if (lineType == 'Cumulative VWAP' || lineType == 'Cumulative SMA' || lineType == 'Cumulative EMA') {
-      return true
+      return false
     }
-    return false
+    return true
   }
 
   onSubmit() {
