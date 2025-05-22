@@ -167,7 +167,7 @@ export class AddRuleComponent {
   }
 
   isAllLine(lineType: string): boolean {
-    if (lineType == 'Price' || lineType == 'Cumulative VWAP') {
+    if (lineType == 'Price' || lineType == 'Cumulative VWAP' || lineType == 'Cumulative SMA' || lineType == 'Cumulative EMA') {
       return true
     }
     return false

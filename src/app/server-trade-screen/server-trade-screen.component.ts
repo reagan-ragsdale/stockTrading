@@ -1538,6 +1538,16 @@ export class ServerTradeScreenComponent implements OnInit {
         let filteredLine = this.listOfAddedLines.filter(e => e.id == linesNew[i].id)[0]
         filteredLine.data = lineData
       }
+      else if (linesNew[i].lineType == 'Cumulative SMA') {
+        lineData = this.calculateCumulativeSMA()
+        let filteredLine = this.listOfAddedLines.filter(e => e.id == linesNew[i].id)[0]
+        filteredLine.data = lineData
+      }
+      else if (linesNew[i].lineType == 'Cumulative EMA') {
+        lineData = this.calculateCumulativeEMA()
+        let filteredLine = this.listOfAddedLines.filter(e => e.id == linesNew[i].id)[0]
+        filteredLine.data = lineData
+      }
 
 
       if (linesNew[i].lineType == 'Bollinger Bands') {
@@ -1748,6 +1758,29 @@ export class ServerTradeScreenComponent implements OnInit {
         this.count++
       }
     }
+    return returnData
+  }
+  calculateCumulativeSMA(): LineData[] {
+    let returnData: LineData[] = []
+    let cumulativePrice: number = 0
+    for (let i = 0; i < this.stockDataForSelectedDay.length; i++) {
+      cumulativePrice += this.stockDataForSelectedDay[i].stockPrice
+      const sma = cumulativePrice / (i + 1);
+      returnData.push({ value: sma, time: this.stockDataForSelectedDay[i].time });
+    }
+
+    return returnData
+  }
+  calculateCumulativeEMA(): LineData[] {
+    let returnData: LineData[] = []
+    returnData.push({ value: this.stockDataForSelectedDay[0].stockPrice, time: this.stockDataForSelectedDay[0].time })
+
+    for (let i = 1; i < this.stockDataForSelectedDay.length; i++) {
+      let multiplyFactor = 2 / (i + 1)
+      let newVal = (this.stockDataForSelectedDay[i].stockPrice * multiplyFactor) + (returnData[returnData.length - 1].value! * (1 - multiplyFactor))
+      returnData.push({ value: newVal, time: this.stockDataForSelectedDay[i].time })
+    }
+
     return returnData
   }
 
