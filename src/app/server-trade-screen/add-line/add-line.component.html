@@ -3,25 +3,27 @@
 </div>
 <mat-dialog-content style="display: flex;flex-direction: column;">
     <div style="display:flex; justify-content: flex-end;">
-        <button style="margin-top:auto; margin-bottom:auto;"  mat-icon-button aria-label="Add Line" (click)="addLine()">
+        <button style="margin-top:auto; margin-bottom:auto;" mat-icon-button aria-label="Add Line" (click)="addLine()">
             <mat-icon style="color: black;">add</mat-icon>
-          </button>
+        </button>
     </div>
     <div *ngIf="addedListOfLines.length > 0" style="display: flex; flex-direction: column;  align-items: flex-end;">
         <div *ngFor="let line of addedListOfLines" style="display: flex;">
             <mat-form-field style="width:fit-content;">
                 <mat-label>Line Type</mat-label>
                 <mat-select disableRipple [(value)]="line.lineType">
-                  <mat-option *ngFor="let lineType of lineTypes" [value]="lineType" >{{lineType}}</mat-option>
+                    <mat-option *ngFor="let lineType of lineTypes" [value]="lineType">{{lineType}}</mat-option>
                 </mat-select>
-              </mat-form-field>
-            <mat-form-field *ngIf="line.lineType != 'Cumulative VWAP'"  class="example-full-width" style="max-width: 110px;">
-                <mat-label>Length</mat-label>
-                <input matInput type="number" required [(ngModel)]="line.lineLength" placeholder="0.00" [max]="5400" [min]="60">
             </mat-form-field>
-            <button style="margin-top:auto; margin-bottom:auto;" mat-icon-button aria-label="Delete Line" (click)="removeLine(line.id)">
+            <mat-form-field *ngIf="hasLength(line.lineType)" class="example-full-width" style="max-width: 110px;">
+                <mat-label>Length</mat-label>
+                <input matInput type="number" required [(ngModel)]="line.lineLength" placeholder="0.00" [max]="5400"
+                    [min]="60">
+            </mat-form-field>
+            <button style="margin-top:auto; margin-bottom:auto;" mat-icon-button aria-label="Delete Line"
+                (click)="removeLine(line.id)">
                 <mat-icon style="color: black;">delete</mat-icon>
-              </button>
+            </button>
         </div>
     </div>
 </mat-dialog-content>

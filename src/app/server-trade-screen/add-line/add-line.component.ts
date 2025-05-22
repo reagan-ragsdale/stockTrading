@@ -40,6 +40,12 @@ export class AddLineComponent implements OnInit {
   onSelectedLineTypeChange(event: any) {
 
   }
+  hasLength(lineType: string): boolean {
+    if (lineType == 'Cumulative VWAP' || lineType == 'Cumulative SMA' || lineType == 'Cumulative EMA') {
+      return true
+    }
+    return false
+  }
 
   onSubmit() {
     this.dialogRef.close(this.addedListOfLines)
