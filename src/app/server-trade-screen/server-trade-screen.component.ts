@@ -459,7 +459,7 @@ export class ServerTradeScreenComponent implements OnInit {
       for (let i = 0; i < this.distinctDates.length; i++) {
         await this.updateStockChartData(this.distinctDates[i])
         console.log(this.stockDataForSelectedDay)
-        this.addNewLinesToGraphNew(this.listOfAddedLines)
+        this.addNewLinesToGraphNew()
         console.log(this.listOfAddedLines)
         let result = this.addRule()
         resultList.push({ profit: result.profit, numberOfTrades: result.orderLocations.length, orders: result.orderLocations })
