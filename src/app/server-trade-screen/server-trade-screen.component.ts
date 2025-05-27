@@ -455,12 +455,12 @@ export class ServerTradeScreenComponent implements OnInit {
   async onRunSimulationNew() {
     if (this.intraDayChecked) {
       this.isLoading = true
-      console.log(this.listOfAddedLines)
       let resultList = []
       for (let i = 0; i < this.distinctDates.length; i++) {
         await this.updateStockChartData(this.distinctDates[i])
+        console.log(this.stockDataForSelectedDay)
         this.addNewLinesToGraph(this.listOfAddedLines)
-
+        console.log(this.listOfAddedLines)
         let result = this.addRule()
         resultList.push({ profit: result.profit, numberOfTrades: result.orderLocations.length, orders: result.orderLocations })
 
@@ -513,11 +513,11 @@ export class ServerTradeScreenComponent implements OnInit {
   }
   async updateStockChartData(selectedDate: string) {
     this.stockDataForSelectedDay = await dbStockHistoryDataRepo.find({ where: { stockName: this.selectedStockName, date: selectedDate }, orderBy: { time: 'asc' } })
-    this.stockDataForSelectedDay = this.stockDataForSelectedDay.filter(e => reusedFunctions.isWithinTradingHoursLocal(e.time))
+    //this.stockDataForSelectedDay = this.stockDataForSelectedDay.filter(e => reusedFunctions.isWithinTradingHoursLocal(e.time))
   }
   async updateStockChartDataNew(selectedDate: string): Promise<DbStockHistoryData[]> {
     let returnData = await dbStockHistoryDataRepo.find({ where: { stockName: this.selectedStockName, date: selectedDate }, orderBy: { time: 'asc' } })
-    returnData = returnData.filter(e => reusedFunctions.isWithinTradingHoursLocal(e.time))
+    // returnData = returnData.filter(e => reusedFunctions.isWithinTradingHoursLocal(e.time))
     return returnData
   }
   calculateIntraDaySma() {
@@ -1497,7 +1497,6 @@ export class ServerTradeScreenComponent implements OnInit {
       }
       else if (linesNew[i].lineType == 'EMA') {
         lineData = this.calculateEMA(linesNew[i].lineLength)
-        console.log(this.listOfAddedLines)
         let filteredLine = this.listOfAddedLines.filter(e => e.id == linesNew[i].id)[0]
         filteredLine.data = lineData
       }
@@ -1527,7 +1526,6 @@ export class ServerTradeScreenComponent implements OnInit {
         let bollingerData: LineData[][] = this.calculateBollingerBands(linesNew[i].lineLength)
         //let filteredLine = this.listOfAddedLines.filter(e => e.id == linesNew[i].id)[0]
         //filteredLine.data = lineData
-        console.log(bollingerData)
         this.listOfAddedLines.push({
           id: -10,
           lineType: 'Bollinger Band EMA',
