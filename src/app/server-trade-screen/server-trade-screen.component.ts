@@ -459,34 +459,7 @@ export class ServerTradeScreenComponent implements OnInit {
       let resultList = []
       for (let i = 0; i < this.distinctDates.length; i++) {
         await this.updateStockChartData(this.distinctDates[i])
-        for (let j = 0; j < this.listOfAddedLines.length; j++) {
-          let data: any[] = []
-          if (this.listOfAddedLines[j].lineType == 'SMA') {
-            data = this.calculateSMA(this.listOfAddedLines[j].lineLength)
-          }
-          else if (this.listOfAddedLines[j].lineType == 'EMA') {
-            data = this.calculateEMA(this.listOfAddedLines[j].lineLength)
-          }
-
-          this.listOfAddedLines[j].data = data
-          for (let k = 0; k < this.listOfAddedRules.BuyRules.length; k++) {
-            if (this.listOfAddedRules.BuyRules[k].primaryObjectType == this.listOfAddedLines[j].lineType && this.listOfAddedRules.BuyRules[k].primaryObjectLength == this.listOfAddedLines[j].lineLength) {
-              this.listOfAddedRules.BuyRules[k].primaryObjectData = data
-            }
-            if (this.listOfAddedRules.BuyRules[k].referencedObjectType == this.listOfAddedLines[j].lineType && this.listOfAddedRules.BuyRules[k].referencedObjectLength == this.listOfAddedLines[j].lineLength) {
-              this.listOfAddedRules.BuyRules[k].referencedObjectData = data
-            }
-          }
-          for (let k = 0; k < this.listOfAddedRules.SellRules.length; k++) {
-            if (this.listOfAddedRules.SellRules[k].primaryObjectType == this.listOfAddedLines[j].lineType && this.listOfAddedRules.SellRules[k].primaryObjectLength == this.listOfAddedLines[j].lineLength) {
-              this.listOfAddedRules.SellRules[k].primaryObjectData = data
-            }
-            if (this.listOfAddedRules.SellRules[k].referencedObjectType == this.listOfAddedLines[j].lineType && this.listOfAddedRules.SellRules[k].referencedObjectLength == this.listOfAddedLines[j].lineLength) {
-              this.listOfAddedRules.SellRules[k].referencedObjectData = data
-            }
-          }
-        }
-        console.log(this.listOfAddedRules)
+        this.addNewLinesToGraph(this.listOfAddedLines)
 
         let result = this.addRule()
         resultList.push({ profit: result.profit, numberOfTrades: result.orderLocations.length, orders: result.orderLocations })
