@@ -459,7 +459,7 @@ export class ServerTradeScreenComponent implements OnInit {
       for (let i = 0; i < this.distinctDates.length; i++) {
         await this.updateStockChartData(this.distinctDates[i])
         console.log(this.stockDataForSelectedDay)
-        this.addNewLinesToGraph(this.listOfAddedLines)
+        this.addNewLinesToGraphNew(this.listOfAddedLines)
         console.log(this.listOfAddedLines)
         let result = this.addRule()
         resultList.push({ profit: result.profit, numberOfTrades: result.orderLocations.length, orders: result.orderLocations })
@@ -1581,6 +1581,127 @@ export class ServerTradeScreenComponent implements OnInit {
       else {
         this.stockChart.data.datasets.push({
           label: linesNew[i].lineType + ' - ' + linesNew[i].lineLength,
+          data: lineData.map(e => e.value),
+          backgroundColor: this.listOfBGCOlors[i],
+          hoverBackgroundColor: this.listOfBGCOlors[i],
+          borderColor: this.listOfBGCOlors[i],
+          pointBackgroundColor: this.listOfBGCOlors[i],
+          pointBorderColor: this.listOfBGCOlors[i],
+          pointRadius: 0,
+          spanGaps: true
+        })
+      }
+    }
+
+    this.stockChart.update()
+  }
+  addNewLinesToGraphNew() {
+    this.stockChart.data.datasets = [this.stockChart.data.datasets[0]]
+    this.listOfAddedLines = this.listOfAddedLines.filter(e => e.lineType != 'Price' && e.id != -10 && e.id != -11 && e.id != -12)
+    let priceData: LineData[] = []
+    for (let i = 0; i < this.stockDataForSelectedDay.length; i++) {
+      priceData.push({ value: this.stockDataForSelectedDay[i].stockPrice, time: this.stockDataForSelectedDay[i].time })
+    }
+    this.listOfAddedLines.push({
+      lineType: 'Price',
+      lineLength: 1,
+      id: -1,
+      data: priceData
+    })
+
+    for (let i = 0; i < this.listOfAddedLines.length; i++) {
+      let lineData: LineData[] = []
+      if (this.listOfAddedLines[i].lineType == 'SMA') {
+        lineData = this.calculateSMA(this.listOfAddedLines[i].lineLength)
+        let filteredLine = this.listOfAddedLines.filter(e => e.id == this.listOfAddedLines[i].id)[0]
+        filteredLine.data = lineData
+      }
+      else if (this.listOfAddedLines[i].lineType == 'EMA') {
+        lineData = this.calculateEMA(this.listOfAddedLines[i].lineLength)
+        let filteredLine = this.listOfAddedLines.filter(e => e.id == this.listOfAddedLines[i].id)[0]
+        filteredLine.data = lineData
+      }
+      else if (this.listOfAddedLines[i].lineType == 'Cumulative VWAP') {
+        lineData = this.calculateCumulativeVWAP();
+        let filteredLine = this.listOfAddedLines.filter(e => e.id == this.listOfAddedLines[i].id)[0]
+        filteredLine.data = lineData
+      }
+      else if (this.listOfAddedLines[i].lineType == 'Rolling VWAP') {
+        lineData = this.calculateRollingVWAP(this.listOfAddedLines[i].lineLength);
+        let filteredLine = this.listOfAddedLines.filter(e => e.id == this.listOfAddedLines[i].id)[0]
+        filteredLine.data = lineData
+      }
+      else if (this.listOfAddedLines[i].lineType == 'Cumulative SMA') {
+        lineData = this.calculateCumulativeSMA()
+        let filteredLine = this.listOfAddedLines.filter(e => e.id == this.listOfAddedLines[i].id)[0]
+        filteredLine.data = lineData
+      }
+      else if (this.listOfAddedLines[i].lineType == 'Cumulative EMA') {
+        lineData = this.calculateCumulativeEMA()
+        let filteredLine = this.listOfAddedLines.filter(e => e.id == this.listOfAddedLines[i].id)[0]
+        filteredLine.data = lineData
+      }
+
+
+      if (this.listOfAddedLines[i].lineType == 'Bollinger Bands') {
+        let bollingerData: LineData[][] = this.calculateBollingerBands(this.listOfAddedLines[i].lineLength)
+        //let filteredLine = this.listOfAddedLines.filter(e => e.id == linesNew[i].id)[0]
+        //filteredLine.data = lineData
+        this.listOfAddedLines.push({
+          id: -10,
+          lineType: 'Bollinger Band EMA',
+          lineLength: this.listOfAddedLines[i].lineLength,
+          data: bollingerData[0]
+        })
+        this.listOfAddedLines.push({
+          id: -11,
+          lineType: 'Bollinger Band Upper',
+          lineLength: this.listOfAddedLines[i].lineLength,
+          data: bollingerData[1]
+        })
+        this.listOfAddedLines.push({
+          id: -12,
+          lineType: 'Bollinger Band Lower',
+          lineLength: this.listOfAddedLines[i].lineLength,
+          data: bollingerData[2]
+        })
+        this.stockChart.data.datasets.push({
+          label: this.listOfAddedLines[i].lineType + ' - ' + this.listOfAddedLines[i].lineLength + ' EMA',
+          data: bollingerData[0].map(e => e.value),
+          backgroundColor: this.listOfBGCOlors[i],
+          hoverBackgroundColor: this.listOfBGCOlors[i],
+          borderColor: this.listOfBGCOlors[i],
+          pointBackgroundColor: this.listOfBGCOlors[i],
+          pointBorderColor: this.listOfBGCOlors[i],
+          pointRadius: 0,
+          spanGaps: true
+        })
+        this.stockChart.data.datasets.push({
+          label: this.listOfAddedLines[i].lineType + ' - ' + this.listOfAddedLines[i].lineLength + ' Upper',
+          data: bollingerData[1].map(e => e.value),
+          backgroundColor: this.listOfBGCOlors[i],
+          hoverBackgroundColor: this.listOfBGCOlors[i],
+          borderColor: this.listOfBGCOlors[i],
+          pointBackgroundColor: this.listOfBGCOlors[i],
+          pointBorderColor: this.listOfBGCOlors[i],
+          pointRadius: 0,
+          spanGaps: true
+        })
+        this.stockChart.data.datasets.push({
+          label: this.listOfAddedLines[i].lineType + ' - ' + this.listOfAddedLines[i].lineLength + ' Lower',
+          data: bollingerData[2].map(e => e.value),
+          backgroundColor: this.listOfBGCOlors[i],
+          hoverBackgroundColor: this.listOfBGCOlors[i],
+          borderColor: this.listOfBGCOlors[i],
+          pointBackgroundColor: this.listOfBGCOlors[i],
+          pointBorderColor: this.listOfBGCOlors[i],
+          pointRadius: 0,
+          spanGaps: true
+        })
+      }
+      else {
+        this.stockChart.data.datasets.push({
+          label: this.listOfAddedLines[i].lineType + ' - ' + this.listOfAddedLines[i].lineLength,
           data: lineData.map(e => e.value),
           backgroundColor: this.listOfBGCOlors[i],
           hoverBackgroundColor: this.listOfBGCOlors[i],
