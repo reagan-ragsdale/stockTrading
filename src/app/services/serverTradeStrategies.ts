@@ -13,7 +13,6 @@ export class ServerTradeStrategies {
     private static stockInfoMap = new Map<string, StockInfo>()
     private static listOfTradableStocks: string[] = ['AAPL', 'TSLA', 'MSFT', 'AMD', 'PLTR', 'XOM', 'NVO', 'NEE', 'NVDA']
     private static activeStrategies: string[] = ['MACrossover', 'VWAP Trend']
-    private static today = new Date()
     private static startTime: number = 0
     private static endTime: number = 0
 
@@ -77,10 +76,11 @@ export class ServerTradeStrategies {
             }
 
         }
-        this.today.setHours(13, 30, 0, 0)
-        this.startTime = this.today.getTime()
-        this.today.setHours(19, 59, 50, 0)
-        this.endTime = this.today.getTime()
+        let today = new Date()
+        today.setHours(13, 30, 0, 0)
+        this.startTime = today.getTime()
+        today.setHours(19, 59, 50, 0)
+        this.endTime = today.getTime()
         console.log(this.startTime)
         console.log(this.endTime)
     }

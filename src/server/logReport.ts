@@ -152,7 +152,6 @@ export const createExcel = async (logArray: tradeLogDto[]): Promise<excelJS.Buff
             if (filteredByStock[j].orderType == 'Sell') {
                 let profit = filteredByStock[j].stockPrice - filteredByStock[j - 1].stockPrice
                 stockProfit += profit
-                allProfit += stockProfit
                 if (profit > 0) {
                     totalWins++
                     totalWinAmt += profit
