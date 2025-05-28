@@ -81,6 +81,8 @@ export class ServerTradeStrategies {
         this.startTime = this.today.getTime()
         this.today.setHours(19, 59, 50, 0)
         this.endTime = this.today.getTime()
+        console.log(this.startTime)
+        console.log(this.endTime)
     }
 
 
@@ -275,7 +277,7 @@ export class ServerTradeStrategies {
                     }
                 }
             } */
-            if (stockData.bidPrice <= stockInfo.stopLoss) {
+            else if (stockData.bidPrice <= stockInfo.stopLoss) {
                 stockInfo.numberOfTrades++
                 stockInfo.stopLoss = 0
                 stockInfo.tradeHigh = 0
@@ -296,7 +298,7 @@ export class ServerTradeStrategies {
                     }
                 }
             }
-            if (stockData.time > this.endTime) {
+            else if (stockData.time > this.endTime) {
                 stockInfo.numberOfTrades++
                 stockInfo.stopLoss = 0
                 stockInfo.tradeHigh = 0
@@ -420,7 +422,7 @@ export class ServerTradeStrategies {
         }
 
         if (isBuy && stockInfo.canTrade) {
-            if ((((stockStrategyData.RollingVWAP - stockStrategyData.CumulativeVWAP) / stockStrategyData.CumulativeVWAP) > -.002) && stockStrategyData.RollingVWAPTrend > 0) {
+            if ((((stockStrategyData.RollingVWAP - stockStrategyData.CumulativeVWAP) / stockStrategyData.CumulativeVWAP) < -.002) && stockStrategyData.RollingVWAPTrend > 0) {
                 stockInfo.numberOfTrades++
                 stockInfo.stopLoss = stockData.askPrice * (1 - stockStrategyInfo.StopLossAmt)
                 return {
@@ -441,7 +443,7 @@ export class ServerTradeStrategies {
         }
         else if (!isBuy && stockInfo.canTrade) {
 
-            if ((stockStrategyData.RollingVWAP > stockStrategyData.CumulativeVWAP) && stockStrategyData.RollingVWAPTrend > 0) {
+            if ((stockStrategyData.RollingVWAP > stockStrategyData.CumulativeVWAP) && stockStrategyData.RollingVWAPTrend < 0) {
                 stockInfo.numberOfTrades++
                 stockInfo.stopLoss = 0
                 stockInfo.tradeHigh = 0
@@ -462,7 +464,7 @@ export class ServerTradeStrategies {
                 }
             }
 
-            if (stockData.bidPrice <= stockInfo.stopLoss) {
+            else if (stockData.bidPrice <= stockInfo.stopLoss) {
                 stockInfo.numberOfTrades++
                 stockInfo.stopLoss = 0
                 stockInfo.tradeHigh = 0
@@ -483,7 +485,7 @@ export class ServerTradeStrategies {
                     }
                 }
             }
-            if (stockData.time > this.endTime) {
+            else if (stockData.time > this.endTime) {
                 stockInfo.numberOfTrades++
                 stockInfo.stopLoss = 0
                 stockInfo.tradeHigh = 0

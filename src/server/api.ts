@@ -45,6 +45,7 @@ import { getAccountInfo, getAccountNumbers } from './schwabApiCalls.js'
 import { LoggerController } from '../shared/controllers/LoggerController.js'
 import { emailer } from './log-emailer.js'
 import { createExcel } from './logReport.js'
+import { ServerTradeStrategies } from '../app/services/serverTradeStrategies.js'
 
 //import ev from '../../environmentVariables.json'
 
@@ -62,30 +63,30 @@ LoggerController.generateExcel = createExcel
 
 
 export const api = remultExpress({
-    controllers:[AuthController, SimFinance, OAuthContoller, OrderController,StockController, RegFinanceController, RegressionOrderController, RegressionStockController, StockHistoryController, SimulationController, SchwabController, LoggerController],
-    entities: [
-      Task,
-      Users,
-      Rhkeys, 
-      SimFInance, 
-      testEnc, 
-      DbOrders, 
-      UsersStocks,
-      RegressionFinance, 
-      DbRegressionOrders, 
-      dbRegressionUserStocks, 
-      DbTOkens, 
-      DbStockHistoryData, 
-      DbCurrentDayStockData, 
-      DbLevelTwoData,
-      DbStockBasicHistory,
-      DbStockDashInfo,
-      DbAlgorithmList,
-      DbListOfProfits
-    ],
-    admin:true,
-    getUser: (req) => req.session!['user'],
-    dataProvider: process.env['DATABASE_URL'] ?
+  controllers: [AuthController, SimFinance, OAuthContoller, OrderController, StockController, RegFinanceController, RegressionOrderController, RegressionStockController, StockHistoryController, SimulationController, SchwabController, LoggerController],
+  entities: [
+    Task,
+    Users,
+    Rhkeys,
+    SimFInance,
+    testEnc,
+    DbOrders,
+    UsersStocks,
+    RegressionFinance,
+    DbRegressionOrders,
+    dbRegressionUserStocks,
+    DbTOkens,
+    DbStockHistoryData,
+    DbCurrentDayStockData,
+    DbLevelTwoData,
+    DbStockBasicHistory,
+    DbStockDashInfo,
+    DbAlgorithmList,
+    DbListOfProfits
+  ],
+  admin: true,
+  getUser: (req) => req.session!['user'],
+  dataProvider: process.env['DATABASE_URL'] ?
     createPostgresDataProvider({
       caseInsensitiveIdentifiers: true,
       connectionString: process.env['DATABASE_URL']
@@ -94,20 +95,21 @@ export const api = remultExpress({
       connectionString: ev.dbConnection 
       
     })  */ ,
-    initRequest
-    ,initApi: async () => {
-      //socketCall(),
-      cron.schedule('0 11 * * 2-6', () => getDailyStockInfo()),
+  initRequest
+  , initApi: async () => {
+    //socketCall(),
+    cron.schedule('0 11 * * 2-6', () => getDailyStockInfo()),
       cron.schedule('30 13 * * 1-5', () => socketCall()),
-      
+
       cron.schedule('0 9 * * 1,4', () => resetTokens()),
       cron.schedule('*/25 * * * *', () => loadNewToken()),
       cron.schedule('45 20 * * 1-5 ', () => loadDailyDataIntoHistory()),
       cron.schedule('10 20 * * 1-5 ', () => LoggerController.sendEmailCall())
-      //LoggerController.sendEmailCall()
-      //loadDailyDataIntoHistory()
-      
-      //getDailyStockInfo()
-      
-    }
+    //LoggerController.sendEmailCall()
+    //loadDailyDataIntoHistory()
+    ServerTradeStrategies.initialize()
+
+    //getDailyStockInfo()
+
+  }
 })

@@ -256,7 +256,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
                   time: Number(newEvent.data[0].timestamp),
                   volume: newEvent.data[0].content[i]['8']
                 })
-                await this.refreshData()
+                this.refreshData()
 
               }
             }
@@ -296,7 +296,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     time: 0,
     volume: 0
   }]
-  async refreshData() {
+  refreshData() {
     this.chartData.history = this.chartInfo.map(e => e.stockPrice)
     this.chartData.labels = this.chartInfo.map(e => new Date(e.time).toLocaleTimeString())
     this.chartData.time = this.chartInfo.map(e => e.time)
@@ -307,13 +307,13 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     if (this.listOfAddedLines.length > 0) {
       this.refreshAddedLines()
     }
-    this.refreshStochData()
+    //this.refreshStochData()
 
     this.updateChart()
   }
   refreshAddedLines() {
     for (let i = 0; i < this.listOfAddedLines.length; i++) {
-      
+
       if (this.listOfAddedLines[i].lineType == 'SMA') {
         let addedData: LineData = { value: 0, time: 0 }
         addedData = {
