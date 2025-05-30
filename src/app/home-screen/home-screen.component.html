@@ -1,21 +1,22 @@
-
 <ng-container *ngIf="isLoading">
     <mat-spinner [mode]="'indeterminate'" class="spinner"></mat-spinner>
     <div class="overlay"></div>
 </ng-container>
 <div style="display:flex; flex-direction: column; height: calc(100vh - 63px);">
     <div class="top-bar">
-        <div *ngIf="false" style="margin-left: 1rem;margin-top: auto;margin-bottom: auto; display: flex;align-items: center;">
+        <div *ngIf="false"
+            style="margin-left: 1rem;margin-top: auto;margin-bottom: auto; display: flex;align-items: center;">
             <h3>Live Env</h3>
             <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Change info">
                 <mat-icon style="color: #DBD4D1;">more_vert</mat-icon>
-              </button>
-              <mat-menu #menu="matMenu">
+            </button>
+            <mat-menu #menu="matMenu">
                 <button mat-menu-item (click)="navToTestEnv()">
-                  <span>Go to Test Env</span>
+                    <span>Go to Test Env</span>
                 </button>
-              </mat-menu>
-            <mat-button-toggle-group name="fontStyle" aria-label="Font Style" (change)="userBotChange($event)" [hideSingleSelectionIndicator]="true">
+            </mat-menu>
+            <mat-button-toggle-group name="fontStyle" aria-label="Font Style" (change)="userBotChange($event)"
+                [hideSingleSelectionIndicator]="true">
                 <mat-button-toggle [checked]="true" value="User">User</mat-button-toggle>
                 <mat-button-toggle value="Bot">Bot</mat-button-toggle>
             </mat-button-toggle-group>
@@ -27,36 +28,50 @@
                         <mat-option (onSelectionChange)="onAlgoChanged($event)" value="followUp">Follow Up</mat-option>
                         <mat-option (onSelectionChange)="onAlgoChanged($event)" value="highLow">High Low</mat-option>
                     </mat-select>
-                  </mat-form-field>
-                <div *ngIf="tempSelectedAlgo == 'trend' || tempSelectedAlgo == 'highLow'" style="margin-left:1rem; display:flex; gap:5px;">
-                        <mat-form-field class="example-full-width" style="max-width: 110px;">
-                            <mat-label>Starting index</mat-label>
-                            <input matInput type="number" (ngModelChange)="trendAlgoStartingPointChanged()" [(ngModel)]="tempTrendAlgoStartingPoint" placeholder="0.00" [max]="chartData.history.length - 1" [min]="0">
-                        </mat-form-field>
-                        <mat-form-field class="example-full-width" style="max-width: 110px;">
-                            <mat-label>Gutter</mat-label>
-                            <input matInput type="number" (ngModelChange)="updatesToAlgo()" [(ngModel)]="trendGutterTemp" placeholder="0.00" [max]=".99" [min]=".01" step=".01">
-                        </mat-form-field>
-                        <mat-form-field class="example-full-width" style="max-width: 110px;">
-                            <mat-label>Stop Loss Lag</mat-label>
-                            <input matInput type="number" (ngModelChange)="updatesToAlgo()" [(ngModel)]="stopLossLagTemp" placeholder="0.00" [min]=".01" step=".01">
-                        </mat-form-field>
-                        <button style="width: max-content; margin-top:auto; margin-bottom:auto;" mat-raised-button color="primary" aria-label="Confirm Algorithm" [disabled]="!isChangesToBot" (click)="confirmAlgo()">Save</button> 
-                        <button *ngIf="tempSelectedAlgo == 'trend' && tempTrendAlgoStartingPoint > 0" style="width: max-content; margin-top:auto; margin-bottom:auto;" mat-raised-button color="primary" aria-label="Confirm Algorithm" [disabled]="!isChangesToBot" (click)="resetAlgo()">Reset</button>
-                 </div>
-                <div *ngIf="tempSelectedAlgo == 'followUp'" style="margin-left:1rem; display:flex; gap:5px;">
-                        <mat-form-field class="example-full-width" style="max-width: 110px;">
-                            <mat-label>Stop Loss</mat-label>
-                            <input matInput type="number" required (ngModelChange)="updatesToAlgo()" [(ngModel)]="selectedStopLossPrice" placeholder="0.00" [max]="chartData.history[chartData.history.length - 1]" [min]="0">
-                        </mat-form-field>
-                        <mat-form-field class="example-full-width" style="max-width: 110px;">
-                            <mat-label>Stop Loss Lag</mat-label>
-                            <input matInput type="number" required (ngModelChange)="updatesToAlgo()" [(ngModel)]="selectedStopLossAdjustmentAmt" placeholder="0.00" [max]="100" [min]="0" step=".01">
-                        </mat-form-field>
-                        <button mat-raised-button color="primary" (click)="submitFollowUp()">Save</button>
+                </mat-form-field>
+                <div *ngIf="tempSelectedAlgo == 'trend' || tempSelectedAlgo == 'highLow'"
+                    style="margin-left:1rem; display:flex; gap:5px;">
+                    <mat-form-field class="example-full-width" style="max-width: 110px;">
+                        <mat-label>Starting index</mat-label>
+                        <input matInput type="number" (ngModelChange)="trendAlgoStartingPointChanged()"
+                            [(ngModel)]="tempTrendAlgoStartingPoint" placeholder="0.00"
+                            [max]="chartData.history.length - 1" [min]="0">
+                    </mat-form-field>
+                    <mat-form-field class="example-full-width" style="max-width: 110px;">
+                        <mat-label>Gutter</mat-label>
+                        <input matInput type="number" (ngModelChange)="updatesToAlgo()" [(ngModel)]="trendGutterTemp"
+                            placeholder="0.00" [max]=".99" [min]=".01" step=".01">
+                    </mat-form-field>
+                    <mat-form-field class="example-full-width" style="max-width: 110px;">
+                        <mat-label>Stop Loss Lag</mat-label>
+                        <input matInput type="number" (ngModelChange)="updatesToAlgo()" [(ngModel)]="stopLossLagTemp"
+                            placeholder="0.00" [min]=".01" step=".01">
+                    </mat-form-field>
+                    <button style="width: max-content; margin-top:auto; margin-bottom:auto;" mat-raised-button
+                        color="primary" aria-label="Confirm Algorithm" [disabled]="!isChangesToBot"
+                        (click)="confirmAlgo()">Save</button>
+                    <button *ngIf="tempSelectedAlgo == 'trend' && tempTrendAlgoStartingPoint > 0"
+                        style="width: max-content; margin-top:auto; margin-bottom:auto;" mat-raised-button
+                        color="primary" aria-label="Confirm Algorithm" [disabled]="!isChangesToBot"
+                        (click)="resetAlgo()">Reset</button>
                 </div>
-                
-                   
+                <div *ngIf="tempSelectedAlgo == 'followUp'" style="margin-left:1rem; display:flex; gap:5px;">
+                    <mat-form-field class="example-full-width" style="max-width: 110px;">
+                        <mat-label>Stop Loss</mat-label>
+                        <input matInput type="number" required (ngModelChange)="updatesToAlgo()"
+                            [(ngModel)]="selectedStopLossPrice" placeholder="0.00"
+                            [max]="chartData.history[chartData.history.length - 1]" [min]="0">
+                    </mat-form-field>
+                    <mat-form-field class="example-full-width" style="max-width: 110px;">
+                        <mat-label>Stop Loss Lag</mat-label>
+                        <input matInput type="number" required (ngModelChange)="updatesToAlgo()"
+                            [(ngModel)]="selectedStopLossAdjustmentAmt" placeholder="0.00" [max]="100" [min]="0"
+                            step=".01">
+                    </mat-form-field>
+                    <button mat-raised-button color="primary" (click)="submitFollowUp()">Save</button>
+                </div>
+
+
             </div>
         </div>
         <div *ngIf="false" style="margin-left:auto; margin-right: 2rem; display:flex; align-items: center; gap: 1rem;">
@@ -65,20 +80,22 @@
                 <span style="color: #DBD4D1;">{{i + 1}}.</span>
                 <span style="color: #DBD4D1;">{{user.userName}}</span>
                 <span style="color: #DBD4D1;">{{user.spending | currency:'USD':'symbol'}}</span>
-            </div>       
+            </div>
         </div>
-        <button style=" margin-top:auto; margin-bottom:auto;" mat-icon-button aria-label="Add more funds" (click)="showAddFunds()">
+        <button style=" margin-top:auto; margin-bottom:auto;" mat-icon-button aria-label="Add more funds"
+            (click)="showAddFunds()">
             <mat-icon style="color: #DBD4D1;">add</mat-icon>
-          </button>
+        </button>
         <h3 style="padding-right:1rem;">{{userSimFinData[0].spending | currency:'USD':'symbol'}}</h3>
-        <div *ngIf="selectedStockHistoryData.length > 0" style="display:flex; gap: .5rem; margin-left:auto; margin-right:1rem;">
+        <div *ngIf="selectedStockHistoryData.length > 0"
+            style="display:flex; gap: .5rem; margin-left:auto; margin-right:1rem;">
             <h3>Last Order: </h3>
             <h3>{{selectedStockHistoryData[0].orderType}}</h3>
             <h3>{{selectedStockHistoryData[0].shareQty}} Share</h3>
             <h3>{{selectedStockHistoryData[0].stockPrice | currency:'USD':'symbol'}}</h3>
             <h3>{{getDateTime(selectedStockHistoryData[0].orderTime) }}</h3>
         </div>
-        
+
     </div>
     <div class="dashboard">
         <div style="padding-left: 1rem; padding-right:1rem; display:flex; flex-direction: column;">
@@ -86,30 +103,35 @@
                 <mat-form-field>
                     <mat-label>Select a Stock</mat-label>
                     <mat-select disableRipple [(value)]="selectedStockName">
-                      <mat-option *ngFor="let stock of distinctAvailableStocks" value="{{stock}}" (onSelectionChange)="onSelectedStockChange($event)">{{stock}}</mat-option>
+                        <mat-option *ngFor="let stock of distinctAvailableStocks" value="{{stock}}"
+                            (onSelectionChange)="onSelectedStockChange($event)">{{stock}}</mat-option>
                     </mat-select>
-                  </mat-form-field>
-                  <!-- <button mat-icon-button (click)="toggleStockInfo()">
+                </mat-form-field>
+                <!-- <button mat-icon-button (click)="toggleStockInfo()">
                     <mat-icon>info</mat-icon>
                   </button> -->
-                <button style=" margin-top:auto; margin-bottom:auto;" mat-icon-button aria-label="Add Line" (click)="addLineToGraph()">
+                <button style=" margin-top:auto; margin-bottom:auto;" mat-icon-button aria-label="Add Line"
+                    (click)="addLineToGraph()">
                     <mat-icon style="color: #DBD4D1;">add</mat-icon>
-                  </button>
+                </button>
+                <button style=" margin-top:auto; margin-bottom:auto;" mat-raised-button color="primary"
+                    aria-label="Clear Graph" (click)="resetZoom()">
+                    Reset Zoom
+                </button>
             </div>
-              <!-- <div>
+            <!-- <div>
                 <button *ngFor="let mover of moversData" style="width: max-content;"mat-raised-button color="primary" aria-label="Add more funds" >{{mover.symbol}}</button>
             </div> -->
-            
+
             <div style="width: 100%;display:flex;">
                 <div style="display:flex; flex-direction: column;">
                     <h5>O:{{stockOpenPrice}}</h5>
                     <h5>{{stockVariance | percent: '2.1-2'}}</h5>
                     <h5><mat-icon>keyboard_arrow_up</mat-icon>{{stockVarianceHigh | percent: '2.1-2'}}</h5>
-                    <h5><mat-icon>keyboard_arrow_down</mat-icon>{{stockVarianceLow  | percent: '2.1-2'}}</h5>
+                    <h5><mat-icon>keyboard_arrow_down</mat-icon>{{stockVarianceLow | percent: '2.1-2'}}</h5>
                 </div>
                 <div class="canvas-container">
                     <canvas style="width:100% !important;" id="stock-chart">{{stockChart}}</canvas>
-                    <canvas style="width:100% !important;" id="stoch-chart">{{stochChart}}</canvas>
 
                     <!-- <canvas style="width:100% !important;" id="volume-chart">{{volumeChart}}</canvas> -->
                 </div>
@@ -117,16 +139,23 @@
                     <h4>{{selectedStockCurrent}}</h4>
                     <h4>H:{{selectedStockHigh}}</h4>
                     <h4>L:{{selectedStockLow}}</h4>
-                    <h4 *ngIf="isUserOrBot == 'Bot' && targetPrice != 0" style="color: #ff8f50 !important;">T:{{targetPrice | number:'1.2-5'}}</h4>
-                    <h4 *ngIf="isUserOrBot == 'Bot' && stopLossPrice != 0" style="color: #ea4c4c !important;">SL:{{stopLossPrice | number:'1.2-5'}}</h4>
-                    <h4 *ngIf="isUserOrBot == 'Bot' && tradeCurrentHigh != 0" style="color: #DBD4D1 !important;">TH:{{tradeCurrentHigh | number:'1.2-5'}}</h4>
-                    <h4 *ngIf="isUserOrBot == 'Bot' && tradeInitialAverage != 0" style="color: #9dfd01 !important;">IA:{{tradeInitialAverage | number:'1.2-5'}}</h4>
+                    <h4 *ngIf="isUserOrBot == 'Bot' && targetPrice != 0" style="color: #ff8f50 !important;">
+                        T:{{targetPrice | number:'1.2-5'}}</h4>
+                    <h4 *ngIf="isUserOrBot == 'Bot' && stopLossPrice != 0" style="color: #ea4c4c !important;">
+                        SL:{{stopLossPrice | number:'1.2-5'}}</h4>
+                    <h4 *ngIf="isUserOrBot == 'Bot' && tradeCurrentHigh != 0" style="color: #DBD4D1 !important;">
+                        TH:{{tradeCurrentHigh | number:'1.2-5'}}</h4>
+                    <h4 *ngIf="isUserOrBot == 'Bot' && tradeInitialAverage != 0" style="color: #9dfd01 !important;">
+                        IA:{{tradeInitialAverage | number:'1.2-5'}}</h4>
                 </div>
                 <div style="flex-grow: 1;" *ngIf="false">
                     <div style="padding: 1rem; display: flex;flex-direction: column;">
-                        <button style="width: max-content; margin: auto;"mat-raised-button color="warn" aria-label="Add more funds" (click)="openTradePopup()" [disabled]="isUserOrBot == 'Bot'">Trade</button>
+                        <button style="width: max-content; margin: auto;" mat-raised-button color="warn"
+                            aria-label="Add more funds" (click)="openTradePopup()"
+                            [disabled]="isUserOrBot == 'Bot'">Trade</button>
                         <h2 style="text-align:center;">Active Positions</h2>
-                        <div *ngIf="selectedStockData.shareQty > 0" style="display:flex; justify-content: center;  gap: 1rem;">
+                        <div *ngIf="selectedStockData.shareQty > 0"
+                            style="display:flex; justify-content: center;  gap: 1rem;">
                             <h3>{{selectedStockData.stockName}}</h3>
                             <h3>{{selectedStockData.shareQty | number:'1.2-5'}}</h3>
                             <h3>{{(selectedStockData.shareQty * selectedStockCurrent) | number:'1.2-5'}}</h3>
@@ -136,42 +165,48 @@
                         </div>
                         <div style="display:flex; justify-content: space-between; align-items: baseline; ">
                             <h2 style="text-align:center;">Trade History</h2>
-                            <h3 style="text-align: center;">Total: {{this.selectedStockTotalNet | currency:'USD':'symbol'}}</h3>
+                            <h3 style="text-align: center;">Total: {{this.selectedStockTotalNet |
+                                currency:'USD':'symbol'}}</h3>
                         </div>
-                        <div *ngIf="selectedStockHistoryData.length > 0" class="table-div" >
-                            <mat-table [dataSource]="selectedStockHistoryData"  style="height:inherit;">
+                        <div *ngIf="selectedStockHistoryData.length > 0" class="table-div">
+                            <mat-table [dataSource]="selectedStockHistoryData" style="height:inherit;">
                                 <!-- Position Column -->
                                 <ng-container matColumnDef="Trade">
-                                  <mat-header-cell *matHeaderCellDef> Trade </mat-header-cell>
-                                  <mat-cell *matCellDef="let element"> {{element.orderType}} </mat-cell>
+                                    <mat-header-cell *matHeaderCellDef> Trade </mat-header-cell>
+                                    <mat-cell *matCellDef="let element"> {{element.orderType}} </mat-cell>
                                 </ng-container>
-                              
+
                                 <!-- Name Column -->
                                 <ng-container matColumnDef="Stock">
-                                  <mat-header-cell *matHeaderCellDef> Stock </mat-header-cell>
-                                  <mat-cell *matCellDef="let element"> {{element.stockName}} </mat-cell>
+                                    <mat-header-cell *matHeaderCellDef> Stock </mat-header-cell>
+                                    <mat-cell *matCellDef="let element"> {{element.stockName}} </mat-cell>
                                 </ng-container>
-                              
+
                                 <!-- Weight Column -->
                                 <ng-container matColumnDef="Shares">
-                                  <mat-header-cell *matHeaderCellDef> Shares </mat-header-cell>
-                                  <mat-cell *matCellDef="let element"> {{element.shareQty | number:'1.2-5'}} </mat-cell>
+                                    <mat-header-cell *matHeaderCellDef> Shares </mat-header-cell>
+                                    <mat-cell *matCellDef="let element"> {{element.shareQty | number:'1.2-5'}}
+                                    </mat-cell>
                                 </ng-container>
-                              
+
                                 <!-- Symbol Column -->
                                 <ng-container matColumnDef="Price">
-                                  <mat-header-cell *matHeaderCellDef> Price </mat-header-cell>
-                                  <mat-cell *matCellDef="let element"> {{element.stockPrice | currency:'USD':'symbol'}} </mat-cell>
+                                    <mat-header-cell *matHeaderCellDef> Price </mat-header-cell>
+                                    <mat-cell *matCellDef="let element"> {{element.stockPrice |
+                                        currency:'USD':'symbol'}} </mat-cell>
                                 </ng-container>
 
                                 <ng-container matColumnDef="Time">
                                     <mat-header-cell *matHeaderCellDef> Time </mat-header-cell>
-                                    <mat-cell *matCellDef="let element"> {{element.orderTime | epochToTimePipe}} </mat-cell>
-                                  </ng-container>
-                              
-                                <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" style="min-height:fit-content; background-color:#3C3E3D;" ></mat-header-row>
-                                <mat-row *matRowDef="let row; columns: displayedColumns;" style="min-height:fit-content;"></mat-row>
-                              </mat-table>
+                                    <mat-cell *matCellDef="let element"> {{element.orderTime | epochToTimePipe}}
+                                    </mat-cell>
+                                </ng-container>
+
+                                <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"
+                                    style="min-height:fit-content; background-color:#3C3E3D;"></mat-header-row>
+                                <mat-row *matRowDef="let row; columns: displayedColumns;"
+                                    style="min-height:fit-content;"></mat-row>
+                            </mat-table>
                             <!-- 
                             <div *ngFor="let trade of selectedStockHistoryData" style="display: flex;justify-content: space-evenly; ">
                                 <h3>{{trade.orderType}}</h3>
@@ -180,21 +215,22 @@
                                 <h3>{{trade.orderTime| number:'1.2-3'}}</h3>
                             </div> -->
                         </div>
-    
+
                     </div>
                 </div>
             </div>
-            
+
         </div>
-        
+
     </div>
 </div>
 <ng-template #modalTemplate>
-    <app-trade [stockName]="chartData.name" [stockPrice]="selectedStockCurrent" 
-     [stockTime]="chartData.time[chartData.time.length - 1]"[ownedShares]="selectedStockData.shareQty"
-     [availableFunds]="userSimFinData[0]!.spending" [orderHistory]="selectedStockHistoryData[0]">
+    <app-trade [stockName]="chartData.name" [stockPrice]="selectedStockCurrent"
+        [stockTime]="chartData.time[chartData.time.length - 1]" [ownedShares]="selectedStockData.shareQty"
+        [availableFunds]="userSimFinData[0]!.spending" [orderHistory]="selectedStockHistoryData[0]">
     </app-trade>
 </ng-template>
 <ng-template #addLineTemplate>
-    <app-add-graph [listOfLinesIncoming]="listOfAddedLines" [stockDataLength]="chartData.history.length"></app-add-graph>
+    <app-add-graph [listOfLinesIncoming]="listOfAddedLines"
+        [stockDataLength]="chartData.history.length"></app-add-graph>
 </ng-template>

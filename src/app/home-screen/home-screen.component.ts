@@ -486,6 +486,9 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
 
     return returnData
   }
+  resetZoom() {
+    this.stockChart.resetZoom()
+  }
   createOrUpdateChart() {
 
     console.log('create chart')
@@ -547,6 +550,20 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
 
         },
         plugins: {
+          zoom: {
+            pan: {
+              enabled: true
+            },
+            zoom: {
+              wheel: {
+                enabled: true,
+              },
+              pinch: {
+                enabled: true
+              },
+              mode: 'xy',
+            }
+          },
           annotation: {
             annotations: {
               orderLine: {

@@ -2034,7 +2034,7 @@ export class ServerTradeScreenComponent implements OnInit {
 
 
     //trend = ((length * sumOfTimeValue) - (sumOfTime * sumOfValue)) / ((length * sumOfTimeSquared) - (sumOfTime * sumOfTime))
-    trend = (data[index].value! - data[index - length].value!) / 120
+    trend = (data[index].value! - data[index - length].value!) / length
     if (this.count == 1) {
       console.log(index - length)
       console.log(trend)

@@ -41,7 +41,7 @@ import { DbListOfProfits } from '../shared/tasks/dbListOfProfits.js'
 import { SimulationController } from '../shared/controllers/SimulationController.js'
 import { runIntraDaySim } from './runIntraDaySim.js'
 import { SchwabController } from '../shared/controllers/SchwabController.js'
-import { getAccountInfo, getAccountNumbers } from './schwabApiCalls.js'
+import { getAccountInfo, getAccountNumbers, getEnvironment } from './schwabApiCalls.js'
 import { LoggerController } from '../shared/controllers/LoggerController.js'
 import { emailer } from './log-emailer.js'
 import { createExcel } from './logReport.js'
@@ -56,6 +56,7 @@ OAuthContoller.sendCall = oauthCall;
 SimulationController.intraDaySimulation = runIntraDaySim
 SchwabController.getAccountNumbers = getAccountNumbers
 SchwabController.getAccountInfo = getAccountInfo
+SchwabController.getEnvironment = getEnvironment
 LoggerController.sendEmail = emailer
 LoggerController.generateExcel = createExcel
 
@@ -98,13 +99,16 @@ export const api = remultExpress({
   initRequest
   , initApi: async () => {
     //socketCall(),
-    cron.schedule('0 11 * * 2-6', () => getDailyStockInfo()),
-      cron.schedule('30 13 * * 1-5', () => socketCall()),
+    if (process.env['environment'] == 'Prod') {
+      cron.schedule('0 11 * * 2-6', () => getDailyStockInfo()),
+        cron.schedule('30 13 * * 1-5', () => socketCall()),
 
-      cron.schedule('0 9 * * 1,4', () => resetTokens()),
-      cron.schedule('*/25 * * * *', () => loadNewToken()),
-      cron.schedule('45 20 * * 1-5 ', () => loadDailyDataIntoHistory()),
-      cron.schedule('10 20 * * 1-5 ', () => LoggerController.sendEmailCall())
+        cron.schedule('0 9 * * 1,4', () => resetTokens()),
+        cron.schedule('*/25 * * * *', () => loadNewToken()),
+        cron.schedule('45 20 * * 1-5 ', () => loadDailyDataIntoHistory()),
+        cron.schedule('10 20 * * 1-5 ', () => LoggerController.sendEmailCall())
+    }
+
     //LoggerController.sendEmailCall()
     //loadDailyDataIntoHistory()
 

@@ -1,7 +1,13 @@
+
+
+export const getEnvironment = (): string => {
+    return process.env['environment']!
+}
+
 //get the encrypted account number
 export const getAccountNumbers = async (accessToken: string): Promise<any> => {
     try {
-        
+
         const url = `https://api.schwabapi.com/trader/v1/accounts/accountNumbers`;
         const options = {
             method: 'GET',
