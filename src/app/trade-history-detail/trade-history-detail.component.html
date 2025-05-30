@@ -72,7 +72,7 @@
 
       <ng-container matColumnDef="Trade Strategy">
         <mat-header-cell *matHeaderCellDef> Trade Strategy </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{getTime(element.tradeStrategy)}} </mat-cell>
+        <mat-cell *matCellDef="let element"> {{element.tradeStrategy}} </mat-cell>
       </ng-container>
 
       <mat-header-row *matHeaderRowDef="displayedColumns" style="min-height:fit-content;"></mat-header-row>

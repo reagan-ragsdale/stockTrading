@@ -40,15 +40,15 @@ export class ServerTradeStrategies {
         this.stockMovingAverageCrossoverMap.set('NEE', { MovingAverageLength: 600, RollingVWAPLength: 1800, WaitTime: 1800000, TrailingStopAmt: .25, StopLossAmt: 0.003 })
         this.stockMovingAverageCrossoverMap.set('NVDA', { MovingAverageLength: 600, RollingVWAPLength: 1800, WaitTime: 3600000, TrailingStopAmt: .5, StopLossAmt: 0.003 })
 
-        this.stockMACrossDataMap.set('AAPL', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, rollingPV: 0, rollingV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
-        this.stockMACrossDataMap.set('MSFT', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, rollingPV: 0, rollingV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
-        this.stockMACrossDataMap.set('PLTR', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, rollingPV: 0, rollingV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
-        this.stockMACrossDataMap.set('AMD', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, rollingPV: 0, rollingV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
-        this.stockMACrossDataMap.set('TSLA', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, rollingPV: 0, rollingV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
-        this.stockMACrossDataMap.set('XOM', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, rollingPV: 0, rollingV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
-        this.stockMACrossDataMap.set('NVO', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, rollingPV: 0, rollingV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
-        this.stockMACrossDataMap.set('NEE', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, rollingPV: 0, rollingV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
-        this.stockMACrossDataMap.set('NVDA', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, rollingPV: 0, rollingV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+        this.stockMACrossDataMap.set('AAPL', { priceHistory: [], volumeHistory: [], EMA: 0, PreviousEMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, rollingPV: 0, rollingV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+        this.stockMACrossDataMap.set('MSFT', { priceHistory: [], volumeHistory: [], EMA: 0, PreviousEMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, rollingPV: 0, rollingV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+        this.stockMACrossDataMap.set('PLTR', { priceHistory: [], volumeHistory: [], EMA: 0, PreviousEMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, rollingPV: 0, rollingV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+        this.stockMACrossDataMap.set('AMD', { priceHistory: [], volumeHistory: [], EMA: 0, PreviousEMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, rollingPV: 0, rollingV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+        this.stockMACrossDataMap.set('TSLA', { priceHistory: [], volumeHistory: [], EMA: 0, PreviousEMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, rollingPV: 0, rollingV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+        this.stockMACrossDataMap.set('XOM', { priceHistory: [], volumeHistory: [], EMA: 0, PreviousEMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, rollingPV: 0, rollingV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+        this.stockMACrossDataMap.set('NVO', { priceHistory: [], volumeHistory: [], EMA: 0, PreviousEMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, rollingPV: 0, rollingV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+        this.stockMACrossDataMap.set('NEE', { priceHistory: [], volumeHistory: [], EMA: 0, PreviousEMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, rollingPV: 0, rollingV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+        this.stockMACrossDataMap.set('NVDA', { priceHistory: [], volumeHistory: [], EMA: 0, PreviousEMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, rollingPV: 0, rollingV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
 
         this.VWAPTrendMap.set('TSLA', { RollingVWAPLength: 1800, VWAPTrendLength: 120, WaitTime: 3600000, StopLossAmt: .002 })
         this.VWAPTrendMap.set('AAPL', { RollingVWAPLength: 1800, VWAPTrendLength: 120, WaitTime: 3600000, StopLossAmt: .002 })
@@ -116,82 +116,43 @@ export class ServerTradeStrategies {
         stockStrategyData.lastAsk = stockData.askPrice
         stockStrategyData.lastBid = stockData.bidPrice
         const multiplyer = 2 / (stockStrategyInfo.MovingAverageLength + 1)
+
+        let nonTradeLog: tradeLogDto | null = null
+
+        //if the length of the history is equal to what the long moving average length is then set the moving averages
+        if (stockStrategyData.priceHistory.length == stockStrategyInfo.MovingAverageLength) {
+            stockStrategyData.EMA = stockStrategyData.priceHistory.reduce((sum, val) => sum + val, 0) / stockStrategyInfo.MovingAverageLength
+        }
+        //else if its greater than then we do a revolving door first in first out and recalculate the moving averages
+        else if (stockStrategyData.priceHistory.length > stockStrategyInfo.MovingAverageLength) {
+            stockStrategyData.PreviousEMA = stockStrategyData.EMA
+            stockStrategyData.EMA = (stockData.stockPrice * multiplyer) + (stockStrategyData.EMA * (1 - multiplyer))
+            stockStrategyData.VWAP = stockStrategyData.cumulativePV / stockStrategyData.cumulativeV
+        }
         if (stockStrategyData.priceHistory.length < stockStrategyInfo.RollingVWAPLength) {
             stockStrategyData.rollingPV += (stockData.stockPrice * stockData.volume)
             stockStrategyData.rollingV += stockData.volume
         }
-        //if the length of the history is equal to what the long moving average length is then set the moving averages
-        if (stockStrategyData.priceHistory.length == stockStrategyInfo.MovingAverageLength) {
-            stockStrategyData.EMA = stockStrategyData.priceHistory.reduce((sum, val) => sum + val, 0) / stockStrategyInfo.MovingAverageLength
-            stockStrategyData.VWAP = 10000000
-        }
-        //else if its greater than then we do a revolving door first in first out and recalculate the moving averages
-        else if (stockStrategyData.priceHistory.length > stockStrategyInfo.MovingAverageLength) {
-            stockStrategyData.EMA = (stockData.stockPrice * multiplyer) + (stockStrategyData.EMA * (1 - multiplyer))
-            stockStrategyData.VWAP = stockStrategyData.cumulativePV / stockStrategyData.cumulativeV
-        }
-        if (stockStrategyData.priceHistory.length == stockStrategyInfo.RollingVWAPLength) {
+        else if (stockStrategyData.priceHistory.length == stockStrategyInfo.RollingVWAPLength) {
             stockStrategyData.RollingVWAP = stockStrategyData.rollingPV / stockStrategyData.rollingV
         }
         else if (stockStrategyData.priceHistory.length > stockStrategyInfo.RollingVWAPLength) {
             stockStrategyData.rollingPV += (stockData.stockPrice * stockData.volume) - (stockStrategyData.priceHistory[stockStrategyData.priceHistory.length - stockStrategyInfo.RollingVWAPLength] * stockStrategyData.volumeHistory[stockStrategyData.volumeHistory.length - stockStrategyInfo.RollingVWAPLength])
             stockStrategyData.rollingV += stockData.volume - stockStrategyData.volumeHistory[stockStrategyData.volumeHistory.length - stockStrategyInfo.RollingVWAPLength]
             stockStrategyData.RollingVWAP = stockStrategyData.rollingPV / stockStrategyData.rollingV
-        }
 
-        let nonTradeLog: tradeLogDto | null = null
-        let isBuy = true;
-        if (lastOrder.length > 0) {
-            isBuy = lastOrder[0].orderType == 'Sell' ? true : false;
-        }
-        if (stockInfo.numberOfTrades == 0 && stockStrategyInfo.WaitTime > 0) {
-            if (stockData.time < (this.startTime + stockStrategyInfo.WaitTime)) {
-                stockInfo.canTrade = false
-            }
-            else {
-                stockInfo.canTrade = true
-                nonTradeLog ??= {
-                    stockName: stockData.stockName,
-                    strategy: 'MACrossover',
-                    tradingAmount: 0,
-                    orderId: 0,
-                    shares: 0,
-                    dayTradeValues: structuredClone(stockStrategyInfo),
-                    stockInfo: structuredClone(stockInfo),
-                    stockDataInfo: structuredClone(stockStrategyData),
-                    logType: '',
-                    time: stockData.time,
-                }
-                nonTradeLog.logType += 'Stock Free To Trade After Initial Wait Time - '
-            }
-        }
-        if (stockInfo.numberOfTrades > 0 && stockInfo.canTrade == false) {
-            if ((Date.now() - lastOrder[0].orderTime) > 1800000) {
-                stockInfo.canTrade = true
-                nonTradeLog ??= {
-                    stockName: stockData.stockName,
-                    strategy: 'MACrossover',
-                    tradingAmount: 0,
-                    orderId: 0,
-                    shares: 0,
-                    dayTradeValues: structuredClone(stockStrategyInfo),
-                    stockInfo: structuredClone(stockInfo),
-                    stockDataInfo: structuredClone(stockStrategyData),
-                    logType: '',
-                    time: stockData.time,
-                }
-                nonTradeLog.logType += 'Stock Free To Trade After Stop Loss Timeout - '
-            }
-        }
 
-        if (isBuy && stockInfo.canTrade) {
-            if (stockStrategyData.EMA > stockStrategyData.VWAP) {
-                stockInfo.numberOfTrades++
-                stockInfo.stopLoss = stockData.askPrice * (1 - stockStrategyInfo.StopLossAmt)
-                stockInfo.tradeHigh = stockData.askPrice
-                stockInfo.stopLossGainThreshold = 0
-                return {
-                    shouldTrade: true, log: {
+            let isBuy = true;
+            if (lastOrder.length > 0) {
+                isBuy = lastOrder[0].orderType == 'Sell' ? true : false;
+            }
+            if (stockInfo.numberOfTrades == 0 && stockStrategyInfo.WaitTime > 0) {
+                if (stockData.time < (this.startTime + stockStrategyInfo.WaitTime)) {
+                    stockInfo.canTrade = false
+                }
+                else {
+                    stockInfo.canTrade = true
+                    nonTradeLog ??= {
                         stockName: stockData.stockName,
                         strategy: 'MACrossover',
                         tradingAmount: 0,
@@ -200,130 +161,174 @@ export class ServerTradeStrategies {
                         dayTradeValues: structuredClone(stockStrategyInfo),
                         stockInfo: structuredClone(stockInfo),
                         stockDataInfo: structuredClone(stockStrategyData),
-                        logType: 'Buy',
+                        logType: '',
                         time: stockData.time,
+                    }
+                    nonTradeLog.logType += 'Stock Free To Trade After Initial Wait Time - '
+                }
+            }
+            if (stockInfo.numberOfTrades > 0 && stockInfo.canTrade == false) {
+                if ((Date.now() - lastOrder[0].orderTime) > 1800000) {
+                    stockInfo.canTrade = true
+                    nonTradeLog ??= {
+                        stockName: stockData.stockName,
+                        strategy: 'MACrossover',
+                        tradingAmount: 0,
+                        orderId: 0,
+                        shares: 0,
+                        dayTradeValues: structuredClone(stockStrategyInfo),
+                        stockInfo: structuredClone(stockInfo),
+                        stockDataInfo: structuredClone(stockStrategyData),
+                        logType: '',
+                        time: stockData.time,
+                    }
+                    nonTradeLog.logType += 'Stock Free To Trade After Stop Loss Timeout - '
+                }
+            }
+
+            if (isBuy && stockInfo.canTrade) {
+                if ((stockStrategyData.EMA > stockStrategyData.VWAP) && (stockStrategyData.PreviousEMA <= stockStrategyData.VWAP)) {
+                    stockInfo.numberOfTrades++
+                    stockInfo.stopLoss = stockData.askPrice * (1 - stockStrategyInfo.StopLossAmt)
+                    stockInfo.tradeHigh = stockData.askPrice
+                    stockInfo.stopLossGainThreshold = 0
+                    return {
+                        shouldTrade: true, log: {
+                            stockName: stockData.stockName,
+                            strategy: 'MACrossover',
+                            tradingAmount: 0,
+                            orderId: 0,
+                            shares: 0,
+                            dayTradeValues: structuredClone(stockStrategyInfo),
+                            stockInfo: structuredClone(stockInfo),
+                            stockDataInfo: structuredClone(stockStrategyData),
+                            logType: 'Buy',
+                            time: stockData.time,
+                        }
+                    }
+                }
+            }
+            else if (!isBuy && stockInfo.canTrade) {
+                if (stockData.bidPrice > stockInfo.tradeHigh) {
+                    stockInfo.tradeHigh = stockData.bidPrice
+                    nonTradeLog ??= {
+                        stockName: stockData.stockName,
+                        strategy: 'MACrossover',
+                        tradingAmount: 0,
+                        orderId: lastOrder[0].orderId,
+                        shares: 0,
+                        dayTradeValues: structuredClone(stockStrategyInfo),
+                        stockInfo: structuredClone(stockInfo),
+                        stockDataInfo: structuredClone(stockStrategyData),
+                        logType: '',
+                        time: stockData.time,
+                    }
+                    nonTradeLog.logType += 'Increased Trade High - '
+                }
+                /* if (stockInfo.tradeHigh > (lastOrder[0].stockPrice + stockStrategyInfo.TrailingStopAmt)) {
+                    stockInfo.stopLossGainThreshold = stockInfo.tradeHigh - stockStrategyInfo.TrailingStopAmt
+                    nonTradeLog ??= {
+                        stockName: stockData.stockName,
+                        strategy: 'MACrossover',
+                        tradingAmount: 0,
+                        orderId: lastOrder[0].orderId,
+                        shares: 0,
+                        dayTradeValues: structuredClone(stockStrategyInfo),
+                        stockInfo: structuredClone(stockInfo),
+                        stockDataInfo: structuredClone(stockStrategyData),
+                        logType: '',
+                        time: stockData.time,
+                    }
+                    nonTradeLog.logType += 'Increased Trailing Stop - '
+                } */
+
+                if ((stockStrategyData.EMA < stockStrategyData.RollingVWAP) && (stockStrategyData.EMA >= stockStrategyData.RollingVWAP)) {
+                    stockInfo.numberOfTrades++
+                    stockInfo.stopLoss = 0
+                    stockInfo.tradeHigh = 0
+                    stockInfo.stopLossGainThreshold = 0
+                    return {
+                        shouldTrade: true, log: {
+                            stockName: stockData.stockName,
+                            strategy: 'MACrossover',
+                            tradingAmount: 0,
+                            orderId: lastOrder[0].orderId,
+                            shares: 0,
+                            dayTradeValues: structuredClone(stockStrategyInfo),
+                            stockInfo: structuredClone(stockInfo),
+                            stockDataInfo: structuredClone(stockStrategyData),
+                            logType: 'Sell',
+                            time: stockData.time,
+                        }
+                    }
+                }
+
+                /* if (stockData.bidPrice <= stockInfo.stopLossGainThreshold) {
+                    stockInfo.numberOfTrades++
+                    stockInfo.stopLoss = 0
+                    stockInfo.tradeHigh = 0
+                    stockInfo.stopLossGainThreshold = 0
+                    return {
+                        shouldTrade: true, log: {
+                            stockName: stockData.stockName,
+                            strategy: 'MACrossover',
+                            tradingAmount: 0,
+                            orderId: lastOrder[0].orderId,
+                            shares: 0,
+                            dayTradeValues: structuredClone(stockStrategyInfo),
+                            stockInfo: structuredClone(stockInfo),
+                            stockDataInfo: structuredClone(stockStrategyData),
+                            logType: 'Trailing Stop Sell',
+                            time: stockData.time,
+                        }
+                    }
+                } */
+                else if (stockData.bidPrice <= stockInfo.stopLoss) {
+                    stockInfo.numberOfTrades++
+                    stockInfo.stopLoss = 0
+                    stockInfo.tradeHigh = 0
+                    stockInfo.stopLossGainThreshold = 0
+                    stockInfo.canTrade = false
+                    return {
+                        shouldTrade: true, log: {
+                            stockName: stockData.stockName,
+                            strategy: 'MACrossover',
+                            tradingAmount: 0,
+                            orderId: lastOrder[0].orderId,
+                            shares: 0,
+                            dayTradeValues: structuredClone(stockStrategyInfo),
+                            stockInfo: structuredClone(stockInfo),
+                            stockDataInfo: structuredClone(stockStrategyData),
+                            logType: 'Stop Loss Sell',
+                            time: stockData.time,
+                        }
+                    }
+                }
+                else if (stockData.time > this.endTime) {
+                    stockInfo.numberOfTrades++
+                    stockInfo.stopLoss = 0
+                    stockInfo.tradeHigh = 0
+                    stockInfo.stopLossGainThreshold = 0
+                    stockInfo.canTrade = false
+                    return {
+                        shouldTrade: true, log: {
+                            stockName: stockData.stockName,
+                            strategy: 'MACrossover',
+                            tradingAmount: 0,
+                            orderId: lastOrder[0].orderId,
+                            shares: 0,
+                            dayTradeValues: structuredClone(stockStrategyInfo),
+                            stockInfo: structuredClone(stockInfo),
+                            stockDataInfo: structuredClone(stockStrategyData),
+                            logType: 'End Of Day Sell',
+                            time: stockData.time,
+                        }
                     }
                 }
             }
         }
-        else if (!isBuy && stockInfo.canTrade) {
-            if (stockData.bidPrice > stockInfo.tradeHigh) {
-                stockInfo.tradeHigh = stockData.bidPrice
-                nonTradeLog ??= {
-                    stockName: stockData.stockName,
-                    strategy: 'MACrossover',
-                    tradingAmount: 0,
-                    orderId: lastOrder[0].orderId,
-                    shares: 0,
-                    dayTradeValues: structuredClone(stockStrategyInfo),
-                    stockInfo: structuredClone(stockInfo),
-                    stockDataInfo: structuredClone(stockStrategyData),
-                    logType: '',
-                    time: stockData.time,
-                }
-                nonTradeLog.logType += 'Increased Trade High - '
-            }
-            /* if (stockInfo.tradeHigh > (lastOrder[0].stockPrice + stockStrategyInfo.TrailingStopAmt)) {
-                stockInfo.stopLossGainThreshold = stockInfo.tradeHigh - stockStrategyInfo.TrailingStopAmt
-                nonTradeLog ??= {
-                    stockName: stockData.stockName,
-                    strategy: 'MACrossover',
-                    tradingAmount: 0,
-                    orderId: lastOrder[0].orderId,
-                    shares: 0,
-                    dayTradeValues: structuredClone(stockStrategyInfo),
-                    stockInfo: structuredClone(stockInfo),
-                    stockDataInfo: structuredClone(stockStrategyData),
-                    logType: '',
-                    time: stockData.time,
-                }
-                nonTradeLog.logType += 'Increased Trailing Stop - '
-            } */
 
-            if (stockStrategyData.EMA < stockStrategyData.RollingVWAP) {
-                stockInfo.numberOfTrades++
-                stockInfo.stopLoss = 0
-                stockInfo.tradeHigh = 0
-                stockInfo.stopLossGainThreshold = 0
-                return {
-                    shouldTrade: true, log: {
-                        stockName: stockData.stockName,
-                        strategy: 'MACrossover',
-                        tradingAmount: 0,
-                        orderId: lastOrder[0].orderId,
-                        shares: 0,
-                        dayTradeValues: structuredClone(stockStrategyInfo),
-                        stockInfo: structuredClone(stockInfo),
-                        stockDataInfo: structuredClone(stockStrategyData),
-                        logType: 'Sell',
-                        time: stockData.time,
-                    }
-                }
-            }
 
-            /* if (stockData.bidPrice <= stockInfo.stopLossGainThreshold) {
-                stockInfo.numberOfTrades++
-                stockInfo.stopLoss = 0
-                stockInfo.tradeHigh = 0
-                stockInfo.stopLossGainThreshold = 0
-                return {
-                    shouldTrade: true, log: {
-                        stockName: stockData.stockName,
-                        strategy: 'MACrossover',
-                        tradingAmount: 0,
-                        orderId: lastOrder[0].orderId,
-                        shares: 0,
-                        dayTradeValues: structuredClone(stockStrategyInfo),
-                        stockInfo: structuredClone(stockInfo),
-                        stockDataInfo: structuredClone(stockStrategyData),
-                        logType: 'Trailing Stop Sell',
-                        time: stockData.time,
-                    }
-                }
-            } */
-            else if (stockData.bidPrice <= stockInfo.stopLoss) {
-                stockInfo.numberOfTrades++
-                stockInfo.stopLoss = 0
-                stockInfo.tradeHigh = 0
-                stockInfo.stopLossGainThreshold = 0
-                stockInfo.canTrade = false
-                return {
-                    shouldTrade: true, log: {
-                        stockName: stockData.stockName,
-                        strategy: 'MACrossover',
-                        tradingAmount: 0,
-                        orderId: lastOrder[0].orderId,
-                        shares: 0,
-                        dayTradeValues: structuredClone(stockStrategyInfo),
-                        stockInfo: structuredClone(stockInfo),
-                        stockDataInfo: structuredClone(stockStrategyData),
-                        logType: 'Stop Loss Sell',
-                        time: stockData.time,
-                    }
-                }
-            }
-            else if (stockData.time > this.endTime) {
-                stockInfo.numberOfTrades++
-                stockInfo.stopLoss = 0
-                stockInfo.tradeHigh = 0
-                stockInfo.stopLossGainThreshold = 0
-                stockInfo.canTrade = false
-                return {
-                    shouldTrade: true, log: {
-                        stockName: stockData.stockName,
-                        strategy: 'MACrossover',
-                        tradingAmount: 0,
-                        orderId: lastOrder[0].orderId,
-                        shares: 0,
-                        dayTradeValues: structuredClone(stockStrategyInfo),
-                        stockInfo: structuredClone(stockInfo),
-                        stockDataInfo: structuredClone(stockStrategyData),
-                        logType: 'End Of Day Sell',
-                        time: stockData.time,
-                    }
-                }
-            }
-        }
         return { shouldTrade: false, log: nonTradeLog }
     }
 
@@ -340,6 +345,7 @@ export class ServerTradeStrategies {
         stockStrategyData.lastPrice = stockData.stockPrice
         stockStrategyData.lastAsk = stockData.askPrice
         stockStrategyData.lastBid = stockData.bidPrice
+        let nonTradeLog: tradeLogDto | null = null
 
         if (stockStrategyData.priceHistory.length < stockStrategyInfo.RollingVWAPLength) {
             stockStrategyData.rollingPV += (stockData.stockPrice * stockData.volume)
@@ -378,59 +384,18 @@ export class ServerTradeStrategies {
             stockStrategyData.RollingVWAPTrendData.shift()
             stockStrategyData.RollingVWAPTrendData.push(stockStrategyData.RollingVWAP)
             stockStrategyData.RollingVWAPTrend = (stockStrategyData.RollingVWAPTrendData[stockStrategyData.RollingVWAPTrendData.length - 1] - stockStrategyData.RollingVWAPTrendData[0]) / stockStrategyInfo.VWAPTrendLength
-        }
 
-        let nonTradeLog: tradeLogDto | null = null
-        let isBuy = true;
-        if (lastOrder.length > 0) {
-            isBuy = lastOrder[0].orderType == 'Sell' ? true : false;
-        }
-        if (stockInfo.numberOfTrades == 0 && stockStrategyInfo.WaitTime > 0) {
-            if (stockData.time < (this.startTime + stockStrategyInfo.WaitTime)) {
-                stockInfo.canTrade = false
+            let isBuy = true;
+            if (lastOrder.length > 0) {
+                isBuy = lastOrder[0].orderType == 'Sell' ? true : false;
             }
-            else {
-                stockInfo.canTrade = true
-                nonTradeLog ??= {
-                    stockName: stockData.stockName,
-                    strategy: 'VWAP Trend',
-                    tradingAmount: 0,
-                    orderId: 0,
-                    shares: 0,
-                    dayTradeValues: structuredClone(stockStrategyInfo),
-                    stockInfo: structuredClone(stockInfo),
-                    stockDataInfo: structuredClone(stockStrategyData),
-                    logType: '',
-                    time: stockData.time,
+            if (stockInfo.numberOfTrades == 0 && stockStrategyInfo.WaitTime > 0) {
+                if (stockData.time < (this.startTime + stockStrategyInfo.WaitTime)) {
+                    stockInfo.canTrade = false
                 }
-                nonTradeLog.logType += 'Stock Free To Trade After Initial Wait Time - '
-            }
-        }
-        if (stockInfo.numberOfTrades > 0 && stockInfo.canTrade == false) {
-            if ((Date.now() - lastOrder[0].orderTime) > 1800000) {
-                stockInfo.canTrade = true
-                nonTradeLog ??= {
-                    stockName: stockData.stockName,
-                    strategy: 'VWAP Trend',
-                    tradingAmount: 0,
-                    orderId: 0,
-                    shares: 0,
-                    dayTradeValues: structuredClone(stockStrategyInfo),
-                    stockInfo: structuredClone(stockInfo),
-                    stockDataInfo: structuredClone(stockStrategyData),
-                    logType: '',
-                    time: stockData.time,
-                }
-                nonTradeLog.logType += 'Stock Free To Trade After Stop Loss Timeout - '
-            }
-        }
-
-        if (isBuy && stockInfo.canTrade) {
-            if ((((stockStrategyData.RollingVWAP - stockStrategyData.CumulativeVWAP) / stockStrategyData.CumulativeVWAP) < -.002) && stockStrategyData.RollingVWAPTrend > 0) {
-                stockInfo.numberOfTrades++
-                stockInfo.stopLoss = stockData.askPrice * (1 - stockStrategyInfo.StopLossAmt)
-                return {
-                    shouldTrade: true, log: {
+                else {
+                    stockInfo.canTrade = true
+                    nonTradeLog ??= {
                         stockName: stockData.stockName,
                         strategy: 'VWAP Trend',
                         tradingAmount: 0,
@@ -439,78 +404,122 @@ export class ServerTradeStrategies {
                         dayTradeValues: structuredClone(stockStrategyInfo),
                         stockInfo: structuredClone(stockInfo),
                         stockDataInfo: structuredClone(stockStrategyData),
-                        logType: 'Buy',
+                        logType: '',
                         time: stockData.time,
                     }
+                    nonTradeLog.logType += 'Stock Free To Trade After Initial Wait Time - '
                 }
             }
-        }
-        else if (!isBuy && stockInfo.canTrade) {
-
-            if ((stockStrategyData.RollingVWAP > stockStrategyData.CumulativeVWAP) && stockStrategyData.RollingVWAPTrend < 0) {
-                stockInfo.numberOfTrades++
-                stockInfo.stopLoss = 0
-                stockInfo.tradeHigh = 0
-                stockInfo.stopLossGainThreshold = 0
-                return {
-                    shouldTrade: true, log: {
+            if (stockInfo.numberOfTrades > 0 && stockInfo.canTrade == false) {
+                if ((Date.now() - lastOrder[0].orderTime) > 1800000) {
+                    stockInfo.canTrade = true
+                    nonTradeLog ??= {
                         stockName: stockData.stockName,
                         strategy: 'VWAP Trend',
                         tradingAmount: 0,
-                        orderId: lastOrder[0].orderId,
+                        orderId: 0,
                         shares: 0,
                         dayTradeValues: structuredClone(stockStrategyInfo),
                         stockInfo: structuredClone(stockInfo),
                         stockDataInfo: structuredClone(stockStrategyData),
-                        logType: 'Sell',
+                        logType: '',
                         time: stockData.time,
                     }
+                    nonTradeLog.logType += 'Stock Free To Trade After Stop Loss Timeout - '
                 }
             }
 
-            else if (stockData.bidPrice <= stockInfo.stopLoss) {
-                stockInfo.numberOfTrades++
-                stockInfo.stopLoss = 0
-                stockInfo.tradeHigh = 0
-                stockInfo.stopLossGainThreshold = 0
-                stockInfo.canTrade = false
-                return {
-                    shouldTrade: true, log: {
-                        stockName: stockData.stockName,
-                        strategy: 'VWAP Trend',
-                        tradingAmount: 0,
-                        orderId: lastOrder[0].orderId,
-                        shares: 0,
-                        dayTradeValues: structuredClone(stockStrategyInfo),
-                        stockInfo: structuredClone(stockInfo),
-                        stockDataInfo: structuredClone(stockStrategyData),
-                        logType: 'Stop Loss Sell',
-                        time: stockData.time,
+            if (isBuy && stockInfo.canTrade) {
+                if ((((stockStrategyData.RollingVWAP - stockStrategyData.CumulativeVWAP) / stockStrategyData.CumulativeVWAP) < -.002) && stockStrategyData.RollingVWAPTrend > 0) {
+                    stockInfo.numberOfTrades++
+                    stockInfo.stopLoss = stockData.askPrice * (1 - stockStrategyInfo.StopLossAmt)
+                    return {
+                        shouldTrade: true, log: {
+                            stockName: stockData.stockName,
+                            strategy: 'VWAP Trend',
+                            tradingAmount: 0,
+                            orderId: 0,
+                            shares: 0,
+                            dayTradeValues: structuredClone(stockStrategyInfo),
+                            stockInfo: structuredClone(stockInfo),
+                            stockDataInfo: structuredClone(stockStrategyData),
+                            logType: 'Buy',
+                            time: stockData.time,
+                        }
                     }
                 }
             }
-            else if (stockData.time > this.endTime) {
-                stockInfo.numberOfTrades++
-                stockInfo.stopLoss = 0
-                stockInfo.tradeHigh = 0
-                stockInfo.stopLossGainThreshold = 0
-                stockInfo.canTrade = false
-                return {
-                    shouldTrade: true, log: {
-                        stockName: stockData.stockName,
-                        strategy: 'VWAP Trend',
-                        tradingAmount: 0,
-                        orderId: lastOrder[0].orderId,
-                        shares: 0,
-                        dayTradeValues: structuredClone(stockStrategyInfo),
-                        stockInfo: structuredClone(stockInfo),
-                        stockDataInfo: structuredClone(stockStrategyData),
-                        logType: 'End Of Day Sell',
-                        time: stockData.time,
+            else if (!isBuy && stockInfo.canTrade) {
+
+                if ((stockStrategyData.RollingVWAP > stockStrategyData.CumulativeVWAP) && stockStrategyData.RollingVWAPTrend < 0) {
+                    stockInfo.numberOfTrades++
+                    stockInfo.stopLoss = 0
+                    stockInfo.tradeHigh = 0
+                    stockInfo.stopLossGainThreshold = 0
+                    return {
+                        shouldTrade: true, log: {
+                            stockName: stockData.stockName,
+                            strategy: 'VWAP Trend',
+                            tradingAmount: 0,
+                            orderId: lastOrder[0].orderId,
+                            shares: 0,
+                            dayTradeValues: structuredClone(stockStrategyInfo),
+                            stockInfo: structuredClone(stockInfo),
+                            stockDataInfo: structuredClone(stockStrategyData),
+                            logType: 'Sell',
+                            time: stockData.time,
+                        }
+                    }
+                }
+
+                else if (stockData.bidPrice <= stockInfo.stopLoss) {
+                    stockInfo.numberOfTrades++
+                    stockInfo.stopLoss = 0
+                    stockInfo.tradeHigh = 0
+                    stockInfo.stopLossGainThreshold = 0
+                    stockInfo.canTrade = false
+                    return {
+                        shouldTrade: true, log: {
+                            stockName: stockData.stockName,
+                            strategy: 'VWAP Trend',
+                            tradingAmount: 0,
+                            orderId: lastOrder[0].orderId,
+                            shares: 0,
+                            dayTradeValues: structuredClone(stockStrategyInfo),
+                            stockInfo: structuredClone(stockInfo),
+                            stockDataInfo: structuredClone(stockStrategyData),
+                            logType: 'Stop Loss Sell',
+                            time: stockData.time,
+                        }
+                    }
+                }
+                else if (stockData.time > this.endTime) {
+                    stockInfo.numberOfTrades++
+                    stockInfo.stopLoss = 0
+                    stockInfo.tradeHigh = 0
+                    stockInfo.stopLossGainThreshold = 0
+                    stockInfo.canTrade = false
+                    return {
+                        shouldTrade: true, log: {
+                            stockName: stockData.stockName,
+                            strategy: 'VWAP Trend',
+                            tradingAmount: 0,
+                            orderId: lastOrder[0].orderId,
+                            shares: 0,
+                            dayTradeValues: structuredClone(stockStrategyInfo),
+                            stockInfo: structuredClone(stockInfo),
+                            stockDataInfo: structuredClone(stockStrategyData),
+                            logType: 'End Of Day Sell',
+                            time: stockData.time,
+                        }
                     }
                 }
             }
+
         }
+
+
+
         return { shouldTrade: false, log: nonTradeLog }
     }
 }

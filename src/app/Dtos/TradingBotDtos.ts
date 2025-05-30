@@ -31,6 +31,7 @@ export type stockMACrossData = {
     priceHistory: number[];
     volumeHistory: number[];
     EMA: number;
+    PreviousEMA: number;
     VWAP: number;
     RollingVWAP: number;
     cumulativePV: number;
