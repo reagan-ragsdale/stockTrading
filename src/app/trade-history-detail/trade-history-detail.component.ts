@@ -33,7 +33,7 @@ export class TradeHistoryDetailComponent implements OnInit {
   isLoading: boolean = true
   distinctStocks: string[] = ['All']
   selectedStockOrders: DbOrders[] = []
-  displayedColumns: string[] = ["Trade", "Stock", "Shares", "Price", "Date", "Time"]
+  displayedColumns: string[] = ["Trade", "Stock", "Shares", "Price", "Date", "Time", 'Trade Strategy']
   dateTypes: string[] = ['All', 'Today', 'This Week', 'This Month', 'Choose Date']
   dateType: string = this.dateTypes[0]
   allOrders: DbOrders[] = []
@@ -170,26 +170,32 @@ export class TradeHistoryDetailComponent implements OnInit {
 
     let totalWinAmt: number = 0
     let totalLossAmt: number = 0
-    let distinctStocks = this.selectedStockOrders.map(e => e.stockName).filter((v, i, a) => a.indexOf(v) === i)
-    for (let j = 0; j < distinctStocks.length; j++) {
-      let filteredStockOrders = this.selectedStockOrders.filter(e => e.stockName == distinctStocks[j])
-      for (let i = 0; i < filteredStockOrders.length - 1; i++) {
-        //need to find each pair of buy and sells
-        if (filteredStockOrders[i].orderType == 'Sell' && filteredStockOrders[i + 1].orderType == 'Buy') {
-          let profitShare = (filteredStockOrders[i].stockPrice - filteredStockOrders[i + 1].stockPrice)
-          let profit = ((filteredStockOrders[i].shareQty * filteredStockOrders[i].stockPrice) - (filteredStockOrders[i + 1].stockPrice * filteredStockOrders[i + 1].shareQty))
-          this.totalProfit += profit
-          if (profitShare > 0) {
-            this.totalWins++
-            totalWinAmt += profitShare
-          }
-          else {
-            this.totalLosses++
-            totalLossAmt += profitShare
+
+    let distinctTradeStrategies = this.selectedStockOrders.map(e => e.tradeStrategy).filter((v, i, a) => a.indexOf(v) === i)
+    for (let k = 0; k < distinctTradeStrategies.length; k++) {
+      let filteredStocks = this.selectedStockOrders.filter(e => e.tradeStrategy == distinctTradeStrategies[k])
+      let distinctStocks = filteredStocks.map(e => e.stockName).filter((v, i, a) => a.indexOf(v) === i)
+      for (let j = 0; j < distinctStocks.length; j++) {
+        let filteredStockOrders = this.selectedStockOrders.filter(e => e.stockName == distinctStocks[j] && e.tradeStrategy == distinctTradeStrategies[k])
+        for (let i = 0; i < filteredStockOrders.length - 1; i++) {
+          //need to find each pair of buy and sells
+          if (filteredStockOrders[i].orderType == 'Sell' && filteredStockOrders[i + 1].orderType == 'Buy') {
+            let profitShare = (filteredStockOrders[i].stockPrice - filteredStockOrders[i + 1].stockPrice)
+            let profit = ((filteredStockOrders[i].shareQty * filteredStockOrders[i].stockPrice) - (filteredStockOrders[i + 1].stockPrice * filteredStockOrders[i + 1].shareQty))
+            this.totalProfit += profit
+            if (profitShare > 0) {
+              this.totalWins++
+              totalWinAmt += profitShare
+            }
+            else {
+              this.totalLosses++
+              totalLossAmt += profitShare
+            }
           }
         }
       }
     }
+
 
     this.percentChange = this.totalProfit / (this.userSimFinData[0].spending - this.totalProfit)
     this.averageWinAmt = this.totalWins == 0 ? 0 : (totalWinAmt / this.totalWins)

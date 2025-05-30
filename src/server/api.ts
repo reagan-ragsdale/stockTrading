@@ -98,13 +98,16 @@ export const api = remultExpress({
   initRequest
   , initApi: async () => {
     //socketCall(),
-    cron.schedule('0 11 * * 2-6', () => getDailyStockInfo()),
-      cron.schedule('30 13 * * 1-5', () => socketCall()),
+    if (process.env['environment'] == 'Prod') {
+      cron.schedule('0 11 * * 2-6', () => getDailyStockInfo()),
+        cron.schedule('30 13 * * 1-5', () => socketCall()),
 
-      cron.schedule('0 9 * * 1,4', () => resetTokens()),
-      cron.schedule('*/25 * * * *', () => loadNewToken()),
-      cron.schedule('45 20 * * 1-5 ', () => loadDailyDataIntoHistory()),
-      cron.schedule('10 20 * * 1-5 ', () => LoggerController.sendEmailCall())
+        cron.schedule('0 9 * * 1,4', () => resetTokens()),
+        cron.schedule('*/25 * * * *', () => loadNewToken()),
+        cron.schedule('45 20 * * 1-5 ', () => loadDailyDataIntoHistory()),
+        cron.schedule('10 20 * * 1-5 ', () => LoggerController.sendEmailCall())
+    }
+
     //LoggerController.sendEmailCall()
     //loadDailyDataIntoHistory()
 

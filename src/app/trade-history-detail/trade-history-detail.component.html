@@ -1,74 +1,82 @@
 <div style="display:flex; flex-direction: column;">
-    <div class="top-bar" style="display:flex;">
-        <mat-form-field style="padding-left:.5rem;">
-            <mat-label>Stock</mat-label>
-            <mat-select disableRipple [(value)]="selectedStockName">
-              <mat-option *ngFor="let stock of distinctStocks" value="{{stock}}" (onSelectionChange)="onSelectedStockChange($event)">{{stock}}</mat-option>
-            </mat-select>
-          </mat-form-field>
-          <mat-form-field style="padding-left:.5rem;">
-            <mat-label>Date Range</mat-label>
-            <mat-select disableRipple [(value)]="dateType">
-              <mat-option *ngFor="let type of dateTypes" value="{{type}}" (onSelectionChange)="onSelectedDateTypeChange($event)">{{type}}</mat-option>
-            </mat-select>
-          </mat-form-field>
-          <mat-form-field style="padding-left:.5rem;" *ngIf="dateType == 'Choose Date'">
-            <mat-label>Start Date</mat-label>
-            <input matInput placeholder="MM/DD/YYYY" [(ngModel)]="startDate">
-          </mat-form-field>
-          <mat-form-field style="padding-left:.5rem;" *ngIf="dateType == 'Choose Date'">
-            <mat-label>End Date</mat-label>
-            <input matInput placeholder="MM/DD/YYYY" [(ngModel)]="endDate" >
-          </mat-form-field>
-          
-          <button style="margin-top: auto; margin-bottom: auto; margin-left: .5rem;" mat-raised-button color="primary" aria-label="Search" (click)="onSubmitSearch()">Search</button>
-          <div style="display:flex; align-items: end; gap: 1rem; margin-left:1rem; width:100%;">
-            <h3>Total: {{totalProfit | currency:'USD':'symbol'}}</h3>
-            <h3>{{percentChange | percent: '2.1-2'}}</h3>
-            <h3 style="margin-left:auto;">Wins: {{totalWins}}</h3>
-            <h3>Losses: {{totalLosses}}</h3>
-            <h3>Average Win/Share: {{averageWinAmt | currency:'USD':'symbol'}}</h3>
-            <h3 style="margin-right:2rem;">Average Loss/Share: {{averageLossAmt | currency:'USD':'symbol'}}</h3>
-          </div>
-    </div>
-    <div class="trade-body" style="display:flex; margin-bottom:1rem;">
-        <mat-table [dataSource]="selectedStockOrders"  style="height:inherit;">
-            <!-- Position Column -->
-            <ng-container matColumnDef="Trade">
-              <mat-header-cell *matHeaderCellDef> Trade </mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{element.orderType}} </mat-cell>
-            </ng-container>
-          
-            <!-- Name Column -->
-            <ng-container matColumnDef="Stock">
-              <mat-header-cell *matHeaderCellDef> Stock </mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{element.stockName}} </mat-cell>
-            </ng-container>
-          
-            <!-- Weight Column -->
-            <ng-container matColumnDef="Shares">
-              <mat-header-cell *matHeaderCellDef> Shares </mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{element.shareQty | number:'1.2-5'}} </mat-cell>
-            </ng-container>
-          
-            <!-- Symbol Column -->
-            <ng-container matColumnDef="Price">
-              <mat-header-cell *matHeaderCellDef> Price </mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{element.stockPrice | currency:'USD':'symbol'}} </mat-cell>
-            </ng-container>
+  <div class="top-bar" style="display:flex;">
+    <mat-form-field style="padding-left:.5rem;">
+      <mat-label>Stock</mat-label>
+      <mat-select disableRipple [(value)]="selectedStockName">
+        <mat-option *ngFor="let stock of distinctStocks" value="{{stock}}"
+          (onSelectionChange)="onSelectedStockChange($event)">{{stock}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field style="padding-left:.5rem;">
+      <mat-label>Date Range</mat-label>
+      <mat-select disableRipple [(value)]="dateType">
+        <mat-option *ngFor="let type of dateTypes" value="{{type}}"
+          (onSelectionChange)="onSelectedDateTypeChange($event)">{{type}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field style="padding-left:.5rem;" *ngIf="dateType == 'Choose Date'">
+      <mat-label>Start Date</mat-label>
+      <input matInput placeholder="MM/DD/YYYY" [(ngModel)]="startDate">
+    </mat-form-field>
+    <mat-form-field style="padding-left:.5rem;" *ngIf="dateType == 'Choose Date'">
+      <mat-label>End Date</mat-label>
+      <input matInput placeholder="MM/DD/YYYY" [(ngModel)]="endDate">
+    </mat-form-field>
 
-            <ng-container matColumnDef="Date">
-              <mat-header-cell *matHeaderCellDef> Date </mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{convertEpochToDate(element.orderTime)}} </mat-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="Time">
-                <mat-header-cell *matHeaderCellDef> Time </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{getTime(element.orderTime)}} </mat-cell>
-            </ng-container>
-          
-            <mat-header-row *matHeaderRowDef="displayedColumns" style="min-height:fit-content;" ></mat-header-row>
-            <mat-row *matRowDef="let row; columns: displayedColumns;" style="min-height:fit-content;"></mat-row>
-          </mat-table>
+    <button style="margin-top: auto; margin-bottom: auto; margin-left: .5rem;" mat-raised-button color="primary"
+      aria-label="Search" (click)="onSubmitSearch()">Search</button>
+    <div style="display:flex; align-items: end; gap: 1rem; margin-left:1rem; width:100%;">
+      <h3>Total: {{totalProfit | currency:'USD':'symbol'}}</h3>
+      <h3>{{percentChange | percent: '2.1-2'}}</h3>
+      <h3 style="margin-left:auto;">Wins: {{totalWins}}</h3>
+      <h3>Losses: {{totalLosses}}</h3>
+      <h3>Average Win/Share: {{averageWinAmt | currency:'USD':'symbol'}}</h3>
+      <h3 style="margin-right:2rem;">Average Loss/Share: {{averageLossAmt | currency:'USD':'symbol'}}</h3>
     </div>
+  </div>
+  <div class="trade-body" style="display:flex; margin-bottom:1rem;">
+    <mat-table [dataSource]="selectedStockOrders" style="height:inherit;">
+      <!-- Position Column -->
+      <ng-container matColumnDef="Trade">
+        <mat-header-cell *matHeaderCellDef> Trade </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.orderType}} </mat-cell>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="Stock">
+        <mat-header-cell *matHeaderCellDef> Stock </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.stockName}} </mat-cell>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="Shares">
+        <mat-header-cell *matHeaderCellDef> Shares </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.shareQty | number:'1.2-5'}} </mat-cell>
+      </ng-container>
+
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="Price">
+        <mat-header-cell *matHeaderCellDef> Price </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.stockPrice | currency:'USD':'symbol'}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="Date">
+        <mat-header-cell *matHeaderCellDef> Date </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{convertEpochToDate(element.orderTime)}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="Time">
+        <mat-header-cell *matHeaderCellDef> Time </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{getTime(element.orderTime)}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="Trade Strategy">
+        <mat-header-cell *matHeaderCellDef> Trade Strategy </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{getTime(element.tradeStrategy)}} </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns" style="min-height:fit-content;"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;" style="min-height:fit-content;"></mat-row>
+    </mat-table>
+  </div>
 </div>

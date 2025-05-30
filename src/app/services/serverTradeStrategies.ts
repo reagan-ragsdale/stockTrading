@@ -40,15 +40,15 @@ export class ServerTradeStrategies {
         this.stockMovingAverageCrossoverMap.set('NEE', { MovingAverageLength: 600, RollingVWAPLength: 1800, WaitTime: 1800000, TrailingStopAmt: .25, StopLossAmt: 0.003 })
         this.stockMovingAverageCrossoverMap.set('NVDA', { MovingAverageLength: 600, RollingVWAPLength: 1800, WaitTime: 3600000, TrailingStopAmt: .5, StopLossAmt: 0.003 })
 
-        this.stockMACrossDataMap.set('AAPL', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
-        this.stockMACrossDataMap.set('MSFT', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
-        this.stockMACrossDataMap.set('PLTR', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
-        this.stockMACrossDataMap.set('AMD', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
-        this.stockMACrossDataMap.set('TSLA', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
-        this.stockMACrossDataMap.set('XOM', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
-        this.stockMACrossDataMap.set('NVO', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
-        this.stockMACrossDataMap.set('NEE', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
-        this.stockMACrossDataMap.set('NVDA', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+        this.stockMACrossDataMap.set('AAPL', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, rollingPV: 0, rollingV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+        this.stockMACrossDataMap.set('MSFT', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, rollingPV: 0, rollingV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+        this.stockMACrossDataMap.set('PLTR', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, rollingPV: 0, rollingV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+        this.stockMACrossDataMap.set('AMD', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, rollingPV: 0, rollingV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+        this.stockMACrossDataMap.set('TSLA', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, rollingPV: 0, rollingV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+        this.stockMACrossDataMap.set('XOM', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, rollingPV: 0, rollingV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+        this.stockMACrossDataMap.set('NVO', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, rollingPV: 0, rollingV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+        this.stockMACrossDataMap.set('NEE', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, rollingPV: 0, rollingV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
+        this.stockMACrossDataMap.set('NVDA', { priceHistory: [], volumeHistory: [], EMA: 0, VWAP: 0, RollingVWAP: 0, cumulativePV: 0, cumulativeV: 0, rollingPV: 0, rollingV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
 
         this.VWAPTrendMap.set('TSLA', { RollingVWAPLength: 1800, VWAPTrendLength: 120, WaitTime: 3600000, StopLossAmt: .002 })
         this.VWAPTrendMap.set('AAPL', { RollingVWAPLength: 1800, VWAPTrendLength: 120, WaitTime: 3600000, StopLossAmt: .002 })
@@ -116,6 +116,10 @@ export class ServerTradeStrategies {
         stockStrategyData.lastAsk = stockData.askPrice
         stockStrategyData.lastBid = stockData.bidPrice
         const multiplyer = 2 / (stockStrategyInfo.MovingAverageLength + 1)
+        if (stockStrategyData.priceHistory.length < stockStrategyInfo.RollingVWAPLength) {
+            stockStrategyData.rollingPV += (stockData.stockPrice * stockData.volume)
+            stockStrategyData.rollingV += stockData.volume
+        }
         //if the length of the history is equal to what the long moving average length is then set the moving averages
         if (stockStrategyData.priceHistory.length == stockStrategyInfo.MovingAverageLength) {
             stockStrategyData.EMA = stockStrategyData.priceHistory.reduce((sum, val) => sum + val, 0) / stockStrategyInfo.MovingAverageLength
@@ -127,12 +131,12 @@ export class ServerTradeStrategies {
             stockStrategyData.VWAP = stockStrategyData.cumulativePV / stockStrategyData.cumulativeV
         }
         if (stockStrategyData.priceHistory.length == stockStrategyInfo.RollingVWAPLength) {
-            stockStrategyData.RollingVWAP = stockStrategyData.cumulativePV / stockStrategyData.cumulativeV
+            stockStrategyData.RollingVWAP = stockStrategyData.rollingPV / stockStrategyData.rollingV
         }
         else if (stockStrategyData.priceHistory.length > stockStrategyInfo.RollingVWAPLength) {
-            let tempCumulativePV = stockStrategyData.cumulativePV - (stockStrategyData.priceHistory[stockStrategyData.priceHistory.length - stockStrategyInfo.RollingVWAPLength] * stockStrategyData.volumeHistory[stockStrategyData.volumeHistory.length - stockStrategyInfo.RollingVWAPLength])
-            let tempCumulativeV = stockStrategyData.cumulativeV - stockStrategyData.volumeHistory[stockStrategyData.volumeHistory.length - stockStrategyInfo.RollingVWAPLength]
-            stockStrategyData.RollingVWAP = tempCumulativePV / tempCumulativeV
+            stockStrategyData.rollingPV += (stockData.stockPrice * stockData.volume) - (stockStrategyData.priceHistory[stockStrategyData.priceHistory.length - stockStrategyInfo.RollingVWAPLength] * stockStrategyData.volumeHistory[stockStrategyData.volumeHistory.length - stockStrategyInfo.RollingVWAPLength])
+            stockStrategyData.rollingV += stockData.volume - stockStrategyData.volumeHistory[stockStrategyData.volumeHistory.length - stockStrategyInfo.RollingVWAPLength]
+            stockStrategyData.RollingVWAP = stockStrategyData.rollingPV / stockStrategyData.rollingV
         }
 
         let nonTradeLog: tradeLogDto | null = null
@@ -183,7 +187,7 @@ export class ServerTradeStrategies {
         if (isBuy && stockInfo.canTrade) {
             if (stockStrategyData.EMA > stockStrategyData.VWAP) {
                 stockInfo.numberOfTrades++
-                stockInfo.stopLoss = stockData.askPrice * (1 - stockStrategyInfo.TrailingStopAmt)
+                stockInfo.stopLoss = stockData.askPrice * (1 - stockStrategyInfo.StopLossAmt)
                 stockInfo.tradeHigh = stockData.askPrice
                 stockInfo.stopLossGainThreshold = 0
                 return {

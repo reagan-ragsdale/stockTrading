@@ -35,6 +35,8 @@ export type stockMACrossData = {
     RollingVWAP: number;
     cumulativePV: number;
     cumulativeV: number;
+    rollingPV: number;
+    rollingV: number;
     lastPrice: number;
     lastBid: number;
     lastAsk: number;
