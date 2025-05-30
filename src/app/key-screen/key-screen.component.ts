@@ -85,7 +85,7 @@ export class KeyScreenComponent implements OnInit, OnDestroy {
         )?.focus()
       }
       else if (SchwabController.getEnvironmentCall() == 'Dev') {
-        window.open(`https://api.schwabapi.com/v1/oauth/authorize?response_type=code&client_id=${userKeys.appKey}&scope=readonly&redirect_uri=https://stocktrading.up.railway.app/auth`,
+        window.open(`https://api.schwabapi.com/v1/oauth/authorize?response_type=code&client_id=${userKeys.appKey}&scope=readonly&redirect_uri=https://stocktrading-dev.up.railway.app/auth`,
           "_blank"
         )?.focus()
       }
