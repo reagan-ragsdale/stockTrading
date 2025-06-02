@@ -1646,6 +1646,33 @@ export class ServerTradeScreenComponent implements OnInit {
       }
       this.listOfAddedLines = newListOfAddedLines
 
+      let rules = structuredClone(this.listOfAddedRules)
+
+      for (let i = 0; i < rules.BuyRules.length; i++) {
+        if (rules.BuyRules[i].primaryObjectType != "") {
+          let filteredLine = this.listOfAddedLines.filter(e => e.lineType == rules.BuyRules[i].primaryObjectType && e.lineLength == rules.BuyRules[i].primaryObjectLength)[0]
+          rules.BuyRules[i].primaryObjectData = filteredLine.data
+        }
+        if (rules.BuyRules[i].referencedObjectType != "") {
+          let filteredLine = this.listOfAddedLines.filter(e => e.lineType == rules.BuyRules[i].referencedObjectType && e.lineLength == rules.BuyRules[i].referencedObjectLength)[0]
+          rules.BuyRules[i].referencedObjectData = filteredLine.data
+        }
+
+      }
+      for (let i = 0; i < rules.SellRules.length; i++) {
+        if (rules.SellRules[i].primaryObjectType != "") {
+          let filteredLine = this.listOfAddedLines.filter(e => e.lineType == rules.SellRules[i].primaryObjectType && e.lineLength == rules.SellRules[i].primaryObjectLength)[0]
+          rules.SellRules[i].primaryObjectData = filteredLine.data
+        }
+        if (rules.SellRules[i].referencedObjectType != "") {
+          let filteredLine = this.listOfAddedLines.filter(e => e.lineType == rules.SellRules[i].referencedObjectType && e.lineLength == rules.SellRules[i].referencedObjectLength)[0]
+          rules.SellRules[i].referencedObjectData = filteredLine.data
+        }
+
+      }
+
+      this.listOfAddedRules = rules
+
 
       /* if (this.listOfAddedLines[i].lineType == 'Bollinger Bands') {
         let bollingerData: LineData[][] = this.calculateBollingerBands(this.listOfAddedLines[i].lineLength)
