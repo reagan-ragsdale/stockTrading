@@ -455,7 +455,8 @@ export class ServerTradeScreenComponent implements OnInit {
     if (this.intraDayChecked) {
       this.isLoading = true
       let resultList = []
-      for (let i = 0; i < this.distinctDates.length; i++) {
+      //this.distinctDates.length
+      for (let i = 0; i < 1; i++) {
         await this.updateStockChartData(this.distinctDates[i])
         console.log('data for: ' + this.distinctDates[i])
         console.log(this.stockDataForSelectedDay)
