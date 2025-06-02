@@ -470,6 +470,7 @@ export class ServerTradeScreenComponent implements OnInit {
       let finalsResultData: any = {}
       finalsResultData.avgProfit = resultList.reduce((sum, val) => sum + val.profit, 0) / resultList.length
       finalsResultData.avgNumTrades = resultList.reduce((sum, val) => sum + val.numberOfTrades, 0) / resultList.length
+      finalsResultData.totalProfit = resultList.reduce((sum, val) => sum + val.profit, 0)
       console.log('All Day Results below')
       console.log(finalsResultData)
       console.log('result list below')
