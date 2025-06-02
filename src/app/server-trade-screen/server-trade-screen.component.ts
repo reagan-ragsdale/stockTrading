@@ -461,7 +461,8 @@ export class ServerTradeScreenComponent implements OnInit {
         console.log('data for: ' + this.distinctDates[i])
         console.log(this.stockDataForSelectedDay)
         this.addNewLinesToGraphNew()
-        console.log(this.listOfAddedLines)
+        let newLines = structuredClone(this.listOfAddedLines)
+        console.log(newLines)
         let result = this.addRule()
         resultList.push({ profit: result.profit, numberOfTrades: result.orderLocations.length, orders: result.orderLocations })
 
@@ -1597,54 +1598,53 @@ export class ServerTradeScreenComponent implements OnInit {
     this.stockChart.update()
   }
   addNewLinesToGraphNew() {
-    console.log(this.listOfAddedLines)
     this.stockChart.data.datasets = [this.stockChart.data.datasets[0]]
-    this.listOfAddedLines = this.listOfAddedLines.filter(e => e.lineType != 'Price' && e.id != -10 && e.id != -11 && e.id != -12)
-    console.log(this.listOfAddedLines)
+    let newListOfAddedLines = structuredClone(this.listOfAddedLines)
+    newListOfAddedLines = newListOfAddedLines.filter(e => e.lineType != 'Price' && e.id != -10 && e.id != -11 && e.id != -12)
     let priceData: LineData[] = []
     for (let i = 0; i < this.stockDataForSelectedDay.length; i++) {
       priceData.push({ value: this.stockDataForSelectedDay[i].stockPrice, time: this.stockDataForSelectedDay[i].time })
     }
-    this.listOfAddedLines.push({
+    newListOfAddedLines.push({
       lineType: 'Price',
       lineLength: 1,
       id: -1,
       data: priceData
     })
-    console.log(this.listOfAddedLines)
 
-    for (let i = 0; i < this.listOfAddedLines.length; i++) {
+    for (let i = 0; i < newListOfAddedLines.length; i++) {
       let lineData: LineData[] = []
-      if (this.listOfAddedLines[i].lineType == 'SMA') {
-        lineData = this.calculateSMA(this.listOfAddedLines[i].lineLength)
-        let filteredLine = this.listOfAddedLines.filter(e => e.id == this.listOfAddedLines[i].id)[0]
+      if (newListOfAddedLines[i].lineType == 'SMA') {
+        lineData = this.calculateSMA(newListOfAddedLines[i].lineLength)
+        let filteredLine = newListOfAddedLines.filter(e => e.id == newListOfAddedLines[i].id)[0]
         filteredLine.data = lineData
       }
-      else if (this.listOfAddedLines[i].lineType == 'EMA') {
-        lineData = this.calculateEMA(this.listOfAddedLines[i].lineLength)
-        let filteredLine = this.listOfAddedLines.filter(e => e.id == this.listOfAddedLines[i].id)[0]
+      else if (newListOfAddedLines[i].lineType == 'EMA') {
+        lineData = this.calculateEMA(newListOfAddedLines[i].lineLength)
+        let filteredLine = newListOfAddedLines.filter(e => e.id == newListOfAddedLines[i].id)[0]
         filteredLine.data = lineData
       }
-      else if (this.listOfAddedLines[i].lineType == 'Cumulative VWAP') {
+      else if (newListOfAddedLines[i].lineType == 'Cumulative VWAP') {
         lineData = this.calculateCumulativeVWAP();
-        let filteredLine = this.listOfAddedLines.filter(e => e.id == this.listOfAddedLines[i].id)[0]
+        let filteredLine = newListOfAddedLines.filter(e => e.id == newListOfAddedLines[i].id)[0]
         filteredLine.data = lineData
       }
-      else if (this.listOfAddedLines[i].lineType == 'Rolling VWAP') {
-        lineData = this.calculateRollingVWAP(this.listOfAddedLines[i].lineLength);
-        let filteredLine = this.listOfAddedLines.filter(e => e.id == this.listOfAddedLines[i].id)[0]
+      else if (newListOfAddedLines[i].lineType == 'Rolling VWAP') {
+        lineData = this.calculateRollingVWAP(newListOfAddedLines[i].lineLength);
+        let filteredLine = newListOfAddedLines.filter(e => e.id == newListOfAddedLines[i].id)[0]
         filteredLine.data = lineData
       }
-      else if (this.listOfAddedLines[i].lineType == 'Cumulative SMA') {
+      else if (newListOfAddedLines[i].lineType == 'Cumulative SMA') {
         lineData = this.calculateCumulativeSMA()
-        let filteredLine = this.listOfAddedLines.filter(e => e.id == this.listOfAddedLines[i].id)[0]
+        let filteredLine = newListOfAddedLines.filter(e => e.id == newListOfAddedLines[i].id)[0]
         filteredLine.data = lineData
       }
-      else if (this.listOfAddedLines[i].lineType == 'Cumulative EMA') {
+      else if (newListOfAddedLines[i].lineType == 'Cumulative EMA') {
         lineData = this.calculateCumulativeEMA()
-        let filteredLine = this.listOfAddedLines.filter(e => e.id == this.listOfAddedLines[i].id)[0]
+        let filteredLine = newListOfAddedLines.filter(e => e.id == newListOfAddedLines[i].id)[0]
         filteredLine.data = lineData
       }
+      this.listOfAddedLines = newListOfAddedLines
 
 
       /* if (this.listOfAddedLines[i].lineType == 'Bollinger Bands') {
