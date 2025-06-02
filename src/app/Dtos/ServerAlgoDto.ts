@@ -8,11 +8,14 @@ export type lineType = {
 export type RuleDto = {
     BuyRules: BuyRule[];
     SellRules: SellRule[];
+    NumberOfLossesInARowToStop: number;
+    TimeOutAfterStopLossSell: number;
+
 
 }
 export type LineData = {
-  value: number | null;
-  time: number;
+    value: number | null;
+    time: number;
 }
 export type BuyRule = {
     id: number;
