@@ -63,3 +63,24 @@ export type stockVWAPCrossData = {
     lastBid: number;
     lastAsk: number;
 }
+
+export type SchwabOrderDTO = {
+
+    orderType: string;
+    session: string;
+    duration: string;
+    orderStrategyType: string,
+    orderLegCollection: [
+        {
+            instruction: string;
+            quantity: number;
+            instrument: {
+                symbol: string;
+                assetType: string;
+            }
+        }
+    ]
+
+}
+
+

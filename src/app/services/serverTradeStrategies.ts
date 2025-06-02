@@ -242,7 +242,7 @@ export class ServerTradeStrategies {
                     nonTradeLog.logType += 'Increased Trailing Stop - '
                 } */
 
-                if ((stockStrategyData.EMA < stockStrategyData.RollingVWAP) && (stockStrategyData.EMA >= stockStrategyData.RollingVWAP)) {
+                if ((stockStrategyData.EMA < stockStrategyData.RollingVWAP) && (stockStrategyData.PreviousEMA >= stockStrategyData.RollingVWAP)) {
                     stockInfo.numberOfTrades++
                     stockInfo.stopLoss = 0
                     stockInfo.tradeHigh = 0
