@@ -1983,12 +1983,12 @@ export class ServerTradeScreenComponent implements OnInit {
     let numberOfConsecutiveLosses = 0
     let timeOutPeriod = 0
     for (let i = counter; i < this.stockDataForSelectedDay.length; i++) {
-      if (buySell == 'Buy' && this.stockDataForSelectedDay[i].time >= timeOutPeriod) {
+      if (buySell == 'Buy') {
         let buyArray = []
         for (let j = 0; j < this.listOfAddedRules.BuyRules.length; j++) {
           buyArray.push(this.operators[this.listOfAddedRules.BuyRules[j].desiredAction](this.listOfAddedRules.BuyRules[j], i))
         }
-        if (!buyArray.includes(false)) {
+        if (!buyArray.includes(false) && this.stockDataForSelectedDay[i].time >= timeOutPeriod) {
           orderLocations.push({ buySell: 'Buy', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString() })
           buySell = 'Sell'
           for (let j = 0; j < this.listOfAddedRules.SellRules.length; j++) {
