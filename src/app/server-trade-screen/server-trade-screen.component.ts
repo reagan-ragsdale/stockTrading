@@ -1922,11 +1922,13 @@ export class ServerTradeScreenComponent implements OnInit {
   addRuleDialogRef: any
   listOfAddedRules: RuleDto = {
     BuyRules: [],
-    SellRules: []
+    SellRules: [],
+    NumberOfLossesInARowToStop: 0,
+    TimeOutAfterStopLossSell: 0
   }
   addRuleToGraph() {
     this.addRuleDialogRef = this.dialog.open(this.addRuleTemplate, {
-      width: '800px',
+      width: '1200px',
       enterAnimationDuration: 0,
       exitAnimationDuration: 0
     });
@@ -1978,8 +1980,10 @@ export class ServerTradeScreenComponent implements OnInit {
     let buySell = 'Buy'
     let orderLocations: orderLocation[] = []
     let profit = 0
+    let numberOfConsecutiveLosses = 0
+    let timeOutPeriod = 0
     for (let i = counter; i < this.stockDataForSelectedDay.length; i++) {
-      if (buySell == 'Buy') {
+      if (buySell == 'Buy' && this.stockDataForSelectedDay[i].time >= timeOutPeriod) {
         let buyArray = []
         for (let j = 0; j < this.listOfAddedRules.BuyRules.length; j++) {
           buyArray.push(this.operators[this.listOfAddedRules.BuyRules[j].desiredAction](this.listOfAddedRules.BuyRules[j], i))
@@ -2016,11 +2020,19 @@ export class ServerTradeScreenComponent implements OnInit {
           profit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
           buySell = 'Buy'
         }
-        else {
+        else if (numberOfConsecutiveLosses < this.listOfAddedRules.NumberOfLossesInARowToStop) {
           if (andOr == 'Or') {
             if (buyArray.includes(true)) {
               orderLocations.push({ buySell: 'Sell', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString() })
               profit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
+              if (profit < 0) {
+                numberOfConsecutiveLosses++
+                timeOutPeriod = (this.listOfAddedRules.TimeOutAfterStopLossSell * 60000) + this.stockDataForSelectedDay[i].time
+              }
+              else {
+                numberOfConsecutiveLosses = 0
+
+              }
               buySell = 'Buy'
             }
           }
@@ -2028,6 +2040,13 @@ export class ServerTradeScreenComponent implements OnInit {
             if (!buyArray.includes(false)) {
               orderLocations.push({ buySell: 'Sell', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString() })
               profit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
+              if (profit < 0) {
+                numberOfConsecutiveLosses++
+                timeOutPeriod = (this.listOfAddedRules.TimeOutAfterStopLossSell * 60000) + this.stockDataForSelectedDay[i].time
+              }
+              else {
+                numberOfConsecutiveLosses = 0
+              }
               buySell = 'Buy'
             }
           }

@@ -21,7 +21,9 @@ import { lineType, RuleDto } from '../../Dtos/ServerAlgoDto';
 export class AddRuleComponent {
   @Input() listOfRulesIncoming: RuleDto = {
     BuyRules: [],
-    SellRules: []
+    SellRules: [],
+    NumberOfLossesInARowToStop: 0,
+    TimeOutAfterStopLossSell: 0
   }
   @Input() listOfLinesIncoming: lineType[] = []
   readonly dialogRef = inject(MatDialogRef<AddRuleComponent>);
@@ -169,6 +171,14 @@ export class AddRuleComponent {
   isAllLine(lineType: string): boolean {
     if (lineType == 'Price' || lineType == 'Cumulative VWAP' || lineType == 'Cumulative SMA' || lineType == 'Cumulative EMA') {
       return true
+    }
+    return false
+  }
+  sellRulesContainsStopLoss(): boolean {
+    for (let i = 0; i < this.listOfRulesIncoming.SellRules.length; i++) {
+      if (this.listOfRulesIncoming.SellRules[i].desiredAction == 'Stop Loss') {
+        return true
+      }
     }
     return false
   }
