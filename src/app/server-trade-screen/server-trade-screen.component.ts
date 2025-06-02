@@ -1596,8 +1596,10 @@ export class ServerTradeScreenComponent implements OnInit {
     this.stockChart.update()
   }
   addNewLinesToGraphNew() {
+    console.log(this.listOfAddedLines)
     this.stockChart.data.datasets = [this.stockChart.data.datasets[0]]
     this.listOfAddedLines = this.listOfAddedLines.filter(e => e.lineType != 'Price' && e.id != -10 && e.id != -11 && e.id != -12)
+    console.log(this.listOfAddedLines)
     let priceData: LineData[] = []
     for (let i = 0; i < this.stockDataForSelectedDay.length; i++) {
       priceData.push({ value: this.stockDataForSelectedDay[i].stockPrice, time: this.stockDataForSelectedDay[i].time })
@@ -1608,6 +1610,7 @@ export class ServerTradeScreenComponent implements OnInit {
       id: -1,
       data: priceData
     })
+    console.log(this.listOfAddedLines)
 
     for (let i = 0; i < this.listOfAddedLines.length; i++) {
       let lineData: LineData[] = []
@@ -1643,7 +1646,7 @@ export class ServerTradeScreenComponent implements OnInit {
       }
 
 
-      if (this.listOfAddedLines[i].lineType == 'Bollinger Bands') {
+      /* if (this.listOfAddedLines[i].lineType == 'Bollinger Bands') {
         let bollingerData: LineData[][] = this.calculateBollingerBands(this.listOfAddedLines[i].lineLength)
         //let filteredLine = this.listOfAddedLines.filter(e => e.id == linesNew[i].id)[0]
         //filteredLine.data = lineData
@@ -1711,10 +1714,10 @@ export class ServerTradeScreenComponent implements OnInit {
           pointRadius: 0,
           spanGaps: true
         })
-      }
+      } */
     }
 
-    this.stockChart.update()
+    //this.stockChart.update()
   }
 
   calculateSMA(lineLength: number): LineData[] {

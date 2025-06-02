@@ -1,3 +1,4 @@
+import { SchwabOrderDTO } from "../app/Dtos/TradingBotDtos";
 
 
 export const getEnvironment = (): string => {
@@ -52,7 +53,7 @@ export const getOrdersForAccount = async (accountNumber: string, accessToken: st
     try {
         let startDate = new Date()
         startDate.setHours(5, 0, 0, 0)
-        let fromDate = startDate.toISOString()
+        let fromDate = startDate.toUTCString()
         let toDate = new Date().toISOString()
         const url = `https://api.schwabapi.com/v1/accounts/${accountNumber}/orders?fromEnteredTime=${fromDate}&toEnteredTime=${toDate}`;
         const options = {
@@ -72,14 +73,23 @@ export const getOrdersForAccount = async (accountNumber: string, accessToken: st
     }
 }
 //place an order for an account
-export const placeOrderForAccount = async (accountNumber: string, accessToken: string, order: any): Promise<any> => {
+export const placeOrderForAccount = async (accountNumber: string, accessToken: string, order: SchwabOrderDTO): Promise<any> => {
     try {
-        const url = `https://api.schwabapi.com/v1/accounts/${accountNumber}/orders?`;
+        const url = `https://api.schwabapi.com/v1/accounts/${accountNumber}/orders`;
         const options = {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${accessToken}`
-            }
+            },
+            body: JSON.stringify(
+                {
+                    "orderType": order.orderType,
+                    "session": order.session,
+                    "duration": order.duration,
+                    "orderStrategyType": order.orderStrategyType,
+                    "orderLegCollection": order.orderLegCollection
+                }
+            )
         };
 
         const response = await fetch(url, options);
@@ -111,5 +121,7 @@ export const replaceOrderForAccount = async (accountNumber: string, accessToken:
         return ''
     }
 }
+
+
 
 
