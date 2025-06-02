@@ -458,19 +458,30 @@ export class ServerTradeScreenComponent implements OnInit {
       //this.distinctDates.length
       for (let i = 0; i < this.distinctDates.length; i++) {
         await this.updateStockChartData(this.distinctDates[i])
-        console.log('data for: ' + this.distinctDates[i])
-        console.log(this.stockDataForSelectedDay)
         this.addNewLinesToGraphNew()
-        let newLines = structuredClone(this.listOfAddedLines)
-        console.log(newLines)
         let result = this.addRule()
-        resultList.push({ profit: result.profit, numberOfTrades: result.orderLocations.length, orders: result.orderLocations })
-
+        let winTrades = 0
+        let loseTrades = 0
+        for (let i = 0; i < result.orderLocations.length; i++) {
+          if (result.orderLocations[i].buySell == 'Sell') {
+            let profit = result.orderLocations[i].price - result.orderLocations[i - 1].price
+            if (profit > 0) {
+              winTrades++
+            }
+            else {
+              loseTrades++
+            }
+          }
+        }
+        resultList.push({ profit: result.profit, numberOfTrades: result.orderLocations.length, orders: result.orderLocations, wins: winTrades, losses: loseTrades })
       }
       let finalsResultData: any = {}
       finalsResultData.avgProfit = resultList.reduce((sum, val) => sum + val.profit, 0) / resultList.length
       finalsResultData.avgNumTrades = resultList.reduce((sum, val) => sum + val.numberOfTrades, 0) / resultList.length
       finalsResultData.totalProfit = resultList.reduce((sum, val) => sum + val.profit, 0)
+      finalsResultData.totalWins = resultList.reduce((sum, val) => sum + val.wins, 0)
+      finalsResultData.totalLosses = resultList.reduce((sum, val) => sum + val.losses, 0)
+
       console.log('All Day Results below')
       console.log(finalsResultData)
       console.log('result list below')
