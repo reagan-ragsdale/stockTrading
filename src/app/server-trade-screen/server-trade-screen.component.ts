@@ -1992,18 +1992,18 @@ export class ServerTradeScreenComponent implements OnInit {
   addRule() {
 
     let counter = 0
-    for (let i = 1; i < this.listOfAddedLines.length; i++) {
-      let tempCounter = 0
-      for (let j = 0; j < this.listOfAddedLines[i].data.length; j++) {
+    for (let i = 0; i < this.listOfAddedLines.length; i++) {
+      let tempCounter = this.listOfAddedLines[i].lineLength
+      /* for (let j = 0; j < this.listOfAddedLines[i].data.length; j++) {
         if (this.listOfAddedLines[i].data[j] == null) {
           tempCounter += 1;
         }
-      }
+      } */
       if (tempCounter > counter) {
         counter = tempCounter
       }
     }
-    counter = counter + 1
+    counter = counter - 1
 
     let buySell = 'Buy'
     let orderLocations: orderLocation[] = []
@@ -2016,9 +2016,9 @@ export class ServerTradeScreenComponent implements OnInit {
       if (buySell == 'Buy') {
         let buyArray = []
         for (let j = 0; j < this.listOfAddedRules.BuyRules.length; j++) {
-          console.log(i)
           buyArray.push(this.operators[this.listOfAddedRules.BuyRules[j].desiredAction.type](this.listOfAddedRules.BuyRules[j], i))
         }
+        console.log(buyArray)
         if (!buyArray.includes(false) && this.stockDataForSelectedDay[i].time >= timeOutPeriod && numberOfConsecutiveLosses < this.listOfAddedRules.NumberOfLossesInARowToStop) {
           orderLocations.push({ buySell: 'Buy', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString() })
           console.log(numberOfConsecutiveLosses)
