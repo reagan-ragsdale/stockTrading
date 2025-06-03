@@ -1668,6 +1668,8 @@ export class ServerTradeScreenComponent implements OnInit {
       for (let i = 0; i < rules.BuyRules.length; i++) {
         if (rules.BuyRules[i].primaryObject.type != "") {
           let filteredLine = this.listOfAddedLines.filter(e => e.lineType == rules.BuyRules[i].primaryObject.type && e.lineLength == rules.BuyRules[i].primaryObject.length)[0]
+          console.log(filteredLine)
+          console.log(rules.BuyRules[i].primaryObject)
           rules.BuyRules[i].primaryObject.data = filteredLine.data
         }
         if (rules.BuyRules[i].referencedObject.type != "") {
