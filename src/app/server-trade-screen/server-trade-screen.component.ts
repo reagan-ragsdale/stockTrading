@@ -21,6 +21,7 @@ import { BuyRule, LineData, lineType, RuleDto, SellRule } from '../Dtos/ServerAl
 import { AddRuleComponent } from './addrule/addrule.component';
 import { dbOrdersRepo } from '../../shared/tasks/dbOrders';
 import zoomPlugin from 'chartjs-plugin-zoom';
+import { AlgoLoopComponent } from "./algo-loop/algo-loop.component";
 
 
 type OperatorFunction = (rule: BuyRule | SellRule, index: number, buyPrice?: number) => boolean;
@@ -56,7 +57,7 @@ type orderLocation = {
 
 @Component({
   selector: 'app-server-trade-screen',
-  imports: [MatCheckboxModule, CommonModule, MatTableModule, MatIconModule, MatProgressSpinnerModule, MatFormFieldModule, MatSelectModule, MatButtonModule, MatInputModule, FormsModule, MatSlideToggleModule, AddLineComponent, AddRuleComponent],
+  imports: [MatCheckboxModule, CommonModule, MatTableModule, MatIconModule, MatProgressSpinnerModule, MatFormFieldModule, MatSelectModule, MatButtonModule, MatInputModule, FormsModule, MatSlideToggleModule, AddLineComponent, AddRuleComponent, AlgoLoopComponent],
   templateUrl: './server-trade-screen.component.html',
   styleUrl: './server-trade-screen.component.css'
 })
