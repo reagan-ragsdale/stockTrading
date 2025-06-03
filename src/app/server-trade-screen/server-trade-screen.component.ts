@@ -1983,8 +1983,8 @@ export class ServerTradeScreenComponent implements OnInit {
     "Stop Loss": (rule, index, buyPrice) => (this.stockDataForSelectedDay[index].stockPrice <= (buyPrice! * (1 - rule.desiredAction.amount))),
     "After": (rule, index) => ('buyTime' in rule ? (this.stockDataForSelectedDay[index].time > (this.stockDataForSelectedDay[0].time + (rule.buyTime * 1000 * 60))) : false),
     "Trailing Stop": (rule, index) => ('current' in rule.desiredAction ? (this.stockDataForSelectedDay[index].stockPrice <= rule.desiredAction.current) : false),
-    "Trend Crosses Below:": (rule, index) => (('desiredActionLength' in rule && index >= (rule.primaryObject.length + rule.desiredAction.length) - 2) ? (this.getTrend(rule.primaryObject.data, rule.desiredAction.length, index) < rule.desiredAction.amount) : false),
-    "Trend Crosses Above:": (rule, index) => (('desiredActionLength' in rule && index >= (rule.primaryObject.length + rule.desiredAction.length) - 2) ? (this.getTrend(rule.primaryObject.data, rule.desiredAction.length, index) > rule.desiredAction.amount) : false),
+    "Trend Crosses Below:": (rule, index) => ((index >= (rule.primaryObject.length + rule.desiredAction.length) - 2) ? (this.getTrend(rule.primaryObject.data, rule.desiredAction.length, index) < rule.desiredAction.amount) : false),
+    "Trend Crosses Above:": (rule, index) => ((index >= (rule.primaryObject.length + rule.desiredAction.length) - 2) ? (this.getTrend(rule.primaryObject.data, rule.desiredAction.length, index) > rule.desiredAction.amount) : false),
     "Is greater than:": (rule, index) => (rule.primaryObject.data[index].value == null || rule.referencedObject.data[index].value == null) ? false : (rule.primaryObject.data[index].value > rule.referencedObject.data[index].value),
     "Is less than:": (rule, index) => (rule.primaryObject.data[index].value == null || rule.referencedObject.data[index].value == null) ? false : (rule.primaryObject.data[index].value < rule.referencedObject.data[index].value)
   };
@@ -1993,14 +1993,8 @@ export class ServerTradeScreenComponent implements OnInit {
 
     let counter = 0
     for (let i = 0; i < this.listOfAddedLines.length; i++) {
-      let tempCounter = this.listOfAddedLines[i].lineLength
-      /* for (let j = 0; j < this.listOfAddedLines[i].data.length; j++) {
-        if (this.listOfAddedLines[i].data[j] == null) {
-          tempCounter += 1;
-        }
-      } */
-      if (tempCounter > counter) {
-        counter = tempCounter
+      if (this.listOfAddedLines[i].lineLength > counter) {
+        counter = this.listOfAddedLines[i].lineLength
       }
     }
     counter = counter - 1
@@ -2011,17 +2005,14 @@ export class ServerTradeScreenComponent implements OnInit {
     let numberOfConsecutiveLosses = 0
     let timeOutPeriod = 0
 
-    console.log('Counter: ' + counter)
     for (let i = counter; i < this.stockDataForSelectedDay.length; i++) {
       if (buySell == 'Buy') {
         let buyArray = []
         for (let j = 0; j < this.listOfAddedRules.BuyRules.length; j++) {
           buyArray.push(this.operators[this.listOfAddedRules.BuyRules[j].desiredAction.type](this.listOfAddedRules.BuyRules[j], i))
         }
-        console.log(buyArray)
         if (!buyArray.includes(false) && this.stockDataForSelectedDay[i].time >= timeOutPeriod && numberOfConsecutiveLosses < this.listOfAddedRules.NumberOfLossesInARowToStop) {
           orderLocations.push({ buySell: 'Buy', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString() })
-          console.log(numberOfConsecutiveLosses)
           buySell = 'Sell'
           for (let j = 0; j < this.listOfAddedRules.SellRules.length; j++) {
             if (this.listOfAddedRules.SellRules[j].desiredAction.type == 'Trailing Stop') {
