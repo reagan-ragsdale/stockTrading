@@ -1990,6 +1990,7 @@ export class ServerTradeScreenComponent implements OnInit {
         }
         if (!buyArray.includes(false) && this.stockDataForSelectedDay[i].time >= timeOutPeriod && numberOfConsecutiveLosses < this.listOfAddedRules.NumberOfLossesInARowToStop) {
           orderLocations.push({ buySell: 'Buy', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString() })
+          console.log(numberOfConsecutiveLosses)
           buySell = 'Sell'
           for (let j = 0; j < this.listOfAddedRules.SellRules.length; j++) {
             if (this.listOfAddedRules.SellRules[j].desiredAction == 'Trailing Stop') {
@@ -2029,10 +2030,6 @@ export class ServerTradeScreenComponent implements OnInit {
                 numberOfConsecutiveLosses++
                 timeOutPeriod = (this.listOfAddedRules.TimeOutAfterStopLossSell * 60000) + this.stockDataForSelectedDay[i].time
               }
-              else {
-                numberOfConsecutiveLosses = 0
-
-              }
               buySell = 'Buy'
             }
           }
@@ -2043,9 +2040,6 @@ export class ServerTradeScreenComponent implements OnInit {
               if (profit < 0) {
                 numberOfConsecutiveLosses++
                 timeOutPeriod = (this.listOfAddedRules.TimeOutAfterStopLossSell * 60000) + this.stockDataForSelectedDay[i].time
-              }
-              else {
-                numberOfConsecutiveLosses = 0
               }
               buySell = 'Buy'
             }
