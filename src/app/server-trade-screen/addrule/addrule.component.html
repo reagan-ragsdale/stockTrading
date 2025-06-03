@@ -163,14 +163,14 @@
 
 
     </div>
-    <div>
+    <div style="margin-top:2rem; gap: 1rem;">
         <mat-form-field class="example-full-width" style="width:fit-content;">
-            <mat-label>Number Of Losses In A Row To Stop</mat-label>
+            <mat-label>Number of Losses to stop</mat-label>
             <input matInput type="number" [(ngModel)]="listOfRulesIncoming.NumberOfLossesInARowToStop" placeholder="0"
                 [min]="0" step="1">
         </mat-form-field>
         <mat-form-field *ngIf="sellRulesContainsStopLoss()" class="example-full-width" style="width:fit-content;">
-            <mat-label>Time Out After Stop Loss Sell - Minutes</mat-label>
+            <mat-label>Stop Loss Timout - Minutes</mat-label>
             <input matInput type="number" [(ngModel)]="listOfRulesIncoming.TimeOutAfterStopLossSell" placeholder="0"
                 [min]="0" step="1">
         </mat-form-field>
