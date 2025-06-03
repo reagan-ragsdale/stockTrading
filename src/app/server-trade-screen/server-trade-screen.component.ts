@@ -2029,10 +2029,6 @@ export class ServerTradeScreenComponent implements OnInit {
                 numberOfConsecutiveLosses++
                 timeOutPeriod = (this.listOfAddedRules.TimeOutAfterStopLossSell * 60000) + this.stockDataForSelectedDay[i].time
               }
-              else {
-                numberOfConsecutiveLosses = 0
-
-              }
               buySell = 'Buy'
             }
           }
@@ -2043,9 +2039,6 @@ export class ServerTradeScreenComponent implements OnInit {
               if (profit < 0) {
                 numberOfConsecutiveLosses++
                 timeOutPeriod = (this.listOfAddedRules.TimeOutAfterStopLossSell * 60000) + this.stockDataForSelectedDay[i].time
-              }
-              else {
-                numberOfConsecutiveLosses = 0
               }
               buySell = 'Buy'
             }
