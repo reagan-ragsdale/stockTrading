@@ -46,17 +46,23 @@ export class AddRuleComponent {
       conditionType: '',
       buyTimeType: '',
       buyTime: 0,
-      primaryObject: '',
-      primaryObjectType: '',
-      primaryObjectLength: 0,
-      primaryObjectData: [],
-      desiredAction: '',
-      desiredActionAmnt: 0,
-      desiredActionLength: 0,
-      referencedObject: '',
-      referencedObjectType: '',
-      referencedObjectLength: 0,
-      referencedObjectData: []
+      primaryObject: {
+        name: '',
+        type: '',
+        length: 0,
+        data: []
+      },
+      desiredAction: {
+        amount: 0,
+        length: 0,
+        type: ''
+      },
+      referencedObject: {
+        name: '',
+        type: '',
+        length: 0,
+        data: []
+      },
     })
   }
   addSellRule() {
@@ -65,19 +71,27 @@ export class AddRuleComponent {
       lineId: 0,
       andOr: '',
       conditionType: '',
-      primaryObject: '',
-      primaryObjectType: '',
-      primaryObjectLength: 0,
-      primaryObjectData: [],
-      desiredAction: '',
-      desiredActionAmnt: 0,
-      desiredActionCurrent: 0,
-      desiredActionLength: 0,
+      primaryObject: {
+        name: '',
+        type: '',
+        length: 0,
+        data: []
+      },
+
+      desiredAction: {
+        amount: 0,
+        type: '',
+        length: 0,
+        current: 0
+
+      },
       tradeHigh: 0,
-      referencedObject: '',
-      referencedObjectType: '',
-      referencedObjectLength: 0,
-      referencedObjectData: []
+      referencedObject: {
+        name: '',
+        type: '',
+        length: 0,
+        data: []
+      },
     })
   }
   removeBuyRule(id: number) {
@@ -97,7 +111,7 @@ export class AddRuleComponent {
   onSelectedBuyTimeTypeChange(event: any, id: number, time: string) {
     if (event.isUserInput == true) {
       let selectedBuyRule = this.listOfRulesIncoming.BuyRules.filter(e => e.id == id)[0]
-      selectedBuyRule.desiredAction = time
+      selectedBuyRule.desiredAction.type = time
     }
   }
   /*  onSelectedBuyTimeChange(event: any, id: number, time: number){
@@ -110,25 +124,25 @@ export class AddRuleComponent {
   onSelectedBuyRuleTypeChange(event: any, id: number, line: lineType) {
     if (event.isUserInput == true) {
       let selectedBuyRule = this.listOfRulesIncoming.BuyRules.filter(e => e.id == id)[0]
-      selectedBuyRule.primaryObject = line.lineType + ' - ' + line.lineLength
-      selectedBuyRule.primaryObjectType = line.lineType
-      selectedBuyRule.primaryObjectLength = line.lineLength
-      selectedBuyRule.primaryObjectData = line.data
+      selectedBuyRule.primaryObject.name = line.lineType + ' - ' + line.lineLength
+      selectedBuyRule.primaryObject.type = line.lineType
+      selectedBuyRule.primaryObject.length = line.lineLength
+      selectedBuyRule.primaryObject.data = line.data
     }
   }
   onSelectedBuyActionTypeChange(event: any, id: number, action: string) {
     if (event.isUserInput == true) {
       let selectedBuyRule = this.listOfRulesIncoming.BuyRules.filter(e => e.id == id)[0]
-      selectedBuyRule.desiredAction = action
+      selectedBuyRule.desiredAction.type = action
     }
   }
   onSelectedBuyReferencedObjectTypeChange(event: any, id: number, line: lineType) {
     if (event.isUserInput == true) {
       let selectedBuyRule = this.listOfRulesIncoming.BuyRules.filter(e => e.id == id)[0]
-      selectedBuyRule.referencedObject = line.lineType + ' - ' + line.lineLength
-      selectedBuyRule.referencedObjectType = line.lineType
-      selectedBuyRule.referencedObjectLength = line.lineLength
-      selectedBuyRule.referencedObjectData = line.data
+      selectedBuyRule.referencedObject.name = line.lineType + ' - ' + line.lineLength
+      selectedBuyRule.referencedObject.type = line.lineType
+      selectedBuyRule.referencedObject.length = line.lineLength
+      selectedBuyRule.referencedObject.data = line.data
     }
   }
   onSelectedSellRuleAndOrTypeChange(event: any, id: number, andOr: string) {
@@ -146,25 +160,25 @@ export class AddRuleComponent {
   onSelectedSellRuleTypeChange(event: any, id: number, line: lineType) {
     if (event.isUserInput == true) {
       let selectedSellRule = this.listOfRulesIncoming.SellRules.filter(e => e.id == id)[0]
-      selectedSellRule.primaryObject = line.lineType + ' - ' + line.lineLength
-      selectedSellRule.primaryObjectType = line.lineType
-      selectedSellRule.primaryObjectLength = line.lineLength
-      selectedSellRule.primaryObjectData = line.data
+      selectedSellRule.primaryObject.name = line.lineType + ' - ' + line.lineLength
+      selectedSellRule.primaryObject.type = line.lineType
+      selectedSellRule.primaryObject.length = line.lineLength
+      selectedSellRule.primaryObject.data = line.data
     }
   }
   onSelectedSellActionTypeChange(event: any, id: number, action: string) {
     if (event.isUserInput == true) {
       let selectedSellRule = this.listOfRulesIncoming.SellRules.filter(e => e.id == id)[0]
-      selectedSellRule.desiredAction = action
+      selectedSellRule.desiredAction.type = action
     }
   }
   onSelectedSellReferencedObjectTypeChange(event: any, id: number, line: lineType) {
     if (event.isUserInput == true) {
       let selectedSellRule = this.listOfRulesIncoming.SellRules.filter(e => e.id == id)[0]
-      selectedSellRule.referencedObject = line.lineType + ' - ' + line.lineLength
-      selectedSellRule.referencedObjectType = line.lineType
-      selectedSellRule.referencedObjectLength = line.lineLength
-      selectedSellRule.referencedObjectData = line.data
+      selectedSellRule.referencedObject.name = line.lineType + ' - ' + line.lineLength
+      selectedSellRule.referencedObject.type = line.lineType
+      selectedSellRule.referencedObject.length = line.lineLength
+      selectedSellRule.referencedObject.data = line.data
     }
   }
 
@@ -176,7 +190,7 @@ export class AddRuleComponent {
   }
   sellRulesContainsStopLoss(): boolean {
     for (let i = 0; i < this.listOfRulesIncoming.SellRules.length; i++) {
-      if (this.listOfRulesIncoming.SellRules[i].desiredAction == 'Stop Loss') {
+      if (this.listOfRulesIncoming.SellRules[i].desiredAction.type == 'Stop Loss') {
         return true
       }
     }

@@ -25,19 +25,36 @@ export type BuyRule = {
     conditionType: string;
     buyTimeType: string;
     buyTime: number;
-    primaryObject: string;
-    primaryObjectType: string;
-    primaryObjectLength: number;
-    primaryObjectData: LineData[];
+    primaryObject: {
+        name: string;
+        type: string;
+        length: number;
+        data: LineData[]
+    },
+    /*  primaryObject: string;
+     primaryObjectType: string;
+     primaryObjectLength: number;
+     primaryObjectData: LineData[]; */
     //does an action: ex crosses over, is dips x amount below
-    desiredAction: string;
+    desiredAction: {
+        type: string;
+        amount: number;
+        length: number
+    }
+    /* desiredAction: string;
     desiredActionAmnt: number;
-    desiredActionLength: number;
+    desiredActionLength: number; */
     //the referenced line
-    referencedObject: string;
+    referencedObject: {
+        name: string;
+        type: string;
+        length: number;
+        data: LineData[];
+    }
+    /* referencedObject: string;
     referencedObjectType: string;
     referencedObjectLength: number;
-    referencedObjectData: LineData[];
+    referencedObjectData: LineData[]; */
 
 
 }
@@ -48,20 +65,38 @@ export type SellRule = {
     //the primary line
     andOr: string;
     conditionType: string;
-    primaryObject: string;
+    primaryObject: {
+        name: string;
+        type: string;
+        length: number;
+        data: LineData[]
+    },
+    /* primaryObject: string;
     primaryObjectType: string;
     primaryObjectLength: number;
-    primaryObjectData: LineData[];
+    primaryObjectData: LineData[]; */
     //does an action: ex crosses over, is dips x amount below
-    desiredAction: string;
+    desiredAction: {
+        type: string;
+        amount: number;
+        length: number;
+        current: number;
+    }
+    /* desiredAction: string;
     desiredActionAmnt: number;
     desiredActionLength: number;
-    desiredActionCurrent: number;
+    desiredActionCurrent: number; */
     tradeHigh: number;
     //the referenced line
-    referencedObject: string;
+    referencedObject: {
+        name: string;
+        type: string;
+        length: number;
+        data: LineData[];
+    }
+    /* referencedObject: string;
     referencedObjectType: string;
     referencedObjectLength: number;
-    referencedObjectData: LineData[];
+    referencedObjectData: LineData[]; */
 
 }

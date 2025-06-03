@@ -1,7 +1,7 @@
 <div mat-dialog-title style="display: flex; justify-content: center; flex-direction: column;">
     <h2 style="margin-top: 0; margin-bottom: 0;">Loop Definition</h2>
 </div>
-<mat-dialog-content style="display: flex;flex-direction: column;">
+<mat-dialog-content style="display: flex;">
     <div style="width:50%; display:flex; flex-direction: column;">
         <h5>Buy</h5>
         <div *ngIf="listOfRulesIncoming.BuyRules.length > 0" style="display:flex; flex-direction: column;">
@@ -10,12 +10,14 @@
                 <h4 *ngIf="buyRule.id > 0">And</h4>
                 <mat-form-field style="width:fit-content;">
                     <mat-label>Condition</mat-label>
-                    <mat-select [disabled]="true" disableRipple [(value)]="buyRule.conditionType">
+                    <mat-select [placeholder]="buyRule.conditionType" [disabled]="true" disableRipple
+                        [(value)]="buyRule.conditionType">
                     </mat-select>
                 </mat-form-field>
                 <mat-form-field *ngIf="buyRule.conditionType == 'Time'" style="width:fit-content;">
                     <mat-label>Time Period</mat-label>
-                    <mat-select [disabled]="true" disableRipple [(value)]="buyRule.primaryObject">
+                    <mat-select [placeholder]="buyRule.buyTimeType" [disabled]="true" disableRipple
+                        [(value)]="buyRule.buyTimeType">
                     </mat-select>
                 </mat-form-field>
                 <mat-form-field *ngIf="buyRule.conditionType == 'Time'" class="example-full-width"
@@ -26,32 +28,35 @@
                 </mat-form-field>
                 <mat-form-field *ngIf="buyRule.conditionType == 'Line'" style="width:fit-content;">
                     <mat-label>Primary Line</mat-label>
-                    <mat-select [disabled]="true" disableRipple [(value)]="buyRule.primaryObject">
+                    <mat-select [disabled]="true" [placeholder]="buyRule.primaryObject.name" disableRipple
+                        [(value)]="buyRule.primaryObject.name">
                     </mat-select>
                 </mat-form-field>
                 <mat-form-field *ngIf="buyRule.conditionType == 'Line'" style="width:fit-content;">
                     <mat-label>Action</mat-label>
-                    <mat-select [disabled]="true" disableRipple [(value)]="buyRule.desiredAction">
+                    <mat-select [disabled]="true" [placeholder]="buyRule.desiredAction.type" disableRipple
+                        [(value)]="buyRule.desiredAction.type">
                     </mat-select>
                 </mat-form-field>
                 <mat-form-field
-                    *ngIf="buyRule.conditionType == 'Line' && buyRule.desiredAction != 'Trend Crosses Above:'"
+                    *ngIf="buyRule.conditionType == 'Line' && buyRule.desiredAction.type != 'Trend Crosses Above:'"
                     style="width:fit-content;">
                     <mat-label>Referenced Object</mat-label>
-                    <mat-select [disabled]="true" disableRipple [(value)]="buyRule.referencedObject">
+                    <mat-select [disabled]="true" [placeholder]="buyRule.referencedObject.name" disableRipple
+                        [(value)]="buyRule.referencedObject.name">
                     </mat-select>
                 </mat-form-field>
-                <mat-form-field *ngIf="buyRule.desiredAction == 'Trend Crosses Above:'" class="example-full-width"
+                <mat-form-field *ngIf="buyRule.desiredAction.type == 'Trend Crosses Above:'" class="example-full-width"
                     style="width:fit-content;">
                     <mat-label>Trend Length</mat-label>
-                    <input [disabled]="true" matInput type="number" [(ngModel)]="buyRule.desiredActionLength"
+                    <input [disabled]="true" matInput type="number" [(ngModel)]="buyRule.desiredAction.length"
                         placeholder="0.00" [min]=".001" step=".001">
                 </mat-form-field>
                 <mat-form-field
-                    *ngIf="(buyRule.desiredAction == 'Dips below:' || buyRule.desiredAction == 'Rises above:' || buyRule.desiredAction == 'Trend Crosses Above:') && buyRule.conditionType == 'Line'"
+                    *ngIf="(buyRule.desiredAction.type == 'Dips below:' || buyRule.desiredAction.type == 'Rises above:' || buyRule.desiredAction.type == 'Trend Crosses Above:') && buyRule.conditionType == 'Line'"
                     class="example-full-width" style="width:fit-content;">
                     <mat-label>By Amount:</mat-label>
-                    <input [disabled]="true" matInput type="number" [(ngModel)]="buyRule.desiredActionAmnt"
+                    <input [disabled]="true" matInput type="number" [(ngModel)]="buyRule.desiredAction.amount"
                         placeholder="0.00" [min]="0.001" [max]="1" step=".001">
                 </mat-form-field>
             </div>
@@ -67,47 +72,53 @@
                 <!-- <h4 *ngIf="sellRule.id > 0">And</h4> -->
                 <mat-form-field *ngIf="sellRule.id > 0" style="width:fit-content;">
                     <mat-label>And/Or</mat-label>
-                    <mat-select [disabled]="true" disableRipple [(value)]="sellRule.andOr">
+                    <mat-select [disabled]="true" [placeholder]="sellRule.andOr" disableRipple
+                        [(value)]="sellRule.andOr">
                     </mat-select>
                 </mat-form-field>
                 <mat-form-field style="width:fit-content;">
                     <mat-label>Condition Type</mat-label>
-                    <mat-select [disabled]="true" disableRipple [(value)]="sellRule.conditionType">
+                    <mat-select [disabled]="true" [placeholder]="sellRule.conditionType" disableRipple
+                        [(value)]="sellRule.conditionType">
                     </mat-select>
                 </mat-form-field>
                 <mat-form-field *ngIf="sellRule.conditionType == 'Line Action'" style="width:fit-content;">
                     <mat-label>Primary Line</mat-label>
-                    <mat-select [disabled]="true" disableRipple [(value)]="sellRule.primaryObject">
+                    <mat-select [disabled]="true" [placeholder]="sellRule.primaryObject.name" disableRipple
+                        [(value)]="sellRule.primaryObject.name">
                     </mat-select>
                 </mat-form-field>
                 <mat-form-field *ngIf="sellRule.conditionType == 'Line Action'" style="width:fit-content;">
                     <mat-label>Action</mat-label>
-                    <mat-select [disabled]="true" disableRipple [(value)]="sellRule.desiredAction">
+                    <mat-select [disabled]="true" [placeholder]="sellRule.desiredAction.type" disableRipple
+                        [(value)]="sellRule.desiredAction.type">
                     </mat-select>
                 </mat-form-field>
                 <mat-form-field *ngIf="sellRule.conditionType == 'Price Action'" style="width:fit-content;">
                     <mat-label>Action</mat-label>
-                    <mat-select [disabled]="true" disableRipple [(value)]="sellRule.desiredAction">
+                    <mat-select [disabled]="true" [placeholder]="sellRule.desiredAction.type" disableRipple
+                        [(value)]="sellRule.desiredAction.type">
                     </mat-select>
                 </mat-form-field>
                 <mat-form-field
-                    *ngIf="sellRule.conditionType == 'Line Action' && sellRule.desiredAction != 'Trend Crosses Below:'"
+                    *ngIf="sellRule.conditionType == 'Line Action' && sellRule.desiredAction.type != 'Trend Crosses Below:'"
                     style="width:fit-content;">
                     <mat-label>Referenced Object</mat-label>
-                    <mat-select [disabled]="true" disableRipple [(value)]="sellRule.referencedObject">
+                    <mat-select [disabled]="true" [placeholder]="sellRule.referencedObject.name" disableRipple
+                        [(value)]="sellRule.referencedObject.name">
                     </mat-select>
                 </mat-form-field>
-                <mat-form-field *ngIf="sellRule.desiredAction == 'Trend Crosses Below:'" class="example-full-width"
+                <mat-form-field *ngIf="sellRule.desiredAction.type == 'Trend Crosses Below:'" class="example-full-width"
                     style="width:fit-content;">
                     <mat-label>Trend Length</mat-label>
-                    <input [disabled]="true" matInput type="number" [(ngModel)]="sellRule.desiredActionLength"
+                    <input [disabled]="true" matInput type="number" [(ngModel)]="sellRule.desiredAction.length"
                         placeholder="0.00" [min]=".001" step=".001">
                 </mat-form-field>
                 <mat-form-field
-                    *ngIf="((sellRule.desiredAction == 'Rises above:' || sellRule.desiredAction == 'Trend Crosses Below:') && sellRule.conditionType == 'Line Action') || sellRule.conditionType == 'Price Action'"
+                    *ngIf="((sellRule.desiredAction.type == 'Rises above:' || sellRule.desiredAction.type == 'Trend Crosses Below:') && sellRule.conditionType == 'Line Action') || sellRule.conditionType == 'Price Action'"
                     class="example-full-width" style="width:fit-content;">
                     <mat-label>By Amount:</mat-label>
-                    <input [disabled]="true" matInput type="number" [(ngModel)]="sellRule.desiredActionAmnt"
+                    <input [disabled]="true" matInput type="number" [(ngModel)]="sellRule.desiredAction.amount"
                         placeholder="0.00" [min]=".001" step=".001">
                 </mat-form-field>
             </div>
@@ -118,5 +129,5 @@
 
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-    <button mat-button cdkFocusInitial (click)="onSubmit()">Save</button>
+    <button mat-button cdkFocusInitial (click)="onSubmit()">Run Sim</button>
 </mat-dialog-actions>
