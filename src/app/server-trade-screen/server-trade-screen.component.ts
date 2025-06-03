@@ -101,6 +101,7 @@ export class ServerTradeScreenComponent implements OnInit {
   readonly dialog = inject(MatDialog);
   @ViewChild('addLineTemplate', { static: true }) addLineTemplate!: TemplateRef<any>;
   @ViewChild('addRuleTemplate', { static: true }) addRuleTemplate!: TemplateRef<any>;
+  @ViewChild('algoLoopTemplate', { static: true }) algoLoopTemplate!: TemplateRef<any>;
 
 
   async saveAlgos() {
@@ -497,6 +498,9 @@ export class ServerTradeScreenComponent implements OnInit {
       this.runSimulation()
       this.isLoading = false
     }
+  }
+  onRunSimulationNewLoop() {
+
   }
   async onRunEntireSimulationIntraDayAllDays() {
     this.isLoading = true;
@@ -1933,6 +1937,25 @@ export class ServerTradeScreenComponent implements OnInit {
       exitAnimationDuration: 0
     });
     this.addRuleDialogRef.afterClosed().subscribe(async (result: any) => {
+      console.log(result)
+      //this.addRule(result)
+      /* 
+      else if (this.stockChart.data.datasets.length > 1) {
+        this.listOfAddedLines = []
+        this.stockChart.data.datasets = [this.stockChart.data.datasets[0]]
+        this.stockChart.update()
+      } */
+
+    });
+  }
+  algoLoopDialogRef: any
+  algoLoopPopup() {
+    this.algoLoopDialogRef = this.dialog.open(this.algoLoopTemplate, {
+      width: '1200px',
+      enterAnimationDuration: 0,
+      exitAnimationDuration: 0
+    });
+    this.algoLoopDialogRef.afterClosed().subscribe(async (result: any) => {
       console.log(result)
       //this.addRule(result)
       /* 
