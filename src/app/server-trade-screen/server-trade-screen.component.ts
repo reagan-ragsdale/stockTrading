@@ -2010,11 +2010,13 @@ export class ServerTradeScreenComponent implements OnInit {
     let profit = 0
     let numberOfConsecutiveLosses = 0
     let timeOutPeriod = 0
-    console.log(this.listOfAddedRules.BuyRules[0].desiredAction.type)
+
+    console.log('Counter: ' + counter)
     for (let i = counter; i < this.stockDataForSelectedDay.length; i++) {
       if (buySell == 'Buy') {
         let buyArray = []
         for (let j = 0; j < this.listOfAddedRules.BuyRules.length; j++) {
+          console.log(i)
           buyArray.push(this.operators[this.listOfAddedRules.BuyRules[j].desiredAction.type](this.listOfAddedRules.BuyRules[j], i))
         }
         if (!buyArray.includes(false) && this.stockDataForSelectedDay[i].time >= timeOutPeriod && numberOfConsecutiveLosses < this.listOfAddedRules.NumberOfLossesInARowToStop) {
