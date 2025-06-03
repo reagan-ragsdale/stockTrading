@@ -458,7 +458,7 @@ export class ServerTradeScreenComponent implements OnInit {
       this.isLoading = true
       let resultList = []
       //this.distinctDates.length
-      for (let i = 0; i < this.distinctDates.length; i++) {
+      for (let i = 0; i < 2; i++) {
         await this.updateStockChartData(this.distinctDates[i])
         this.addNewLinesToGraphNew()
         let result = this.addRule()
@@ -1669,7 +1669,7 @@ export class ServerTradeScreenComponent implements OnInit {
         if (rules.BuyRules[i].primaryObject.type != "") {
           let filteredLine = this.listOfAddedLines.filter(e => e.lineType == rules.BuyRules[i].primaryObject.type && e.lineLength == rules.BuyRules[i].primaryObject.length)[0]
           console.log(filteredLine)
-          console.log(rules.BuyRules[i].primaryObject)
+          console.log(rules.BuyRules[i].primaryObject.length)
           rules.BuyRules[i].primaryObject.data = filteredLine.data
         }
         if (rules.BuyRules[i].referencedObject.type != "") {
