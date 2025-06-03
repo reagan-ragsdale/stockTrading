@@ -7,6 +7,7 @@ import { dbOrdersRepo } from "../shared/tasks/dbOrders.js";
 import { LoggerController } from "../shared/controllers/LoggerController.js";
 import { simFinRepo } from "../shared/tasks/simFinance.js";
 import { ServerTradeStrategies } from "../app/services/serverTradeStrategies.js";
+import { SchwabController } from "../shared/controllers/SchwabController.js";
 
 type lastTrade = {
     lastPrice: number;
@@ -29,6 +30,8 @@ export const socketCall = async (): Promise<void> => {
     let userFinance = await simFinRepo.findFirst({ userId: 'Shared' })
     //get all orders for each above user
     let userOrders = await dbOrdersRepo.find({ where: { userId: 'Shared' }, orderBy: { orderTime: 'desc' } })
+
+    let schwabOrders = SchwabController.getOrdersCall()
 
     let stockLastTradesMap = new Map<string, lastTrade>()
     stockLastTradesMap.set('AAPL', { lastPrice: 0, lastAsk: 0, lastBid: 0 })

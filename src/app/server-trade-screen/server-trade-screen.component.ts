@@ -1666,24 +1666,24 @@ export class ServerTradeScreenComponent implements OnInit {
       let rules = structuredClone(this.listOfAddedRules)
 
       for (let i = 0; i < rules.BuyRules.length; i++) {
-        if (rules.BuyRules[i].primaryObjectType != "") {
-          let filteredLine = this.listOfAddedLines.filter(e => e.lineType == rules.BuyRules[i].primaryObjectType && e.lineLength == rules.BuyRules[i].primaryObjectLength)[0]
-          rules.BuyRules[i].primaryObjectData = filteredLine.data
+        if (rules.BuyRules[i].primaryObject.type != "") {
+          let filteredLine = this.listOfAddedLines.filter(e => e.lineType == rules.BuyRules[i].primaryObject.type && e.lineLength == rules.BuyRules[i].primaryObject.length)[0]
+          rules.BuyRules[i].primaryObject.data = filteredLine.data
         }
-        if (rules.BuyRules[i].referencedObjectType != "") {
-          let filteredLine = this.listOfAddedLines.filter(e => e.lineType == rules.BuyRules[i].referencedObjectType && e.lineLength == rules.BuyRules[i].referencedObjectLength)[0]
-          rules.BuyRules[i].referencedObjectData = filteredLine.data
+        if (rules.BuyRules[i].referencedObject.type != "") {
+          let filteredLine = this.listOfAddedLines.filter(e => e.lineType == rules.BuyRules[i].referencedObject.type && e.lineLength == rules.BuyRules[i].referencedObject.length)[0]
+          rules.BuyRules[i].referencedObject.data = filteredLine.data
         }
 
       }
       for (let i = 0; i < rules.SellRules.length; i++) {
-        if (rules.SellRules[i].primaryObjectType != "") {
-          let filteredLine = this.listOfAddedLines.filter(e => e.lineType == rules.SellRules[i].primaryObjectType && e.lineLength == rules.SellRules[i].primaryObjectLength)[0]
-          rules.SellRules[i].primaryObjectData = filteredLine.data
+        if (rules.SellRules[i].primaryObject.type != "") {
+          let filteredLine = this.listOfAddedLines.filter(e => e.lineType == rules.SellRules[i].primaryObject.type && e.lineLength == rules.SellRules[i].primaryObject.length)[0]
+          rules.SellRules[i].primaryObject.data = filteredLine.data
         }
-        if (rules.SellRules[i].referencedObjectType != "") {
-          let filteredLine = this.listOfAddedLines.filter(e => e.lineType == rules.SellRules[i].referencedObjectType && e.lineLength == rules.SellRules[i].referencedObjectLength)[0]
-          rules.SellRules[i].referencedObjectData = filteredLine.data
+        if (rules.SellRules[i].referencedObject.type != "") {
+          let filteredLine = this.listOfAddedLines.filter(e => e.lineType == rules.SellRules[i].referencedObject.type && e.lineLength == rules.SellRules[i].referencedObject.length)[0]
+          rules.SellRules[i].referencedObject.data = filteredLine.data
         }
 
       }
@@ -1823,6 +1823,8 @@ export class ServerTradeScreenComponent implements OnInit {
       cumulativeVolume += this.stockDataForSelectedDay[i].volume
       returnData.push({ value: null, time: this.stockDataForSelectedDay[i].time })
     }
+    cumulativePV += this.stockDataForSelectedDay[lineLength - 1].stockPrice * this.stockDataForSelectedDay[lineLength - 1].volume
+    cumulativeVolume += this.stockDataForSelectedDay[lineLength - 1].volume
     returnData.push({ value: cumulativePV / cumulativeVolume, time: this.stockDataForSelectedDay[lineLength - 1].time });
     for (let i = lineLength; i < this.stockDataForSelectedDay.length; i++) {
       cumulativePV += (this.stockDataForSelectedDay[i].stockPrice * this.stockDataForSelectedDay[i].volume) - (this.stockDataForSelectedDay[i - lineLength].stockPrice * this.stockDataForSelectedDay[i - lineLength].volume);
@@ -1971,18 +1973,18 @@ export class ServerTradeScreenComponent implements OnInit {
 
 
   operators: Record<string, OperatorFunction> = {
-    "Crosses above:": (rule, index) => (rule.primaryObjectData[index].value == null || rule.referencedObjectData[index].value == null) ? false : (rule.primaryObjectData[index].value > rule.referencedObjectData[index].value && (rule.primaryObjectData[index - 1].value != null && rule.referencedObjectData[index - 1].value != null) && (rule.primaryObjectData[index - 1].value! <= rule.referencedObjectData[index - 1].value!)),
-    "Crosses below:": (rule, index) => (rule.primaryObjectData[index].value == null || rule.referencedObjectData[index].value == null) ? false : (rule.primaryObjectData[index].value < rule.referencedObjectData[index].value && (rule.primaryObjectData[index - 1].value != null && rule.referencedObjectData[index - 1].value != null) && (rule.primaryObjectData[index - 1].value! >= rule.referencedObjectData[index - 1].value!)),
-    "Dips below:": (rule, index) => (rule.primaryObjectData[index].value == null || rule.referencedObjectData[index].value == null) ? false : (((rule.primaryObjectData[index].value - rule.referencedObjectData[index].value) / rule.referencedObjectData[index].value) < (rule.desiredActionAmnt * -1)),
-    "Rises above:": (rule, index) => (rule.primaryObjectData[index].value == null || rule.referencedObjectData[index].value == null) ? false : (((rule.primaryObjectData[index].value - rule.referencedObjectData[index].value) / rule.referencedObjectData[index].value) > (rule.desiredActionAmnt)),
-    "Take Profit": (rule, index, buyPrice) => (this.stockDataForSelectedDay[index].stockPrice >= (buyPrice! * (1 + rule.desiredActionAmnt))),
-    "Stop Loss": (rule, index, buyPrice) => (this.stockDataForSelectedDay[index].stockPrice <= (buyPrice! * (1 - rule.desiredActionAmnt))),
+    "Crosses above:": (rule, index) => (rule.primaryObject.data[index].value == null || rule.referencedObject.data[index].value == null) ? false : (rule.primaryObject.data[index].value > rule.referencedObject.data[index].value && (rule.primaryObject.data[index - 1].value != null && rule.referencedObject.data[index - 1].value != null) && (rule.primaryObject.data[index - 1].value! <= rule.referencedObject.data[index - 1].value!)),
+    "Crosses below:": (rule, index) => (rule.primaryObject.data[index].value == null || rule.referencedObject.data[index].value == null) ? false : (rule.primaryObject.data[index].value < rule.referencedObject.data[index].value && (rule.primaryObject.data[index - 1].value != null && rule.referencedObject.data[index - 1].value != null) && (rule.primaryObject.data[index - 1].value! >= rule.referencedObject.data[index - 1].value!)),
+    "Dips below:": (rule, index) => (rule.primaryObject.data[index].value == null || rule.referencedObject.data[index].value == null) ? false : (((rule.primaryObject.data[index].value - rule.referencedObject.data[index].value) / rule.referencedObject.data[index].value) < (rule.desiredAction.amount * -1)),
+    "Rises above:": (rule, index) => (rule.primaryObject.data[index].value == null || rule.referencedObject.data[index].value == null) ? false : (((rule.primaryObject.data[index].value - rule.referencedObject.data[index].value) / rule.referencedObject.data[index].value) > (rule.desiredAction.amount)),
+    "Take Profit": (rule, index, buyPrice) => (this.stockDataForSelectedDay[index].stockPrice >= (buyPrice! * (1 + rule.desiredAction.amount))),
+    "Stop Loss": (rule, index, buyPrice) => (this.stockDataForSelectedDay[index].stockPrice <= (buyPrice! * (1 - rule.desiredAction.amount))),
     "After": (rule, index) => ('buyTime' in rule ? (this.stockDataForSelectedDay[index].time > (this.stockDataForSelectedDay[0].time + (rule.buyTime * 1000 * 60))) : false),
-    "Trailing Stop": (rule, index) => ('desiredActionCurrent' in rule ? (this.stockDataForSelectedDay[index].stockPrice <= rule.desiredActionCurrent) : false),
-    "Trend Crosses Below:": (rule, index) => (('desiredActionLength' in rule && index >= (rule.primaryObjectLength + rule.desiredActionLength) - 2) ? (this.getTrend(rule.primaryObjectData, rule.desiredActionLength, index) < rule.desiredActionAmnt) : false),
-    "Trend Crosses Above:": (rule, index) => (('desiredActionLength' in rule && index >= (rule.primaryObjectLength + rule.desiredActionLength) - 2) ? (this.getTrend(rule.primaryObjectData, rule.desiredActionLength, index) > rule.desiredActionAmnt) : false),
-    "Is greater than:": (rule, index) => (rule.primaryObjectData[index].value == null || rule.referencedObjectData[index].value == null) ? false : (rule.primaryObjectData[index].value > rule.referencedObjectData[index].value),
-    "Is less than:": (rule, index) => (rule.primaryObjectData[index].value == null || rule.referencedObjectData[index].value == null) ? false : (rule.primaryObjectData[index].value < rule.referencedObjectData[index].value)
+    "Trailing Stop": (rule, index) => ('current' in rule.desiredAction ? (this.stockDataForSelectedDay[index].stockPrice <= rule.desiredAction.current) : false),
+    "Trend Crosses Below:": (rule, index) => (('desiredActionLength' in rule && index >= (rule.primaryObject.length + rule.desiredAction.length) - 2) ? (this.getTrend(rule.primaryObject.data, rule.desiredAction.length, index) < rule.desiredAction.amount) : false),
+    "Trend Crosses Above:": (rule, index) => (('desiredActionLength' in rule && index >= (rule.primaryObject.length + rule.desiredAction.length) - 2) ? (this.getTrend(rule.primaryObject.data, rule.desiredAction.length, index) > rule.desiredAction.amount) : false),
+    "Is greater than:": (rule, index) => (rule.primaryObject.data[index].value == null || rule.referencedObject.data[index].value == null) ? false : (rule.primaryObject.data[index].value > rule.referencedObject.data[index].value),
+    "Is less than:": (rule, index) => (rule.primaryObject.data[index].value == null || rule.referencedObject.data[index].value == null) ? false : (rule.primaryObject.data[index].value < rule.referencedObject.data[index].value)
   };
 
   addRule() {
@@ -2010,15 +2012,15 @@ export class ServerTradeScreenComponent implements OnInit {
       if (buySell == 'Buy') {
         let buyArray = []
         for (let j = 0; j < this.listOfAddedRules.BuyRules.length; j++) {
-          buyArray.push(this.operators[this.listOfAddedRules.BuyRules[j].desiredAction](this.listOfAddedRules.BuyRules[j], i))
+          buyArray.push(this.operators[this.listOfAddedRules.BuyRules[j].desiredAction.type](this.listOfAddedRules.BuyRules[j], i))
         }
         if (!buyArray.includes(false) && this.stockDataForSelectedDay[i].time >= timeOutPeriod && numberOfConsecutiveLosses < this.listOfAddedRules.NumberOfLossesInARowToStop) {
           orderLocations.push({ buySell: 'Buy', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString() })
           console.log(numberOfConsecutiveLosses)
           buySell = 'Sell'
           for (let j = 0; j < this.listOfAddedRules.SellRules.length; j++) {
-            if (this.listOfAddedRules.SellRules[j].desiredAction == 'Trailing Stop') {
-              this.listOfAddedRules.SellRules[j].desiredActionCurrent = 0
+            if (this.listOfAddedRules.SellRules[j].desiredAction.type == 'Trailing Stop') {
+              this.listOfAddedRules.SellRules[j].desiredAction.current = 0
               this.listOfAddedRules.SellRules[j].tradeHigh = this.stockDataForSelectedDay[i].stockPrice
             }
           }
@@ -2029,13 +2031,13 @@ export class ServerTradeScreenComponent implements OnInit {
 
         let andOr = 'And'
         for (let j = 0; j < this.listOfAddedRules.SellRules.length; j++) {
-          if (this.listOfAddedRules.SellRules[j].desiredAction == 'Trailing Stop' && (this.stockDataForSelectedDay[i].stockPrice > this.listOfAddedRules.SellRules[j].tradeHigh)) {
+          if (this.listOfAddedRules.SellRules[j].desiredAction.type == 'Trailing Stop' && (this.stockDataForSelectedDay[i].stockPrice > this.listOfAddedRules.SellRules[j].tradeHigh)) {
             this.listOfAddedRules.SellRules[j].tradeHigh = this.stockDataForSelectedDay[i].stockPrice
-            if (this.listOfAddedRules.SellRules[j].tradeHigh >= (orderLocations[orderLocations.length - 1].price + this.listOfAddedRules.SellRules[j].desiredActionAmnt)) {
-              this.listOfAddedRules.SellRules[j].desiredActionCurrent = this.listOfAddedRules.SellRules[j].tradeHigh - this.listOfAddedRules.SellRules[j].desiredActionAmnt
+            if (this.listOfAddedRules.SellRules[j].tradeHigh >= (orderLocations[orderLocations.length - 1].price + this.listOfAddedRules.SellRules[j].desiredAction.amount)) {
+              this.listOfAddedRules.SellRules[j].desiredAction.current = this.listOfAddedRules.SellRules[j].tradeHigh - this.listOfAddedRules.SellRules[j].desiredAction.amount
             }
           }
-          buyArray.push(this.operators[this.listOfAddedRules.SellRules[j].desiredAction](this.listOfAddedRules.SellRules[j], i, orderLocations[orderLocations.length - 1].price))
+          buyArray.push(this.operators[this.listOfAddedRules.SellRules[j].desiredAction.type](this.listOfAddedRules.SellRules[j], i, orderLocations[orderLocations.length - 1].price))
         }
         if (this.listOfAddedRules.SellRules[this.listOfAddedRules.SellRules.length - 1].andOr == 'Or') {
           andOr = 'Or'
@@ -2079,24 +2081,24 @@ export class ServerTradeScreenComponent implements OnInit {
   }
   refreshRules() {
     for (let i = 0; i < this.listOfAddedRules.BuyRules.length; i++) {
-      let filteredLineData = this.listOfAddedLines.filter(e => e.lineType == this.listOfAddedRules.BuyRules[i].primaryObjectType && e.lineLength == this.listOfAddedRules.BuyRules[i].primaryObjectLength)
+      let filteredLineData = this.listOfAddedLines.filter(e => e.lineType == this.listOfAddedRules.BuyRules[i].primaryObject.type && e.lineLength == this.listOfAddedRules.BuyRules[i].primaryObject.length)
       if (filteredLineData.length > 0) {
-        this.listOfAddedRules.BuyRules[i].primaryObjectData = filteredLineData[0].data
+        this.listOfAddedRules.BuyRules[i].primaryObject.data = filteredLineData[0].data
       }
-      filteredLineData = this.listOfAddedLines.filter(e => e.lineType == this.listOfAddedRules.BuyRules[i].referencedObjectType && e.lineLength == this.listOfAddedRules.BuyRules[i].referencedObjectLength)
+      filteredLineData = this.listOfAddedLines.filter(e => e.lineType == this.listOfAddedRules.BuyRules[i].referencedObject.type && e.lineLength == this.listOfAddedRules.BuyRules[i].referencedObject.length)
       if (filteredLineData.length > 0) {
-        this.listOfAddedRules.BuyRules[i].referencedObjectData = filteredLineData[0].data
+        this.listOfAddedRules.BuyRules[i].referencedObject.data = filteredLineData[0].data
       }
 
     }
     for (let i = 0; i < this.listOfAddedRules.SellRules.length; i++) {
-      let filteredLineData = this.listOfAddedLines.filter(e => e.lineType == this.listOfAddedRules.SellRules[i].primaryObjectType && e.lineLength == this.listOfAddedRules.SellRules[i].primaryObjectLength)
+      let filteredLineData = this.listOfAddedLines.filter(e => e.lineType == this.listOfAddedRules.SellRules[i].primaryObject.type && e.lineLength == this.listOfAddedRules.SellRules[i].primaryObject.length)
       if (filteredLineData.length > 0) {
-        this.listOfAddedRules.SellRules[i].primaryObjectData = filteredLineData[0].data
+        this.listOfAddedRules.SellRules[i].primaryObject.data = filteredLineData[0].data
       }
-      filteredLineData = this.listOfAddedLines.filter(e => e.lineType == this.listOfAddedRules.SellRules[i].referencedObjectType && e.lineLength == this.listOfAddedRules.SellRules[i].referencedObjectLength)
+      filteredLineData = this.listOfAddedLines.filter(e => e.lineType == this.listOfAddedRules.SellRules[i].referencedObject.type && e.lineLength == this.listOfAddedRules.SellRules[i].referencedObject.length)
       if (filteredLineData.length > 0) {
-        this.listOfAddedRules.SellRules[i].referencedObjectData = filteredLineData[0].data
+        this.listOfAddedRules.SellRules[i].referencedObject.data = filteredLineData[0].data
       }
     }
   }

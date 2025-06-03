@@ -18,16 +18,6 @@ export class ServerTradeStrategies {
 
 
 
-    ////
-    /////
-    ////
-    ////
-    //Buy when respective ema moves above the cumulative vwap and sell when ema moves belwo the 1800 rolling vwap
-    //
-    ////
-    /////
-    ////
-
 
     static initialize() {
         this.stockMovingAverageCrossoverMap.set('TSLA', { MovingAverageLength: 900, RollingVWAPLength: 1800, WaitTime: 3600000, TrailingStopAmt: .6, StopLossAmt: 0.002 })
@@ -72,7 +62,7 @@ export class ServerTradeStrategies {
 
         for (let i = 0; i < this.listOfTradableStocks.length; i++) {
             for (let j = 0; j < this.activeStrategies.length; j++) {
-                this.stockInfoMap.set(JSON.stringify({ stockName: this.listOfTradableStocks[i], tradeStrategy: this.activeStrategies[j] }), { canTrade: true, numberOfTrades: 0, stopLoss: 0, stopLossGainThreshold: 0, tradeHigh: 0 })
+                this.stockInfoMap.set(JSON.stringify({ stockName: this.listOfTradableStocks[i], tradeStrategy: this.activeStrategies[j] }), { canTrade: true, numberOfTrades: 0, stopLoss: 0, stopLossGainThreshold: 0, tradeHigh: 0, numberOfLosses: 0 })
             }
 
         }
@@ -134,6 +124,8 @@ export class ServerTradeStrategies {
             stockStrategyData.rollingV += stockData.volume
         }
         else if (stockStrategyData.priceHistory.length == stockStrategyInfo.RollingVWAPLength) {
+            stockStrategyData.rollingPV += (stockData.stockPrice * stockData.volume)
+            stockStrategyData.rollingV += stockData.volume
             stockStrategyData.RollingVWAP = stockStrategyData.rollingPV / stockStrategyData.rollingV
         }
         else if (stockStrategyData.priceHistory.length > stockStrategyInfo.RollingVWAPLength) {
@@ -186,7 +178,7 @@ export class ServerTradeStrategies {
                 }
             }
 
-            if (isBuy && stockInfo.canTrade) {
+            if (isBuy && stockInfo.canTrade && stockInfo.numberOfLosses < 2) {
                 if ((stockStrategyData.EMA > stockStrategyData.VWAP) && (stockStrategyData.PreviousEMA <= stockStrategyData.VWAP)) {
                     stockInfo.numberOfTrades++
                     stockInfo.stopLoss = stockData.askPrice * (1 - stockStrategyInfo.StopLossAmt)
@@ -247,6 +239,9 @@ export class ServerTradeStrategies {
                     stockInfo.stopLoss = 0
                     stockInfo.tradeHigh = 0
                     stockInfo.stopLossGainThreshold = 0
+                    if (stockData.bidPrice < lastOrder[0].stockPrice) {
+                        stockInfo.numberOfLosses++
+                    }
                     return {
                         shouldTrade: true, log: {
                             stockName: stockData.stockName,
@@ -289,6 +284,9 @@ export class ServerTradeStrategies {
                     stockInfo.tradeHigh = 0
                     stockInfo.stopLossGainThreshold = 0
                     stockInfo.canTrade = false
+                    if (stockData.bidPrice < lastOrder[0].stockPrice) {
+                        stockInfo.numberOfLosses++
+                    }
                     return {
                         shouldTrade: true, log: {
                             stockName: stockData.stockName,

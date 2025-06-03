@@ -39,6 +39,7 @@ import { dbStockBasicHistoryRepo } from '../../shared/tasks/dbStockBasicHistory'
 import { AddGraphComponent } from "./add-graph/add-graph.component";
 import { SchwabController } from '../../shared/controllers/SchwabController';
 import { LineData, lineType } from '../Dtos/ServerAlgoDto';
+import zoomPlugin from 'chartjs-plugin-zoom';
 
 
 //import { WebSocket } from 'ws';
@@ -1080,6 +1081,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.isLoading = true
     Chart.register(annotationPlugin);
     Chart.register(...registerables)
+    Chart.register(zoomPlugin)
     let user = await remult.initUser()
     await AuthController.resetUser()
     let userTokenData = await dbTokenRepo.findFirst({ userId: user?.id }) as DbTOkens

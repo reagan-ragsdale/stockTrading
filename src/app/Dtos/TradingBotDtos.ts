@@ -4,6 +4,7 @@ export type StockInfo = {
     stopLoss: number;
     stopLossGainThreshold: number;
     tradeHigh: number;
+    numberOfLosses: number;
 };
 export type DayTradeValues = MovingAvergeCrossoverDto | VWAPTrendCrossDto
 export type stockDataInfo = stockMACrossData | stockVWAPCrossData;

@@ -1,4 +1,6 @@
 import { SchwabOrderDTO } from "../app/Dtos/TradingBotDtos";
+import { AuthController } from "../shared/controllers/AuthController";
+import { dbTokenRepo, DbTOkens } from "../shared/tasks/dbTokens";
 
 
 export const getEnvironment = (): string => {
@@ -49,17 +51,18 @@ export const getAccountInfo = async (accountNumber: string, accessToken: string)
 }
 
 //get a list of orders for the account
-export const getOrdersForAccount = async (accountNumber: string, accessToken: string): Promise<any> => {
+export const getOrdersForAccount = async (): Promise<any> => {
     try {
+        let token = await dbTokenRepo.findFirst({ id: 'asdfghjkl' }) as DbTOkens
         let startDate = new Date()
         startDate.setHours(5, 0, 0, 0)
         let fromDate = startDate.toUTCString()
         let toDate = new Date().toISOString()
-        const url = `https://api.schwabapi.com/v1/accounts/${accountNumber}/orders?fromEnteredTime=${fromDate}&toEnteredTime=${toDate}`;
+        const url = `https://api.schwabapi.com/v1/accounts/${token.accountNum}/orders?fromEnteredTime=${fromDate}&toEnteredTime=${toDate}`;
         const options = {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${accessToken}`
+                'Authorization': `Bearer ${token.accessToken}`
             }
         };
 

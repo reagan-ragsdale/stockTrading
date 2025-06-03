@@ -41,7 +41,7 @@ import { DbListOfProfits } from '../shared/tasks/dbListOfProfits.js'
 import { SimulationController } from '../shared/controllers/SimulationController.js'
 import { runIntraDaySim } from './runIntraDaySim.js'
 import { SchwabController } from '../shared/controllers/SchwabController.js'
-import { getAccountInfo, getAccountNumbers, getEnvironment } from './schwabApiCalls.js'
+import { getAccountInfo, getAccountNumbers, getEnvironment, getOrdersForAccount } from './schwabApiCalls.js'
 import { LoggerController } from '../shared/controllers/LoggerController.js'
 import { emailer } from './log-emailer.js'
 import { createExcel } from './logReport.js'
@@ -56,6 +56,7 @@ SimulationController.intraDaySimulation = runIntraDaySim
 SchwabController.getAccountNumbers = getAccountNumbers
 SchwabController.getAccountInfo = getAccountInfo
 SchwabController.getEnvironment = getEnvironment
+SchwabController.getOrdersForAccount = getOrdersForAccount
 LoggerController.sendEmail = emailer
 LoggerController.generateExcel = createExcel
 
