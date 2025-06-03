@@ -110,25 +110,25 @@ export class ServerTradeStrategies {
         let nonTradeLog: tradeLogDto | null = null
 
         //if the length of the history is equal to what the long moving average length is then set the moving averages
-        if (stockStrategyData.priceHistory.length == stockStrategyInfo.MovingAverageLength) {
+        if (stockStrategyData.priceHistory.length == stockStrategyInfo.MovingAverageLength - 1) {
             stockStrategyData.EMA = stockStrategyData.priceHistory.reduce((sum, val) => sum + val, 0) / stockStrategyInfo.MovingAverageLength
         }
         //else if its greater than then we do a revolving door first in first out and recalculate the moving averages
-        else if (stockStrategyData.priceHistory.length > stockStrategyInfo.MovingAverageLength) {
+        else if (stockStrategyData.priceHistory.length > stockStrategyInfo.MovingAverageLength - 1) {
             stockStrategyData.PreviousEMA = stockStrategyData.EMA
             stockStrategyData.EMA = (stockData.stockPrice * multiplyer) + (stockStrategyData.EMA * (1 - multiplyer))
             stockStrategyData.VWAP = stockStrategyData.cumulativePV / stockStrategyData.cumulativeV
         }
-        if (stockStrategyData.priceHistory.length < stockStrategyInfo.RollingVWAPLength) {
+        if (stockStrategyData.priceHistory.length < stockStrategyInfo.RollingVWAPLength - 1) {
             stockStrategyData.rollingPV += (stockData.stockPrice * stockData.volume)
             stockStrategyData.rollingV += stockData.volume
         }
-        else if (stockStrategyData.priceHistory.length == stockStrategyInfo.RollingVWAPLength) {
+        else if (stockStrategyData.priceHistory.length == stockStrategyInfo.RollingVWAPLength - 1) {
             stockStrategyData.rollingPV += (stockData.stockPrice * stockData.volume)
             stockStrategyData.rollingV += stockData.volume
             stockStrategyData.RollingVWAP = stockStrategyData.rollingPV / stockStrategyData.rollingV
         }
-        else if (stockStrategyData.priceHistory.length > stockStrategyInfo.RollingVWAPLength) {
+        else if (stockStrategyData.priceHistory.length > stockStrategyInfo.RollingVWAPLength - 1) {
             stockStrategyData.rollingPV += (stockData.stockPrice * stockData.volume) - (stockStrategyData.priceHistory[stockStrategyData.priceHistory.length - stockStrategyInfo.RollingVWAPLength] * stockStrategyData.volumeHistory[stockStrategyData.volumeHistory.length - stockStrategyInfo.RollingVWAPLength])
             stockStrategyData.rollingV += stockData.volume - stockStrategyData.volumeHistory[stockStrategyData.volumeHistory.length - stockStrategyInfo.RollingVWAPLength]
             stockStrategyData.RollingVWAP = stockStrategyData.rollingPV / stockStrategyData.rollingV

@@ -1,6 +1,6 @@
 import { SchwabOrderDTO } from "../app/Dtos/TradingBotDtos";
 import { AuthController } from "../shared/controllers/AuthController";
-import { dbTokenRepo, DbTOkens } from "../shared/tasks/dbTokens";
+import { dbTokenRepo, DbTOkens } from "../shared/tasks/dbTokens.js";
 
 
 export const getEnvironment = (): string => {
