@@ -11,13 +11,13 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ServerTradeScreenComponent } from './server-trade-screen/server-trade-screen.component';
 
 export const routes: Routes = [
-    { path: '', redirectTo: 'login', pathMatch: 'full'},
-    {path: 'home', title: 'home', component: HomeScreenComponent},
-    {path: 'testEnv', title: 'TestEnv', component: TestScreenComponent},
-    {path: 'login', component: AuthComponent},
-    {path: 'keys', component: KeyScreenComponent},
-    {path: 'auth', component: AuthScreenComponent},
-    {path: 'orderHistory', component: TradeHistoryDetailComponent},
-    {path: 'dashboard', component: DashboardComponent},
-    {path: 'serverTradeList', component: ServerTradeScreenComponent}
+    { path: '', redirectTo: 'login', pathMatch: 'full' },
+    { path: 'home', title: 'home', component: HomeScreenComponent, canActivate: [KeyGuard] },
+    { path: 'testEnv', title: 'TestEnv', component: TestScreenComponent },
+    { path: 'login', component: AuthComponent, canActivate: [KeyGuard] },
+    { path: 'keys', component: KeyScreenComponent, canActivate: [KeyGuard] },
+    { path: 'auth', component: AuthScreenComponent, canActivate: [KeyGuard] },
+    { path: 'orderHistory', component: TradeHistoryDetailComponent },
+    { path: 'dashboard', component: DashboardComponent, canActivate: [KeyGuard] },
+    { path: 'serverTradeList', component: ServerTradeScreenComponent }
 ];
