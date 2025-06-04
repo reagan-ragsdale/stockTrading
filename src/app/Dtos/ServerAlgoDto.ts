@@ -25,10 +25,12 @@ export type BuyRule = {
     conditionType: string;
     buyTimeType: string;
     buyTime: number;
+    buyTimeChecked: boolean;
     primaryObject: {
         name: string;
         type: string;
         length: number;
+        lengthLoopChecked: boolean;
         data: LineData[]
     },
     /*  primaryObject: string;
@@ -39,7 +41,9 @@ export type BuyRule = {
     desiredAction: {
         type: string;
         amount: number;
-        length: number
+        amountLoopChecked: boolean;
+        length: number;
+        lengthLoopChecked: boolean;
     }
     /* desiredAction: string;
     desiredActionAmnt: number;
@@ -49,6 +53,7 @@ export type BuyRule = {
         name: string;
         type: string;
         length: number;
+        lengthLoopChecked: boolean;
         data: LineData[];
     }
     /* referencedObject: string;
@@ -69,6 +74,7 @@ export type SellRule = {
         name: string;
         type: string;
         length: number;
+        lengthLoopChecked: boolean;
         data: LineData[]
     },
     /* primaryObject: string;
@@ -79,7 +85,9 @@ export type SellRule = {
     desiredAction: {
         type: string;
         amount: number;
+        amountLoopChecked: boolean;
         length: number;
+        lengthLoopChecked: boolean;
         current: number;
     }
     /* desiredAction: string;
@@ -92,6 +100,7 @@ export type SellRule = {
         name: string;
         type: string;
         length: number;
+        lengthLoopChecked: boolean;
         data: LineData[];
     }
     /* referencedObject: string;

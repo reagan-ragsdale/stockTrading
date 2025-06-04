@@ -1,22 +1,29 @@
-::ng-deep .mdc-label{
+::ng-deep .mdc-label {
     color: #DBD4D1 !important;
 }
-.spinner{
+
+.spinner {
     position: absolute;
-    top:50%;
-    left:50%;
+    top: 50%;
+    left: 50%;
     transform: translate(-50%, -50%);
     z-index: 102;
 }
-.overlay{
-    position:absolute;
-    top:0;
-    left:0;
-    right:0;
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
     bottom: 0;
-    z-index:101;
+    z-index: 101;
     backdrop-filter: blur(2px);
 }
-::ng-deep .mat-mdc-form-field-bottom-align{
+
+::ng-deep .mat-mdc-form-field-bottom-align {
     display: none;
+}
+
+::ng-deep .cdk-overlay-pane.mat-mdc-dialog-panel {
+    max-width: none;
 }

@@ -46,21 +46,26 @@ export class AddRuleComponent {
       conditionType: '',
       buyTimeType: '',
       buyTime: 0,
+      buyTimeChecked: false,
       primaryObject: {
         name: '',
         type: '',
         length: 0,
+        lengthLoopChecked: false,
         data: []
       },
       desiredAction: {
         amount: 0,
+        amountLoopChecked: false,
         length: 0,
+        lengthLoopChecked: false,
         type: ''
       },
       referencedObject: {
         name: '',
         type: '',
         length: 0,
+        lengthLoopChecked: false,
         data: []
       },
     })
@@ -75,13 +80,16 @@ export class AddRuleComponent {
         name: '',
         type: '',
         length: 0,
+        lengthLoopChecked: false,
         data: []
       },
 
       desiredAction: {
         amount: 0,
+        amountLoopChecked: false,
         type: '',
         length: 0,
+        lengthLoopChecked: false,
         current: 0
 
       },
@@ -90,6 +98,7 @@ export class AddRuleComponent {
         name: '',
         type: '',
         length: 0,
+        lengthLoopChecked: false,
         data: []
       },
     })
