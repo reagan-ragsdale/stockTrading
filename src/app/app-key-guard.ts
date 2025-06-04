@@ -14,7 +14,8 @@ export class KeyGuard implements CanActivate {
   async canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Promise<boolean | UrlTree> {
-    let environment = SchwabController.getEnvironmentCall()
+    let environment = await SchwabController.getEnvironmentCall()
+    console.log(environment)
     if (environment == 'Prod') {
       return true; // User is logged in, allow access
     } else {
