@@ -1957,6 +1957,7 @@ export class ServerTradeScreenComponent implements OnInit {
   algoLoopPopup() {
     this.algoLoopDialogRef = this.dialog.open(this.algoLoopTemplate, {
       width: '1200px',
+      maxWidth: '1200px',
       enterAnimationDuration: 0,
       exitAnimationDuration: 0
     });

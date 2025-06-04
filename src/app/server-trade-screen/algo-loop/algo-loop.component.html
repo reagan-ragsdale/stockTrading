@@ -19,19 +19,50 @@
                     <mat-label>Time Period</mat-label>
                     <input [disabled]="true" matInput type="text" [(ngModel)]="buyRule.buyTimeType">
                 </mat-form-field>
-                <div style="display:flex; gap:.5rem;">
-                    <mat-form-field *ngIf="buyRule.conditionType == 'Time'" class="example-full-width"
-                        style="width:fit-content;">
+                <div style="display:flex; gap:.5rem;" *ngIf="buyRule.conditionType == 'Time'">
+                    <mat-form-field class="example-full-width" style="width:fit-content;">
                         <mat-label>Minutes</mat-label>
                         <input [disabled]="true" matInput type="number" [(ngModel)]="buyRule.buyTime">
                     </mat-form-field>
                     <mat-checkbox [(ngModel)]="buyRule.buyTimeChecked">Add</mat-checkbox>
+                    <div *ngIf="buyRule.buyTimeChecked">
+                        <mat-form-field style="width:fit-content;">
+                            <mat-label>From</mat-label>
+                            <input matInput type="number" [(ngModel)]="buyRule.buyTimeCheckFromAmnt">
+                        </mat-form-field>
+                        <mat-form-field style="width:fit-content;">
+                            <mat-label>To</mat-label>
+                            <input matInput type="number" [(ngModel)]="buyRule.buyTimeCheckToAmnt">
+                        </mat-form-field>
+                        <mat-form-field style="width:fit-content;">
+                            <mat-label>Step</mat-label>
+                            <input matInput type="number" [(ngModel)]="buyRule.buyTimeCheckStepAmnt">
+                        </mat-form-field>
+                    </div>
                 </div>
 
-                <mat-form-field *ngIf="buyRule.conditionType == 'Line'" style="width:fit-content;">
-                    <mat-label>Primary Line</mat-label>
-                    <input [disabled]="true" matInput type="text" [(ngModel)]="buyRule.primaryObject.name">
-                </mat-form-field>
+                <div *ngIf="buyRule.conditionType == 'Line'">
+                    <mat-form-field style="width:fit-content;">
+                        <mat-label>Primary Line</mat-label>
+                        <input [disabled]="true" matInput type="text" [(ngModel)]="buyRule.primaryObject.name">
+                    </mat-form-field>
+                    <mat-checkbox [(ngModel)]="buyRule.primaryObject.lengthLoopChecked">Add</mat-checkbox>
+                    <div *ngIf="buyRule.primaryObject.lengthLoopChecked">
+                        <mat-form-field style="width:fit-content;">
+                            <mat-label>From</mat-label>
+                            <input matInput type="number" [(ngModel)]="buyRule.primaryObject.lengthLoopCheckFromAmnt">
+                        </mat-form-field>
+                        <mat-form-field style="width:fit-content;">
+                            <mat-label>To</mat-label>
+                            <input matInput type="number" [(ngModel)]="buyRule.primaryObject.lengthLoopCheckToAmnt">
+                        </mat-form-field>
+                        <mat-form-field style="width:fit-content;">
+                            <mat-label>Step</mat-label>
+                            <input matInput type="number" [(ngModel)]="buyRule.primaryObject.lengthLoopCheckStepAmnt">
+                        </mat-form-field>
+                    </div>
+                </div>
+
                 <mat-form-field *ngIf="buyRule.conditionType == 'Line'" style="width:fit-content;">
                     <mat-label>Action</mat-label>
                     <input [disabled]="true" matInput type="text" [(ngModel)]="buyRule.desiredAction.type">
@@ -42,17 +73,50 @@
                     <mat-label>Referenced Object</mat-label>
                     <input [disabled]="true" matInput type="text" [(ngModel)]="buyRule.referencedObject.name">
                 </mat-form-field>
-                <mat-form-field *ngIf="buyRule.desiredAction.type == 'Trend Crosses Above:'" class="example-full-width"
-                    style="width:fit-content;">
-                    <mat-label>Trend Length</mat-label>
-                    <input [disabled]="true" matInput type="number" [(ngModel)]="buyRule.desiredAction.length">
-                </mat-form-field>
-                <mat-form-field
-                    *ngIf="(buyRule.desiredAction.type == 'Dips below:' || buyRule.desiredAction.type == 'Rises above:' || buyRule.desiredAction.type == 'Trend Crosses Above:') && buyRule.conditionType == 'Line'"
-                    class="example-full-width" style="width:fit-content;">
-                    <mat-label>By Amount:</mat-label>
-                    <input [disabled]="true" matInput type="number" [(ngModel)]="buyRule.desiredAction.amount">
-                </mat-form-field>
+                <div *ngIf="buyRule.desiredAction.type == 'Trend Crosses Above:'">
+                    <mat-form-field class="example-full-width" style="width:fit-content;">
+                        <mat-label>Trend Length</mat-label>
+                        <input [disabled]="true" matInput type="number" [(ngModel)]="buyRule.desiredAction.length">
+                    </mat-form-field>
+                    <mat-checkbox [(ngModel)]="buyRule.desiredAction.lengthLoopChecked">Add</mat-checkbox>
+                    <div *ngIf="buyRule.desiredAction.lengthLoopChecked">
+                        <mat-form-field style="width:fit-content;">
+                            <mat-label>From</mat-label>
+                            <input matInput type="number" [(ngModel)]="buyRule.desiredAction.lengthLoopCheckFromAmnt">
+                        </mat-form-field>
+                        <mat-form-field style="width:fit-content;">
+                            <mat-label>To</mat-label>
+                            <input matInput type="number" [(ngModel)]="buyRule.desiredAction.lengthLoopCheckToAmnt">
+                        </mat-form-field>
+                        <mat-form-field style="width:fit-content;">
+                            <mat-label>Step</mat-label>
+                            <input matInput type="number" [(ngModel)]="buyRule.desiredAction.lengthLoopCheckStepAmnt">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div
+                    *ngIf="(buyRule.desiredAction.type == 'Dips below:' || buyRule.desiredAction.type == 'Rises above:' || buyRule.desiredAction.type == 'Trend Crosses Above:') && buyRule.conditionType == 'Line'">
+                    <mat-form-field class="example-full-width" style="width:fit-content;">
+                        <mat-label>By Amount:</mat-label>
+                        <input [disabled]="true" matInput type="number" [(ngModel)]="buyRule.desiredAction.amount">
+                    </mat-form-field>
+                    <mat-checkbox [(ngModel)]="buyRule.desiredAction.amountLoopChecked">Add</mat-checkbox>
+                    <div *ngIf="buyRule.desiredAction.amountLoopChecked">
+                        <mat-form-field style="width:fit-content;">
+                            <mat-label>From</mat-label>
+                            <input matInput type="number" [(ngModel)]="buyRule.desiredAction.amountLoopCheckFromAmnt">
+                        </mat-form-field>
+                        <mat-form-field style="width:fit-content;">
+                            <mat-label>To</mat-label>
+                            <input matInput type="number" [(ngModel)]="buyRule.desiredAction.amountLoopCheckToAmnt">
+                        </mat-form-field>
+                        <mat-form-field style="width:fit-content;">
+                            <mat-label>Step</mat-label>
+                            <input matInput type="number" [(ngModel)]="buyRule.desiredAction.amountLoopCheckStepAmnt">
+                        </mat-form-field>
+                    </div>
+                </div>
+
             </div>
 
         </div>

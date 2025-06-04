@@ -25,5 +25,5 @@
 }
 
 ::ng-deep .cdk-overlay-pane.mat-mdc-dialog-panel {
-    max-width: none;
+    max-width: none !important;
 }

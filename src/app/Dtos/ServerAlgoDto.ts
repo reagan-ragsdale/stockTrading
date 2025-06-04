@@ -26,11 +26,17 @@ export type BuyRule = {
     buyTimeType: string;
     buyTime: number;
     buyTimeChecked: boolean;
+    buyTimeCheckToAmnt: number;
+    buyTimeCheckFromAmnt: number;
+    buyTimeCheckStepAmnt: number;
     primaryObject: {
         name: string;
         type: string;
         length: number;
         lengthLoopChecked: boolean;
+        lengthLoopCheckToAmnt: number;
+        lengthLoopCheckFromAmnt: number;
+        lengthLoopCheckStepAmnt: number;
         data: LineData[]
     },
     /*  primaryObject: string;
@@ -42,8 +48,14 @@ export type BuyRule = {
         type: string;
         amount: number;
         amountLoopChecked: boolean;
+        amountLoopCheckToAmnt: number;
+        amountLoopCheckFromAmnt: number;
+        amountLoopCheckStepAmnt: number;
         length: number;
         lengthLoopChecked: boolean;
+        lengthLoopCheckToAmnt: number;
+        lengthLoopCheckFromAmnt: number;
+        lengthLoopCheckStepAmnt: number;
     }
     /* desiredAction: string;
     desiredActionAmnt: number;
@@ -54,6 +66,9 @@ export type BuyRule = {
         type: string;
         length: number;
         lengthLoopChecked: boolean;
+        lengthLoopCheckToAmnt: number;
+        lengthLoopCheckFromAmnt: number;
+        lengthLoopCheckStepAmnt: number;
         data: LineData[];
     }
     /* referencedObject: string;
@@ -75,6 +90,9 @@ export type SellRule = {
         type: string;
         length: number;
         lengthLoopChecked: boolean;
+        lengthLoopCheckToAmnt: number;
+        lengthLoopCheckFromAmnt: number;
+        lengthLoopCheckStepAmnt: number;
         data: LineData[]
     },
     /* primaryObject: string;
@@ -86,8 +104,14 @@ export type SellRule = {
         type: string;
         amount: number;
         amountLoopChecked: boolean;
+        amountLoopCheckToAmnt: number;
+        amountLoopCheckFromAmnt: number;
+        amountLoopCheckStepAmnt: number;
         length: number;
         lengthLoopChecked: boolean;
+        lengthLoopCheckToAmnt: number;
+        lengthLoopCheckFromAmnt: number;
+        lengthLoopCheckStepAmnt: number;
         current: number;
     }
     /* desiredAction: string;
@@ -101,6 +125,9 @@ export type SellRule = {
         type: string;
         length: number;
         lengthLoopChecked: boolean;
+        lengthLoopCheckToAmnt: number;
+        lengthLoopCheckFromAmnt: number;
+        lengthLoopCheckStepAmnt: number;
         data: LineData[];
     }
     /* referencedObject: string;
