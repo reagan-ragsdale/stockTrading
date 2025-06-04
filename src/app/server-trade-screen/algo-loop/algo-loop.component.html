@@ -10,52 +10,41 @@
                 <h4 *ngIf="buyRule.id > 0">And</h4>
                 <mat-form-field style="width:fit-content;">
                     <mat-label>Condition</mat-label>
-                    <mat-select [disabled]="true" disableRipple value="buyRule.conditionType">
-                    </mat-select>
+                    <input [disabled]="true" matInput type="text" [(ngModel)]="buyRule.conditionType">
                 </mat-form-field>
                 <mat-form-field *ngIf="buyRule.conditionType == 'Time'" style="width:fit-content;">
                     <mat-label>Time Period</mat-label>
-                    <mat-select [placeholder]="buyRule.buyTimeType" [disabled]="false" disableRipple
-                        [(value)]="buyRule.buyTimeType">
-                    </mat-select>
+                    <input [disabled]="true" matInput type="text" [(ngModel)]="buyRule.buyTimeType">
                 </mat-form-field>
                 <mat-form-field *ngIf="buyRule.conditionType == 'Time'" class="example-full-width"
                     style="width:fit-content;">
                     <mat-label>Minutes</mat-label>
-                    <input [disabled]="true" matInput type="number" [(ngModel)]="buyRule.buyTime" placeholder="0.00"
-                        [min]="0" step="1000">
+                    <input [disabled]="true" matInput type="number" [(ngModel)]="buyRule.buyTime">
                 </mat-form-field>
                 <mat-form-field *ngIf="buyRule.conditionType == 'Line'" style="width:fit-content;">
                     <mat-label>Primary Line</mat-label>
-                    <mat-select [disabled]="true" disableRipple [(ngModel)]="buyRule.primaryObject.name">
-                    </mat-select>
+                    <input [disabled]="true" matInput type="text" [(ngModel)]="buyRule.primaryObject.name">
                 </mat-form-field>
                 <mat-form-field *ngIf="buyRule.conditionType == 'Line'" style="width:fit-content;">
                     <mat-label>Action</mat-label>
-                    <mat-select [disabled]="true" [placeholder]="buyRule.desiredAction.type" disableRipple
-                        [(value)]="buyRule.desiredAction.type">
-                    </mat-select>
+                    <input [disabled]="true" matInput type="text" [(ngModel)]="buyRule.desiredAction.type">
                 </mat-form-field>
                 <mat-form-field
                     *ngIf="buyRule.conditionType == 'Line' && buyRule.desiredAction.type != 'Trend Crosses Above:'"
                     style="width:fit-content;">
                     <mat-label>Referenced Object</mat-label>
-                    <mat-select [disabled]="true" [placeholder]="buyRule.referencedObject.name" disableRipple
-                        [(value)]="buyRule.referencedObject.name">
-                    </mat-select>
+                    <input [disabled]="true" matInput type="text" [(ngModel)]="buyRule.referencedObject.name">
                 </mat-form-field>
                 <mat-form-field *ngIf="buyRule.desiredAction.type == 'Trend Crosses Above:'" class="example-full-width"
                     style="width:fit-content;">
                     <mat-label>Trend Length</mat-label>
-                    <input [disabled]="true" matInput type="number" [(ngModel)]="buyRule.desiredAction.length"
-                        placeholder="0.00" [min]=".001" step=".001">
+                    <input [disabled]="true" matInput type="number" [(ngModel)]="buyRule.desiredAction.length">
                 </mat-form-field>
                 <mat-form-field
                     *ngIf="(buyRule.desiredAction.type == 'Dips below:' || buyRule.desiredAction.type == 'Rises above:' || buyRule.desiredAction.type == 'Trend Crosses Above:') && buyRule.conditionType == 'Line'"
                     class="example-full-width" style="width:fit-content;">
                     <mat-label>By Amount:</mat-label>
-                    <input [disabled]="true" matInput type="number" [(ngModel)]="buyRule.desiredAction.amount"
-                        placeholder="0.00" [min]="0.001" [max]="1" step=".001">
+                    <input [disabled]="true" matInput type="number" [(ngModel)]="buyRule.desiredAction.amount">
                 </mat-form-field>
             </div>
 
