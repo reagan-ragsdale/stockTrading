@@ -10,13 +10,13 @@
                 <h4 *ngIf="buyRule.id > 0">And</h4>
                 <mat-form-field style="width:fit-content;">
                     <mat-label>Condition</mat-label>
-                    <mat-select [placeholder]="buyRule.conditionType" [disabled]="true" disableRipple
-                        [(value)]="buyRule.conditionType">
+                    <mat-select [placeholder]="buyRule.conditionType" [value]="buyRule.conditionType" [disabled]="false"
+                        disableRipple [(value)]="buyRule.conditionType">
                     </mat-select>
                 </mat-form-field>
                 <mat-form-field *ngIf="buyRule.conditionType == 'Time'" style="width:fit-content;">
                     <mat-label>Time Period</mat-label>
-                    <mat-select [placeholder]="buyRule.buyTimeType" [disabled]="true" disableRipple
+                    <mat-select [placeholder]="buyRule.buyTimeType" [disabled]="false" disableRipple
                         [(value)]="buyRule.buyTimeType">
                     </mat-select>
                 </mat-form-field>
@@ -28,7 +28,7 @@
                 </mat-form-field>
                 <mat-form-field *ngIf="buyRule.conditionType == 'Line'" style="width:fit-content;">
                     <mat-label>Primary Line</mat-label>
-                    <mat-select [disabled]="true" [placeholder]="buyRule.primaryObject.name" disableRipple
+                    <mat-select [disabled]="false" [placeholder]="buyRule.primaryObject.name" disableRipple
                         [(value)]="buyRule.primaryObject.name">
                     </mat-select>
                 </mat-form-field>
