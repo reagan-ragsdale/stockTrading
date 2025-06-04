@@ -47,18 +47,30 @@ export class AddRuleComponent {
       buyTimeType: '',
       buyTime: 0,
       buyTimeChecked: false,
+      buyTimeCheckToAmnt: 0,
+      buyTimeCheckFromAmnt: 0,
+      buyTimeCheckStepAmnt: 0,
       primaryObject: {
         name: '',
         type: '',
         length: 0,
         lengthLoopChecked: false,
+        lengthLoopCheckToAmnt: 0,
+        lengthLoopCheckFromAmnt: 0,
+        lengthLoopCheckStepAmnt: 0,
         data: []
       },
       desiredAction: {
         amount: 0,
         amountLoopChecked: false,
+        amountLoopCheckToAmnt: 0,
+        amountLoopCheckFromAmnt: 0,
+        amountLoopCheckStepAmnt: 0,
         length: 0,
         lengthLoopChecked: false,
+        lengthLoopCheckToAmnt: 0,
+        lengthLoopCheckFromAmnt: 0,
+        lengthLoopCheckStepAmnt: 0,
         type: ''
       },
       referencedObject: {
@@ -66,6 +78,9 @@ export class AddRuleComponent {
         type: '',
         length: 0,
         lengthLoopChecked: false,
+        lengthLoopCheckToAmnt: 0,
+        lengthLoopCheckFromAmnt: 0,
+        lengthLoopCheckStepAmnt: 0,
         data: []
       },
     })
@@ -81,15 +96,24 @@ export class AddRuleComponent {
         type: '',
         length: 0,
         lengthLoopChecked: false,
+        lengthLoopCheckToAmnt: 0,
+        lengthLoopCheckFromAmnt: 0,
+        lengthLoopCheckStepAmnt: 0,
         data: []
       },
 
       desiredAction: {
         amount: 0,
         amountLoopChecked: false,
+        amountLoopCheckToAmnt: 0,
+        amountLoopCheckFromAmnt: 0,
+        amountLoopCheckStepAmnt: 0,
         type: '',
         length: 0,
         lengthLoopChecked: false,
+        lengthLoopCheckToAmnt: 0,
+        lengthLoopCheckFromAmnt: 0,
+        lengthLoopCheckStepAmnt: 0,
         current: 0
 
       },
@@ -99,6 +123,9 @@ export class AddRuleComponent {
         type: '',
         length: 0,
         lengthLoopChecked: false,
+        lengthLoopCheckToAmnt: 0,
+        lengthLoopCheckFromAmnt: 0,
+        lengthLoopCheckStepAmnt: 0,
         data: []
       },
     })
