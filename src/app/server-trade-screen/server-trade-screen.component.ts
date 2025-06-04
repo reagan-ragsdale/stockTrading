@@ -1963,6 +1963,7 @@ export class ServerTradeScreenComponent implements OnInit {
     });
     this.algoLoopDialogRef.afterClosed().subscribe(async (result: any) => {
       console.log(result)
+      console.log(this.listOfAddedRules)
       //this.addRule(result)
       /* 
       else if (this.stockChart.data.datasets.length > 1) {
