@@ -528,10 +528,10 @@ export class ServerTradeScreenComponent implements OnInit {
           }
         }
       }
-      /* else if ((listOfBuyLines[rules.BuyRules[i].primaryObject.lineId] == undefined && rules.BuyRules[i].primaryObject.length == 1) || (mapOfBuyLines.get(rules.BuyRules[i].primaryObject.name) == undefined && rules.BuyRules[i].primaryObject.length > 1)) {
+      else if ((listOfBuyLines[rules.BuyRules[i].primaryObject.lineId] == undefined && rules.BuyRules[i].primaryObject.length == 1) || (listOfBuyLines[rules.BuyRules[i].primaryObject.lineId] == undefined == undefined && rules.BuyRules[i].primaryObject.length > 1)) {
         listOfBuyLines[rules.BuyRules[i].primaryObject.lineId] = []
         listOfBuyLines[rules.BuyRules[i].primaryObject.lineId].push({ length: rules.BuyRules[i].primaryObject.length, data: rules.BuyRules[i].primaryObject.data })
-      } */
+      }
     }
     for (let i = 0; i < rules.BuyRules.length; i++) {
       if (rules.BuyRules[i].referencedObject.length > 1 && rules.BuyRules[i].referencedObject.lengthLoopChecked) {
@@ -550,7 +550,7 @@ export class ServerTradeScreenComponent implements OnInit {
           }
         }
       }
-      else if ((listOfBuyLines[rules.BuyRules[i].referencedObject.lineId] == undefined && rules.BuyRules[i].referencedObject.length == 1) || (mapOfBuyLines.get(rules.BuyRules[i].referencedObject.name) == undefined && rules.BuyRules[i].referencedObject.length > 1)) {
+      else if ((listOfBuyLines[rules.BuyRules[i].referencedObject.lineId] == undefined && rules.BuyRules[i].referencedObject.length == 1) || (listOfBuyLines[rules.BuyRules[i].referencedObject.lineId] == undefined == undefined && rules.BuyRules[i].referencedObject.length > 1)) {
         listOfBuyLines[rules.BuyRules[i].referencedObject.lineId] = []
         listOfBuyLines[rules.BuyRules[i].referencedObject.lineId].push({ length: rules.BuyRules[i].referencedObject.length, data: rules.BuyRules[i].referencedObject.data })
       }
