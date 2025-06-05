@@ -140,12 +140,33 @@
                         [(value)]="sellRule.conditionType">
                     </mat-select>
                 </mat-form-field>
-                <mat-form-field *ngIf="sellRule.conditionType == 'Line Action'" style="width:fit-content;">
-                    <mat-label>Primary Line</mat-label>
-                    <mat-select [disabled]="true" [placeholder]="sellRule.primaryObject.name" disableRipple
-                        [(value)]="sellRule.primaryObject.name">
-                    </mat-select>
-                </mat-form-field>
+                <div *ngIf="sellRule.conditionType == 'Line Action'">
+                    <mat-form-field style="width:fit-content;">
+                        <mat-label>Primary Line</mat-label>
+                        <mat-select [disabled]="true" [placeholder]="sellRule.primaryObject.name" disableRipple
+                            [(value)]="sellRule.primaryObject.name">
+                        </mat-select>
+                        <mat-checkbox [(ngModel)]="sellRule.primaryObject.lengthLoopChecked">Add</mat-checkbox>
+                        <div *ngIf="sellRule.primaryObject.lengthLoopChecked">
+                            <mat-form-field style="width:fit-content;">
+                                <mat-label>From</mat-label>
+                                <input matInput type="number"
+                                    [(ngModel)]="sellRule.primaryObject.lengthLoopCheckFromAmnt">
+                            </mat-form-field>
+                            <mat-form-field style="width:fit-content;">
+                                <mat-label>To</mat-label>
+                                <input matInput type="number"
+                                    [(ngModel)]="sellRule.primaryObject.lengthLoopCheckToAmnt">
+                            </mat-form-field>
+                            <mat-form-field style="width:fit-content;">
+                                <mat-label>Step</mat-label>
+                                <input matInput type="number"
+                                    [(ngModel)]="sellRule.primaryObject.lengthLoopCheckStepAmnt">
+                            </mat-form-field>
+                        </div>
+                    </mat-form-field>
+                </div>
+
                 <mat-form-field *ngIf="sellRule.conditionType == 'Line Action'" style="width:fit-content;">
                     <mat-label>Action</mat-label>
                     <mat-select [disabled]="true" [placeholder]="sellRule.desiredAction.type" disableRipple
@@ -158,20 +179,56 @@
                         [(value)]="sellRule.desiredAction.type">
                     </mat-select>
                 </mat-form-field>
-                <mat-form-field
-                    *ngIf="sellRule.conditionType == 'Line Action' && sellRule.desiredAction.type != 'Trend Crosses Below:'"
-                    style="width:fit-content;">
-                    <mat-label>Referenced Object</mat-label>
-                    <mat-select [disabled]="true" [placeholder]="sellRule.referencedObject.name" disableRipple
-                        [(value)]="sellRule.referencedObject.name">
-                    </mat-select>
-                </mat-form-field>
-                <mat-form-field *ngIf="sellRule.desiredAction.type == 'Trend Crosses Below:'" class="example-full-width"
-                    style="width:fit-content;">
-                    <mat-label>Trend Length</mat-label>
-                    <input [disabled]="true" matInput type="number" [(ngModel)]="sellRule.desiredAction.length"
-                        placeholder="0.00" [min]=".001" step=".001">
-                </mat-form-field>
+                <div
+                    *ngIf="sellRule.conditionType == 'Line Action' && sellRule.desiredAction.type != 'Trend Crosses Below:'">
+                    <mat-form-field style="width:fit-content;">
+                        <mat-label>Referenced Object</mat-label>
+                        <mat-select [disabled]="true" [placeholder]="sellRule.referencedObject.name" disableRipple
+                            [(value)]="sellRule.referencedObject.name">
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-checkbox [(ngModel)]="sellRule.referencedObject.lengthLoopChecked">Add</mat-checkbox>
+                    <div *ngIf="sellRule.primaryObject.lengthLoopChecked">
+                        <mat-form-field style="width:fit-content;">
+                            <mat-label>From</mat-label>
+                            <input matInput type="number"
+                                [(ngModel)]="sellRule.referencedObject.lengthLoopCheckFromAmnt">
+                        </mat-form-field>
+                        <mat-form-field style="width:fit-content;">
+                            <mat-label>To</mat-label>
+                            <input matInput type="number" [(ngModel)]="sellRule.referencedObject.lengthLoopCheckToAmnt">
+                        </mat-form-field>
+                        <mat-form-field style="width:fit-content;">
+                            <mat-label>Step</mat-label>
+                            <input matInput type="number"
+                                [(ngModel)]="sellRule.referencedObject.lengthLoopCheckStepAmnt">
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div *ngIf="sellRule.desiredAction.type == 'Trend Crosses Below:'">
+                    <mat-form-field class="example-full-width" style="width:fit-content;">
+                        <mat-label>Trend Length</mat-label>
+                        <input [disabled]="true" matInput type="number" [(ngModel)]="sellRule.desiredAction.length"
+                            placeholder="0.00" [min]=".001" step=".001">
+                    </mat-form-field>
+                    <mat-checkbox [(ngModel)]="sellRule.desiredAction.lengthLoopChecked">Add</mat-checkbox>
+                    <div *ngIf="sellRule.desiredAction.lengthLoopChecked">
+                        <mat-form-field style="width:fit-content;">
+                            <mat-label>From</mat-label>
+                            <input matInput type="number" [(ngModel)]="sellRule.desiredAction.lengthLoopCheckFromAmnt">
+                        </mat-form-field>
+                        <mat-form-field style="width:fit-content;">
+                            <mat-label>To</mat-label>
+                            <input matInput type="number" [(ngModel)]="sellRule.desiredAction.lengthLoopCheckToAmnt">
+                        </mat-form-field>
+                        <mat-form-field style="width:fit-content;">
+                            <mat-label>Step</mat-label>
+                            <input matInput type="number" [(ngModel)]="sellRule.desiredAction.lengthLoopCheckStepAmnt">
+                        </mat-form-field>
+                    </div>
+                </div>
+
                 <mat-form-field
                     *ngIf="((sellRule.desiredAction.type == 'Rises above:' || sellRule.desiredAction.type == 'Trend Crosses Below:') && sellRule.conditionType == 'Line Action') || sellRule.conditionType == 'Price Action'"
                     class="example-full-width" style="width:fit-content;">
