@@ -501,47 +501,53 @@ export class ServerTradeScreenComponent implements OnInit {
     }
   }
   runAlgoAllDaysWithLoop() {
+    this.isLoading = true
     let rules = structuredClone(this.listOfAddedRules)
 
     //try calculating each lines data and storing it
     let mapOfBuyLines = new Map<string, LineData[]>()
     for (let i = 0; i < rules.BuyRules.length; i++) {
-      if (mapOfBuyLines.get(rules.BuyRules[i].primaryObject.name) != undefined && rules.BuyRules[i].primaryObject.length > 1) {
+      if (rules.BuyRules[i].primaryObject.length > 1) {
         let from = rules.BuyRules[i].primaryObject.lengthLoopCheckFromAmnt
         let to = rules.BuyRules[i].primaryObject.lengthLoopCheckToAmnt
         let step = rules.BuyRules[i].primaryObject.lengthLoopCheckStepAmnt
         for (let j = from; j <= to; j += step) {
-          if (rules.BuyRules[i].primaryObject.type == 'EMA') {
-            mapOfBuyLines.set(rules.BuyRules[i].primaryObject.name, this.calculateEMA(j))
-          }
-          else if (rules.BuyRules[i].primaryObject.type == 'SMA') {
-            mapOfBuyLines.set(rules.BuyRules[i].primaryObject.name, this.calculateSMA(j))
+          if (mapOfBuyLines.get(rules.BuyRules[i].primaryObject.type + ' - ' + j) == undefined) {
+            if (rules.BuyRules[i].primaryObject.type == 'EMA') {
+              mapOfBuyLines.set(rules.BuyRules[i].primaryObject.name, this.calculateEMA(j))
+            }
+            else if (rules.BuyRules[i].primaryObject.type == 'SMA') {
+              mapOfBuyLines.set(rules.BuyRules[i].primaryObject.name, this.calculateSMA(j))
+            }
           }
         }
       }
-      else if (mapOfBuyLines.get(rules.BuyRules[i].primaryObject.name) != undefined && rules.BuyRules[i].primaryObject.length == 1) {
+      else if (mapOfBuyLines.get(rules.BuyRules[i].primaryObject.name) == undefined && rules.BuyRules[i].primaryObject.length == 1) {
         mapOfBuyLines.set(rules.BuyRules[i].primaryObject.name, rules.BuyRules[i].primaryObject.data)
       }
-      if (mapOfBuyLines.get(rules.BuyRules[i].referencedObject.name) != undefined && rules.BuyRules[i].referencedObject.length > 1) {
+      if (rules.BuyRules[i].referencedObject.length > 1) {
         let from = rules.BuyRules[i].referencedObject.lengthLoopCheckFromAmnt
         let to = rules.BuyRules[i].referencedObject.lengthLoopCheckToAmnt
         let step = rules.BuyRules[i].referencedObject.lengthLoopCheckStepAmnt
         for (let j = from; j <= to; j += step) {
-          if (rules.BuyRules[i].referencedObject.type == 'EMA') {
-            mapOfBuyLines.set(rules.BuyRules[i].referencedObject.name, this.calculateEMA(j))
-          }
-          else if (rules.BuyRules[i].referencedObject.type == 'SMA') {
-            mapOfBuyLines.set(rules.BuyRules[i].referencedObject.name, this.calculateSMA(j))
+          if (mapOfBuyLines.get(rules.BuyRules[i].referencedObject.type + ' - ' + j) == undefined) {
+            if (rules.BuyRules[i].referencedObject.type == 'EMA') {
+              mapOfBuyLines.set(rules.BuyRules[i].referencedObject.type + ' - ' + j, this.calculateEMA(j))
+            }
+            else if (rules.BuyRules[i].referencedObject.type == 'SMA') {
+              mapOfBuyLines.set(rules.BuyRules[i].referencedObject.type + ' - ' + j, this.calculateSMA(j))
+            }
           }
         }
       }
-      else if (mapOfBuyLines.get(rules.BuyRules[i].referencedObject.name) != undefined && rules.BuyRules[i].referencedObject.length == 1) {
+      else if (mapOfBuyLines.get(rules.BuyRules[i].referencedObject.name) == undefined && rules.BuyRules[i].referencedObject.length == 1) {
         mapOfBuyLines.set(rules.BuyRules[i].referencedObject.name, rules.BuyRules[i].referencedObject.data)
       }
     }
 
 
     console.log(mapOfBuyLines)
+    this.isLoading = false;
 
   }
 
