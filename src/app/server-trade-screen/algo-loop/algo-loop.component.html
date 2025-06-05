@@ -46,7 +46,8 @@
                         <mat-label>Primary Line</mat-label>
                         <input [disabled]="true" matInput type="text" [(ngModel)]="buyRule.primaryObject.name">
                     </mat-form-field>
-                    <mat-checkbox [(ngModel)]="buyRule.primaryObject.lengthLoopChecked">Add</mat-checkbox>
+                    <mat-checkbox *ngIf="buyRule.primaryObject.length > 1"
+                        [(ngModel)]="buyRule.primaryObject.lengthLoopChecked">Add</mat-checkbox>
                     <div *ngIf="buyRule.primaryObject.lengthLoopChecked">
                         <mat-form-field style="width:fit-content;">
                             <mat-label>From</mat-label>
@@ -72,6 +73,24 @@
                     style="width:fit-content;">
                     <mat-label>Referenced Object</mat-label>
                     <input [disabled]="true" matInput type="text" [(ngModel)]="buyRule.referencedObject.name">
+                    <mat-checkbox *ngIf="buyRule.referencedObject.length > 1"
+                        [(ngModel)]="buyRule.referencedObject.lengthLoopChecked">Add</mat-checkbox>
+                    <div *ngIf="buyRule.referencedObject.lengthLoopChecked">
+                        <mat-form-field style="width:fit-content;">
+                            <mat-label>From</mat-label>
+                            <input matInput type="number"
+                                [(ngModel)]="buyRule.referencedObject.lengthLoopCheckFromAmnt">
+                        </mat-form-field>
+                        <mat-form-field style="width:fit-content;">
+                            <mat-label>To</mat-label>
+                            <input matInput type="number" [(ngModel)]="buyRule.referencedObject.lengthLoopCheckToAmnt">
+                        </mat-form-field>
+                        <mat-form-field style="width:fit-content;">
+                            <mat-label>Step</mat-label>
+                            <input matInput type="number"
+                                [(ngModel)]="buyRule.referencedObject.lengthLoopCheckStepAmnt">
+                        </mat-form-field>
+                    </div>
                 </mat-form-field>
                 <div *ngIf="buyRule.desiredAction.type == 'Trend Crosses Above:'">
                     <mat-form-field class="example-full-width" style="width:fit-content;">
@@ -140,25 +159,24 @@
                     <mat-form-field style="width:fit-content;">
                         <mat-label>Primary Line</mat-label>
                         <input [disabled]="true" matInput type="text" [(ngModel)]="sellRule.primaryObject.name">
-                        <mat-checkbox [(ngModel)]="sellRule.primaryObject.lengthLoopChecked">Add</mat-checkbox>
-                        <div *ngIf="sellRule.primaryObject.lengthLoopChecked">
-                            <mat-form-field style="width:fit-content;">
-                                <mat-label>From</mat-label>
-                                <input matInput type="number"
-                                    [(ngModel)]="sellRule.primaryObject.lengthLoopCheckFromAmnt">
-                            </mat-form-field>
-                            <mat-form-field style="width:fit-content;">
-                                <mat-label>To</mat-label>
-                                <input matInput type="number"
-                                    [(ngModel)]="sellRule.primaryObject.lengthLoopCheckToAmnt">
-                            </mat-form-field>
-                            <mat-form-field style="width:fit-content;">
-                                <mat-label>Step</mat-label>
-                                <input matInput type="number"
-                                    [(ngModel)]="sellRule.primaryObject.lengthLoopCheckStepAmnt">
-                            </mat-form-field>
-                        </div>
                     </mat-form-field>
+                    <mat-checkbox *ngIf="sellRule.primaryObject.length > 1"
+                        [(ngModel)]="sellRule.primaryObject.lengthLoopChecked">Add</mat-checkbox>
+                    <div *ngIf="sellRule.primaryObject.lengthLoopChecked">
+                        <mat-form-field style="width:fit-content;">
+                            <mat-label>From</mat-label>
+                            <input matInput type="number" [(ngModel)]="sellRule.primaryObject.lengthLoopCheckFromAmnt">
+                        </mat-form-field>
+                        <mat-form-field style="width:fit-content;">
+                            <mat-label>To</mat-label>
+                            <input matInput type="number" [(ngModel)]="sellRule.primaryObject.lengthLoopCheckToAmnt">
+                        </mat-form-field>
+                        <mat-form-field style="width:fit-content;">
+                            <mat-label>Step</mat-label>
+                            <input matInput type="number" [(ngModel)]="sellRule.primaryObject.lengthLoopCheckStepAmnt">
+                        </mat-form-field>
+                    </div>
+
                 </div>
 
                 <mat-form-field *ngIf="sellRule.conditionType == 'Line Action'" style="width:fit-content;">
@@ -175,8 +193,9 @@
                         <mat-label>Referenced Object</mat-label>
                         <input [disabled]="true" matInput type="text" [(ngModel)]="sellRule.referencedObject.name">
                     </mat-form-field>
-                    <mat-checkbox [(ngModel)]="sellRule.referencedObject.lengthLoopChecked">Add</mat-checkbox>
-                    <div *ngIf="sellRule.primaryObject.lengthLoopChecked">
+                    <mat-checkbox *ngIf="sellRule.referencedObject.length > 1"
+                        [(ngModel)]="sellRule.referencedObject.lengthLoopChecked">Add</mat-checkbox>
+                    <div *ngIf="sellRule.referencedObject.lengthLoopChecked">
                         <mat-form-field style="width:fit-content;">
                             <mat-label>From</mat-label>
                             <input matInput type="number"
