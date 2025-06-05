@@ -42,7 +42,7 @@ export class AddRuleComponent {
   addBuyRule() {
     this.listOfRulesIncoming.BuyRules.push({
       id: this.listOfRulesIncoming.BuyRules.length,
-      lineId: 0,
+
       conditionType: '',
       buyTimeType: '',
       buyTime: 0,
@@ -53,6 +53,7 @@ export class AddRuleComponent {
       primaryObject: {
         name: '',
         type: '',
+        lineId: 0,
         length: 0,
         lengthLoopChecked: false,
         lengthLoopCheckToAmnt: 0,
@@ -76,6 +77,7 @@ export class AddRuleComponent {
       referencedObject: {
         name: '',
         type: '',
+        lineId: 0,
         length: 0,
         lengthLoopChecked: false,
         lengthLoopCheckToAmnt: 0,
@@ -88,12 +90,13 @@ export class AddRuleComponent {
   addSellRule() {
     this.listOfRulesIncoming.SellRules.push({
       id: this.listOfRulesIncoming.SellRules.length,
-      lineId: 0,
+
       andOr: '',
       conditionType: '',
       primaryObject: {
         name: '',
         type: '',
+        lineId: 0,
         length: 0,
         lengthLoopChecked: false,
         lengthLoopCheckToAmnt: 0,
@@ -121,6 +124,7 @@ export class AddRuleComponent {
       referencedObject: {
         name: '',
         type: '',
+        lineId: 0,
         length: 0,
         lengthLoopChecked: false,
         lengthLoopCheckToAmnt: 0,
@@ -164,6 +168,7 @@ export class AddRuleComponent {
       selectedBuyRule.primaryObject.type = line.lineType
       selectedBuyRule.primaryObject.length = line.lineLength
       selectedBuyRule.primaryObject.data = line.data
+      selectedBuyRule.primaryObject.lineId = line.id
     }
   }
   onSelectedBuyActionTypeChange(event: any, id: number, action: string) {
@@ -179,6 +184,7 @@ export class AddRuleComponent {
       selectedBuyRule.referencedObject.type = line.lineType
       selectedBuyRule.referencedObject.length = line.lineLength
       selectedBuyRule.referencedObject.data = line.data
+      selectedBuyRule.referencedObject.lineId = line.id
     }
   }
   onSelectedSellRuleAndOrTypeChange(event: any, id: number, andOr: string) {
@@ -200,6 +206,7 @@ export class AddRuleComponent {
       selectedSellRule.primaryObject.type = line.lineType
       selectedSellRule.primaryObject.length = line.lineLength
       selectedSellRule.primaryObject.data = line.data
+      selectedSellRule.primaryObject.lineId = line.id
     }
   }
   onSelectedSellActionTypeChange(event: any, id: number, action: string) {
@@ -215,6 +222,7 @@ export class AddRuleComponent {
       selectedSellRule.referencedObject.type = line.lineType
       selectedSellRule.referencedObject.length = line.lineLength
       selectedSellRule.referencedObject.data = line.data
+      selectedSellRule.referencedObject.lineId = line.id
     }
   }
 
