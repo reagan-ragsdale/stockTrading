@@ -514,10 +514,10 @@ export class ServerTradeScreenComponent implements OnInit {
         for (let j = from; j <= to; j += step) {
           if (mapOfBuyLines.get(rules.BuyRules[i].primaryObject.type + ' - ' + j) == undefined) {
             if (rules.BuyRules[i].primaryObject.type == 'EMA') {
-              mapOfBuyLines.set(rules.BuyRules[i].primaryObject.name, this.calculateEMA(j))
+              mapOfBuyLines.set(rules.BuyRules[i].primaryObject.type + ' - ' + j, this.calculateEMA(j))
             }
             else if (rules.BuyRules[i].primaryObject.type == 'SMA') {
-              mapOfBuyLines.set(rules.BuyRules[i].primaryObject.name, this.calculateSMA(j))
+              mapOfBuyLines.set(rules.BuyRules[i].primaryObject.type + ' - ' + j, this.calculateSMA(j))
             }
           }
         }
@@ -1838,6 +1838,7 @@ export class ServerTradeScreenComponent implements OnInit {
 
   }
   calculateEMA(lineLength: number): LineData[] {
+    console.log(lineLength)
     let returnData: LineData[] = []
     let windowSum = 0
     for (let i = 0; i < lineLength - 1; i++) {
