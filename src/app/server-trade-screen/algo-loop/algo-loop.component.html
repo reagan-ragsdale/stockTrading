@@ -242,6 +242,21 @@
                     <mat-label>By Amount:</mat-label>
                     <input [disabled]="true" matInput type="number" [(ngModel)]="sellRule.desiredAction.amount"
                         placeholder="0.00" [min]=".001" step=".001">
+                    <mat-checkbox [(ngModel)]="sellRule.desiredAction.amountLoopChecked">Add</mat-checkbox>
+                    <div *ngIf="sellRule.desiredAction.amountLoopChecked">
+                        <mat-form-field style="width:fit-content;">
+                            <mat-label>From</mat-label>
+                            <input matInput type="number" [(ngModel)]="sellRule.desiredAction.amountLoopCheckFromAmnt">
+                        </mat-form-field>
+                        <mat-form-field style="width:fit-content;">
+                            <mat-label>To</mat-label>
+                            <input matInput type="number" [(ngModel)]="sellRule.desiredAction.amountLoopCheckToAmnt">
+                        </mat-form-field>
+                        <mat-form-field style="width:fit-content;">
+                            <mat-label>Step</mat-label>
+                            <input matInput type="number" [(ngModel)]="sellRule.desiredAction.amountLoopCheckStepAmnt">
+                        </mat-form-field>
+                    </div>
                 </mat-form-field>
             </div>
         </div>
