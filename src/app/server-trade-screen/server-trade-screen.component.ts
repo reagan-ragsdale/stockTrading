@@ -514,6 +514,7 @@ export class ServerTradeScreenComponent implements OnInit {
         for (let j = from; j <= to; j += step) {
           if (mapOfBuyLines.get(rules.BuyRules[i].primaryObject.type + ' - ' + j) == undefined) {
             if (rules.BuyRules[i].primaryObject.type == 'EMA') {
+              console.log('primary')
               mapOfBuyLines.set(rules.BuyRules[i].primaryObject.type + ' - ' + j, this.calculateEMA(j))
             }
             else if (rules.BuyRules[i].primaryObject.type == 'SMA') {
@@ -532,6 +533,7 @@ export class ServerTradeScreenComponent implements OnInit {
         for (let j = from; j <= to; j += step) {
           if (mapOfBuyLines.get(rules.BuyRules[i].referencedObject.type + ' - ' + j) == undefined) {
             if (rules.BuyRules[i].referencedObject.type == 'EMA') {
+              console.log('referenced')
               mapOfBuyLines.set(rules.BuyRules[i].referencedObject.type + ' - ' + j, this.calculateEMA(j))
             }
             else if (rules.BuyRules[i].referencedObject.type == 'SMA') {
