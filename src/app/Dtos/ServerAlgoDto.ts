@@ -19,7 +19,7 @@ export type LineData = {
 }
 export type BuyRule = {
     id: number;
-    lineId: number;
+
     //buy when:
     //the primary line
     conditionType: string;
@@ -32,6 +32,7 @@ export type BuyRule = {
     primaryObject: {
         name: string;
         type: string;
+        lineId: number;
         length: number;
         lengthLoopChecked: boolean;
         lengthLoopCheckToAmnt: number;
@@ -64,6 +65,7 @@ export type BuyRule = {
     referencedObject: {
         name: string;
         type: string;
+        lineId: number;
         length: number;
         lengthLoopChecked: boolean;
         lengthLoopCheckToAmnt: number;
@@ -80,7 +82,7 @@ export type BuyRule = {
 }
 export type SellRule = {
     id: number;
-    lineId: number;
+
     //sell when:
     //the primary line
     andOr: string;
@@ -88,6 +90,7 @@ export type SellRule = {
     primaryObject: {
         name: string;
         type: string;
+        lineId: number;
         length: number;
         lengthLoopChecked: boolean;
         lengthLoopCheckToAmnt: number;
@@ -123,6 +126,7 @@ export type SellRule = {
     referencedObject: {
         name: string;
         type: string;
+        lineId: number;
         length: number;
         lengthLoopChecked: boolean;
         lengthLoopCheckToAmnt: number;
