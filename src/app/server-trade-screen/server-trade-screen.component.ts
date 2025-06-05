@@ -510,16 +510,16 @@ export class ServerTradeScreenComponent implements OnInit {
 
     //try calculating each lines data and storing it
     let mapOfBuyLines = new Map<string, LineData[]>()
-    let listOfBuyLines: { [key: number]: [{ length: number, data: LineData[] }] } = {}
+    let listOfBuyLines: { [key: number]: { length: number, data: LineData[] }[] } = {}
     for (let i = 0; i < rules.BuyRules.length; i++) {
       if (rules.BuyRules[i].primaryObject.length > 1 && rules.BuyRules[i].primaryObject.lengthLoopChecked) {
-        let from = rules.BuyRules[i].primaryObject.lengthLoopCheckFromAmnt
-        let to = rules.BuyRules[i].primaryObject.lengthLoopCheckToAmnt
-        let step = rules.BuyRules[i].primaryObject.lengthLoopCheckStepAmnt
-        for (let j = from; j <= to; j += step) {
-          if (listOfBuyLines[rules.BuyRules[i].primaryObject.lineId] == undefined == undefined) {
+        if (listOfBuyLines[rules.BuyRules[i].primaryObject.lineId] == undefined) {
+          listOfBuyLines[rules.BuyRules[i].primaryObject.lineId] = []
+          let from = rules.BuyRules[i].primaryObject.lengthLoopCheckFromAmnt
+          let to = rules.BuyRules[i].primaryObject.lengthLoopCheckToAmnt
+          let step = rules.BuyRules[i].primaryObject.lengthLoopCheckStepAmnt
+          for (let j = from; j <= to; j += step) {
             if (rules.BuyRules[i].primaryObject.type == 'EMA') {
-              console.log('primary')
               listOfBuyLines[rules.BuyRules[i].primaryObject.lineId].push({ length: j, data: this.calculateEMA(j) })
             }
             else if (rules.BuyRules[i].primaryObject.type == 'SMA') {
@@ -529,18 +529,19 @@ export class ServerTradeScreenComponent implements OnInit {
         }
       }
       else if ((listOfBuyLines[rules.BuyRules[i].primaryObject.lineId] == undefined && rules.BuyRules[i].primaryObject.length == 1) || (mapOfBuyLines.get(rules.BuyRules[i].primaryObject.name) == undefined && rules.BuyRules[i].primaryObject.length > 1)) {
+        listOfBuyLines[rules.BuyRules[i].primaryObject.lineId] = []
         listOfBuyLines[rules.BuyRules[i].primaryObject.lineId].push({ length: rules.BuyRules[i].primaryObject.length, data: rules.BuyRules[i].primaryObject.data })
       }
     }
     for (let i = 0; i < rules.BuyRules.length; i++) {
       if (rules.BuyRules[i].referencedObject.length > 1 && rules.BuyRules[i].referencedObject.lengthLoopChecked) {
-        let from = rules.BuyRules[i].referencedObject.lengthLoopCheckFromAmnt
-        let to = rules.BuyRules[i].referencedObject.lengthLoopCheckToAmnt
-        let step = rules.BuyRules[i].referencedObject.lengthLoopCheckStepAmnt
-        for (let j = from; j <= to; j += step) {
-          if (listOfBuyLines[rules.BuyRules[i].referencedObject.lineId] == undefined == undefined) {
+        if (listOfBuyLines[rules.BuyRules[i].referencedObject.lineId] == undefined) {
+          listOfBuyLines[rules.BuyRules[i].referencedObject.lineId] = []
+          let from = rules.BuyRules[i].referencedObject.lengthLoopCheckFromAmnt
+          let to = rules.BuyRules[i].referencedObject.lengthLoopCheckToAmnt
+          let step = rules.BuyRules[i].referencedObject.lengthLoopCheckStepAmnt
+          for (let j = from; j <= to; j += step) {
             if (rules.BuyRules[i].referencedObject.type == 'EMA') {
-              console.log('primary')
               listOfBuyLines[rules.BuyRules[i].referencedObject.lineId].push({ length: j, data: this.calculateEMA(j) })
             }
             else if (rules.BuyRules[i].referencedObject.type == 'SMA') {
@@ -550,6 +551,7 @@ export class ServerTradeScreenComponent implements OnInit {
         }
       }
       else if ((listOfBuyLines[rules.BuyRules[i].referencedObject.lineId] == undefined && rules.BuyRules[i].referencedObject.length == 1) || (mapOfBuyLines.get(rules.BuyRules[i].referencedObject.name) == undefined && rules.BuyRules[i].referencedObject.length > 1)) {
+        listOfBuyLines[rules.BuyRules[i].referencedObject.lineId] = []
         listOfBuyLines[rules.BuyRules[i].referencedObject.lineId].push({ length: rules.BuyRules[i].referencedObject.length, data: rules.BuyRules[i].referencedObject.data })
       }
     }
