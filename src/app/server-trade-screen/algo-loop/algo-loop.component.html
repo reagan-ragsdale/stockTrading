@@ -130,22 +130,16 @@
                 <!-- <h4 *ngIf="sellRule.id > 0">And</h4> -->
                 <mat-form-field *ngIf="sellRule.id > 0" style="width:fit-content;">
                     <mat-label>And/Or</mat-label>
-                    <mat-select [disabled]="true" [placeholder]="sellRule.andOr" disableRipple
-                        [(value)]="sellRule.andOr">
-                    </mat-select>
+                    <input [disabled]="true" matInput type="text" [(ngModel)]="sellRule.andOr">
                 </mat-form-field>
                 <mat-form-field style="width:fit-content;">
                     <mat-label>Condition Type</mat-label>
-                    <mat-select [disabled]="true" [placeholder]="sellRule.conditionType" disableRipple
-                        [(value)]="sellRule.conditionType">
-                    </mat-select>
+                    <input [disabled]="true" matInput type="text" [(ngModel)]="sellRule.conditionType">
                 </mat-form-field>
                 <div *ngIf="sellRule.conditionType == 'Line Action'">
                     <mat-form-field style="width:fit-content;">
                         <mat-label>Primary Line</mat-label>
-                        <mat-select [disabled]="true" [placeholder]="sellRule.primaryObject.name" disableRipple
-                            [(value)]="sellRule.primaryObject.name">
-                        </mat-select>
+                        <input [disabled]="true" matInput type="text" [(ngModel)]="sellRule.primaryObject.name">
                         <mat-checkbox [(ngModel)]="sellRule.primaryObject.lengthLoopChecked">Add</mat-checkbox>
                         <div *ngIf="sellRule.primaryObject.lengthLoopChecked">
                             <mat-form-field style="width:fit-content;">
@@ -169,23 +163,17 @@
 
                 <mat-form-field *ngIf="sellRule.conditionType == 'Line Action'" style="width:fit-content;">
                     <mat-label>Action</mat-label>
-                    <mat-select [disabled]="true" [placeholder]="sellRule.desiredAction.type" disableRipple
-                        [(value)]="sellRule.desiredAction.type">
-                    </mat-select>
+                    <input [disabled]="true" matInput type="text" [(ngModel)]="sellRule.desiredAction.type">
                 </mat-form-field>
                 <mat-form-field *ngIf="sellRule.conditionType == 'Price Action'" style="width:fit-content;">
                     <mat-label>Action</mat-label>
-                    <mat-select [disabled]="true" [placeholder]="sellRule.desiredAction.type" disableRipple
-                        [(value)]="sellRule.desiredAction.type">
-                    </mat-select>
+                    <input [disabled]="true" matInput type="text" [(ngModel)]="sellRule.desiredAction.type">
                 </mat-form-field>
                 <div
                     *ngIf="sellRule.conditionType == 'Line Action' && sellRule.desiredAction.type != 'Trend Crosses Below:'">
                     <mat-form-field style="width:fit-content;">
                         <mat-label>Referenced Object</mat-label>
-                        <mat-select [disabled]="true" [placeholder]="sellRule.referencedObject.name" disableRipple
-                            [(value)]="sellRule.referencedObject.name">
-                        </mat-select>
+                        <input [disabled]="true" matInput type="text" [(ngModel)]="sellRule.referencedObject.name">
                     </mat-form-field>
                     <mat-checkbox [(ngModel)]="sellRule.referencedObject.lengthLoopChecked">Add</mat-checkbox>
                     <div *ngIf="sellRule.primaryObject.lengthLoopChecked">
