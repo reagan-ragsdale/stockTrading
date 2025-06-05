@@ -532,10 +532,10 @@ export class ServerTradeScreenComponent implements OnInit {
         for (let j = from; j <= to; j += step) {
           if (mapOfBuyLines.get(rules.BuyRules[i].referencedObject.type + ' - ' + j) == undefined) {
             if (rules.BuyRules[i].referencedObject.type == 'EMA') {
-              mapOfBuyLines.set(rules.BuyRules[i].referencedObject.name, this.calculateEMA(j))
+              mapOfBuyLines.set(rules.BuyRules[i].referencedObject.type + ' - ' + j, this.calculateEMA(j))
             }
             else if (rules.BuyRules[i].referencedObject.type == 'SMA') {
-              mapOfBuyLines.set(rules.BuyRules[i].referencedObject.name, this.calculateSMA(j))
+              mapOfBuyLines.set(rules.BuyRules[i].referencedObject.type + ' - ' + j, this.calculateSMA(j))
             }
           }
         }
