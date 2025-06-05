@@ -601,10 +601,33 @@ export class ServerTradeScreenComponent implements OnInit {
 
     console.log(listOfBuyLines)
 
+    const allCombinations = this.generateCombinations(listOfBuyLines);
+    console.log(allCombinations)
 
 
     this.isLoading = false;
 
+  }
+
+  generateCombinations(data: any, keys: number[] = []): number[][] {
+    const dataKeys = Object.keys(data).map(k => parseInt(k));
+
+    if (keys.length === dataKeys.length) {
+      // Base case: we've selected an index for each key
+      return [keys];
+    }
+
+    const currentKeyIndex = keys.length;
+    const currentKey = dataKeys[currentKeyIndex];
+    const combinations: number[][] = [];
+
+    // For each possible index in the current key's array
+    for (let i = 0; i < data[currentKey].length; i++) {
+      const newKeys = [...keys, i];
+      combinations.push(...this.generateCombinations(data, newKeys));
+    }
+
+    return combinations;
   }
 
   loopFunct() {
