@@ -791,16 +791,12 @@ export class ServerTradeScreenComponent implements OnInit {
       for (let k = 0; k < buyCombinations.length; k++) {
         for (let n = 0; n < rules.BuyRules.length; n++) {
           for (let p = 0; p < buyCombinations[k].length; p++) {
-            if (this.overallCount == 0) {
-              console.log(buyCombinations[k][p].name)
-              console.log(n + 'A')
-              this.overallCount++
-            }
             if (buyCombinations[k][p].name == n + 'A') {
               rules.BuyRules[n].buyTime = buyCombinations[k][p].value
             }
             if (buyCombinations[k][p].name == n + 'B') {
               rules.BuyRules[n].desiredAction.amount = buyCombinations[k][p].value
+              console.log(buyCombinations[k][p].value)
             }
             if (buyCombinations[k][p].name == n + 'C') {
               rules.BuyRules[n].desiredAction.length = buyCombinations[k][p].value
