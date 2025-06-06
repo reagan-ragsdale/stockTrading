@@ -627,20 +627,20 @@ export class ServerTradeScreenComponent implements OnInit {
 
       const allCombinations = this.generateCombinations(listOfBuyLines);
 
-      let result = this.addRule2(listOfBuyLines, allCombinations)
+      let result = this.addRule2(listOfBuyLines, allCombinations, rules)
       finalResult.push(result)
     }
-
-    console.log(finalResult)
     let summedResults = []
     for (let i = 0; i < finalResult[0].length; i++) {
       let profit = 0
-      let combination = {}
+      let buyCombo = []
+      let sellCombo = []
       for (let j = 0; j < finalResult.length; j++) {
         profit += finalResult[j][i].profit
-        combination = finalResult[j][i].combination
+        buyCombo = finalResult[j][i].buyCombos
+        sellCombo = finalResult[j][i].sellCombos
       }
-      summedResults.push({ profit: profit, combo: combination })
+      summedResults.push({ profit: profit, buyCombo: buyCombo, sellCombo: sellCombo })
     }
     console.log(summedResults)
     this.isLoading = false;
@@ -688,10 +688,8 @@ export class ServerTradeScreenComponent implements OnInit {
     return combinations;
   }
   overallCount = 0
-  addRule2(buyLines: { [key: number]: { length: number, data: LineData[] }[] }, combinations: number[][]) {
-    let totalCount = 0
-    let rules = structuredClone(this.listOfAddedRules)
-    console.log(rules)
+  addRule2(buyLines: { [key: number]: { length: number, data: LineData[] }[] }, combinations: number[][], rules: RuleDto) {
+
     let returnData = []
     for (let i = 0; i < combinations.length; i++) {
       let counter = 0
@@ -885,8 +883,26 @@ export class ServerTradeScreenComponent implements OnInit {
 
             }
           }
-          totalCount++
-          returnData.push({ orderLocations: orderLocations, profit: profit, combination: structuredClone(rules) })
+          let buyCombo: any[] = []
+          for (let i = 0; i < rules.BuyRules.length; i++) {
+            buyCombo.push({
+              primaryLength: rules.BuyRules[i].primaryObject.length,
+              time: rules.BuyRules[i].buyTime,
+              actionAmnt: rules.BuyRules[i].desiredAction.amount,
+              actionLength: rules.BuyRules[i].desiredAction.length,
+              referencedLength: rules.BuyRules[i].referencedObject.length
+            })
+          }
+          let sellCombo: any[] = []
+          for (let i = 0; i < rules.SellRules.length; i++) {
+            sellCombo.push({
+              primaryLength: rules.SellRules[i].primaryObject.length,
+              actionAmnt: rules.SellRules[i].desiredAction.amount,
+              actionLength: rules.SellRules[i].desiredAction.length,
+              referencedLength: rules.SellRules[i].referencedObject.length
+            })
+          }
+          returnData.push({ orderLocations: orderLocations, profit: profit, buyCombos: buyCombo, sellCombos: sellCombo })
         }
 
       }
@@ -895,7 +911,6 @@ export class ServerTradeScreenComponent implements OnInit {
 
 
     }
-    console.log(totalCount)
     return returnData
 
   }
