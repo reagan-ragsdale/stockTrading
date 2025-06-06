@@ -809,12 +809,12 @@ export class ServerTradeScreenComponent implements OnInit {
         }
         for (let n = 0; n < sellCombinations.length; n++) {
           for (let s = 0; s < rules.SellRules.length; s++) {
-            for (let p = 0; p < buyCombinations[k].length; p++) {
-              if (buyCombinations[k][p].name == s + 'A') {
-                rules.SellRules[s].desiredAction.amount = buyCombinations[k][p].value
+            for (let p = 0; p < sellCombinations[n].length; p++) {
+              if (sellCombinations[n][p].name == s + 'A') {
+                rules.SellRules[s].desiredAction.amount = sellCombinations[n][p].value
               }
-              if (buyCombinations[k][p].name == s + 'B') {
-                rules.SellRules[s].desiredAction.length = buyCombinations[k][p].value
+              if (sellCombinations[n][p].name == s + 'B') {
+                rules.SellRules[s].desiredAction.length = sellCombinations[n][p].value
               }
             }
           }
