@@ -635,10 +635,12 @@ export class ServerTradeScreenComponent implements OnInit {
     let summedResults = []
     for (let i = 0; i < finalResult[0].length; i++) {
       let profit = 0
+      let combination = {}
       for (let j = 0; j < finalResult.length; j++) {
         profit += finalResult[j][i].profit
+        combination = finalResult[j][i].combination
       }
-      summedResults.push(profit)
+      summedResults.push({ profit: profit, combo: combination })
     }
     console.log(summedResults)
     this.isLoading = false;
@@ -685,6 +687,7 @@ export class ServerTradeScreenComponent implements OnInit {
 
     return combinations;
   }
+  overallCount = 0
   addRule2(buyLines: { [key: number]: { length: number, data: LineData[] }[] }, combinations: number[][]) {
     let totalCount = 0
     let rules = structuredClone(this.listOfAddedRules)
@@ -784,6 +787,11 @@ export class ServerTradeScreenComponent implements OnInit {
       for (let k = 0; k < buyCombinations.length; k++) {
         for (let n = 0; n < rules.BuyRules.length; n++) {
           for (let p = 0; p < buyCombinations[k].length; p++) {
+            if (this.overallCount == 0) {
+              console.log(buyCombinations[k][p].name)
+              console.log(n + 'A')
+              this.overallCount++
+            }
             if (buyCombinations[k][p].name == n + 'A') {
               rules.BuyRules[n].buyTime = buyCombinations[k][p].value
             }
