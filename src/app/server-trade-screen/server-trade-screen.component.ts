@@ -667,6 +667,26 @@ export class ServerTradeScreenComponent implements OnInit {
 
     return combinations;
   }
+  generateNonLineCombinations(data: any, keys: number[] = []): any[][] {
+    const dataKeys = Object.keys(data).map(k => k);
+
+    if (keys.length === dataKeys.length) {
+      // Base case: we've selected an index for each key
+      return [keys];
+    }
+
+    const currentKeyIndex = keys.length;
+    const currentKey = dataKeys[currentKeyIndex];
+    const combinations: any[][] = [];
+
+    // For each possible index in the current key's array
+    for (let i = 0; i < data[currentKey].length; i++) {
+      const newKeys = [...keys, i];
+      combinations.push(...this.generateCombinations(data, newKeys));
+    }
+
+    return combinations;
+  }
   addRule2(buyLines: { [key: number]: { length: number, data: LineData[] }[] }, combinations: number[][]) {
 
     let rules = structuredClone(this.listOfAddedRules)
@@ -765,8 +785,8 @@ export class ServerTradeScreenComponent implements OnInit {
           }
         }
       }
-      let buyCombinations = this.generateCombinations(nonBuyLineCombinations)
-      let sellCombinations = this.generateCombinations(nonSellLineCombinations)
+      let buyCombinations = this.generateNonLineCombinations(nonBuyLineCombinations)
+      let sellCombinations = this.generateNonLineCombinations(nonSellLineCombinations)
       console.log(buyCombinations)
       console.log(sellCombinations)
       for (let m = counter; m < this.stockDataForSelectedDay.length; m++) {
