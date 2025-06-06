@@ -796,13 +796,13 @@ export class ServerTradeScreenComponent implements OnInit {
           }
         }
         for (let n = 0; n < sellCombinations.length; n++) {
-          for (let n = 0; n < rules.SellRules.length; n++) {
+          for (let s = 0; s < rules.SellRules.length; s++) {
             for (let p = 0; p < buyCombinations[k].length; p++) {
-              if (buyCombinations[k][p].name == n + 'A') {
-                rules.SellRules[n].desiredAction.amount = buyCombinations[k][p].value
+              if (buyCombinations[k][p].name == s + 'A') {
+                rules.SellRules[s].desiredAction.amount = buyCombinations[k][p].value
               }
-              if (buyCombinations[k][p].name == n + 'B') {
-                rules.SellRules[n].desiredAction.length = buyCombinations[k][p].value
+              if (buyCombinations[k][p].name == s + 'B') {
+                rules.SellRules[s].desiredAction.length = buyCombinations[k][p].value
               }
             }
           }
