@@ -801,7 +801,7 @@ export class ServerTradeScreenComponent implements OnInit {
               rules.BuyRules[n].desiredAction.amount = buyCombinations[k][p].value
             }
             if (buyCombinations[k][p].name == n + 'C') {
-              console.log('here')
+              console.log('here' + n)
               rules.BuyRules[n].desiredAction.length = buyCombinations[k][p].value
             }
           }
