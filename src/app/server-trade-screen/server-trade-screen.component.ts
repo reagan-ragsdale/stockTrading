@@ -824,11 +824,7 @@ export class ServerTradeScreenComponent implements OnInit {
           let numberOfConsecutiveLosses = 0
           let timeOutPeriod = 0
           let tempRule = structuredClone(rules)
-          console.log({
-            line: tempRule.BuyRules[0].primaryObject.length,
-            trendLength: tempRule.BuyRules[0].desiredAction.length,
-            sellAmnt: tempRule.SellRules[0].desiredAction.amount
-          })
+          console.log(tempRule)
           for (let m = counter; m < this.stockDataForSelectedDay.length; m++) {
             if (buySell == 'Buy') {
               let buyArray = []
