@@ -685,8 +685,8 @@ export class ServerTradeScreenComponent implements OnInit {
           rules.SellRules[j].referencedObject.data = buyLines[rules.SellRules[j].referencedObject.lineId][comboIndex].data
         }
       }
-      //let tempRules = structuredClone(rules)
-      //console.log(tempRules)
+      let tempRules = structuredClone(rules)
+      console.log(tempRules)
       for (let m = counter; m < this.stockDataForSelectedDay.length; m++) {
         if (buySell == 'Buy') {
           let buyArray = []
