@@ -53,7 +53,7 @@ export class AddRuleComponent {
       primaryObject: {
         name: '',
         type: '',
-        lineId: 0,
+        lineId: -1,
         length: 0,
         lengthLoopChecked: false,
         lengthLoopCheckToAmnt: 0,
@@ -77,7 +77,7 @@ export class AddRuleComponent {
       referencedObject: {
         name: '',
         type: '',
-        lineId: 0,
+        lineId: -1,
         length: 0,
         lengthLoopChecked: false,
         lengthLoopCheckToAmnt: 0,
@@ -96,7 +96,7 @@ export class AddRuleComponent {
       primaryObject: {
         name: '',
         type: '',
-        lineId: 0,
+        lineId: -1,
         length: 0,
         lengthLoopChecked: false,
         lengthLoopCheckToAmnt: 0,
@@ -124,7 +124,7 @@ export class AddRuleComponent {
       referencedObject: {
         name: '',
         type: '',
-        lineId: 0,
+        lineId: -1,
         length: 0,
         lengthLoopChecked: false,
         lengthLoopCheckToAmnt: 0,
