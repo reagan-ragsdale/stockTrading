@@ -691,6 +691,7 @@ export class ServerTradeScreenComponent implements OnInit {
   addRule2(buyLines: { [key: number]: { length: number, data: LineData[] }[] }, combinations: number[][]) {
     let totalCount = 0
     let rules = structuredClone(this.listOfAddedRules)
+    console.log(rules)
     let returnData = []
     for (let i = 0; i < combinations.length; i++) {
       let counter = 0
@@ -825,7 +826,7 @@ export class ServerTradeScreenComponent implements OnInit {
           let tempRule = structuredClone(rules)
           console.log({
             line: tempRule.BuyRules[0].primaryObject.length,
-            trendLength: tempRule.BuyRules[1].desiredAction.length,
+            trendLength: tempRule.BuyRules[0].desiredAction.length,
             sellAmnt: tempRule.SellRules[0].desiredAction.amount
           })
           for (let m = counter; m < this.stockDataForSelectedDay.length; m++) {
