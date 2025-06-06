@@ -686,7 +686,7 @@ export class ServerTradeScreenComponent implements OnInit {
     return combinations;
   }
   addRule2(buyLines: { [key: number]: { length: number, data: LineData[] }[] }, combinations: number[][]) {
-
+    let totalCount = 0
     let rules = structuredClone(this.listOfAddedRules)
     let returnData = []
     for (let i = 0; i < combinations.length; i++) {
@@ -698,11 +698,7 @@ export class ServerTradeScreenComponent implements OnInit {
       }
       counter = counter - 1
 
-      let buySell = 'Buy'
-      let orderLocations: orderLocation[] = []
-      let profit = 0
-      let numberOfConsecutiveLosses = 0
-      let timeOutPeriod = 0
+
 
       for (let j = 0; j < rules.BuyRules.length; j++) {
         if (buyLines[rules.BuyRules[j].primaryObject.lineId] != undefined) {
@@ -810,8 +806,11 @@ export class ServerTradeScreenComponent implements OnInit {
               }
             }
           }
-          let ruleTemp = structuredClone(rules)
-          console.log(ruleTemp)
+          let buySell = 'Buy'
+          let orderLocations: orderLocation[] = []
+          let profit = 0
+          let numberOfConsecutiveLosses = 0
+          let timeOutPeriod = 0
           for (let m = counter; m < this.stockDataForSelectedDay.length; m++) {
             if (buySell == 'Buy') {
               let buyArray = []
@@ -878,6 +877,7 @@ export class ServerTradeScreenComponent implements OnInit {
 
             }
           }
+          totalCount++
           returnData.push({ orderLocations: orderLocations, profit: profit })
         }
 
@@ -887,7 +887,7 @@ export class ServerTradeScreenComponent implements OnInit {
 
 
     }
-
+    console.log(totalCount)
     return returnData
 
   }
