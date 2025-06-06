@@ -54,9 +54,9 @@ type orderLocation = {
   price: number;
   dateString: string
 }
-type lengthData = {
-  lineLength: number;
-  data: LineData[];
+type nonLineValues = {
+  uId: string;
+  value: number;
 }
 
 @Component({
@@ -667,7 +667,6 @@ export class ServerTradeScreenComponent implements OnInit {
 
     return combinations;
   }
-
   addRule2(buyLines: { [key: number]: { length: number, data: LineData[] }[] }, combinations: number[][]) {
 
     let rules = structuredClone(this.listOfAddedRules)
@@ -680,7 +679,6 @@ export class ServerTradeScreenComponent implements OnInit {
         }
       }
       counter = counter - 1
-      console.log(counter)
 
       let buySell = 'Buy'
       let orderLocations: orderLocation[] = []
@@ -716,8 +714,59 @@ export class ServerTradeScreenComponent implements OnInit {
           rules.SellRules[j].referencedObject.data = buyLines[rules.SellRules[j].referencedObject.lineId][comboIndex].data
         }
       }
-      let tempRules = structuredClone(rules)
-      console.log(tempRules)
+      let nonBuyLineCombinations: { [key: string]: { value: number }[] } = {}
+      for (let j = 0; j < rules.BuyRules.length; j++) {
+        if (rules.BuyRules[j].buyTimeChecked) {
+          nonBuyLineCombinations[rules.BuyRules[j].buyTimeUId] = []
+          let from = rules.BuyRules[j].buyTimeCheckFromAmnt
+          let to = rules.BuyRules[j].buyTimeCheckToAmnt
+          let step = rules.BuyRules[j].buyTimeCheckStepAmnt
+          for (let k = from; k < to; k += step) {
+            nonBuyLineCombinations[rules.BuyRules[j].buyTimeUId].push({ value: k })
+          }
+        }
+        if (rules.BuyRules[j].desiredAction.amountLoopChecked) {
+          nonBuyLineCombinations[rules.BuyRules[j].desiredAction.amountLoopUId] = []
+          let from = rules.BuyRules[j].desiredAction.amountLoopCheckFromAmnt
+          let to = rules.BuyRules[j].desiredAction.amountLoopCheckToAmnt
+          let step = rules.BuyRules[j].desiredAction.amountLoopCheckStepAmnt
+          for (let k = from; k < to; k += step) {
+            nonBuyLineCombinations[rules.BuyRules[j].desiredAction.amountLoopUId].push({ value: k })
+          }
+        }
+        if (rules.BuyRules[j].desiredAction.lengthLoopChecked) {
+          nonBuyLineCombinations[rules.BuyRules[j].desiredAction.lengthLoopUId] = []
+          let from = rules.BuyRules[j].desiredAction.lengthLoopCheckFromAmnt
+          let to = rules.BuyRules[j].desiredAction.lengthLoopCheckToAmnt
+          let step = rules.BuyRules[j].desiredAction.lengthLoopCheckStepAmnt
+          for (let k = from; k < to; k += step) {
+            nonBuyLineCombinations[rules.BuyRules[j].desiredAction.lengthLoopUId].push({ value: k })
+          }
+        }
+      }
+      let nonSellLineCombinations: { [key: string]: { value: number }[] } = {}
+      for (let j = 0; j < rules.SellRules.length; j++) {
+        if (rules.SellRules[j].desiredAction.amountLoopChecked) {
+          nonSellLineCombinations[rules.SellRules[j].desiredAction.amountLoopUId] = []
+          let from = rules.SellRules[j].desiredAction.amountLoopCheckFromAmnt
+          let to = rules.SellRules[j].desiredAction.amountLoopCheckToAmnt
+          let step = rules.SellRules[j].desiredAction.amountLoopCheckStepAmnt
+          for (let k = from; k < to; k += step) {
+            nonSellLineCombinations[rules.SellRules[j].desiredAction.amountLoopUId].push({ value: k })
+          }
+        }
+        if (rules.SellRules[j].desiredAction.lengthLoopChecked) {
+          nonSellLineCombinations[rules.SellRules[j].desiredAction.lengthLoopUId] = []
+          let from = rules.SellRules[j].desiredAction.lengthLoopCheckFromAmnt
+          let to = rules.SellRules[j].desiredAction.lengthLoopCheckToAmnt
+          let step = rules.SellRules[j].desiredAction.lengthLoopCheckStepAmnt
+          for (let k = from; k < to; k += step) {
+            nonSellLineCombinations[rules.SellRules[j].desiredAction.lengthLoopUId].push({ value: k })
+          }
+        }
+      }
+      console.log(nonBuyLineCombinations)
+      console.log(nonSellLineCombinations)
       for (let m = counter; m < this.stockDataForSelectedDay.length; m++) {
         if (buySell == 'Buy') {
           let buyArray = []

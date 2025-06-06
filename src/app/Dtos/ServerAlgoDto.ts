@@ -29,6 +29,7 @@ export type BuyRule = {
     buyTimeCheckToAmnt: number;
     buyTimeCheckFromAmnt: number;
     buyTimeCheckStepAmnt: number;
+    buyTimeUId: string;
     primaryObject: {
         name: string;
         type: string;
@@ -52,11 +53,13 @@ export type BuyRule = {
         amountLoopCheckToAmnt: number;
         amountLoopCheckFromAmnt: number;
         amountLoopCheckStepAmnt: number;
+        amountLoopUId: string;
         length: number;
         lengthLoopChecked: boolean;
         lengthLoopCheckToAmnt: number;
         lengthLoopCheckFromAmnt: number;
         lengthLoopCheckStepAmnt: number;
+        lengthLoopUId: string;
     }
     /* desiredAction: string;
     desiredActionAmnt: number;
@@ -110,11 +113,13 @@ export type SellRule = {
         amountLoopCheckToAmnt: number;
         amountLoopCheckFromAmnt: number;
         amountLoopCheckStepAmnt: number;
+        amountLoopUId: string;
         length: number;
         lengthLoopChecked: boolean;
         lengthLoopCheckToAmnt: number;
         lengthLoopCheckFromAmnt: number;
         lengthLoopCheckStepAmnt: number;
+        lengthLoopUId: string;
         current: number;
     }
     /* desiredAction: string;
