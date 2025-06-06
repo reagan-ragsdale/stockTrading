@@ -504,109 +504,114 @@ export class ServerTradeScreenComponent implements OnInit {
       this.isLoading = false
     }
   }
-  runAlgoAllDaysWithLoop() {
+  async runAlgoAllDaysWithLoop() {
     this.isLoading = true
     let rules = structuredClone(this.listOfAddedRules)
 
-    let listOfBuyLines: { [key: number]: { length: number, data: LineData[] }[] } = {}
-    for (let i = 0; i < rules.BuyRules.length; i++) {
-      if (rules.BuyRules[i].primaryObject.length > 1 && rules.BuyRules[i].primaryObject.lengthLoopChecked) {
-        if (listOfBuyLines[rules.BuyRules[i].primaryObject.lineId] == undefined) {
+    let finalResult = []
+    for (let k = 0; k < this.distinctDates.length; k++) {
+      await this.updateStockChartData(this.distinctDates[k])
+      let listOfBuyLines: { [key: number]: { length: number, data: LineData[] }[] } = {}
+      for (let i = 0; i < rules.BuyRules.length; i++) {
+        if (rules.BuyRules[i].primaryObject.length > 1 && rules.BuyRules[i].primaryObject.lengthLoopChecked) {
+          if (listOfBuyLines[rules.BuyRules[i].primaryObject.lineId] == undefined) {
+            listOfBuyLines[rules.BuyRules[i].primaryObject.lineId] = []
+            let from = rules.BuyRules[i].primaryObject.lengthLoopCheckFromAmnt
+            let to = rules.BuyRules[i].primaryObject.lengthLoopCheckToAmnt
+            let step = rules.BuyRules[i].primaryObject.lengthLoopCheckStepAmnt
+            for (let j = from; j <= to; j += step) {
+              if (rules.BuyRules[i].primaryObject.type == 'EMA') {
+                listOfBuyLines[rules.BuyRules[i].primaryObject.lineId].push({ length: j, data: this.calculateEMA(j) })
+              }
+              else if (rules.BuyRules[i].primaryObject.type == 'SMA') {
+                listOfBuyLines[rules.BuyRules[i].primaryObject.lineId].push({ length: j, data: this.calculateSMA(j) })
+              }
+            }
+          }
+        }
+        else if ((listOfBuyLines[rules.BuyRules[i].primaryObject.lineId] == undefined && rules.BuyRules[i].primaryObject.length == 1) || (listOfBuyLines[rules.BuyRules[i].primaryObject.lineId] == undefined && rules.BuyRules[i].primaryObject.length > 1)) {
           listOfBuyLines[rules.BuyRules[i].primaryObject.lineId] = []
-          let from = rules.BuyRules[i].primaryObject.lengthLoopCheckFromAmnt
-          let to = rules.BuyRules[i].primaryObject.lengthLoopCheckToAmnt
-          let step = rules.BuyRules[i].primaryObject.lengthLoopCheckStepAmnt
-          for (let j = from; j <= to; j += step) {
-            if (rules.BuyRules[i].primaryObject.type == 'EMA') {
-              listOfBuyLines[rules.BuyRules[i].primaryObject.lineId].push({ length: j, data: this.calculateEMA(j) })
-            }
-            else if (rules.BuyRules[i].primaryObject.type == 'SMA') {
-              listOfBuyLines[rules.BuyRules[i].primaryObject.lineId].push({ length: j, data: this.calculateSMA(j) })
+          listOfBuyLines[rules.BuyRules[i].primaryObject.lineId].push({ length: rules.BuyRules[i].primaryObject.length, data: rules.BuyRules[i].primaryObject.data })
+        }
+      }
+      for (let i = 0; i < rules.BuyRules.length; i++) {
+        if (rules.BuyRules[i].referencedObject.length > 1 && rules.BuyRules[i].referencedObject.lengthLoopChecked) {
+          if (listOfBuyLines[rules.BuyRules[i].referencedObject.lineId] == undefined) {
+            listOfBuyLines[rules.BuyRules[i].referencedObject.lineId] = []
+            let from = rules.BuyRules[i].referencedObject.lengthLoopCheckFromAmnt
+            let to = rules.BuyRules[i].referencedObject.lengthLoopCheckToAmnt
+            let step = rules.BuyRules[i].referencedObject.lengthLoopCheckStepAmnt
+            for (let j = from; j <= to; j += step) {
+              if (rules.BuyRules[i].referencedObject.type == 'EMA') {
+                listOfBuyLines[rules.BuyRules[i].referencedObject.lineId].push({ length: j, data: this.calculateEMA(j) })
+              }
+              else if (rules.BuyRules[i].referencedObject.type == 'SMA') {
+                listOfBuyLines[rules.BuyRules[i].referencedObject.lineId].push({ length: j, data: this.calculateSMA(j) })
+              }
             }
           }
         }
-      }
-      else if ((listOfBuyLines[rules.BuyRules[i].primaryObject.lineId] == undefined && rules.BuyRules[i].primaryObject.length == 1) || (listOfBuyLines[rules.BuyRules[i].primaryObject.lineId] == undefined && rules.BuyRules[i].primaryObject.length > 1)) {
-        listOfBuyLines[rules.BuyRules[i].primaryObject.lineId] = []
-        listOfBuyLines[rules.BuyRules[i].primaryObject.lineId].push({ length: rules.BuyRules[i].primaryObject.length, data: rules.BuyRules[i].primaryObject.data })
-      }
-    }
-    for (let i = 0; i < rules.BuyRules.length; i++) {
-      if (rules.BuyRules[i].referencedObject.length > 1 && rules.BuyRules[i].referencedObject.lengthLoopChecked) {
-        if (listOfBuyLines[rules.BuyRules[i].referencedObject.lineId] == undefined) {
+        else if ((listOfBuyLines[rules.BuyRules[i].referencedObject.lineId] == undefined && rules.BuyRules[i].referencedObject.length == 1) || (listOfBuyLines[rules.BuyRules[i].referencedObject.lineId] == undefined && rules.BuyRules[i].referencedObject.length > 1)) {
           listOfBuyLines[rules.BuyRules[i].referencedObject.lineId] = []
-          let from = rules.BuyRules[i].referencedObject.lengthLoopCheckFromAmnt
-          let to = rules.BuyRules[i].referencedObject.lengthLoopCheckToAmnt
-          let step = rules.BuyRules[i].referencedObject.lengthLoopCheckStepAmnt
-          for (let j = from; j <= to; j += step) {
-            if (rules.BuyRules[i].referencedObject.type == 'EMA') {
-              listOfBuyLines[rules.BuyRules[i].referencedObject.lineId].push({ length: j, data: this.calculateEMA(j) })
-            }
-            else if (rules.BuyRules[i].referencedObject.type == 'SMA') {
-              listOfBuyLines[rules.BuyRules[i].referencedObject.lineId].push({ length: j, data: this.calculateSMA(j) })
+          listOfBuyLines[rules.BuyRules[i].referencedObject.lineId].push({ length: rules.BuyRules[i].referencedObject.length, data: rules.BuyRules[i].referencedObject.data })
+        }
+      }
+
+      for (let i = 0; i < rules.SellRules.length; i++) {
+        if (rules.SellRules[i].primaryObject.length > 1 && rules.SellRules[i].primaryObject.lengthLoopChecked) {
+          if (listOfBuyLines[rules.SellRules[i].primaryObject.lineId] == undefined) {
+            listOfBuyLines[rules.SellRules[i].primaryObject.lineId] = []
+            let from = rules.SellRules[i].primaryObject.lengthLoopCheckFromAmnt
+            let to = rules.SellRules[i].primaryObject.lengthLoopCheckToAmnt
+            let step = rules.SellRules[i].primaryObject.lengthLoopCheckStepAmnt
+            for (let j = from; j <= to; j += step) {
+              if (rules.SellRules[i].primaryObject.type == 'EMA') {
+                listOfBuyLines[rules.SellRules[i].primaryObject.lineId].push({ length: j, data: this.calculateEMA(j) })
+              }
+              else if (rules.SellRules[i].primaryObject.type == 'SMA') {
+                listOfBuyLines[rules.SellRules[i].primaryObject.lineId].push({ length: j, data: this.calculateSMA(j) })
+              }
             }
           }
         }
-      }
-      else if ((listOfBuyLines[rules.BuyRules[i].referencedObject.lineId] == undefined && rules.BuyRules[i].referencedObject.length == 1) || (listOfBuyLines[rules.BuyRules[i].referencedObject.lineId] == undefined && rules.BuyRules[i].referencedObject.length > 1)) {
-        listOfBuyLines[rules.BuyRules[i].referencedObject.lineId] = []
-        listOfBuyLines[rules.BuyRules[i].referencedObject.lineId].push({ length: rules.BuyRules[i].referencedObject.length, data: rules.BuyRules[i].referencedObject.data })
-      }
-    }
-
-    for (let i = 0; i < rules.SellRules.length; i++) {
-      if (rules.SellRules[i].primaryObject.length > 1 && rules.SellRules[i].primaryObject.lengthLoopChecked) {
-        if (listOfBuyLines[rules.SellRules[i].primaryObject.lineId] == undefined) {
+        else if ((listOfBuyLines[rules.SellRules[i].primaryObject.lineId] == undefined && rules.SellRules[i].primaryObject.length == 1) || (listOfBuyLines[rules.SellRules[i].primaryObject.lineId] == undefined && rules.SellRules[i].primaryObject.length > 1)) {
           listOfBuyLines[rules.SellRules[i].primaryObject.lineId] = []
-          let from = rules.SellRules[i].primaryObject.lengthLoopCheckFromAmnt
-          let to = rules.SellRules[i].primaryObject.lengthLoopCheckToAmnt
-          let step = rules.SellRules[i].primaryObject.lengthLoopCheckStepAmnt
-          for (let j = from; j <= to; j += step) {
-            if (rules.SellRules[i].primaryObject.type == 'EMA') {
-              listOfBuyLines[rules.SellRules[i].primaryObject.lineId].push({ length: j, data: this.calculateEMA(j) })
-            }
-            else if (rules.SellRules[i].primaryObject.type == 'SMA') {
-              listOfBuyLines[rules.SellRules[i].primaryObject.lineId].push({ length: j, data: this.calculateSMA(j) })
+          listOfBuyLines[rules.SellRules[i].primaryObject.lineId].push({ length: rules.SellRules[i].primaryObject.length, data: rules.SellRules[i].primaryObject.data })
+        }
+      }
+      for (let i = 0; i < rules.SellRules.length; i++) {
+        if (rules.SellRules[i].referencedObject.length > 1 && rules.SellRules[i].referencedObject.lengthLoopChecked) {
+          if (listOfBuyLines[rules.SellRules[i].referencedObject.lineId] == undefined) {
+            listOfBuyLines[rules.SellRules[i].referencedObject.lineId] = []
+            let from = rules.SellRules[i].referencedObject.lengthLoopCheckFromAmnt
+            let to = rules.SellRules[i].referencedObject.lengthLoopCheckToAmnt
+            let step = rules.SellRules[i].referencedObject.lengthLoopCheckStepAmnt
+            for (let j = from; j <= to; j += step) {
+              if (rules.SellRules[i].referencedObject.type == 'EMA') {
+                listOfBuyLines[rules.SellRules[i].referencedObject.lineId].push({ length: j, data: this.calculateEMA(j) })
+              }
+              else if (rules.SellRules[i].referencedObject.type == 'SMA') {
+                listOfBuyLines[rules.SellRules[i].referencedObject.lineId].push({ length: j, data: this.calculateSMA(j) })
+              }
             }
           }
         }
-      }
-      else if ((listOfBuyLines[rules.SellRules[i].primaryObject.lineId] == undefined && rules.SellRules[i].primaryObject.length == 1) || (listOfBuyLines[rules.SellRules[i].primaryObject.lineId] == undefined && rules.SellRules[i].primaryObject.length > 1)) {
-        listOfBuyLines[rules.SellRules[i].primaryObject.lineId] = []
-        listOfBuyLines[rules.SellRules[i].primaryObject.lineId].push({ length: rules.SellRules[i].primaryObject.length, data: rules.SellRules[i].primaryObject.data })
-      }
-    }
-    for (let i = 0; i < rules.SellRules.length; i++) {
-      if (rules.SellRules[i].referencedObject.length > 1 && rules.SellRules[i].referencedObject.lengthLoopChecked) {
-        if (listOfBuyLines[rules.SellRules[i].referencedObject.lineId] == undefined) {
+        else if ((listOfBuyLines[rules.SellRules[i].referencedObject.lineId] == undefined && rules.SellRules[i].referencedObject.length == 1) || (listOfBuyLines[rules.SellRules[i].referencedObject.lineId] == undefined && rules.SellRules[i].referencedObject.length > 1)) {
           listOfBuyLines[rules.SellRules[i].referencedObject.lineId] = []
-          let from = rules.SellRules[i].referencedObject.lengthLoopCheckFromAmnt
-          let to = rules.SellRules[i].referencedObject.lengthLoopCheckToAmnt
-          let step = rules.SellRules[i].referencedObject.lengthLoopCheckStepAmnt
-          for (let j = from; j <= to; j += step) {
-            if (rules.SellRules[i].referencedObject.type == 'EMA') {
-              listOfBuyLines[rules.SellRules[i].referencedObject.lineId].push({ length: j, data: this.calculateEMA(j) })
-            }
-            else if (rules.SellRules[i].referencedObject.type == 'SMA') {
-              listOfBuyLines[rules.SellRules[i].referencedObject.lineId].push({ length: j, data: this.calculateSMA(j) })
-            }
-          }
+          listOfBuyLines[rules.SellRules[i].referencedObject.lineId].push({ length: rules.SellRules[i].referencedObject.length, data: rules.SellRules[i].referencedObject.data })
         }
       }
-      else if ((listOfBuyLines[rules.SellRules[i].referencedObject.lineId] == undefined && rules.SellRules[i].referencedObject.length == 1) || (listOfBuyLines[rules.SellRules[i].referencedObject.lineId] == undefined && rules.SellRules[i].referencedObject.length > 1)) {
-        listOfBuyLines[rules.SellRules[i].referencedObject.lineId] = []
-        listOfBuyLines[rules.SellRules[i].referencedObject.lineId].push({ length: rules.SellRules[i].referencedObject.length, data: rules.SellRules[i].referencedObject.data })
-      }
+
+      console.log(listOfBuyLines)
+
+      const allCombinations = this.generateCombinations(listOfBuyLines);
+      console.log(allCombinations)
+
+      let result = this.addRule2(listOfBuyLines, allCombinations)
+      finalResult.push(result)
     }
 
-    console.log(listOfBuyLines)
-
-    const allCombinations = this.generateCombinations(listOfBuyLines);
-    console.log(allCombinations)
-
-    let result = this.addRule2(listOfBuyLines, allCombinations)
-    console.log(result)
-
+    console.log(finalResult)
     this.isLoading = false;
 
   }
@@ -680,22 +685,21 @@ export class ServerTradeScreenComponent implements OnInit {
           rules.SellRules[j].referencedObject.data = buyLines[rules.SellRules[j].referencedObject.lineId][comboIndex].data
         }
       }
-      let tempRules = structuredClone(rules)
-      console.log(tempRules)
-
-      for (let i = counter; i < this.stockDataForSelectedDay.length; i++) {
+      //let tempRules = structuredClone(rules)
+      //console.log(tempRules)
+      for (let m = counter; m < this.stockDataForSelectedDay.length; m++) {
         if (buySell == 'Buy') {
           let buyArray = []
           for (let j = 0; j < rules.BuyRules.length; j++) {
-            buyArray.push(this.operators[rules.BuyRules[j].desiredAction.type](rules.BuyRules[j], i))
+            buyArray.push(this.operators[rules.BuyRules[j].desiredAction.type](rules.BuyRules[j], m))
           }
           if (!buyArray.includes(false) && this.stockDataForSelectedDay[i].time >= timeOutPeriod && numberOfConsecutiveLosses < rules.NumberOfLossesInARowToStop) {
-            orderLocations.push({ buySell: 'Buy', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString() })
+            orderLocations.push({ buySell: 'Buy', price: this.stockDataForSelectedDay[m].stockPrice, date: this.stockDataForSelectedDay[m].time, dateString: new Date(this.stockDataForSelectedDay[m].time).toLocaleTimeString() })
             buySell = 'Sell'
             for (let j = 0; j < rules.SellRules.length; j++) {
               if (rules.SellRules[j].desiredAction.type == 'Trailing Stop') {
                 rules.SellRules[j].desiredAction.current = 0
-                rules.SellRules[j].tradeHigh = this.stockDataForSelectedDay[i].stockPrice
+                rules.SellRules[j].tradeHigh = this.stockDataForSelectedDay[m].stockPrice
               }
             }
           }
@@ -705,41 +709,41 @@ export class ServerTradeScreenComponent implements OnInit {
 
           let andOr = 'And'
           for (let j = 0; j < rules.SellRules.length; j++) {
-            if (rules.SellRules[j].desiredAction.type == 'Trailing Stop' && (this.stockDataForSelectedDay[i].stockPrice > rules.SellRules[j].tradeHigh)) {
-              rules.SellRules[j].tradeHigh = this.stockDataForSelectedDay[i].stockPrice
+            if (rules.SellRules[j].desiredAction.type == 'Trailing Stop' && (this.stockDataForSelectedDay[m].stockPrice > rules.SellRules[j].tradeHigh)) {
+              rules.SellRules[j].tradeHigh = this.stockDataForSelectedDay[m].stockPrice
               if (rules.SellRules[j].tradeHigh >= (orderLocations[orderLocations.length - 1].price + rules.SellRules[j].desiredAction.amount)) {
                 rules.SellRules[j].desiredAction.current = rules.SellRules[j].tradeHigh - rules.SellRules[j].desiredAction.amount
               }
             }
-            buyArray.push(this.operators[rules.SellRules[j].desiredAction.type](rules.SellRules[j], i, orderLocations[orderLocations.length - 1].price))
+            buyArray.push(this.operators[rules.SellRules[j].desiredAction.type](rules.SellRules[j], m, orderLocations[orderLocations.length - 1].price))
           }
           if (rules.SellRules[rules.SellRules.length - 1].andOr == 'Or') {
             andOr = 'Or'
           }
-          if (i == this.stockDataForSelectedDay.length - 1) {
-            orderLocations.push({ buySell: 'Sell', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString() })
+          if (m == this.stockDataForSelectedDay.length - 1) {
+            orderLocations.push({ buySell: 'Sell', price: this.stockDataForSelectedDay[m].stockPrice, date: this.stockDataForSelectedDay[m].time, dateString: new Date(this.stockDataForSelectedDay[m].time).toLocaleTimeString() })
             profit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
             buySell = 'Buy'
           }
           else {
             if (andOr == 'Or') {
               if (buyArray.includes(true)) {
-                orderLocations.push({ buySell: 'Sell', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString() })
+                orderLocations.push({ buySell: 'Sell', price: this.stockDataForSelectedDay[m].stockPrice, date: this.stockDataForSelectedDay[m].time, dateString: new Date(this.stockDataForSelectedDay[m].time).toLocaleTimeString() })
                 profit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
                 if (profit < 0) {
                   numberOfConsecutiveLosses++
-                  timeOutPeriod = (rules.TimeOutAfterStopLossSell * 60000) + this.stockDataForSelectedDay[i].time
+                  timeOutPeriod = (rules.TimeOutAfterStopLossSell * 60000) + this.stockDataForSelectedDay[m].time
                 }
                 buySell = 'Buy'
               }
             }
             else {
               if (!buyArray.includes(false)) {
-                orderLocations.push({ buySell: 'Sell', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString() })
+                orderLocations.push({ buySell: 'Sell', price: this.stockDataForSelectedDay[m].stockPrice, date: this.stockDataForSelectedDay[m].time, dateString: new Date(this.stockDataForSelectedDay[m].time).toLocaleTimeString() })
                 profit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
                 if (profit < 0) {
                   numberOfConsecutiveLosses++
-                  timeOutPeriod = (rules.TimeOutAfterStopLossSell * 60000) + this.stockDataForSelectedDay[i].time
+                  timeOutPeriod = (rules.TimeOutAfterStopLossSell * 60000) + this.stockDataForSelectedDay[m].time
                 }
                 buySell = 'Buy'
               }
