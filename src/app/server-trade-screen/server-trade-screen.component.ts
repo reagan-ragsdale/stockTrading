@@ -532,9 +532,12 @@ export class ServerTradeScreenComponent implements OnInit {
             }
           }
         }
-        else if ((listOfBuyLines[rules.BuyRules[i].primaryObject.lineId] == undefined && rules.BuyRules[i].primaryObject.length == 1) || (listOfBuyLines[rules.BuyRules[i].primaryObject.lineId] == undefined && rules.BuyRules[i].primaryObject.length > 1)) {
+        else if ((listOfBuyLines[rules.BuyRules[i].primaryObject.lineId] == undefined && rules.BuyRules[i].primaryObject.length == 1)) {
           listOfBuyLines[rules.BuyRules[i].primaryObject.lineId] = []
-          listOfBuyLines[rules.BuyRules[i].primaryObject.lineId].push({ length: rules.BuyRules[i].primaryObject.length, data: rules.BuyRules[i].primaryObject.data })
+          if (rules.BuyRules[i].primaryObject.type == 'Cumulative SMA') {
+            listOfBuyLines[rules.BuyRules[i].primaryObject.lineId].push({ length: rules.BuyRules[i].primaryObject.length, data: this.calculateCumulativeSMA() })
+          }
+          //listOfBuyLines[rules.BuyRules[i].primaryObject.lineId].push({ length: rules.BuyRules[i].primaryObject.length, data: rules.BuyRules[i].primaryObject.data })
         }
       }
       for (let i = 0; i < rules.BuyRules.length; i++) {
@@ -558,9 +561,11 @@ export class ServerTradeScreenComponent implements OnInit {
             }
           }
         }
-        else if ((listOfBuyLines[rules.BuyRules[i].referencedObject.lineId] == undefined && rules.BuyRules[i].referencedObject.length == 1) || (listOfBuyLines[rules.BuyRules[i].referencedObject.lineId] == undefined && rules.BuyRules[i].referencedObject.length > 1)) {
+        else if ((listOfBuyLines[rules.BuyRules[i].referencedObject.lineId] == undefined && rules.BuyRules[i].referencedObject.length == 1)) {
           listOfBuyLines[rules.BuyRules[i].referencedObject.lineId] = []
-          listOfBuyLines[rules.BuyRules[i].referencedObject.lineId].push({ length: rules.BuyRules[i].referencedObject.length, data: rules.BuyRules[i].referencedObject.data })
+          if (rules.BuyRules[i].referencedObject.type == 'Cumulative SMA') {
+            listOfBuyLines[rules.BuyRules[i].referencedObject.lineId].push({ length: rules.BuyRules[i].referencedObject.length, data: this.calculateCumulativeSMA() })
+          }
         }
       }
 
@@ -584,9 +589,11 @@ export class ServerTradeScreenComponent implements OnInit {
             }
           }
         }
-        else if ((listOfBuyLines[rules.SellRules[i].primaryObject.lineId] == undefined && rules.SellRules[i].primaryObject.length == 1) || (listOfBuyLines[rules.SellRules[i].primaryObject.lineId] == undefined && rules.SellRules[i].primaryObject.length > 1)) {
+        else if ((listOfBuyLines[rules.SellRules[i].primaryObject.lineId] == undefined && rules.SellRules[i].primaryObject.length == 1)) {
           listOfBuyLines[rules.SellRules[i].primaryObject.lineId] = []
-          listOfBuyLines[rules.SellRules[i].primaryObject.lineId].push({ length: rules.SellRules[i].primaryObject.length, data: rules.SellRules[i].primaryObject.data })
+          if (rules.SellRules[i].primaryObject.type == 'Cumulative SMA') {
+            listOfBuyLines[rules.SellRules[i].primaryObject.lineId].push({ length: rules.SellRules[i].primaryObject.length, data: this.calculateCumulativeSMA() })
+          }
         }
       }
       for (let i = 0; i < rules.SellRules.length; i++) {
@@ -609,9 +616,11 @@ export class ServerTradeScreenComponent implements OnInit {
             }
           }
         }
-        else if ((listOfBuyLines[rules.SellRules[i].referencedObject.lineId] == undefined && rules.SellRules[i].referencedObject.length == 1) || (listOfBuyLines[rules.SellRules[i].referencedObject.lineId] == undefined && rules.SellRules[i].referencedObject.length > 1)) {
+        else if ((listOfBuyLines[rules.SellRules[i].referencedObject.lineId] == undefined && rules.SellRules[i].referencedObject.length == 1)) {
           listOfBuyLines[rules.SellRules[i].referencedObject.lineId] = []
-          listOfBuyLines[rules.SellRules[i].referencedObject.lineId].push({ length: rules.SellRules[i].referencedObject.length, data: rules.SellRules[i].referencedObject.data })
+          if (rules.SellRules[i].referencedObject.type == 'Cumulative SMA') {
+            listOfBuyLines[rules.SellRules[i].referencedObject.lineId].push({ length: rules.SellRules[i].referencedObject.length, data: this.calculateCumulativeSMA() })
+          }
         }
       }
 
