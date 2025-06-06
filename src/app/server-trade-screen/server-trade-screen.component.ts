@@ -667,7 +667,7 @@ export class ServerTradeScreenComponent implements OnInit {
 
     return combinations;
   }
-  generateNonLineCombinations(data: any, keys: number[] = []): any[][] {
+  generateNonLineCombinations(data: any, keys: any[] = []): any[][] {
     const dataKeys = Object.keys(data).map(k => k);
 
     if (keys.length === dataKeys.length) {
