@@ -526,6 +526,9 @@ export class ServerTradeScreenComponent implements OnInit {
               else if (rules.BuyRules[i].primaryObject.type == 'SMA') {
                 listOfBuyLines[rules.BuyRules[i].primaryObject.lineId].push({ length: j, data: this.calculateSMA(j) })
               }
+              else if (rules.BuyRules[i].primaryObject.type == 'Cumulative SMA') {
+                listOfBuyLines[rules.BuyRules[i].primaryObject.lineId].push({ length: j, data: this.calculateCumulativeSMA() })
+              }
             }
           }
         }
@@ -548,6 +551,10 @@ export class ServerTradeScreenComponent implements OnInit {
               else if (rules.BuyRules[i].referencedObject.type == 'SMA') {
                 listOfBuyLines[rules.BuyRules[i].referencedObject.lineId].push({ length: j, data: this.calculateSMA(j) })
               }
+              else if (rules.BuyRules[i].referencedObject.type == 'Cumulative SMA') {
+                listOfBuyLines[rules.BuyRules[i].referencedObject.lineId].push({ length: j, data: this.calculateCumulativeSMA() })
+              }
+
             }
           }
         }
@@ -571,6 +578,9 @@ export class ServerTradeScreenComponent implements OnInit {
               else if (rules.SellRules[i].primaryObject.type == 'SMA') {
                 listOfBuyLines[rules.SellRules[i].primaryObject.lineId].push({ length: j, data: this.calculateSMA(j) })
               }
+              else if (rules.SellRules[i].primaryObject.type == 'Cumulative SMA') {
+                listOfBuyLines[rules.SellRules[i].primaryObject.lineId].push({ length: j, data: this.calculateCumulativeSMA() })
+              }
             }
           }
         }
@@ -592,6 +602,9 @@ export class ServerTradeScreenComponent implements OnInit {
               }
               else if (rules.SellRules[i].referencedObject.type == 'SMA') {
                 listOfBuyLines[rules.SellRules[i].referencedObject.lineId].push({ length: j, data: this.calculateSMA(j) })
+              }
+              else if (rules.SellRules[i].referencedObject.type == 'Cumulative SMA') {
+                listOfBuyLines[rules.SellRules[i].referencedObject.lineId].push({ length: j, data: this.calculateCumulativeSMA() })
               }
             }
           }
