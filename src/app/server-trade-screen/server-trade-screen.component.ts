@@ -878,7 +878,7 @@ export class ServerTradeScreenComponent implements OnInit {
             }
           }
           totalCount++
-          returnData.push({ orderLocations: orderLocations, profit: profit })
+          returnData.push({ orderLocations: orderLocations, profit: profit, combination: structuredClone(rules) })
         }
 
       }
