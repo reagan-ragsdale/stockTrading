@@ -634,6 +634,15 @@ export class ServerTradeScreenComponent implements OnInit {
     }
 
     console.log(finalResult)
+    let summedResults = []
+    for (let i = 0; i < finalResult[0].length; i++) {
+      let profit = 0
+      for (let j = 0; j < finalResult.length; j++) {
+        profit += finalResult[j][i].profit
+      }
+      summedResults.push(profit)
+    }
+    console.log(summedResults)
     this.isLoading = false;
 
   }
