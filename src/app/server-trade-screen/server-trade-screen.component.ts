@@ -823,7 +823,12 @@ export class ServerTradeScreenComponent implements OnInit {
           let profit = 0
           let numberOfConsecutiveLosses = 0
           let timeOutPeriod = 0
-          console.log(structuredClone(rules))
+          let tempRule = structuredClone(rules)
+          console.log({
+            line: tempRule.BuyRules[0].primaryObject.length,
+            trendLength: tempRule.BuyRules[1].desiredAction.length,
+            sellAmnt: tempRule.SellRules[0].desiredAction.amount
+          })
           for (let m = counter; m < this.stockDataForSelectedDay.length; m++) {
             if (buySell == 'Buy') {
               let buyArray = []
@@ -1838,7 +1843,7 @@ export class ServerTradeScreenComponent implements OnInit {
   async getStockBasicHistoryData() {
     this.selectedStockBasicHistoryData = await dbStockBasicHistoryRepo.find({ where: { stockName: this.selectedStockName }, orderBy: { date: 'asc' } })
     this.rsiDateRange = this.selectedStockBasicHistoryData.slice(this.interDayLongSma - this.rsiPeriodNum - 2)
-    console.log(this.rsiDateRange)
+
     let rsiUps = []
     let rsiDowns = []
     for (let i = 1; i <= this.rsiPeriodNum; i++) {
@@ -1866,7 +1871,6 @@ export class ServerTradeScreenComponent implements OnInit {
       const rsi = 100 - (100 / (1 + rs));
       this.rsiData.push({ rsiNum: rsi, date: new Date(this.rsiDateRange[i].date).toLocaleDateString() });
     }
-    console.log(this.rsiData)
   }
 
   addLineDialogRef: any
@@ -1879,7 +1883,6 @@ export class ServerTradeScreenComponent implements OnInit {
     });
     this.addLineDialogRef.afterClosed().subscribe(async (result: any) => {
       if (result.length > 0) {
-        console.log(result)
         this.listOfAddedLines = result
         this.addNewLinesToGraph(result)
       }
@@ -2069,8 +2072,7 @@ export class ServerTradeScreenComponent implements OnInit {
       for (let i = 0; i < rules.BuyRules.length; i++) {
         if (rules.BuyRules[i].primaryObject.type != "") {
           let filteredLine = this.listOfAddedLines.filter(e => e.lineType == rules.BuyRules[i].primaryObject.type && e.lineLength == rules.BuyRules[i].primaryObject.length)[0]
-          console.log(filteredLine)
-          console.log(rules.BuyRules[i].primaryObject.length)
+
           rules.BuyRules[i].primaryObject.data = filteredLine.data
         }
         if (rules.BuyRules[i].referencedObject.type != "") {
@@ -2343,7 +2345,6 @@ export class ServerTradeScreenComponent implements OnInit {
       exitAnimationDuration: 0
     });
     this.addRuleDialogRef.afterClosed().subscribe(async (result: any) => {
-      console.log(result)
       //this.addRule(result)
       /* 
       else if (this.stockChart.data.datasets.length > 1) {
@@ -2363,8 +2364,6 @@ export class ServerTradeScreenComponent implements OnInit {
       exitAnimationDuration: 0
     });
     this.algoLoopDialogRef.afterClosed().subscribe(async (result: any) => {
-      console.log(result)
-      console.log(this.listOfAddedRules)
       this.runAlgoAllDaysWithLoop()
       //this.addRule(result)
       /* 
@@ -2518,8 +2517,6 @@ export class ServerTradeScreenComponent implements OnInit {
     //trend = ((length * sumOfTimeValue) - (sumOfTime * sumOfValue)) / ((length * sumOfTimeSquared) - (sumOfTime * sumOfTime))
     trend = (data[index].value! - data[index - length].value!) / length
     if (this.count == 1) {
-      console.log(index - length)
-      console.log(trend)
       this.count++
     }
     return trend
@@ -2534,7 +2531,6 @@ export class ServerTradeScreenComponent implements OnInit {
     this.distinctStocks = this.allHistory.map(e => e.stockName).filter((v, i, a) => a.indexOf(v) === i)
     this.selectedStockName = this.distinctStocks[0]
     this.selectedInterDayStockData = this.allHistory.filter(e => e.stockName == this.selectedStockName)
-    console.log(this.selectedInterDayStockData)
     this.interDayLongSma = 200
     this.interDayMediumSma = 40
     this.interDayShortSma = 5
@@ -2547,7 +2543,6 @@ export class ServerTradeScreenComponent implements OnInit {
     let today = new Date()
     today.setHours(5, 0, 0, 0)
     let listOfOrders = await dbOrdersRepo.find({ where: { orderTime: { $gt: today.getTime() } }, orderBy: { orderTime: 'asc' } })
-    console.log(listOfOrders)
     this.isLoading = false;
 
   }
