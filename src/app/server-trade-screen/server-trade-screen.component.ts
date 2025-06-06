@@ -682,7 +682,7 @@ export class ServerTradeScreenComponent implements OnInit {
     // For each possible index in the current key's array
     for (let i = 0; i < data[currentKey].length; i++) {
       const newKeys = [...keys, { name: currentKey, value: data[currentKey][i].value }];
-      combinations.push(...this.generateCombinations(data, newKeys));
+      combinations.push(...this.generateNonLineCombinations(data, newKeys));
     }
 
     return combinations;
