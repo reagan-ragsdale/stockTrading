@@ -667,7 +667,7 @@ export class ServerTradeScreenComponent implements OnInit {
 
     return combinations;
   }
-  generateNonLineCombinations(data: any, keys: number[] = []): any[][] {
+  generateNonLineCombinations(data: any, keys: any[] = []): any[][] {
     const dataKeys = Object.keys(data).map(k => k);
 
     if (keys.length === dataKeys.length) {
@@ -681,7 +681,7 @@ export class ServerTradeScreenComponent implements OnInit {
 
     // For each possible index in the current key's array
     for (let i = 0; i < data[currentKey].length; i++) {
-      const newKeys = [...keys, i];
+      const newKeys = [...keys, { name: data[currentKey], value: data[currentKey][i].value }];
       combinations.push(...this.generateCombinations(data, newKeys));
     }
 
