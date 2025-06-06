@@ -642,6 +642,7 @@ export class ServerTradeScreenComponent implements OnInit {
       }
       summedResults.push({ profit: profit, buyCombo: buyCombo, sellCombo: sellCombo })
     }
+    summedResults.sort((a, b) => b.profit - a.profit)
     console.log(summedResults)
     this.isLoading = false;
 
