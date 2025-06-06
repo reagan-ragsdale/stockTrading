@@ -604,6 +604,8 @@ export class ServerTradeScreenComponent implements OnInit {
     const allCombinations = this.generateCombinations(listOfBuyLines);
     console.log(allCombinations)
 
+    this.addRule2(listOfBuyLines, allCombinations)
+
 
     this.isLoading = false;
 
@@ -630,7 +632,94 @@ export class ServerTradeScreenComponent implements OnInit {
     return combinations;
   }
 
-  loopFunct() {
+  addRule2(buyLines: { [key: number]: { length: number, data: LineData[] }[] }, combinations: number[][]) {
+
+    for (let i = 0; i < combinations.length; i++) {
+      let counter = 0
+      for (let j = 0; j < combinations[i].length; j++) {
+        if (buyLines[j][combinations[i][j]].length > counter) {
+          counter = buyLines[j][combinations[i][j]].length
+        }
+      }
+      counter = counter - 1
+      console.log(counter)
+
+    }
+
+    /* let buySell = 'Buy'
+    let orderLocations: orderLocation[] = []
+    let profit = 0
+    let numberOfConsecutiveLosses = 0
+    let timeOutPeriod = 0
+
+    for (let i = counter; i < this.stockDataForSelectedDay.length; i++) {
+      if (buySell == 'Buy') {
+        let buyArray = []
+        for (let j = 0; j < this.listOfAddedRules.BuyRules.length; j++) {
+          buyArray.push(this.operators[this.listOfAddedRules.BuyRules[j].desiredAction.type](this.listOfAddedRules.BuyRules[j], i))
+        }
+        if (!buyArray.includes(false) && this.stockDataForSelectedDay[i].time >= timeOutPeriod && numberOfConsecutiveLosses < this.listOfAddedRules.NumberOfLossesInARowToStop) {
+          orderLocations.push({ buySell: 'Buy', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString() })
+          buySell = 'Sell'
+          for (let j = 0; j < this.listOfAddedRules.SellRules.length; j++) {
+            if (this.listOfAddedRules.SellRules[j].desiredAction.type == 'Trailing Stop') {
+              this.listOfAddedRules.SellRules[j].desiredAction.current = 0
+              this.listOfAddedRules.SellRules[j].tradeHigh = this.stockDataForSelectedDay[i].stockPrice
+            }
+          }
+        }
+      }
+      else {
+        let buyArray = []
+
+        let andOr = 'And'
+        for (let j = 0; j < this.listOfAddedRules.SellRules.length; j++) {
+          if (this.listOfAddedRules.SellRules[j].desiredAction.type == 'Trailing Stop' && (this.stockDataForSelectedDay[i].stockPrice > this.listOfAddedRules.SellRules[j].tradeHigh)) {
+            this.listOfAddedRules.SellRules[j].tradeHigh = this.stockDataForSelectedDay[i].stockPrice
+            if (this.listOfAddedRules.SellRules[j].tradeHigh >= (orderLocations[orderLocations.length - 1].price + this.listOfAddedRules.SellRules[j].desiredAction.amount)) {
+              this.listOfAddedRules.SellRules[j].desiredAction.current = this.listOfAddedRules.SellRules[j].tradeHigh - this.listOfAddedRules.SellRules[j].desiredAction.amount
+            }
+          }
+          buyArray.push(this.operators[this.listOfAddedRules.SellRules[j].desiredAction.type](this.listOfAddedRules.SellRules[j], i, orderLocations[orderLocations.length - 1].price))
+        }
+        if (this.listOfAddedRules.SellRules[this.listOfAddedRules.SellRules.length - 1].andOr == 'Or') {
+          andOr = 'Or'
+        }
+        if (i == this.stockDataForSelectedDay.length - 1) {
+          orderLocations.push({ buySell: 'Sell', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString() })
+          profit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
+          buySell = 'Buy'
+        }
+        else {
+          if (andOr == 'Or') {
+            if (buyArray.includes(true)) {
+              orderLocations.push({ buySell: 'Sell', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString() })
+              profit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
+              if (profit < 0) {
+                numberOfConsecutiveLosses++
+                timeOutPeriod = (this.listOfAddedRules.TimeOutAfterStopLossSell * 60000) + this.stockDataForSelectedDay[i].time
+              }
+              buySell = 'Buy'
+            }
+          }
+          else {
+            if (!buyArray.includes(false)) {
+              orderLocations.push({ buySell: 'Sell', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString() })
+              profit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
+              if (profit < 0) {
+                numberOfConsecutiveLosses++
+                timeOutPeriod = (this.listOfAddedRules.TimeOutAfterStopLossSell * 60000) + this.stockDataForSelectedDay[i].time
+              }
+              buySell = 'Buy'
+            }
+          }
+        }
+
+
+      }
+    }
+    return { orderLocations: orderLocations, profit: profit }
+ */
 
   }
   async onRunEntireSimulationIntraDayAllDays() {
