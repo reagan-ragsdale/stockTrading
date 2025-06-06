@@ -509,127 +509,127 @@ export class ServerTradeScreenComponent implements OnInit {
     let rules = structuredClone(this.listOfAddedRules)
 
     let finalResult = []
-    //for (let k = 0; k < this.distinctDates.length; k++) {
-    // await this.updateStockChartData(this.distinctDates[k])
-    let listOfBuyLines: { [key: number]: { length: number, data: LineData[] }[] } = {}
-    for (let i = 0; i < rules.BuyRules.length; i++) {
-      if (rules.BuyRules[i].primaryObject.length > 1 && rules.BuyRules[i].primaryObject.lengthLoopChecked) {
-        if (listOfBuyLines[rules.BuyRules[i].primaryObject.lineId] == undefined) {
+    for (let k = 0; k < this.distinctDates.length; k++) {
+      await this.updateStockChartData(this.distinctDates[k])
+      let listOfBuyLines: { [key: number]: { length: number, data: LineData[] }[] } = {}
+      for (let i = 0; i < rules.BuyRules.length; i++) {
+        if (rules.BuyRules[i].primaryObject.length > 1 && rules.BuyRules[i].primaryObject.lengthLoopChecked) {
+          if (listOfBuyLines[rules.BuyRules[i].primaryObject.lineId] == undefined) {
+            listOfBuyLines[rules.BuyRules[i].primaryObject.lineId] = []
+            let from = rules.BuyRules[i].primaryObject.lengthLoopCheckFromAmnt
+            let to = rules.BuyRules[i].primaryObject.lengthLoopCheckToAmnt
+            let step = rules.BuyRules[i].primaryObject.lengthLoopCheckStepAmnt
+            for (let j = from; j <= to; j += step) {
+              if (rules.BuyRules[i].primaryObject.type == 'EMA') {
+                listOfBuyLines[rules.BuyRules[i].primaryObject.lineId].push({ length: j, data: this.calculateEMA(j) })
+              }
+              else if (rules.BuyRules[i].primaryObject.type == 'SMA') {
+                listOfBuyLines[rules.BuyRules[i].primaryObject.lineId].push({ length: j, data: this.calculateSMA(j) })
+              }
+              else if (rules.BuyRules[i].primaryObject.type == 'Cumulative SMA') {
+                listOfBuyLines[rules.BuyRules[i].primaryObject.lineId].push({ length: j, data: this.calculateCumulativeSMA() })
+              }
+            }
+          }
+        }
+        else if ((listOfBuyLines[rules.BuyRules[i].primaryObject.lineId] == undefined && rules.BuyRules[i].primaryObject.length == 1)) {
           listOfBuyLines[rules.BuyRules[i].primaryObject.lineId] = []
-          let from = rules.BuyRules[i].primaryObject.lengthLoopCheckFromAmnt
-          let to = rules.BuyRules[i].primaryObject.lengthLoopCheckToAmnt
-          let step = rules.BuyRules[i].primaryObject.lengthLoopCheckStepAmnt
-          for (let j = from; j <= to; j += step) {
-            if (rules.BuyRules[i].primaryObject.type == 'EMA') {
-              listOfBuyLines[rules.BuyRules[i].primaryObject.lineId].push({ length: j, data: this.calculateEMA(j) })
-            }
-            else if (rules.BuyRules[i].primaryObject.type == 'SMA') {
-              listOfBuyLines[rules.BuyRules[i].primaryObject.lineId].push({ length: j, data: this.calculateSMA(j) })
-            }
-            else if (rules.BuyRules[i].primaryObject.type == 'Cumulative SMA') {
-              listOfBuyLines[rules.BuyRules[i].primaryObject.lineId].push({ length: j, data: this.calculateCumulativeSMA() })
+          if (rules.BuyRules[i].primaryObject.type == 'Cumulative SMA') {
+            listOfBuyLines[rules.BuyRules[i].primaryObject.lineId].push({ length: rules.BuyRules[i].primaryObject.length, data: this.calculateCumulativeSMA() })
+          }
+          //listOfBuyLines[rules.BuyRules[i].primaryObject.lineId].push({ length: rules.BuyRules[i].primaryObject.length, data: rules.BuyRules[i].primaryObject.data })
+        }
+      }
+      for (let i = 0; i < rules.BuyRules.length; i++) {
+        if (rules.BuyRules[i].referencedObject.length > 1 && rules.BuyRules[i].referencedObject.lengthLoopChecked) {
+          if (listOfBuyLines[rules.BuyRules[i].referencedObject.lineId] == undefined) {
+            listOfBuyLines[rules.BuyRules[i].referencedObject.lineId] = []
+            let from = rules.BuyRules[i].referencedObject.lengthLoopCheckFromAmnt
+            let to = rules.BuyRules[i].referencedObject.lengthLoopCheckToAmnt
+            let step = rules.BuyRules[i].referencedObject.lengthLoopCheckStepAmnt
+            for (let j = from; j <= to; j += step) {
+              if (rules.BuyRules[i].referencedObject.type == 'EMA') {
+                listOfBuyLines[rules.BuyRules[i].referencedObject.lineId].push({ length: j, data: this.calculateEMA(j) })
+              }
+              else if (rules.BuyRules[i].referencedObject.type == 'SMA') {
+                listOfBuyLines[rules.BuyRules[i].referencedObject.lineId].push({ length: j, data: this.calculateSMA(j) })
+              }
+              else if (rules.BuyRules[i].referencedObject.type == 'Cumulative SMA') {
+                listOfBuyLines[rules.BuyRules[i].referencedObject.lineId].push({ length: j, data: this.calculateCumulativeSMA() })
+              }
+
             }
           }
         }
-      }
-      else if ((listOfBuyLines[rules.BuyRules[i].primaryObject.lineId] == undefined && rules.BuyRules[i].primaryObject.length == 1)) {
-        listOfBuyLines[rules.BuyRules[i].primaryObject.lineId] = []
-        if (rules.BuyRules[i].primaryObject.type == 'Cumulative SMA') {
-          listOfBuyLines[rules.BuyRules[i].primaryObject.lineId].push({ length: rules.BuyRules[i].primaryObject.length, data: this.calculateCumulativeSMA() })
-        }
-        //listOfBuyLines[rules.BuyRules[i].primaryObject.lineId].push({ length: rules.BuyRules[i].primaryObject.length, data: rules.BuyRules[i].primaryObject.data })
-      }
-    }
-    for (let i = 0; i < rules.BuyRules.length; i++) {
-      if (rules.BuyRules[i].referencedObject.length > 1 && rules.BuyRules[i].referencedObject.lengthLoopChecked) {
-        if (listOfBuyLines[rules.BuyRules[i].referencedObject.lineId] == undefined) {
+        else if ((listOfBuyLines[rules.BuyRules[i].referencedObject.lineId] == undefined && rules.BuyRules[i].referencedObject.length == 1)) {
           listOfBuyLines[rules.BuyRules[i].referencedObject.lineId] = []
-          let from = rules.BuyRules[i].referencedObject.lengthLoopCheckFromAmnt
-          let to = rules.BuyRules[i].referencedObject.lengthLoopCheckToAmnt
-          let step = rules.BuyRules[i].referencedObject.lengthLoopCheckStepAmnt
-          for (let j = from; j <= to; j += step) {
-            if (rules.BuyRules[i].referencedObject.type == 'EMA') {
-              listOfBuyLines[rules.BuyRules[i].referencedObject.lineId].push({ length: j, data: this.calculateEMA(j) })
-            }
-            else if (rules.BuyRules[i].referencedObject.type == 'SMA') {
-              listOfBuyLines[rules.BuyRules[i].referencedObject.lineId].push({ length: j, data: this.calculateSMA(j) })
-            }
-            else if (rules.BuyRules[i].referencedObject.type == 'Cumulative SMA') {
-              listOfBuyLines[rules.BuyRules[i].referencedObject.lineId].push({ length: j, data: this.calculateCumulativeSMA() })
-            }
-
+          if (rules.BuyRules[i].referencedObject.type == 'Cumulative SMA') {
+            listOfBuyLines[rules.BuyRules[i].referencedObject.lineId].push({ length: rules.BuyRules[i].referencedObject.length, data: this.calculateCumulativeSMA() })
           }
         }
       }
-      else if ((listOfBuyLines[rules.BuyRules[i].referencedObject.lineId] == undefined && rules.BuyRules[i].referencedObject.length == 1)) {
-        listOfBuyLines[rules.BuyRules[i].referencedObject.lineId] = []
-        if (rules.BuyRules[i].referencedObject.type == 'Cumulative SMA') {
-          listOfBuyLines[rules.BuyRules[i].referencedObject.lineId].push({ length: rules.BuyRules[i].referencedObject.length, data: this.calculateCumulativeSMA() })
-        }
-      }
-    }
 
-    for (let i = 0; i < rules.SellRules.length; i++) {
-      if (rules.SellRules[i].primaryObject.length > 1 && rules.SellRules[i].primaryObject.lengthLoopChecked) {
-        if (listOfBuyLines[rules.SellRules[i].primaryObject.lineId] == undefined) {
+      for (let i = 0; i < rules.SellRules.length; i++) {
+        if (rules.SellRules[i].primaryObject.length > 1 && rules.SellRules[i].primaryObject.lengthLoopChecked) {
+          if (listOfBuyLines[rules.SellRules[i].primaryObject.lineId] == undefined) {
+            listOfBuyLines[rules.SellRules[i].primaryObject.lineId] = []
+            let from = rules.SellRules[i].primaryObject.lengthLoopCheckFromAmnt
+            let to = rules.SellRules[i].primaryObject.lengthLoopCheckToAmnt
+            let step = rules.SellRules[i].primaryObject.lengthLoopCheckStepAmnt
+            for (let j = from; j <= to; j += step) {
+              if (rules.SellRules[i].primaryObject.type == 'EMA') {
+                listOfBuyLines[rules.SellRules[i].primaryObject.lineId].push({ length: j, data: this.calculateEMA(j) })
+              }
+              else if (rules.SellRules[i].primaryObject.type == 'SMA') {
+                listOfBuyLines[rules.SellRules[i].primaryObject.lineId].push({ length: j, data: this.calculateSMA(j) })
+              }
+              else if (rules.SellRules[i].primaryObject.type == 'Cumulative SMA') {
+                listOfBuyLines[rules.SellRules[i].primaryObject.lineId].push({ length: j, data: this.calculateCumulativeSMA() })
+              }
+            }
+          }
+        }
+        else if ((listOfBuyLines[rules.SellRules[i].primaryObject.lineId] == undefined && rules.SellRules[i].primaryObject.length == 1)) {
           listOfBuyLines[rules.SellRules[i].primaryObject.lineId] = []
-          let from = rules.SellRules[i].primaryObject.lengthLoopCheckFromAmnt
-          let to = rules.SellRules[i].primaryObject.lengthLoopCheckToAmnt
-          let step = rules.SellRules[i].primaryObject.lengthLoopCheckStepAmnt
-          for (let j = from; j <= to; j += step) {
-            if (rules.SellRules[i].primaryObject.type == 'EMA') {
-              listOfBuyLines[rules.SellRules[i].primaryObject.lineId].push({ length: j, data: this.calculateEMA(j) })
-            }
-            else if (rules.SellRules[i].primaryObject.type == 'SMA') {
-              listOfBuyLines[rules.SellRules[i].primaryObject.lineId].push({ length: j, data: this.calculateSMA(j) })
-            }
-            else if (rules.SellRules[i].primaryObject.type == 'Cumulative SMA') {
-              listOfBuyLines[rules.SellRules[i].primaryObject.lineId].push({ length: j, data: this.calculateCumulativeSMA() })
-            }
+          if (rules.SellRules[i].primaryObject.type == 'Cumulative SMA') {
+            listOfBuyLines[rules.SellRules[i].primaryObject.lineId].push({ length: rules.SellRules[i].primaryObject.length, data: this.calculateCumulativeSMA() })
           }
         }
       }
-      else if ((listOfBuyLines[rules.SellRules[i].primaryObject.lineId] == undefined && rules.SellRules[i].primaryObject.length == 1)) {
-        listOfBuyLines[rules.SellRules[i].primaryObject.lineId] = []
-        if (rules.SellRules[i].primaryObject.type == 'Cumulative SMA') {
-          listOfBuyLines[rules.SellRules[i].primaryObject.lineId].push({ length: rules.SellRules[i].primaryObject.length, data: this.calculateCumulativeSMA() })
+      for (let i = 0; i < rules.SellRules.length; i++) {
+        if (rules.SellRules[i].referencedObject.length > 1 && rules.SellRules[i].referencedObject.lengthLoopChecked) {
+          if (listOfBuyLines[rules.SellRules[i].referencedObject.lineId] == undefined) {
+            listOfBuyLines[rules.SellRules[i].referencedObject.lineId] = []
+            let from = rules.SellRules[i].referencedObject.lengthLoopCheckFromAmnt
+            let to = rules.SellRules[i].referencedObject.lengthLoopCheckToAmnt
+            let step = rules.SellRules[i].referencedObject.lengthLoopCheckStepAmnt
+            for (let j = from; j <= to; j += step) {
+              if (rules.SellRules[i].referencedObject.type == 'EMA') {
+                listOfBuyLines[rules.SellRules[i].referencedObject.lineId].push({ length: j, data: this.calculateEMA(j) })
+              }
+              else if (rules.SellRules[i].referencedObject.type == 'SMA') {
+                listOfBuyLines[rules.SellRules[i].referencedObject.lineId].push({ length: j, data: this.calculateSMA(j) })
+              }
+              else if (rules.SellRules[i].referencedObject.type == 'Cumulative SMA') {
+                listOfBuyLines[rules.SellRules[i].referencedObject.lineId].push({ length: j, data: this.calculateCumulativeSMA() })
+              }
+            }
+          }
         }
-      }
-    }
-    for (let i = 0; i < rules.SellRules.length; i++) {
-      if (rules.SellRules[i].referencedObject.length > 1 && rules.SellRules[i].referencedObject.lengthLoopChecked) {
-        if (listOfBuyLines[rules.SellRules[i].referencedObject.lineId] == undefined) {
+        else if ((listOfBuyLines[rules.SellRules[i].referencedObject.lineId] == undefined && rules.SellRules[i].referencedObject.length == 1)) {
           listOfBuyLines[rules.SellRules[i].referencedObject.lineId] = []
-          let from = rules.SellRules[i].referencedObject.lengthLoopCheckFromAmnt
-          let to = rules.SellRules[i].referencedObject.lengthLoopCheckToAmnt
-          let step = rules.SellRules[i].referencedObject.lengthLoopCheckStepAmnt
-          for (let j = from; j <= to; j += step) {
-            if (rules.SellRules[i].referencedObject.type == 'EMA') {
-              listOfBuyLines[rules.SellRules[i].referencedObject.lineId].push({ length: j, data: this.calculateEMA(j) })
-            }
-            else if (rules.SellRules[i].referencedObject.type == 'SMA') {
-              listOfBuyLines[rules.SellRules[i].referencedObject.lineId].push({ length: j, data: this.calculateSMA(j) })
-            }
-            else if (rules.SellRules[i].referencedObject.type == 'Cumulative SMA') {
-              listOfBuyLines[rules.SellRules[i].referencedObject.lineId].push({ length: j, data: this.calculateCumulativeSMA() })
-            }
+          if (rules.SellRules[i].referencedObject.type == 'Cumulative SMA') {
+            listOfBuyLines[rules.SellRules[i].referencedObject.lineId].push({ length: rules.SellRules[i].referencedObject.length, data: this.calculateCumulativeSMA() })
           }
         }
       }
-      else if ((listOfBuyLines[rules.SellRules[i].referencedObject.lineId] == undefined && rules.SellRules[i].referencedObject.length == 1)) {
-        listOfBuyLines[rules.SellRules[i].referencedObject.lineId] = []
-        if (rules.SellRules[i].referencedObject.type == 'Cumulative SMA') {
-          listOfBuyLines[rules.SellRules[i].referencedObject.lineId].push({ length: rules.SellRules[i].referencedObject.length, data: this.calculateCumulativeSMA() })
-        }
-      }
+
+
+      const allCombinations = this.generateCombinations(listOfBuyLines);
+
+      let result = this.addRule2(listOfBuyLines, allCombinations)
+      finalResult.push(result)
     }
-
-
-    const allCombinations = this.generateCombinations(listOfBuyLines);
-
-    let result = this.addRule2(listOfBuyLines, allCombinations)
-    finalResult.push(result)
-    //}
 
     console.log(finalResult)
     let summedResults = []
@@ -789,12 +789,9 @@ export class ServerTradeScreenComponent implements OnInit {
       }
       let buyCombinations = this.generateNonLineCombinations(nonBuyLineCombinations)
       let sellCombinations = this.generateNonLineCombinations(nonSellLineCombinations)
-      console.log(buyCombinations)
       for (let k = 0; k < buyCombinations.length; k++) {
         for (let n = 0; n < rules.BuyRules.length; n++) {
           for (let p = 0; p < buyCombinations[k].length; p++) {
-            console.log(buyCombinations[k][p].name)
-            console.log(buyCombinations[k][p].value)
             if (buyCombinations[k][p].name == n + 'A') {
               rules.BuyRules[n].buyTime = buyCombinations[k][p].value
             }
@@ -802,7 +799,6 @@ export class ServerTradeScreenComponent implements OnInit {
               rules.BuyRules[n].desiredAction.amount = buyCombinations[k][p].value
             }
             if (buyCombinations[k][p].name == n + 'C') {
-              console.log('here' + n)
               rules.BuyRules[n].desiredAction.length = buyCombinations[k][p].value
             }
           }
@@ -823,8 +819,6 @@ export class ServerTradeScreenComponent implements OnInit {
           let profit = 0
           let numberOfConsecutiveLosses = 0
           let timeOutPeriod = 0
-          let tempRule = structuredClone(rules)
-          console.log(tempRule)
           for (let m = counter; m < this.stockDataForSelectedDay.length; m++) {
             if (buySell == 'Buy') {
               let buyArray = []
