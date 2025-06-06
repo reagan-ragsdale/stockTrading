@@ -236,12 +236,13 @@
                     </div>
                 </div>
 
-                <mat-form-field
-                    *ngIf="((sellRule.desiredAction.type == 'Rises above:' || sellRule.desiredAction.type == 'Trend Crosses Below:') && sellRule.conditionType == 'Line Action') || sellRule.conditionType == 'Price Action'"
-                    class="example-full-width" style="width:fit-content;">
-                    <mat-label>By Amount:</mat-label>
-                    <input [disabled]="true" matInput type="number" [(ngModel)]="sellRule.desiredAction.amount"
-                        placeholder="0.00" [min]=".001" step=".001">
+                <div
+                    *ngIf="((sellRule.desiredAction.type == 'Rises above:' || sellRule.desiredAction.type == 'Trend Crosses Below:') && sellRule.conditionType == 'Line Action') || sellRule.conditionType == 'Price Action'">
+                    <mat-form-field class="example-full-width" style="width:fit-content;">
+                        <mat-label>By Amount:</mat-label>
+                        <input [disabled]="true" matInput type="number" [(ngModel)]="sellRule.desiredAction.amount"
+                            placeholder="0.00" [min]=".001" step=".001">
+                    </mat-form-field>
                     <mat-checkbox [(ngModel)]="sellRule.desiredAction.amountLoopChecked">Add</mat-checkbox>
                     <div *ngIf="sellRule.desiredAction.amountLoopChecked">
                         <mat-form-field style="width:fit-content;">
@@ -257,7 +258,9 @@
                             <input matInput type="number" [(ngModel)]="sellRule.desiredAction.amountLoopCheckStepAmnt">
                         </mat-form-field>
                     </div>
-                </mat-form-field>
+
+                </div>
+
             </div>
         </div>
     </div>

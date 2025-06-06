@@ -721,7 +721,7 @@ export class ServerTradeScreenComponent implements OnInit {
           let from = rules.BuyRules[j].buyTimeCheckFromAmnt
           let to = rules.BuyRules[j].buyTimeCheckToAmnt
           let step = rules.BuyRules[j].buyTimeCheckStepAmnt
-          for (let k = from; k < to; k += step) {
+          for (let k = from; k <= to; k += step) {
             nonBuyLineCombinations[rules.BuyRules[j].buyTimeUId].push({ value: k })
           }
         }
@@ -730,7 +730,7 @@ export class ServerTradeScreenComponent implements OnInit {
           let from = rules.BuyRules[j].desiredAction.amountLoopCheckFromAmnt
           let to = rules.BuyRules[j].desiredAction.amountLoopCheckToAmnt
           let step = rules.BuyRules[j].desiredAction.amountLoopCheckStepAmnt
-          for (let k = from; k < to; k += step) {
+          for (let k = from; k <= to; k += step) {
             nonBuyLineCombinations[rules.BuyRules[j].desiredAction.amountLoopUId].push({ value: k })
           }
         }
@@ -739,7 +739,7 @@ export class ServerTradeScreenComponent implements OnInit {
           let from = rules.BuyRules[j].desiredAction.lengthLoopCheckFromAmnt
           let to = rules.BuyRules[j].desiredAction.lengthLoopCheckToAmnt
           let step = rules.BuyRules[j].desiredAction.lengthLoopCheckStepAmnt
-          for (let k = from; k < to; k += step) {
+          for (let k = from; k <= to; k += step) {
             nonBuyLineCombinations[rules.BuyRules[j].desiredAction.lengthLoopUId].push({ value: k })
           }
         }
@@ -751,7 +751,7 @@ export class ServerTradeScreenComponent implements OnInit {
           let from = rules.SellRules[j].desiredAction.amountLoopCheckFromAmnt
           let to = rules.SellRules[j].desiredAction.amountLoopCheckToAmnt
           let step = rules.SellRules[j].desiredAction.amountLoopCheckStepAmnt
-          for (let k = from; k < to; k += step) {
+          for (let k = from; k <= to; k += step) {
             nonSellLineCombinations[rules.SellRules[j].desiredAction.amountLoopUId].push({ value: k })
           }
         }
@@ -760,13 +760,15 @@ export class ServerTradeScreenComponent implements OnInit {
           let from = rules.SellRules[j].desiredAction.lengthLoopCheckFromAmnt
           let to = rules.SellRules[j].desiredAction.lengthLoopCheckToAmnt
           let step = rules.SellRules[j].desiredAction.lengthLoopCheckStepAmnt
-          for (let k = from; k < to; k += step) {
+          for (let k = from; k <= to; k += step) {
             nonSellLineCombinations[rules.SellRules[j].desiredAction.lengthLoopUId].push({ value: k })
           }
         }
       }
-      console.log(nonBuyLineCombinations)
-      console.log(nonSellLineCombinations)
+      let buyCombinations = this.generateCombinations(nonBuyLineCombinations)
+      let sellCombinations = this.generateCombinations(nonSellLineCombinations)
+      console.log(buyCombinations)
+      console.log(sellCombinations)
       for (let m = counter; m < this.stockDataForSelectedDay.length; m++) {
         if (buySell == 'Buy') {
           let buyArray = []
