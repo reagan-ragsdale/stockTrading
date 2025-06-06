@@ -624,10 +624,8 @@ export class ServerTradeScreenComponent implements OnInit {
         }
       }
 
-      console.log(listOfBuyLines)
 
       const allCombinations = this.generateCombinations(listOfBuyLines);
-      console.log(allCombinations)
 
       let result = this.addRule2(listOfBuyLines, allCombinations)
       finalResult.push(result)
@@ -787,8 +785,6 @@ export class ServerTradeScreenComponent implements OnInit {
       }
       let buyCombinations = this.generateNonLineCombinations(nonBuyLineCombinations)
       let sellCombinations = this.generateNonLineCombinations(nonSellLineCombinations)
-      console.log(buyCombinations)
-      console.log(sellCombinations)
       for (let k = 0; k < buyCombinations.length; k++) {
         for (let n = 0; n < rules.BuyRules.length; n++) {
           for (let p = 0; p < buyCombinations[k].length; p++) {
@@ -2179,7 +2175,6 @@ export class ServerTradeScreenComponent implements OnInit {
 
   }
   calculateEMA(lineLength: number): LineData[] {
-    console.log(lineLength)
     let returnData: LineData[] = []
     let windowSum = 0
     for (let i = 0; i < lineLength - 1; i++) {
