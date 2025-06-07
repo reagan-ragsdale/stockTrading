@@ -627,19 +627,22 @@ export class ServerTradeScreenComponent implements OnInit {
 
       const allCombinations = this.generateCombinations(listOfBuyLines);
 
-      let result = this.addRule2(listOfBuyLines, allCombinations)
+      let result = this.addRule2(listOfBuyLines, allCombinations, rules)
       finalResult.push(result)
     }
-
-    console.log(finalResult)
     let summedResults = []
     for (let i = 0; i < finalResult[0].length; i++) {
       let profit = 0
+      let buyCombo = []
+      let sellCombo = []
       for (let j = 0; j < finalResult.length; j++) {
         profit += finalResult[j][i].profit
+        buyCombo = finalResult[j][i].buyCombos
+        sellCombo = finalResult[j][i].sellCombos
       }
-      summedResults.push(profit)
+      summedResults.push({ profit: profit, buyCombo: buyCombo, sellCombo: sellCombo })
     }
+    summedResults.sort((a, b) => b.profit - a.profit)
     console.log(summedResults)
     this.isLoading = false;
 
@@ -680,14 +683,14 @@ export class ServerTradeScreenComponent implements OnInit {
     // For each possible index in the current key's array
     for (let i = 0; i < data[currentKey].length; i++) {
       const newKeys = [...keys, { name: currentKey, value: data[currentKey][i].value }];
-      combinations.push(...this.generateCombinations(data, newKeys));
+      combinations.push(...this.generateNonLineCombinations(data, newKeys));
     }
 
     return combinations;
   }
-  addRule2(buyLines: { [key: number]: { length: number, data: LineData[] }[] }, combinations: number[][]) {
-    let totalCount = 0
-    let rules = structuredClone(this.listOfAddedRules)
+  overallCount = 0
+  addRule2(buyLines: { [key: number]: { length: number, data: LineData[] }[] }, combinations: number[][], rules: RuleDto) {
+
     let returnData = []
     for (let i = 0; i < combinations.length; i++) {
       let counter = 0
@@ -706,12 +709,14 @@ export class ServerTradeScreenComponent implements OnInit {
           let index = keys.indexOf(rules.BuyRules[j].primaryObject.lineId.toString());
           let comboIndex = combinations[i][index]
           rules.BuyRules[j].primaryObject.data = buyLines[rules.BuyRules[j].primaryObject.lineId][comboIndex].data
+          rules.BuyRules[j].primaryObject.length = buyLines[rules.BuyRules[j].primaryObject.lineId][comboIndex].length
         }
         if (buyLines[rules.BuyRules[j].referencedObject.lineId] != undefined) {
           const keys = Object.keys(buyLines);
           let index = keys.indexOf(rules.BuyRules[j].referencedObject.lineId.toString());
           let comboIndex = combinations[i][index]
           rules.BuyRules[j].referencedObject.data = buyLines[rules.BuyRules[j].referencedObject.lineId][comboIndex].data
+          rules.BuyRules[j].referencedObject.length = buyLines[rules.BuyRules[j].referencedObject.lineId][comboIndex].length
         }
       }
       for (let j = 0; j < rules.SellRules.length; j++) {
@@ -720,12 +725,14 @@ export class ServerTradeScreenComponent implements OnInit {
           let index = keys.indexOf(rules.SellRules[j].primaryObject.lineId.toString());
           let comboIndex = combinations[i][index]
           rules.SellRules[j].primaryObject.data = buyLines[rules.SellRules[j].primaryObject.lineId][comboIndex].data
+          rules.SellRules[j].primaryObject.length = buyLines[rules.SellRules[j].primaryObject.lineId][comboIndex].length
         }
         if (buyLines[rules.SellRules[j].referencedObject.lineId] != undefined) {
           const keys = Object.keys(buyLines);
           let index = keys.indexOf(rules.SellRules[j].referencedObject.lineId.toString());
           let comboIndex = combinations[i][index]
           rules.SellRules[j].referencedObject.data = buyLines[rules.SellRules[j].referencedObject.lineId][comboIndex].data
+          rules.SellRules[j].referencedObject.length = buyLines[rules.SellRules[j].referencedObject.lineId][comboIndex].length
         }
       }
       let nonBuyLineCombinations: { [key: string]: { value: number }[] } = {}
@@ -796,13 +803,13 @@ export class ServerTradeScreenComponent implements OnInit {
           }
         }
         for (let n = 0; n < sellCombinations.length; n++) {
-          for (let n = 0; n < rules.SellRules.length; n++) {
-            for (let p = 0; p < buyCombinations[k].length; p++) {
-              if (buyCombinations[k][p].name == n + 'A') {
-                rules.SellRules[n].desiredAction.amount = buyCombinations[k][p].value
+          for (let s = 0; s < rules.SellRules.length; s++) {
+            for (let p = 0; p < sellCombinations[n].length; p++) {
+              if (sellCombinations[n][p].name == s + 'A') {
+                rules.SellRules[s].desiredAction.amount = sellCombinations[n][p].value
               }
-              if (buyCombinations[k][p].name == n + 'B') {
-                rules.SellRules[n].desiredAction.length = buyCombinations[k][p].value
+              if (sellCombinations[n][p].name == s + 'B') {
+                rules.SellRules[s].desiredAction.length = sellCombinations[n][p].value
               }
             }
           }
@@ -877,8 +884,26 @@ export class ServerTradeScreenComponent implements OnInit {
 
             }
           }
-          totalCount++
-          returnData.push({ orderLocations: orderLocations, profit: profit, combination: structuredClone(rules) })
+          let buyCombo: any[] = []
+          for (let i = 0; i < rules.BuyRules.length; i++) {
+            buyCombo.push({
+              primaryLength: rules.BuyRules[i].primaryObject.length,
+              time: rules.BuyRules[i].buyTime,
+              actionAmnt: rules.BuyRules[i].desiredAction.amount,
+              actionLength: rules.BuyRules[i].desiredAction.length,
+              referencedLength: rules.BuyRules[i].referencedObject.length
+            })
+          }
+          let sellCombo: any[] = []
+          for (let i = 0; i < rules.SellRules.length; i++) {
+            sellCombo.push({
+              primaryLength: rules.SellRules[i].primaryObject.length,
+              actionAmnt: rules.SellRules[i].desiredAction.amount,
+              actionLength: rules.SellRules[i].desiredAction.length,
+              referencedLength: rules.SellRules[i].referencedObject.length
+            })
+          }
+          returnData.push({ orderLocations: orderLocations, profit: profit, buyCombos: buyCombo, sellCombos: sellCombo })
         }
 
       }
@@ -887,7 +912,6 @@ export class ServerTradeScreenComponent implements OnInit {
 
 
     }
-    console.log(totalCount)
     return returnData
 
   }
@@ -1825,7 +1849,7 @@ export class ServerTradeScreenComponent implements OnInit {
   async getStockBasicHistoryData() {
     this.selectedStockBasicHistoryData = await dbStockBasicHistoryRepo.find({ where: { stockName: this.selectedStockName }, orderBy: { date: 'asc' } })
     this.rsiDateRange = this.selectedStockBasicHistoryData.slice(this.interDayLongSma - this.rsiPeriodNum - 2)
-    console.log(this.rsiDateRange)
+
     let rsiUps = []
     let rsiDowns = []
     for (let i = 1; i <= this.rsiPeriodNum; i++) {
@@ -1853,7 +1877,6 @@ export class ServerTradeScreenComponent implements OnInit {
       const rsi = 100 - (100 / (1 + rs));
       this.rsiData.push({ rsiNum: rsi, date: new Date(this.rsiDateRange[i].date).toLocaleDateString() });
     }
-    console.log(this.rsiData)
   }
 
   addLineDialogRef: any
@@ -1866,7 +1889,6 @@ export class ServerTradeScreenComponent implements OnInit {
     });
     this.addLineDialogRef.afterClosed().subscribe(async (result: any) => {
       if (result.length > 0) {
-        console.log(result)
         this.listOfAddedLines = result
         this.addNewLinesToGraph(result)
       }
@@ -2056,8 +2078,7 @@ export class ServerTradeScreenComponent implements OnInit {
       for (let i = 0; i < rules.BuyRules.length; i++) {
         if (rules.BuyRules[i].primaryObject.type != "") {
           let filteredLine = this.listOfAddedLines.filter(e => e.lineType == rules.BuyRules[i].primaryObject.type && e.lineLength == rules.BuyRules[i].primaryObject.length)[0]
-          console.log(filteredLine)
-          console.log(rules.BuyRules[i].primaryObject.length)
+
           rules.BuyRules[i].primaryObject.data = filteredLine.data
         }
         if (rules.BuyRules[i].referencedObject.type != "") {
@@ -2330,7 +2351,6 @@ export class ServerTradeScreenComponent implements OnInit {
       exitAnimationDuration: 0
     });
     this.addRuleDialogRef.afterClosed().subscribe(async (result: any) => {
-      console.log(result)
       //this.addRule(result)
       /* 
       else if (this.stockChart.data.datasets.length > 1) {
@@ -2350,8 +2370,6 @@ export class ServerTradeScreenComponent implements OnInit {
       exitAnimationDuration: 0
     });
     this.algoLoopDialogRef.afterClosed().subscribe(async (result: any) => {
-      console.log(result)
-      console.log(this.listOfAddedRules)
       this.runAlgoAllDaysWithLoop()
       //this.addRule(result)
       /* 
@@ -2505,8 +2523,6 @@ export class ServerTradeScreenComponent implements OnInit {
     //trend = ((length * sumOfTimeValue) - (sumOfTime * sumOfValue)) / ((length * sumOfTimeSquared) - (sumOfTime * sumOfTime))
     trend = (data[index].value! - data[index - length].value!) / length
     if (this.count == 1) {
-      console.log(index - length)
-      console.log(trend)
       this.count++
     }
     return trend
@@ -2521,7 +2537,6 @@ export class ServerTradeScreenComponent implements OnInit {
     this.distinctStocks = this.allHistory.map(e => e.stockName).filter((v, i, a) => a.indexOf(v) === i)
     this.selectedStockName = this.distinctStocks[0]
     this.selectedInterDayStockData = this.allHistory.filter(e => e.stockName == this.selectedStockName)
-    console.log(this.selectedInterDayStockData)
     this.interDayLongSma = 200
     this.interDayMediumSma = 40
     this.interDayShortSma = 5
@@ -2534,7 +2549,6 @@ export class ServerTradeScreenComponent implements OnInit {
     let today = new Date()
     today.setHours(5, 0, 0, 0)
     let listOfOrders = await dbOrdersRepo.find({ where: { orderTime: { $gt: today.getTime() } }, orderBy: { orderTime: 'asc' } })
-    console.log(listOfOrders)
     this.isLoading = false;
 
   }

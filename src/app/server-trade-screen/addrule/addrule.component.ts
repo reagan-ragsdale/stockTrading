@@ -50,7 +50,7 @@ export class AddRuleComponent {
       buyTimeCheckToAmnt: 0,
       buyTimeCheckFromAmnt: 0,
       buyTimeCheckStepAmnt: 0,
-      buyTimeUId: this.listOfRulesIncoming.SellRules.length + 'A',
+      buyTimeUId: this.listOfRulesIncoming.BuyRules.length + 'A',
       primaryObject: {
         name: '',
         type: '',
@@ -68,13 +68,13 @@ export class AddRuleComponent {
         amountLoopCheckToAmnt: 0,
         amountLoopCheckFromAmnt: 0,
         amountLoopCheckStepAmnt: 0,
-        amountLoopUId: this.listOfRulesIncoming.SellRules.length + 'B',
+        amountLoopUId: this.listOfRulesIncoming.BuyRules.length + 'B',
         length: 0,
         lengthLoopChecked: false,
         lengthLoopCheckToAmnt: 0,
         lengthLoopCheckFromAmnt: 0,
         lengthLoopCheckStepAmnt: 0,
-        lengthLoopUId: this.listOfRulesIncoming.SellRules.length + 'C',
+        lengthLoopUId: this.listOfRulesIncoming.BuyRules.length + 'C',
         type: ''
       },
       referencedObject: {
