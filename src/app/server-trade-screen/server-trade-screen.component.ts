@@ -539,7 +539,7 @@ export class ServerTradeScreenComponent implements OnInit {
             listOfBuyLines[rules.BuyRules[i].primaryObject.lineId].push({ length: rules.BuyRules[i].primaryObject.length, data: this.calculateCumulativeSMA() })
           }
           else if (rules.BuyRules[i].primaryObject.type == 'Cumulative VWAP') {
-            listOfBuyLines[rules.BuyRules[i].primaryObject.lineId].push({ length: j, data: this.calculateCumulativeVWAP() })
+            listOfBuyLines[rules.BuyRules[i].primaryObject.lineId].push({ length: rules.BuyRules[i].primaryObject.length, data: this.calculateCumulativeVWAP() })
           }
           //listOfBuyLines[rules.BuyRules[i].primaryObject.lineId].push({ length: rules.BuyRules[i].primaryObject.length, data: rules.BuyRules[i].primaryObject.data })
         }
@@ -571,7 +571,7 @@ export class ServerTradeScreenComponent implements OnInit {
             listOfBuyLines[rules.BuyRules[i].referencedObject.lineId].push({ length: rules.BuyRules[i].referencedObject.length, data: this.calculateCumulativeSMA() })
           }
           else if (rules.BuyRules[i].referencedObject.type == 'Cumulative VWAP') {
-            listOfBuyLines[rules.BuyRules[i].referencedObject.lineId].push({ length: j, data: this.calculateCumulativeVWAP() })
+            listOfBuyLines[rules.BuyRules[i].referencedObject.lineId].push({ length: rules.BuyRules[i].referencedObject.length, data: this.calculateCumulativeVWAP() })
           }
         }
       }
@@ -602,7 +602,7 @@ export class ServerTradeScreenComponent implements OnInit {
             listOfBuyLines[rules.SellRules[i].primaryObject.lineId].push({ length: rules.SellRules[i].primaryObject.length, data: this.calculateCumulativeSMA() })
           }
           else if (rules.SellRules[i].primaryObject.type == 'Cumulative VWAP') {
-            listOfBuyLines[rules.SellRules[i].primaryObject.lineId].push({ length: j, data: this.calculateCumulativeVWAP() })
+            listOfBuyLines[rules.SellRules[i].primaryObject.lineId].push({ length: rules.SellRules[i].primaryObject.length, data: this.calculateCumulativeVWAP() })
           }
         }
       }
@@ -632,7 +632,7 @@ export class ServerTradeScreenComponent implements OnInit {
             listOfBuyLines[rules.SellRules[i].referencedObject.lineId].push({ length: rules.SellRules[i].referencedObject.length, data: this.calculateCumulativeSMA() })
           }
           else if (rules.SellRules[i].referencedObject.type == 'Cumulative VWAP') {
-            listOfBuyLines[rules.SellRules[i].referencedObject.lineId].push({ length: j, data: this.calculateCumulativeVWAP() })
+            listOfBuyLines[rules.SellRules[i].referencedObject.lineId].push({ length: rules.SellRules[i].referencedObject.length, data: this.calculateCumulativeVWAP() })
           }
         }
       }
