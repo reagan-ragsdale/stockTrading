@@ -625,7 +625,9 @@ export class ServerTradeScreenComponent implements OnInit {
       }
 
 
+
       const allCombinations = this.generateCombinations(listOfBuyLines);
+      console.log(allCombinations)
 
       let result = this.addRule2(listOfBuyLines, allCombinations, rules)
       finalResult.push(result)
