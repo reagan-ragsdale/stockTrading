@@ -507,6 +507,7 @@ export class ServerTradeScreenComponent implements OnInit {
   async runAlgoAllDaysWithLoop() {
     this.isLoading = true
     let rules = structuredClone(this.listOfAddedRules)
+    console.log(rules)
 
     let finalResult = []
     for (let k = 0; k < this.distinctDates.length; k++) {
@@ -627,7 +628,7 @@ export class ServerTradeScreenComponent implements OnInit {
 
 
       const allCombinations = this.generateCombinations(listOfBuyLines);
-      console.log(allCombinations)
+      console.log(listOfBuyLines)
 
       let result = this.addRule2(listOfBuyLines, allCombinations, rules)
       finalResult.push(result)
