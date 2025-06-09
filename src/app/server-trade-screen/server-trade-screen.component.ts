@@ -2112,11 +2112,13 @@ export class ServerTradeScreenComponent implements OnInit {
 
       let rules = structuredClone(this.listOfAddedRules)
       console.log(rules)
-
+      console.log(this.listOfAddedLines)
       for (let i = 0; i < rules.BuyRules.length; i++) {
         if (rules.BuyRules[i].primaryObject.type != "") {
           let filteredLine = this.listOfAddedLines.filter(e => e.lineType == rules.BuyRules[i].primaryObject.type && e.lineLength == rules.BuyRules[i].primaryObject.length)[0]
-
+          console.log(rules.BuyRules[i].primaryObject.type)
+          console.log(rules.BuyRules[i].primaryObject.length)
+          console.log(filteredLine)
           rules.BuyRules[i].primaryObject.data = filteredLine.data
         }
         if (rules.BuyRules[i].referencedObject.type != "") {
