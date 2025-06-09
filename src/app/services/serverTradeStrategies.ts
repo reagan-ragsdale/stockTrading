@@ -427,7 +427,7 @@ export class ServerTradeStrategies {
                 }
             }
 
-            if (isBuy && stockInfo.canTrade) {
+            if (isBuy && stockInfo.canTrade && stockInfo.numberOfLosses < 2) {
                 if ((((stockStrategyData.RollingVWAP - stockStrategyData.CumulativeVWAP) / stockStrategyData.CumulativeVWAP) < -.002) && stockStrategyData.RollingVWAPTrend > 0) {
                     stockInfo.numberOfTrades++
                     stockInfo.stopLoss = stockData.askPrice * (1 - stockStrategyInfo.StopLossAmt)
@@ -454,6 +454,9 @@ export class ServerTradeStrategies {
                     stockInfo.stopLoss = 0
                     stockInfo.tradeHigh = 0
                     stockInfo.stopLossGainThreshold = 0
+                    if (stockData.bidPrice < lastOrder[0].stockPrice) {
+                        stockInfo.numberOfLosses++
+                    }
                     return {
                         shouldTrade: true, log: {
                             stockName: stockData.stockName,
@@ -476,6 +479,7 @@ export class ServerTradeStrategies {
                     stockInfo.tradeHigh = 0
                     stockInfo.stopLossGainThreshold = 0
                     stockInfo.canTrade = false
+                    stockInfo.numberOfLosses++
                     return {
                         shouldTrade: true, log: {
                             stockName: stockData.stockName,
