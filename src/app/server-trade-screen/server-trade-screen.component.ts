@@ -650,12 +650,16 @@ export class ServerTradeScreenComponent implements OnInit {
       let profit = 0
       let buyCombo = []
       let sellCombo = []
+      let wins = 0
+      let losses = 0
       for (let j = 0; j < finalResult.length; j++) {
         profit += finalResult[j][i].profit
         buyCombo = finalResult[j][i].buyCombos
         sellCombo = finalResult[j][i].sellCombos
+        wins += finalResult[j][i].wins
+        losses += finalResult[j][i].losses
       }
-      summedResults.push({ profit: profit, buyCombo: buyCombo, sellCombo: sellCombo })
+      summedResults.push({ profit: profit, buyCombo: buyCombo, sellCombo: sellCombo, wins: wins, losses: losses })
     }
     summedResults.sort((a, b) => b.profit - a.profit)
     console.log(summedResults)
