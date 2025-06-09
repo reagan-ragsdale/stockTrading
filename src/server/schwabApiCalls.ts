@@ -30,13 +30,13 @@ export const getAccountNumbers = async (accessToken: string): Promise<any> => {
 }
 
 //get the information for the account based on the above number
-export const getAccountInfo = async (accountNumber: string, accessToken: string): Promise<any> => {
+export const getAccountInfo = async (accountInfo: DbTOkens): Promise<any> => {
     try {
-        const url = `https://api.schwabapi.com/trader/v1/accounts/${accountNumber}`;
+        const url = `https://api.schwabapi.com/trader/v1/accounts/${accountInfo.accountNum}`;
         const options = {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${accessToken}`
+                'Authorization': `Bearer ${accountInfo.accessToken}`
             }
         };
 
@@ -51,18 +51,18 @@ export const getAccountInfo = async (accountNumber: string, accessToken: string)
 }
 
 //get a list of orders for the account
-export const getOrdersForAccount = async (): Promise<any> => {
+export const getOrdersForAccount = async (accountInfo: DbTOkens): Promise<any> => {
     try {
-        let token = await dbTokenRepo.findFirst({ id: 'asdfghjkl' }) as DbTOkens
+
         let startDate = new Date()
         startDate.setHours(5, 0, 0, 0)
         let fromDate = startDate.toUTCString()
         let toDate = new Date().toISOString()
-        const url = `https://api.schwabapi.com/v1/accounts/${token.accountNum}/orders?fromEnteredTime=${fromDate}&toEnteredTime=${toDate}`;
+        const url = `https://api.schwabapi.com/v1/accounts/${accountInfo.accountNum}/orders?fromEnteredTime=${fromDate}&toEnteredTime=${toDate}`;
         const options = {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${token.accessToken}`
+                'Authorization': `Bearer ${accountInfo.accessToken}`
             }
         };
 
@@ -76,13 +76,13 @@ export const getOrdersForAccount = async (): Promise<any> => {
     }
 }
 //place an order for an account
-export const placeOrderForAccount = async (accountNumber: string, accessToken: string, order: SchwabOrderDTO): Promise<any> => {
+export const placeOrderForAccount = async (accountInfo: DbTOkens, order: SchwabOrderDTO): Promise<any> => {
     try {
-        const url = `https://api.schwabapi.com/v1/accounts/${accountNumber}/orders`;
+        const url = `https://api.schwabapi.com/v1/accounts/${accountInfo.accountNum}/orders`;
         const options = {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${accessToken}`
+                'Authorization': `Bearer ${accountInfo.accessToken}`
             },
             body: JSON.stringify(
                 {

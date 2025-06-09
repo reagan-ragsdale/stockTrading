@@ -31,7 +31,10 @@ export const socketCall = async (): Promise<void> => {
     //get all orders for each above user
     let userOrders = await dbOrdersRepo.find({ where: { userId: 'Shared' }, orderBy: { orderTime: 'desc' } })
 
-    let schwabOrders = SchwabController.getOrdersCall()
+
+
+    let schwabOrders = SchwabController.getOrdersCall(userData)
+    let schwabPosition = SchwabController.getAccountInfoCall(userData)
 
     let stockLastTradesMap = new Map<string, lastTrade>()
     stockLastTradesMap.set('AAPL', { lastPrice: 0, lastAsk: 0, lastBid: 0 })
@@ -125,6 +128,7 @@ export const socketCall = async (): Promise<void> => {
                             //push the data into what will be sent to the database 
                             insertData.push(data)
                             for (let strategy = 0; strategy < activeStrategies.length; strategy++) {
+                                //change below to point to schwab order table
                                 let lastOrder = userOrders.filter(e => e.stockName == data.stockName && e.tradeStrategy == activeStrategies[strategy])
                                 let isBuy = true;
                                 if (lastOrder.length > 0) {
@@ -135,6 +139,7 @@ export const socketCall = async (): Promise<void> => {
                                     let result = ServerTradeStrategies.shouldExecuteOrder(data, activeStrategies[strategy], lastOrder)
                                     //console.log(result)
                                     if (result.shouldTrade && (data.askPrice < (userFinance?.spending! + 1))) {
+                                        //add below to send to schwab and also insert into schwab order table
                                         let orderId = Math.floor(Math.random() * 10000000000)
                                         await dbOrdersRepo.insert({
                                             userId: 'Shared',
@@ -148,6 +153,7 @@ export const socketCall = async (): Promise<void> => {
                                         })
 
                                         orderPlaced = true
+                                        //below should be changed to get new schwab amount
                                         let newSpending = userFinance?.spending! - data.askPrice
                                         await simFinRepo.save({ ...userFinance, spending: newSpending })
                                         userFinance = await simFinRepo.findFirst({ userId: 'Shared' })
@@ -163,6 +169,7 @@ export const socketCall = async (): Promise<void> => {
                                 else {
                                     let result = ServerTradeStrategies.shouldExecuteOrder(data, activeStrategies[strategy], lastOrder)
                                     if (result.shouldTrade) {
+                                        //schwab
                                         await dbOrdersRepo.insert({
                                             userId: 'Shared',
                                             stockName: data.stockName,
@@ -193,6 +200,7 @@ export const socketCall = async (): Promise<void> => {
                     await dbCurrentDayStockDataRepo.insert(insertData)
                     //update the orders if there was an order placed
                     if (orderPlaced) {
+                        //schwab
                         userOrders = await dbOrdersRepo.find({ where: { userId: 'Shared' }, orderBy: { orderTime: 'desc' } })
                     }
 

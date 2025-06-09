@@ -78,6 +78,7 @@ export type SchwabOrderDTO = {
             instrument: {
                 symbol: string;
                 assetType: string;
+                description: string;
             }
         }
     ]
