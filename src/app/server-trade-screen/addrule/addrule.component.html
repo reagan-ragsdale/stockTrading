@@ -22,7 +22,7 @@
                     </mat-form-field>
                     <mat-form-field *ngIf="buyRule.conditionType == 'Time'" style="width:fit-content;">
                         <mat-label>Time Period</mat-label>
-                        <mat-select disableRipple [(value)]="buyRule.primaryObject">
+                        <mat-select disableRipple [(value)]="buyRule.desiredAction.type">
                             <mat-option *ngFor="let time of timeConditions" [value]="time"
                                 (onSelectionChange)="onSelectedBuyTimeTypeChange($event, buyRule.id, time)">{{time}}</mat-option>
                         </mat-select>
