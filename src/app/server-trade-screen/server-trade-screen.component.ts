@@ -833,6 +833,8 @@ export class ServerTradeScreenComponent implements OnInit {
           let profit = 0
           let numberOfConsecutiveLosses = 0
           let timeOutPeriod = 0
+          let wins = 0
+          let losses = 0
           for (let m = counter; m < this.stockDataForSelectedDay.length; m++) {
             if (buySell == 'Buy') {
               let buyArray = []
@@ -869,6 +871,13 @@ export class ServerTradeScreenComponent implements OnInit {
               if (m == this.stockDataForSelectedDay.length - 1) {
                 orderLocations.push({ buySell: 'Sell', price: this.stockDataForSelectedDay[m].stockPrice, date: this.stockDataForSelectedDay[m].time, dateString: new Date(this.stockDataForSelectedDay[m].time).toLocaleTimeString() })
                 profit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
+                if (profit > 0) {
+                  wins++
+                }
+                else {
+                  losses++
+                }
+
                 buySell = 'Buy'
               }
               else {
@@ -876,9 +885,14 @@ export class ServerTradeScreenComponent implements OnInit {
                   if (buyArray.includes(true)) {
                     orderLocations.push({ buySell: 'Sell', price: this.stockDataForSelectedDay[m].stockPrice, date: this.stockDataForSelectedDay[m].time, dateString: new Date(this.stockDataForSelectedDay[m].time).toLocaleTimeString() })
                     profit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
-                    if (profit < 0) {
+
+                    if (profit > 0) {
+                      wins++
+                    }
+                    else {
                       numberOfConsecutiveLosses++
                       timeOutPeriod = (rules.TimeOutAfterStopLossSell * 60000) + this.stockDataForSelectedDay[m].time
+                      losses++
                     }
                     buySell = 'Buy'
                   }
@@ -887,9 +901,13 @@ export class ServerTradeScreenComponent implements OnInit {
                   if (!buyArray.includes(false)) {
                     orderLocations.push({ buySell: 'Sell', price: this.stockDataForSelectedDay[m].stockPrice, date: this.stockDataForSelectedDay[m].time, dateString: new Date(this.stockDataForSelectedDay[m].time).toLocaleTimeString() })
                     profit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
-                    if (profit < 0) {
+                    if (profit > 0) {
+                      wins++
+                    }
+                    else {
                       numberOfConsecutiveLosses++
                       timeOutPeriod = (rules.TimeOutAfterStopLossSell * 60000) + this.stockDataForSelectedDay[m].time
+                      losses++
                     }
                     buySell = 'Buy'
                   }
@@ -918,7 +936,7 @@ export class ServerTradeScreenComponent implements OnInit {
               referencedLength: rules.SellRules[i].referencedObject.length
             })
           }
-          returnData.push({ orderLocations: orderLocations, profit: profit, buyCombos: buyCombo, sellCombos: sellCombo })
+          returnData.push({ wins: wins, losses: losses, profit: profit, buyCombos: buyCombo, sellCombos: sellCombo })
         }
 
       }
