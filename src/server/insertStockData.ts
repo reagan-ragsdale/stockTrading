@@ -8,6 +8,8 @@ import { LoggerController } from "../shared/controllers/LoggerController.js";
 import { simFinRepo } from "../shared/tasks/simFinance.js";
 import { ServerTradeStrategies } from "../app/services/serverTradeStrategies.js";
 import { SchwabController } from "../shared/controllers/SchwabController.js";
+import { LogService } from "../app/services/LogService.js";
+import { SchwabOrderDTO } from "../app/Dtos/TradingBotDtos.js";
 
 type lastTrade = {
     lastPrice: number;
@@ -33,8 +35,12 @@ export const socketCall = async (): Promise<void> => {
 
 
 
-    let schwabOrders = SchwabController.getOrdersCall(userData)
-    let schwabPosition = SchwabController.getAccountInfoCall(userData)
+    let schwabOrders = await SchwabController.getOrdersCall(userData)
+    let schwabPosition = await SchwabController.getAccountInfoCall(userData)
+    let count = 0
+
+    LogService.insertSchwabLog(schwabOrders)
+    LogService.insertSchwabLog(schwabPosition)
 
     let stockLastTradesMap = new Map<string, lastTrade>()
     stockLastTradesMap.set('AAPL', { lastPrice: 0, lastAsk: 0, lastBid: 0 })
@@ -195,6 +201,57 @@ export const socketCall = async (): Promise<void> => {
                             }
 
                         }
+                        if (count == 0) {
+                            let order: SchwabOrderDTO = {
+                                orderType: "MARKET",
+                                session: "NORMAL",
+                                duration: "DAY",
+                                orderStrategyType: "SINGLE",
+                                orderLegCollection: [
+                                    {
+                                        instruction: "BUY",
+                                        quantity: 1,
+                                        instrument: {
+                                            symbol: "SID",
+                                            assetType: "EQUITY",
+                                            description: 'Test Description'
+                                        }
+                                    }
+                                ]
+                            }
+                            let response = await SchwabController.placeOrdersCall(userData, order)
+                            LogService.insertSchwabLog(response)
+                            schwabOrders = await SchwabController.getOrdersCall(userData)
+                            schwabPosition = await SchwabController.getAccountInfoCall(userData)
+                            LogService.insertSchwabLog(schwabOrders)
+                            LogService.insertSchwabLog(schwabPosition)
+
+                        }
+                        else if (count == 10) {
+                            let order: SchwabOrderDTO = {
+                                orderType: "MARKET",
+                                session: "NORMAL",
+                                duration: "DAY",
+                                orderStrategyType: "SINGLE",
+                                orderLegCollection: [
+                                    {
+                                        instruction: "SELL",
+                                        quantity: 1,
+                                        instrument: {
+                                            symbol: "SID",
+                                            assetType: "EQUITY",
+                                            description: 'Test Description 2'
+                                        }
+                                    }
+                                ]
+                            }
+                            let response = await SchwabController.placeOrdersCall(userData, order)
+                            LogService.insertSchwabLog(response)
+                            schwabOrders = await SchwabController.getOrdersCall(userData)
+                            schwabPosition = await SchwabController.getAccountInfoCall(userData)
+                            LogService.insertSchwabLog(schwabOrders)
+                            LogService.insertSchwabLog(schwabPosition)
+                        }
                     }
                     //insert all stocks data into the db
                     await dbCurrentDayStockDataRepo.insert(insertData)
@@ -203,6 +260,7 @@ export const socketCall = async (): Promise<void> => {
                         //schwab
                         userOrders = await dbOrdersRepo.find({ where: { userId: 'Shared' }, orderBy: { orderTime: 'desc' } })
                     }
+                    count++
 
                 }
             }
