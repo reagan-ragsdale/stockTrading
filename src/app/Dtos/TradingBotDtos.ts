@@ -6,8 +6,8 @@ export type StockInfo = {
     tradeHigh: number;
     numberOfLosses: number;
 };
-export type DayTradeValues = MovingAvergeCrossoverDto | VWAPTrendCrossDto
-export type stockDataInfo = stockMACrossData | stockVWAPCrossData;
+export type DayTradeValues = MovingAvergeCrossoverDto | VWAPTrendCrossDto | MADropDto
+export type stockDataInfo = stockMACrossData | stockVWAPCrossData | MADropData
 export type tradeLogDto = {
     stockName: string;
     strategy: string;
@@ -64,6 +64,29 @@ export type stockVWAPCrossData = {
     lastBid: number;
     lastAsk: number;
 }
+export type MADropDto = {
+    EMALength: number;
+    BuyTrendLength: number;
+    SellTrendLength: number;
+    BuyDipAmt: number;
+    SellDipAmt: number;
+    WaitTime: number;
+    StopLossAmt: number;
+}
+export type MADropData = {
+    priceHistory: number[];
+    EMA: number;
+    CumulativePrice: number;
+    CumulativeSMA: number;
+    BuyTrend: number;
+    BuyTrendData: number[];
+    SellTrend: number;
+    SellTrendData: number[];
+    lastPrice: number;
+    lastBid: number;
+    lastAsk: number;
+}
+
 
 export type SchwabOrderDTO = {
 

@@ -204,6 +204,7 @@ export const socketCall = async (): Promise<void> => {
 
                     }
                     if (count == 0) {
+                        console.log('here count 0')
                         let order: SchwabOrderDTO = {
                             orderType: "MARKET",
                             session: "NORMAL",
@@ -222,14 +223,16 @@ export const socketCall = async (): Promise<void> => {
                             ]
                         }
                         let response = await SchwabController.placeOrdersCall(userData, order)
-                        LogService.insertSchwabLog(response)
+                        console.log('here after buy')
+                        LoggerController.addToSchwabLog(response)
                         schwabOrders = await SchwabController.getOrdersCall(userData)
                         schwabPosition = await SchwabController.getAccountInfoCall(userData)
-                        LogService.insertSchwabLog(schwabOrders)
-                        LogService.insertSchwabLog(schwabPosition)
+                        LoggerController.addToSchwabLog(schwabOrders)
+                        LoggerController.addToSchwabLog(schwabPosition)
 
                     }
                     else if (count == 10) {
+                        console.log('here count 10')
                         let order: SchwabOrderDTO = {
                             orderType: "MARKET",
                             session: "NORMAL",
@@ -248,11 +251,14 @@ export const socketCall = async (): Promise<void> => {
                             ]
                         }
                         let response = await SchwabController.placeOrdersCall(userData, order)
-                        LogService.insertSchwabLog(response)
+                        console.log('here after buy')
+                        LoggerController.addToSchwabLog(response)
                         schwabOrders = await SchwabController.getOrdersCall(userData)
                         schwabPosition = await SchwabController.getAccountInfoCall(userData)
-                        LogService.insertSchwabLog(schwabOrders)
-                        LogService.insertSchwabLog(schwabPosition)
+                        LoggerController.addToSchwabLog(schwabOrders)
+                        LoggerController.addToSchwabLog(schwabPosition)
+
+                        //
                     }
                     //insert all stocks data into the db
                     await dbCurrentDayStockDataRepo.insert(insertData)

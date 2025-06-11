@@ -44,6 +44,9 @@ export class TradeHistoryDetailComponent implements OnInit {
   averageLossAmt: number = 0
   userSimFinData: SimFInance[] = []
   percentChange: number = 0
+  distinctStrategies: string[] = ['All']
+  selectedStrategy: string = ''
+
 
 
   async onSelectedStockChange(event: any) {
@@ -51,6 +54,11 @@ export class TradeHistoryDetailComponent implements OnInit {
       this.selectedStockName = event.source.value
       //await this.getStockOrders()
       //this.isLoading = true
+    }
+  }
+  onSelectedStrategChange(event: any) {
+    if (event.isUserInput == true) {
+      this.selectedStrategy = event.source.value
     }
   }
   onSelectedDateTypeChange(event: any) {
@@ -69,13 +77,13 @@ export class TradeHistoryDetailComponent implements OnInit {
     this.allOrders = await OrderController.getAllSharedOrders()
     if (this.selectedStockName == 'All') {
       if (this.dateType == 'All') {
-        this.selectedStockOrders = this.allOrders
+        this.selectedStockOrders = this.allOrders.filter(e => e.tradeStrategy == this.selectedStrategy)
       }
       else if (this.dateType == 'Today') {
-        this.selectedStockOrders = this.allOrders.filter(e => this.convertEpochToDate(e.orderTime) == this.getCurrentDateFormat())
+        this.selectedStockOrders = this.allOrders.filter(e => this.convertEpochToDate(e.orderTime) == this.getCurrentDateFormat() && e.tradeStrategy == this.selectedStrategy)
       }
       else if (this.dateType == 'This Week') {
-        this.selectedStockOrders = this.allOrders.filter(e => this.isSameCalendarWeek(e.orderTime))
+        this.selectedStockOrders = this.allOrders.filter(e => this.isSameCalendarWeek(e.orderTime) && e.tradeStrategy == this.selectedStrategy)
       }
       else if (this.dateType == 'This Month') {
 
@@ -86,18 +94,18 @@ export class TradeHistoryDetailComponent implements OnInit {
         endTime.setHours(23, 0, 0, 0)
         console.log(startTime)
         console.log(endTime)
-        this.selectedStockOrders = this.allOrders.filter(e => e.orderTime >= startTime.getTime() && e.orderTime <= endTime.getTime())
+        this.selectedStockOrders = this.allOrders.filter(e => e.orderTime >= startTime.getTime() && e.orderTime <= endTime.getTime() && e.tradeStrategy == this.selectedStrategy)
       }
     }
     else {
       if (this.dateType == 'All') {
-        this.selectedStockOrders = this.allOrders.filter(e => e.stockName == this.selectedStockName)
+        this.selectedStockOrders = this.allOrders.filter(e => e.stockName == this.selectedStockName && e.tradeStrategy == this.selectedStrategy)
       }
       else if (this.dateType == 'Today') {
-        this.selectedStockOrders = this.allOrders.filter(e => e.stockName == this.selectedStockName && this.convertEpochToDate(e.orderTime) == this.getCurrentDateFormat())
+        this.selectedStockOrders = this.allOrders.filter(e => e.stockName == this.selectedStockName && this.convertEpochToDate(e.orderTime) == this.getCurrentDateFormat() && e.tradeStrategy == this.selectedStrategy)
       }
       else if (this.dateType == 'This Week') {
-        this.selectedStockOrders = this.allOrders.filter(e => this.isSameCalendarWeek(e.orderTime) && e.stockName == this.selectedStockName)
+        this.selectedStockOrders = this.allOrders.filter(e => this.isSameCalendarWeek(e.orderTime) && e.stockName == this.selectedStockName && e.tradeStrategy == this.selectedStrategy)
       }
       else if (this.dateType == 'This Month') {
 
@@ -108,7 +116,7 @@ export class TradeHistoryDetailComponent implements OnInit {
         endTime.setHours(23, 0, 0, 0)
         console.log(startTime)
         console.log(endTime)
-        this.selectedStockOrders = this.allOrders.filter(e => e.orderTime >= startTime.getTime() && e.orderTime <= endTime.getTime() && e.stockName == this.selectedStockName)
+        this.selectedStockOrders = this.allOrders.filter(e => e.orderTime >= startTime.getTime() && e.orderTime <= endTime.getTime() && e.stockName == this.selectedStockName && e.tradeStrategy == this.selectedStrategy)
       }
     }
     this.claculateOrderDetails()
@@ -214,6 +222,8 @@ export class TradeHistoryDetailComponent implements OnInit {
     this.distinctStocks = this.distinctStocks.concat(this.allOrders.map(e => e.stockName).filter((v, i, a) => a.indexOf(v) === i))
     this.selectedStockName = this.distinctStocks[0]
     this.selectedStockOrders = this.allOrders
+    this.distinctStrategies = this.distinctStrategies.concat(this.allOrders.map(e => e.tradeStrategy).filter((v, i, a) => a.indexOf(v) === i).filter(e => e != ''))
+    this.selectedStrategy = this.distinctStrategies[0]
     await this.getUserFinanceData()
     this.claculateOrderDetails()
 
