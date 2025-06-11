@@ -109,7 +109,7 @@ export const createExcel = async (logArray: tradeLogDto[]): Promise<excelJS.Buff
                 tradeHigh: filteredByOrder[j].stockInfo.tradeHigh,
                 ema: 0,
                 cumulativeVWAP: 0,
-                rollingVWAP: filteredByOrder[j].stockDataInfo.RollingVWAP/*,
+                rollingVWAP: 0/*,
                 shortSmaMinuteBuy: filteredByOrder[j].stockDataInfo.last60Buysma,
                 shortSmaSell: filteredByOrder[j].stockDataInfo.last300Sellsma,
                 buyParam: filteredByOrder[j].dayTradeValues.Buy,
