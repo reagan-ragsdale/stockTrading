@@ -35,10 +35,10 @@ export class LoggerController {
             await simFinRepo.save({ ...sharedFinance, spending: newSpending })
             LogService.clearLogHistory()
         }
-        catch(error: any){
+        catch (error: any) {
             console.log('report log error: ' + error.message)
         }
-        
+
 
 
 
@@ -48,6 +48,10 @@ export class LoggerController {
     @BackendMethod({ allowed: true })
     static addToLog(message: tradeLogDto) {
         LogService.insertIntoLog(message)
+    }
+    @BackendMethod({ allowed: true })
+    static addToSchwabLog(message: any) {
+        LogService.insertSchwabLog(message)
     }
 
 }

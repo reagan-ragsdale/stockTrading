@@ -58,7 +58,7 @@ export const getOrdersForAccount = async (accountInfo: DbTOkens): Promise<any> =
         startDate.setHours(5, 0, 0, 0)
         let fromDate = startDate.toUTCString()
         let toDate = new Date().toISOString()
-        const url = `https://api.schwabapi.com/v1/accounts/${accountInfo.accountNum}/orders?fromEnteredTime=${fromDate}&toEnteredTime=${toDate}`;
+        const url = `https://api.schwabapi.com/trader/v1/accounts/${accountInfo.accountNum}/orders?fromEnteredTime=${fromDate}&toEnteredTime=${toDate}`;
         const options = {
             method: 'GET',
             headers: {
@@ -78,7 +78,7 @@ export const getOrdersForAccount = async (accountInfo: DbTOkens): Promise<any> =
 //place an order for an account
 export const placeOrderForAccount = async (accountInfo: DbTOkens, order: SchwabOrderDTO): Promise<any> => {
     try {
-        const url = `https://api.schwabapi.com/v1/accounts/${accountInfo.accountNum}/orders`;
+        const url = `https://api.schwabapi.com/trader/v1/accounts/${accountInfo.accountNum}/orders`;
         const options = {
             method: 'POST',
             headers: {
@@ -100,14 +100,14 @@ export const placeOrderForAccount = async (accountInfo: DbTOkens, order: SchwabO
         return result
     }
     catch (error: any) {
-        console.log('refreshToken server: ' + error.message)
+        console.log('Schwab place order error: ' + error.message)
         return ''
     }
 }
 //replace an order for an account
 export const replaceOrderForAccount = async (accountNumber: string, accessToken: string, orderId: number): Promise<any> => {
     try {
-        const url = `https://api.schwabapi.com/v1/accounts/${accountNumber}/orders?`;
+        const url = `https://api.schwabapi.com/trader/v1/accounts/${accountNumber}/orders?`;
         const options = {
             method: 'POST',
             headers: {

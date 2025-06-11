@@ -1,6 +1,6 @@
 import { DbCurrentDayStockData } from "../../shared/tasks/dbCurrentDayStockData"
 import { DbOrders } from "../../shared/tasks/dbOrders";
-import { DayTradeValues, MovingAvergeCrossoverDto, stockDataInfo, StockInfo, stockMACrossData, stockVWAPCrossData, tradeLogDto, VWAPTrendCrossDto } from "../Dtos/TradingBotDtos"
+import { DayTradeValues, MADropData, MADropDto, MovingAvergeCrossoverDto, stockDataInfo, StockInfo, stockMACrossData, stockVWAPCrossData, tradeLogDto, VWAPTrendCrossDto } from "../Dtos/TradingBotDtos"
 
 type stockStrategyType = DayTradeValues;
 type stockStrategyDataType = stockDataInfo;
@@ -10,6 +10,8 @@ export class ServerTradeStrategies {
     private static stockMACrossDataMap = new Map<string, stockMACrossData>()
     private static VWAPTrendMap = new Map<string, VWAPTrendCrossDto>()
     private static stockVWAPDataMap = new Map<string, stockVWAPCrossData>()
+    private static MADropMap = new Map<string, MADropDto>()
+    private static MADropDataMap = new Map<string, MADropData>()
     private static stockInfoMap = new Map<string, StockInfo>()
     private static listOfTradableStocks: string[] = ['AAPL', 'TSLA', 'MSFT', 'AMD', 'PLTR', 'XOM', 'NVO', 'NEE', 'NVDA']
     private static activeStrategies: string[] = ['MACrossover', 'VWAP Trend']
@@ -60,6 +62,27 @@ export class ServerTradeStrategies {
         this.stockVWAPDataMap.set('NEE', { priceHistory: [], volumeHistory: [], CumulativeVWAP: 0, RollingVWAP: 0, RollingVWAPTrend: 0, RollingVWAPTrendData: [], cumulativePV: 0, rollingPV: 0, cumulativeV: 0, rollingV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
         this.stockVWAPDataMap.set('NVDA', { priceHistory: [], volumeHistory: [], CumulativeVWAP: 0, RollingVWAP: 0, RollingVWAPTrend: 0, RollingVWAPTrendData: [], cumulativePV: 0, rollingPV: 0, cumulativeV: 0, rollingV: 0, lastPrice: 0, lastAsk: 0, lastBid: 0 })
 
+
+        this.MADropMap.set('TSLA', { EMALength: 0, BuyTrendLength: 0, SellTrendLength: 0, BuyDipAmt: 0, SellDipAmt: 0, WaitTime: 3600000, StopLossAmt: .003 })
+        this.MADropMap.set('AAPL', { EMALength: 0, BuyTrendLength: 0, SellTrendLength: 0, BuyDipAmt: 0, SellDipAmt: 0, WaitTime: 1800000, StopLossAmt: .003 })
+        this.MADropMap.set('MSFT', { EMALength: 0, BuyTrendLength: 0, SellTrendLength: 0, BuyDipAmt: 0, SellDipAmt: 0, WaitTime: 1800000, StopLossAmt: .003 })
+        this.MADropMap.set('AMD', { EMALength: 0, BuyTrendLength: 0, SellTrendLength: 0, BuyDipAmt: 0, SellDipAmt: 0, WaitTime: 1800000, StopLossAmt: .003 })
+        this.MADropMap.set('PLTR', { EMALength: 0, BuyTrendLength: 0, SellTrendLength: 0, BuyDipAmt: 0, SellDipAmt: 0, WaitTime: 1800000, StopLossAmt: .003 })
+        this.MADropMap.set('XOM', { EMALength: 0, BuyTrendLength: 0, SellTrendLength: 0, BuyDipAmt: 0, SellDipAmt: 0, WaitTime: 1800000, StopLossAmt: .003 })
+        this.MADropMap.set('NVO', { EMALength: 0, BuyTrendLength: 0, SellTrendLength: 0, BuyDipAmt: 0, SellDipAmt: 0, WaitTime: 1800000, StopLossAmt: .003 })
+        this.MADropMap.set('NEE', { EMALength: 0, BuyTrendLength: 0, SellTrendLength: 0, BuyDipAmt: 0, SellDipAmt: 0, WaitTime: 1800000, StopLossAmt: .003 })
+        this.MADropMap.set('NVDA', { EMALength: 0, BuyTrendLength: 0, SellTrendLength: 0, BuyDipAmt: 0, SellDipAmt: 0, WaitTime: 1800000, StopLossAmt: .003 })
+
+        this.MADropDataMap.set('AAPL', { priceHistory: [], EMA: 0, CumulativePrice: 0, CumulativeSMA: 0, BuyTrend: 0, BuyTrendData: [], SellTrend: 0, SellTrendData: [], lastPrice: 0, lastAsk: 0, lastBid: 0 })
+        this.MADropDataMap.set('MSFT', { priceHistory: [], EMA: 0, CumulativePrice: 0, CumulativeSMA: 0, BuyTrend: 0, BuyTrendData: [], SellTrend: 0, SellTrendData: [], lastPrice: 0, lastAsk: 0, lastBid: 0 })
+        this.MADropDataMap.set('PLTR', { priceHistory: [], EMA: 0, CumulativePrice: 0, CumulativeSMA: 0, BuyTrend: 0, BuyTrendData: [], SellTrend: 0, SellTrendData: [], lastPrice: 0, lastAsk: 0, lastBid: 0 })
+        this.MADropDataMap.set('AMD', { priceHistory: [], EMA: 0, CumulativePrice: 0, CumulativeSMA: 0, BuyTrend: 0, BuyTrendData: [], SellTrend: 0, SellTrendData: [], lastPrice: 0, lastAsk: 0, lastBid: 0 })
+        this.MADropDataMap.set('TSLA', { priceHistory: [], EMA: 0, CumulativePrice: 0, CumulativeSMA: 0, BuyTrend: 0, BuyTrendData: [], SellTrend: 0, SellTrendData: [], lastPrice: 0, lastAsk: 0, lastBid: 0 })
+        this.MADropDataMap.set('XOM', { priceHistory: [], EMA: 0, CumulativePrice: 0, CumulativeSMA: 0, BuyTrend: 0, BuyTrendData: [], SellTrend: 0, SellTrendData: [], lastPrice: 0, lastAsk: 0, lastBid: 0 })
+        this.MADropDataMap.set('NVO', { priceHistory: [], EMA: 0, CumulativePrice: 0, CumulativeSMA: 0, BuyTrend: 0, BuyTrendData: [], SellTrend: 0, SellTrendData: [], lastPrice: 0, lastAsk: 0, lastBid: 0 })
+        this.MADropDataMap.set('NEE', { priceHistory: [], EMA: 0, CumulativePrice: 0, CumulativeSMA: 0, BuyTrend: 0, BuyTrendData: [], SellTrend: 0, SellTrendData: [], lastPrice: 0, lastAsk: 0, lastBid: 0 })
+        this.MADropDataMap.set('NVDA', { priceHistory: [], EMA: 0, CumulativePrice: 0, CumulativeSMA: 0, BuyTrend: 0, BuyTrendData: [], SellTrend: 0, SellTrendData: [], lastPrice: 0, lastAsk: 0, lastBid: 0 })
+
         for (let i = 0; i < this.listOfTradableStocks.length; i++) {
             for (let j = 0; j < this.activeStrategies.length; j++) {
                 this.stockInfoMap.set(JSON.stringify({ stockName: this.listOfTradableStocks[i], tradeStrategy: this.activeStrategies[j] }), { canTrade: true, numberOfTrades: 0, stopLoss: 0, stopLossGainThreshold: 0, tradeHigh: 0, numberOfLosses: 0 })
@@ -78,18 +101,13 @@ export class ServerTradeStrategies {
 
     static shouldExecuteOrder(stockData: DbCurrentDayStockData, strategy: string, lastOrder: DbOrders[]): { shouldTrade: boolean, log: tradeLogDto | null } {
         let stockStrategy = this.stockInfoMap.get(JSON.stringify({ stockName: stockData.stockName, tradeStrategy: strategy }))!
-        let stockStrategyInfo: stockStrategyType
-        let stockStrategyData: stockStrategyDataType
         switch (strategy) {
-
             case 'MACrossover':
-                stockStrategyInfo = this.stockMovingAverageCrossoverMap.get(stockData.stockName)!
-                stockStrategyData = this.stockMACrossDataMap.get(stockData.stockName)!
-                return this.shouldExecuteMovingAverageCrossover(stockData, stockStrategy, stockStrategyInfo as MovingAvergeCrossoverDto, stockStrategyData, lastOrder)
+                return this.shouldExecuteMovingAverageCrossover(stockData, stockStrategy, this.stockMovingAverageCrossoverMap.get(stockData.stockName)!, this.stockMACrossDataMap.get(stockData.stockName)!, lastOrder)
             case 'VWAP Trend':
-                stockStrategyInfo = this.VWAPTrendMap.get(stockData.stockName)!
-                stockStrategyData = this.stockVWAPDataMap.get(stockData.stockName)!
-                return this.shouldExecuteVWAPTrend(stockData, stockStrategy, stockStrategyInfo as VWAPTrendCrossDto, stockStrategyData as stockVWAPCrossData, lastOrder)
+                return this.shouldExecuteVWAPTrend(stockData, stockStrategy, this.VWAPTrendMap.get(stockData.stockName)!, this.stockVWAPDataMap.get(stockData.stockName)!, lastOrder)
+            case 'MA Drop':
+                return this.shouldExecuteMADrop(stockData, stockStrategy, this.MADropMap.get(stockData.stockName)!, this.MADropDataMap.get(stockData.stockName)!, lastOrder)
             default:
                 return { shouldTrade: false, log: null }
         }
@@ -505,6 +523,197 @@ export class ServerTradeStrategies {
                         shouldTrade: true, log: {
                             stockName: stockData.stockName,
                             strategy: 'VWAP Trend',
+                            tradingAmount: 0,
+                            orderId: lastOrder[0].orderId,
+                            shares: 0,
+                            dayTradeValues: structuredClone(stockStrategyInfo),
+                            stockInfo: structuredClone(stockInfo),
+                            stockDataInfo: structuredClone(stockStrategyData),
+                            logType: 'End Of Day Sell',
+                            time: stockData.time,
+                        }
+                    }
+                }
+            }
+
+        }
+
+
+
+        return { shouldTrade: false, log: nonTradeLog }
+    }
+
+    private static shouldExecuteMADrop(stockData: DbCurrentDayStockData, stockInfo: StockInfo, stockStrategyInfo: MADropDto, stockStrategyData: MADropData, lastOrder: DbOrders[]): { shouldTrade: boolean, log: tradeLogDto | null } {
+
+        stockStrategyData.priceHistory.push(stockData.stockPrice)
+        stockStrategyData.lastPrice = stockData.stockPrice
+        stockStrategyData.lastAsk = stockData.askPrice
+        stockStrategyData.lastBid = stockData.bidPrice
+        let nonTradeLog: tradeLogDto | null = null
+
+        const multiplyer = 2 / (stockStrategyInfo.EMALength + 1)
+
+        if (stockStrategyData.priceHistory.length < stockStrategyInfo.EMALength) {
+            stockStrategyData.CumulativePrice += stockData.stockPrice
+        }
+        else if (stockStrategyData.priceHistory.length == stockStrategyInfo.EMALength) {
+            stockStrategyData.CumulativePrice += stockData.stockPrice
+            stockStrategyData.CumulativeSMA = stockStrategyData.CumulativePrice / stockStrategyData.priceHistory.length
+            stockStrategyData.EMA = stockStrategyData.CumulativePrice / stockStrategyData.priceHistory.length
+            stockStrategyData.BuyTrendData.push(stockStrategyData.EMA)
+            stockStrategyData.SellTrendData.push(stockStrategyData.EMA)
+        }
+        else if (stockStrategyData.priceHistory.length > stockStrategyInfo.EMALength) {
+            stockStrategyData.CumulativePrice += stockData.stockPrice
+            stockStrategyData.CumulativeSMA = stockStrategyData.CumulativePrice / stockStrategyData.priceHistory.length
+            stockStrategyData.EMA = (stockData.stockPrice * multiplyer) + (stockStrategyData.EMA * (1 - multiplyer))
+            if (stockStrategyData.BuyTrendData.length < stockStrategyInfo.BuyTrendLength - 1) {
+                stockStrategyData.BuyTrendData.push(stockStrategyData.EMA)
+            }
+            else if (stockStrategyData.BuyTrendData.length == stockStrategyInfo.BuyTrendLength - 1) {
+                stockStrategyData.BuyTrendData.push(stockStrategyData.EMA)
+                stockStrategyData.BuyTrend = (stockStrategyData.BuyTrendData[stockStrategyData.BuyTrendData.length - 1] - stockStrategyData.BuyTrendData[0]) / stockStrategyInfo.BuyTrendLength
+            }
+            else if (stockStrategyData.BuyTrendData.length > stockStrategyInfo.BuyTrendLength - 1) {
+                stockStrategyData.BuyTrendData.shift()
+                stockStrategyData.BuyTrendData.push(stockStrategyData.EMA)
+                stockStrategyData.BuyTrend = (stockStrategyData.BuyTrendData[stockStrategyData.BuyTrendData.length - 1] - stockStrategyData.BuyTrendData[0]) / stockStrategyInfo.BuyTrendLength
+            }
+            if (stockStrategyData.SellTrendData.length < stockStrategyInfo.SellTrendLength - 1) {
+                stockStrategyData.SellTrendData.push(stockStrategyData.EMA)
+            }
+            else if (stockStrategyData.SellTrendData.length == stockStrategyInfo.SellTrendLength - 1) {
+                stockStrategyData.SellTrendData.push(stockStrategyData.EMA)
+                stockStrategyData.SellTrend = (stockStrategyData.SellTrendData[stockStrategyData.SellTrendData.length - 1] - stockStrategyData.SellTrendData[0]) / stockStrategyInfo.SellTrendLength
+            }
+            else if (stockStrategyData.SellTrendData.length > stockStrategyInfo.SellTrendLength - 1) {
+                stockStrategyData.SellTrendData.shift()
+                stockStrategyData.SellTrendData.push(stockStrategyData.EMA)
+                stockStrategyData.SellTrend = (stockStrategyData.SellTrendData[stockStrategyData.SellTrendData.length - 1] - stockStrategyData.SellTrendData[0]) / stockStrategyInfo.SellTrendLength
+            }
+
+            let isBuy = true;
+            if (lastOrder.length > 0) {
+                isBuy = lastOrder[0].orderType == 'Sell' ? true : false;
+            }
+            if (stockInfo.numberOfTrades == 0 && stockStrategyInfo.WaitTime > 0) {
+                if (stockData.time < (this.startTime + stockStrategyInfo.WaitTime)) {
+                    stockInfo.canTrade = false
+                }
+                else {
+                    stockInfo.canTrade = true
+                    nonTradeLog ??= {
+                        stockName: stockData.stockName,
+                        strategy: 'MA Drop',
+                        tradingAmount: 0,
+                        orderId: 0,
+                        shares: 0,
+                        dayTradeValues: structuredClone(stockStrategyInfo),
+                        stockInfo: structuredClone(stockInfo),
+                        stockDataInfo: structuredClone(stockStrategyData),
+                        logType: '',
+                        time: stockData.time,
+                    }
+                    nonTradeLog.logType += 'Stock Free To Trade After Initial Wait Time - '
+                }
+            }
+            if (stockInfo.numberOfTrades > 0 && stockInfo.canTrade == false) {
+                if ((Date.now() - lastOrder[0].orderTime) > 1800000) {
+                    stockInfo.canTrade = true
+                    nonTradeLog ??= {
+                        stockName: stockData.stockName,
+                        strategy: 'MA Drop',
+                        tradingAmount: 0,
+                        orderId: 0,
+                        shares: 0,
+                        dayTradeValues: structuredClone(stockStrategyInfo),
+                        stockInfo: structuredClone(stockInfo),
+                        stockDataInfo: structuredClone(stockStrategyData),
+                        logType: '',
+                        time: stockData.time,
+                    }
+                    nonTradeLog.logType += 'Stock Free To Trade After Stop Loss Timeout - '
+                }
+            }
+
+            if (isBuy && stockInfo.canTrade && stockInfo.numberOfLosses < 2 && stockStrategyData.BuyTrendData.length >= stockStrategyInfo.BuyTrendLength) {
+                if ((((stockStrategyData.EMA - stockStrategyData.CumulativeSMA) / stockStrategyData.CumulativeSMA) < (stockStrategyInfo.BuyDipAmt * -1)) && stockStrategyData.BuyTrend > 0) {
+                    stockInfo.numberOfTrades++
+                    stockInfo.stopLoss = stockData.askPrice * (1 - stockStrategyInfo.StopLossAmt)
+                    return {
+                        shouldTrade: true, log: {
+                            stockName: stockData.stockName,
+                            strategy: 'MA Drop',
+                            tradingAmount: 0,
+                            orderId: 0,
+                            shares: 0,
+                            dayTradeValues: structuredClone(stockStrategyInfo),
+                            stockInfo: structuredClone(stockInfo),
+                            stockDataInfo: structuredClone(stockStrategyData),
+                            logType: 'Buy',
+                            time: stockData.time,
+                        }
+                    }
+                }
+            }
+            else if (!isBuy && stockInfo.canTrade && stockStrategyData.SellTrendData.length >= stockStrategyInfo.SellTrendLength) {
+
+                if ((((stockStrategyData.EMA - stockStrategyData.CumulativeSMA) / stockStrategyData.CumulativeSMA) > stockStrategyInfo.SellDipAmt) && stockStrategyData.SellTrend > 0) {
+                    stockInfo.numberOfTrades++
+                    stockInfo.stopLoss = 0
+                    stockInfo.tradeHigh = 0
+                    stockInfo.stopLossGainThreshold = 0
+                    if (stockData.bidPrice < lastOrder[0].stockPrice) {
+                        stockInfo.numberOfLosses++
+                    }
+                    return {
+                        shouldTrade: true, log: {
+                            stockName: stockData.stockName,
+                            strategy: 'MA Drop',
+                            tradingAmount: 0,
+                            orderId: lastOrder[0].orderId,
+                            shares: 0,
+                            dayTradeValues: structuredClone(stockStrategyInfo),
+                            stockInfo: structuredClone(stockInfo),
+                            stockDataInfo: structuredClone(stockStrategyData),
+                            logType: 'Sell',
+                            time: stockData.time,
+                        }
+                    }
+                }
+
+                else if (stockData.bidPrice <= stockInfo.stopLoss) {
+                    stockInfo.numberOfTrades++
+                    stockInfo.stopLoss = 0
+                    stockInfo.tradeHigh = 0
+                    stockInfo.stopLossGainThreshold = 0
+                    stockInfo.canTrade = false
+                    stockInfo.numberOfLosses++
+                    return {
+                        shouldTrade: true, log: {
+                            stockName: stockData.stockName,
+                            strategy: 'MA Drop',
+                            tradingAmount: 0,
+                            orderId: lastOrder[0].orderId,
+                            shares: 0,
+                            dayTradeValues: structuredClone(stockStrategyInfo),
+                            stockInfo: structuredClone(stockInfo),
+                            stockDataInfo: structuredClone(stockStrategyData),
+                            logType: 'Stop Loss Sell',
+                            time: stockData.time,
+                        }
+                    }
+                }
+                else if (stockData.time > this.endTime) {
+                    stockInfo.numberOfTrades++
+                    stockInfo.stopLoss = 0
+                    stockInfo.tradeHigh = 0
+                    stockInfo.stopLossGainThreshold = 0
+                    stockInfo.canTrade = false
+                    return {
+                        shouldTrade: true, log: {
+                            stockName: stockData.stockName,
+                            strategy: 'MA Drop',
                             tradingAmount: 0,
                             orderId: lastOrder[0].orderId,
                             shares: 0,

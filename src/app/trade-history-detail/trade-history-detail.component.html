@@ -22,6 +22,13 @@
       <mat-label>End Date</mat-label>
       <input matInput placeholder="MM/DD/YYYY" [(ngModel)]="endDate">
     </mat-form-field>
+    <mat-form-field style="padding-left:.5rem;">
+      <mat-label>Strategy</mat-label>
+      <mat-select disableRipple [(value)]="selectedStrategy">
+        <mat-option *ngFor="let strategy of distinctStrategies" value="{{strategy}}"
+          (onSelectionChange)="onSelectedStrategChange($event)">{{strategy}}</mat-option>
+      </mat-select>
+    </mat-form-field>
 
     <button style="margin-top: auto; margin-bottom: auto; margin-left: .5rem;" mat-raised-button color="primary"
       aria-label="Search" (click)="onSubmitSearch()">Search</button>
