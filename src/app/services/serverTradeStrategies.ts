@@ -64,7 +64,7 @@ export class ServerTradeStrategies {
 
 
         this.MADropMap.set('TSLA', { EMALength: 0, BuyTrendLength: 0, SellTrendLength: 0, BuyDipAmt: 0, SellDipAmt: 0, WaitTime: 3600000, StopLossAmt: .003 })
-        this.MADropMap.set('AAPL', { EMALength: 0, BuyTrendLength: 0, SellTrendLength: 0, BuyDipAmt: 0, SellDipAmt: 0, WaitTime: 1800000, StopLossAmt: .003 })
+        this.MADropMap.set('AAPL', { EMALength: 750, BuyTrendLength: 30, SellTrendLength: 130, BuyDipAmt: 0.004, SellDipAmt: 0.003, WaitTime: 1800000, StopLossAmt: .003 })
         this.MADropMap.set('MSFT', { EMALength: 0, BuyTrendLength: 0, SellTrendLength: 0, BuyDipAmt: 0, SellDipAmt: 0, WaitTime: 1800000, StopLossAmt: .003 })
         this.MADropMap.set('AMD', { EMALength: 0, BuyTrendLength: 0, SellTrendLength: 0, BuyDipAmt: 0, SellDipAmt: 0, WaitTime: 1800000, StopLossAmt: .003 })
         this.MADropMap.set('PLTR', { EMALength: 0, BuyTrendLength: 0, SellTrendLength: 0, BuyDipAmt: 0, SellDipAmt: 0, WaitTime: 1800000, StopLossAmt: .003 })

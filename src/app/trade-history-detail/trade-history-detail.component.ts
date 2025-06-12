@@ -77,13 +77,31 @@ export class TradeHistoryDetailComponent implements OnInit {
     this.allOrders = await OrderController.getAllSharedOrders()
     if (this.selectedStockName == 'All') {
       if (this.dateType == 'All') {
-        this.selectedStockOrders = this.allOrders.filter(e => e.tradeStrategy == this.selectedStrategy)
+        if (this.selectedStrategy == 'All') {
+          this.selectedStockOrders = this.allOrders
+        }
+        else {
+          this.selectedStockOrders = this.allOrders.filter(e => e.tradeStrategy == this.selectedStrategy)
+        }
+
       }
       else if (this.dateType == 'Today') {
-        this.selectedStockOrders = this.allOrders.filter(e => this.convertEpochToDate(e.orderTime) == this.getCurrentDateFormat() && e.tradeStrategy == this.selectedStrategy)
+        if (this.selectedStrategy == 'All') {
+          this.selectedStockOrders = this.allOrders.filter(e => this.convertEpochToDate(e.orderTime) == this.getCurrentDateFormat())
+        }
+        else {
+          this.selectedStockOrders = this.allOrders.filter(e => this.convertEpochToDate(e.orderTime) == this.getCurrentDateFormat() && e.tradeStrategy == this.selectedStrategy)
+        }
+
       }
       else if (this.dateType == 'This Week') {
-        this.selectedStockOrders = this.allOrders.filter(e => this.isSameCalendarWeek(e.orderTime) && e.tradeStrategy == this.selectedStrategy)
+
+        if (this.selectedStrategy == 'All') {
+          this.selectedStockOrders = this.allOrders.filter(e => this.isSameCalendarWeek(e.orderTime))
+        }
+        else {
+          this.selectedStockOrders = this.allOrders.filter(e => this.isSameCalendarWeek(e.orderTime) && e.tradeStrategy == this.selectedStrategy)
+        }
       }
       else if (this.dateType == 'This Month') {
 
@@ -92,20 +110,42 @@ export class TradeHistoryDetailComponent implements OnInit {
         let startTime = new Date(this.startDate)
         let endTime = new Date(this.endDate)
         endTime.setHours(23, 0, 0, 0)
-        console.log(startTime)
-        console.log(endTime)
-        this.selectedStockOrders = this.allOrders.filter(e => e.orderTime >= startTime.getTime() && e.orderTime <= endTime.getTime() && e.tradeStrategy == this.selectedStrategy)
+        if (this.selectedStrategy == 'All') {
+          this.selectedStockOrders = this.allOrders.filter(e => e.orderTime >= startTime.getTime() && e.orderTime <= endTime.getTime())
+        }
+        else {
+          this.selectedStockOrders = this.allOrders.filter(e => e.orderTime >= startTime.getTime() && e.orderTime <= endTime.getTime() && e.tradeStrategy == this.selectedStrategy)
+        }
+
       }
     }
     else {
       if (this.dateType == 'All') {
-        this.selectedStockOrders = this.allOrders.filter(e => e.stockName == this.selectedStockName && e.tradeStrategy == this.selectedStrategy)
+        if (this.selectedStrategy == 'All') {
+          this.selectedStockOrders = this.allOrders.filter(e => e.stockName == this.selectedStockName)
+        }
+        else {
+          this.selectedStockOrders = this.allOrders.filter(e => e.stockName == this.selectedStockName && e.tradeStrategy == this.selectedStrategy)
+        }
+
       }
       else if (this.dateType == 'Today') {
-        this.selectedStockOrders = this.allOrders.filter(e => e.stockName == this.selectedStockName && this.convertEpochToDate(e.orderTime) == this.getCurrentDateFormat() && e.tradeStrategy == this.selectedStrategy)
+        if (this.selectedStrategy == 'All') {
+          this.selectedStockOrders = this.allOrders.filter(e => e.stockName == this.selectedStockName && this.convertEpochToDate(e.orderTime) == this.getCurrentDateFormat())
+        }
+        else {
+          this.selectedStockOrders = this.allOrders.filter(e => e.stockName == this.selectedStockName && this.convertEpochToDate(e.orderTime) == this.getCurrentDateFormat() && e.tradeStrategy == this.selectedStrategy)
+        }
+
       }
       else if (this.dateType == 'This Week') {
-        this.selectedStockOrders = this.allOrders.filter(e => this.isSameCalendarWeek(e.orderTime) && e.stockName == this.selectedStockName && e.tradeStrategy == this.selectedStrategy)
+        if (this.selectedStrategy == 'All') {
+          this.selectedStockOrders = this.allOrders.filter(e => this.isSameCalendarWeek(e.orderTime) && e.stockName == this.selectedStockName)
+        }
+        else {
+          this.selectedStockOrders = this.allOrders.filter(e => this.isSameCalendarWeek(e.orderTime) && e.stockName == this.selectedStockName && e.tradeStrategy == this.selectedStrategy)
+        }
+
       }
       else if (this.dateType == 'This Month') {
 
@@ -114,9 +154,13 @@ export class TradeHistoryDetailComponent implements OnInit {
         let startTime = new Date(this.startDate)
         let endTime = new Date(this.endDate)
         endTime.setHours(23, 0, 0, 0)
-        console.log(startTime)
-        console.log(endTime)
-        this.selectedStockOrders = this.allOrders.filter(e => e.orderTime >= startTime.getTime() && e.orderTime <= endTime.getTime() && e.stockName == this.selectedStockName && e.tradeStrategy == this.selectedStrategy)
+        if (this.selectedStrategy == 'All') {
+          this.selectedStockOrders = this.allOrders.filter(e => e.orderTime >= startTime.getTime() && e.orderTime <= endTime.getTime() && e.stockName == this.selectedStockName)
+        }
+        else {
+          this.selectedStockOrders = this.allOrders.filter(e => e.orderTime >= startTime.getTime() && e.orderTime <= endTime.getTime() && e.stockName == this.selectedStockName && e.tradeStrategy == this.selectedStrategy)
+        }
+
       }
     }
     this.claculateOrderDetails()

@@ -90,7 +90,17 @@ export const placeOrderForAccount = async (accountInfo: DbTOkens, order: SchwabO
                     "session": order.session,
                     "duration": order.duration,
                     "orderStrategyType": order.orderStrategyType,
-                    "orderLegCollection": order.orderLegCollection
+                    "orderLegCollection": [
+                        {
+                            "instruction": order.orderLegCollection[0].instruction,
+                            "quantity": order.orderLegCollection[0].quantity,
+                            "instrument": {
+                                "symbol": order.orderLegCollection[0].instrument.symbol,
+                                "assetType": order.orderLegCollection[0].instrument.assetType,
+                                "description": order.orderLegCollection[0].instrument.description
+                            }
+                        }
+                    ]
                 }
             )
         };
