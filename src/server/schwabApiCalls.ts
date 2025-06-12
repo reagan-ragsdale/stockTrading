@@ -82,7 +82,8 @@ export const placeOrderForAccount = async (accountInfo: DbTOkens, order: SchwabO
         const options = {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${accountInfo.accessToken}`
+                'Authorization': `Bearer ${accountInfo.accessToken}`,
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(
                 {
@@ -96,8 +97,7 @@ export const placeOrderForAccount = async (accountInfo: DbTOkens, order: SchwabO
                             "quantity": order.orderLegCollection[0].quantity,
                             "instrument": {
                                 "symbol": order.orderLegCollection[0].instrument.symbol,
-                                "assetType": order.orderLegCollection[0].instrument.assetType,
-                                "description": order.orderLegCollection[0].instrument.description
+                                "assetType": order.orderLegCollection[0].instrument.assetType
                             }
                         }
                     ]
