@@ -715,6 +715,8 @@ export class ServerTradeScreenComponent implements OnInit {
 
       let buyCombinations = this.generateNonLineCombinations(nonBuyLineCombinations)
       let sellCombinations = this.generateNonLineCombinations(nonSellLineCombinations)
+      console.log(buyCombinations)
+      console.log(sellCombinations)
       for (let k = 0; k < buyCombinations.length; k++) {
         for (let n = 0; n < rules.BuyRules.length; n++) {
           if (buyLines[rules.BuyRules[n].primaryObject.lineId] != undefined) {
