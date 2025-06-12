@@ -785,7 +785,9 @@ export class ServerTradeScreenComponent implements OnInit {
         }
       }
       let buyCombinations = this.generateNonLineCombinations(nonBuyLineCombinations)
+      console.log(buyCombinations)
       let sellCombinations = this.generateNonLineCombinations(nonSellLineCombinations)
+      console.log(sellCombinations)
       console.time('final loop')
       for (let k = 0; k < buyCombinations.length; k++) {
         for (let n = 0; n < rules.BuyRules.length; n++) {
@@ -803,6 +805,7 @@ export class ServerTradeScreenComponent implements OnInit {
         }
 
         for (let n = 0; n < sellCombinations.length; n++) {
+          count++
           for (let s = 0; s < rules.SellRules.length; s++) {
 
 
@@ -824,7 +827,7 @@ export class ServerTradeScreenComponent implements OnInit {
           let wins = 0
           let losses = 0
           for (let m = counter; m < this.stockDataForSelectedDay.length; m++) {
-            count++
+
             if (buySell == 'Buy') {
               let buyArray = []
               for (let j = 0; j < rules.BuyRules.length; j++) {
