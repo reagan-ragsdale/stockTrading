@@ -533,8 +533,6 @@ export class ServerTradeScreenComponent implements OnInit {
           }
           //listOfBuyLines[rules.BuyRules[i].primaryObject.lineId].push({ length: rules.BuyRules[i].primaryObject.length, data: rules.BuyRules[i].primaryObject.data })
         }
-      }
-      for (let i = 0; i < rules.BuyRules.length; i++) {
         if (rules.BuyRules[i].referencedObject.length > 1 && rules.BuyRules[i].referencedObject.lengthLoopChecked) {
           if (listOfBuyLines[rules.BuyRules[i].referencedObject.lineId] == undefined) {
             listOfBuyLines[rules.BuyRules[i].referencedObject.lineId] = []
@@ -595,8 +593,6 @@ export class ServerTradeScreenComponent implements OnInit {
             listOfBuyLines[rules.SellRules[i].primaryObject.lineId].push({ length: rules.SellRules[i].primaryObject.length, data: this.calculateCumulativeVWAP() })
           }
         }
-      }
-      for (let i = 0; i < rules.SellRules.length; i++) {
         if (rules.SellRules[i].referencedObject.length > 1 && rules.SellRules[i].referencedObject.lengthLoopChecked) {
           if (listOfBuyLines[rules.SellRules[i].referencedObject.lineId] == undefined) {
             listOfBuyLines[rules.SellRules[i].referencedObject.lineId] = []
@@ -712,93 +708,56 @@ export class ServerTradeScreenComponent implements OnInit {
 
 
 
-      for (let j = 0; j < rules.BuyRules.length; j++) {
-        if (buyLines[rules.BuyRules[j].primaryObject.lineId] != undefined) {
-          const keys = Object.keys(buyLines);
-          let index = keys.indexOf(rules.BuyRules[j].primaryObject.lineId.toString());
-          let comboIndex = combinations[i][index]
-          rules.BuyRules[j].primaryObject.data = buyLines[rules.BuyRules[j].primaryObject.lineId][comboIndex].data
-          rules.BuyRules[j].primaryObject.length = buyLines[rules.BuyRules[j].primaryObject.lineId][comboIndex].length
-        }
-        if (buyLines[rules.BuyRules[j].referencedObject.lineId] != undefined) {
-          const keys = Object.keys(buyLines);
-          let index = keys.indexOf(rules.BuyRules[j].referencedObject.lineId.toString());
-          let comboIndex = combinations[i][index]
-          rules.BuyRules[j].referencedObject.data = buyLines[rules.BuyRules[j].referencedObject.lineId][comboIndex].data
-          rules.BuyRules[j].referencedObject.length = buyLines[rules.BuyRules[j].referencedObject.lineId][comboIndex].length
-        }
-      }
-      for (let j = 0; j < rules.SellRules.length; j++) {
-        if (buyLines[rules.SellRules[j].primaryObject.lineId] != undefined) {
-          const keys = Object.keys(buyLines);
-          let index = keys.indexOf(rules.SellRules[j].primaryObject.lineId.toString());
-          let comboIndex = combinations[i][index]
-          rules.SellRules[j].primaryObject.data = buyLines[rules.SellRules[j].primaryObject.lineId][comboIndex].data
-          rules.SellRules[j].primaryObject.length = buyLines[rules.SellRules[j].primaryObject.lineId][comboIndex].length
-        }
-        if (buyLines[rules.SellRules[j].referencedObject.lineId] != undefined) {
-          const keys = Object.keys(buyLines);
-          let index = keys.indexOf(rules.SellRules[j].referencedObject.lineId.toString());
-          let comboIndex = combinations[i][index]
-          rules.SellRules[j].referencedObject.data = buyLines[rules.SellRules[j].referencedObject.lineId][comboIndex].data
-          rules.SellRules[j].referencedObject.length = buyLines[rules.SellRules[j].referencedObject.lineId][comboIndex].length
-        }
-      }
+
       let nonBuyLineCombinations: { [key: string]: { value: number }[] } = {}
-      for (let j = 0; j < rules.BuyRules.length; j++) {
-        if (rules.BuyRules[j].buyTimeChecked) {
-          nonBuyLineCombinations[rules.BuyRules[j].buyTimeUId] = []
-          let from = rules.BuyRules[j].buyTimeCheckFromAmnt
-          let to = rules.BuyRules[j].buyTimeCheckToAmnt
-          let step = rules.BuyRules[j].buyTimeCheckStepAmnt
-          for (let k = from; k <= to; k += step) {
-            nonBuyLineCombinations[rules.BuyRules[j].buyTimeUId].push({ value: k })
-          }
-        }
-        if (rules.BuyRules[j].desiredAction.amountLoopChecked) {
-          nonBuyLineCombinations[rules.BuyRules[j].desiredAction.amountLoopUId] = []
-          let from = rules.BuyRules[j].desiredAction.amountLoopCheckFromAmnt
-          let to = rules.BuyRules[j].desiredAction.amountLoopCheckToAmnt
-          let step = rules.BuyRules[j].desiredAction.amountLoopCheckStepAmnt
-          for (let k = from; k <= to; k += step) {
-            nonBuyLineCombinations[rules.BuyRules[j].desiredAction.amountLoopUId].push({ value: k })
-          }
-        }
-        if (rules.BuyRules[j].desiredAction.lengthLoopChecked) {
-          nonBuyLineCombinations[rules.BuyRules[j].desiredAction.lengthLoopUId] = []
-          let from = rules.BuyRules[j].desiredAction.lengthLoopCheckFromAmnt
-          let to = rules.BuyRules[j].desiredAction.lengthLoopCheckToAmnt
-          let step = rules.BuyRules[j].desiredAction.lengthLoopCheckStepAmnt
-          for (let k = from; k <= to; k += step) {
-            nonBuyLineCombinations[rules.BuyRules[j].desiredAction.lengthLoopUId].push({ value: k })
-          }
-        }
-      }
+
       let nonSellLineCombinations: { [key: string]: { value: number }[] } = {}
-      for (let j = 0; j < rules.SellRules.length; j++) {
-        if (rules.SellRules[j].desiredAction.amountLoopChecked) {
-          nonSellLineCombinations[rules.SellRules[j].desiredAction.amountLoopUId] = []
-          let from = rules.SellRules[j].desiredAction.amountLoopCheckFromAmnt
-          let to = rules.SellRules[j].desiredAction.amountLoopCheckToAmnt
-          let step = rules.SellRules[j].desiredAction.amountLoopCheckStepAmnt
-          for (let k = from; k <= to; k += step) {
-            nonSellLineCombinations[rules.SellRules[j].desiredAction.amountLoopUId].push({ value: k })
-          }
-        }
-        if (rules.SellRules[j].desiredAction.lengthLoopChecked) {
-          nonSellLineCombinations[rules.SellRules[j].desiredAction.lengthLoopUId] = []
-          let from = rules.SellRules[j].desiredAction.lengthLoopCheckFromAmnt
-          let to = rules.SellRules[j].desiredAction.lengthLoopCheckToAmnt
-          let step = rules.SellRules[j].desiredAction.lengthLoopCheckStepAmnt
-          for (let k = from; k <= to; k += step) {
-            nonSellLineCombinations[rules.SellRules[j].desiredAction.lengthLoopUId].push({ value: k })
-          }
-        }
-      }
+
       let buyCombinations = this.generateNonLineCombinations(nonBuyLineCombinations)
       let sellCombinations = this.generateNonLineCombinations(nonSellLineCombinations)
       for (let k = 0; k < buyCombinations.length; k++) {
         for (let n = 0; n < rules.BuyRules.length; n++) {
+          if (buyLines[rules.BuyRules[n].primaryObject.lineId] != undefined) {
+            const keys = Object.keys(buyLines);
+            let index = keys.indexOf(rules.BuyRules[n].primaryObject.lineId.toString());
+            let comboIndex = combinations[i][index]
+            rules.BuyRules[n].primaryObject.data = buyLines[rules.BuyRules[n].primaryObject.lineId][comboIndex].data
+            rules.BuyRules[n].primaryObject.length = buyLines[rules.BuyRules[n].primaryObject.lineId][comboIndex].length
+          }
+          if (buyLines[rules.BuyRules[n].referencedObject.lineId] != undefined) {
+            const keys = Object.keys(buyLines);
+            let index = keys.indexOf(rules.BuyRules[n].referencedObject.lineId.toString());
+            let comboIndex = combinations[i][index]
+            rules.BuyRules[n].referencedObject.data = buyLines[rules.BuyRules[n].referencedObject.lineId][comboIndex].data
+            rules.BuyRules[n].referencedObject.length = buyLines[rules.BuyRules[n].referencedObject.lineId][comboIndex].length
+          }
+          if (rules.BuyRules[n].buyTimeChecked) {
+            nonBuyLineCombinations[rules.BuyRules[n].buyTimeUId] = []
+            let from = rules.BuyRules[n].buyTimeCheckFromAmnt
+            let to = rules.BuyRules[n].buyTimeCheckToAmnt
+            let step = rules.BuyRules[n].buyTimeCheckStepAmnt
+            for (let k = from; k <= to; k += step) {
+              nonBuyLineCombinations[rules.BuyRules[n].buyTimeUId].push({ value: k })
+            }
+          }
+          if (rules.BuyRules[n].desiredAction.amountLoopChecked) {
+            nonBuyLineCombinations[rules.BuyRules[n].desiredAction.amountLoopUId] = []
+            let from = rules.BuyRules[n].desiredAction.amountLoopCheckFromAmnt
+            let to = rules.BuyRules[n].desiredAction.amountLoopCheckToAmnt
+            let step = rules.BuyRules[n].desiredAction.amountLoopCheckStepAmnt
+            for (let k = from; k <= to; k += step) {
+              nonBuyLineCombinations[rules.BuyRules[n].desiredAction.amountLoopUId].push({ value: k })
+            }
+          }
+          if (rules.BuyRules[n].desiredAction.lengthLoopChecked) {
+            nonBuyLineCombinations[rules.BuyRules[n].desiredAction.lengthLoopUId] = []
+            let from = rules.BuyRules[n].desiredAction.lengthLoopCheckFromAmnt
+            let to = rules.BuyRules[n].desiredAction.lengthLoopCheckToAmnt
+            let step = rules.BuyRules[n].desiredAction.lengthLoopCheckStepAmnt
+            for (let k = from; k <= to; k += step) {
+              nonBuyLineCombinations[rules.BuyRules[n].desiredAction.lengthLoopUId].push({ value: k })
+            }
+          }
           for (let p = 0; p < buyCombinations[k].length; p++) {
             if (buyCombinations[k][p].name == n + 'A') {
               rules.BuyRules[n].buyTime = buyCombinations[k][p].value
@@ -813,6 +772,38 @@ export class ServerTradeScreenComponent implements OnInit {
         }
         for (let n = 0; n < sellCombinations.length; n++) {
           for (let s = 0; s < rules.SellRules.length; s++) {
+            if (buyLines[rules.SellRules[s].primaryObject.lineId] != undefined) {
+              const keys = Object.keys(buyLines);
+              let index = keys.indexOf(rules.SellRules[s].primaryObject.lineId.toString());
+              let comboIndex = combinations[i][index]
+              rules.SellRules[s].primaryObject.data = buyLines[rules.SellRules[s].primaryObject.lineId][comboIndex].data
+              rules.SellRules[s].primaryObject.length = buyLines[rules.SellRules[s].primaryObject.lineId][comboIndex].length
+            }
+            if (buyLines[rules.SellRules[s].referencedObject.lineId] != undefined) {
+              const keys = Object.keys(buyLines);
+              let index = keys.indexOf(rules.SellRules[s].referencedObject.lineId.toString());
+              let comboIndex = combinations[i][index]
+              rules.SellRules[s].referencedObject.data = buyLines[rules.SellRules[s].referencedObject.lineId][comboIndex].data
+              rules.SellRules[s].referencedObject.length = buyLines[rules.SellRules[s].referencedObject.lineId][comboIndex].length
+            }
+            if (rules.SellRules[s].desiredAction.amountLoopChecked) {
+              nonSellLineCombinations[rules.SellRules[s].desiredAction.amountLoopUId] = []
+              let from = rules.SellRules[s].desiredAction.amountLoopCheckFromAmnt
+              let to = rules.SellRules[s].desiredAction.amountLoopCheckToAmnt
+              let step = rules.SellRules[s].desiredAction.amountLoopCheckStepAmnt
+              for (let k = from; k <= to; k += step) {
+                nonSellLineCombinations[rules.SellRules[s].desiredAction.amountLoopUId].push({ value: k })
+              }
+            }
+            if (rules.SellRules[s].desiredAction.lengthLoopChecked) {
+              nonSellLineCombinations[rules.SellRules[s].desiredAction.lengthLoopUId] = []
+              let from = rules.SellRules[s].desiredAction.lengthLoopCheckFromAmnt
+              let to = rules.SellRules[s].desiredAction.lengthLoopCheckToAmnt
+              let step = rules.SellRules[s].desiredAction.lengthLoopCheckStepAmnt
+              for (let k = from; k <= to; k += step) {
+                nonSellLineCombinations[rules.SellRules[s].desiredAction.lengthLoopUId].push({ value: k })
+              }
+            }
             for (let p = 0; p < sellCombinations[n].length; p++) {
               if (sellCombinations[n][p].name == s + 'A') {
                 rules.SellRules[s].desiredAction.amount = sellCombinations[n][p].value
