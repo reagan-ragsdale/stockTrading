@@ -785,11 +785,10 @@ export class ServerTradeScreenComponent implements OnInit {
         }
       }
       let buyCombinations = this.generateNonLineCombinations(nonBuyLineCombinations)
-      console.log(buyCombinations)
       let sellCombinations = this.generateNonLineCombinations(nonSellLineCombinations)
-      console.log(sellCombinations)
       console.time('final loop')
       for (let k = 0; k < buyCombinations.length; k++) {
+        let buyCombo: any[] = []
         for (let n = 0; n < rules.BuyRules.length; n++) {
           for (let p = 0; p < buyCombinations[k].length; p++) {
             if (buyCombinations[k][p].name == n + 'A') {
@@ -802,13 +801,19 @@ export class ServerTradeScreenComponent implements OnInit {
               rules.BuyRules[n].desiredAction.length = buyCombinations[k][p].value
             }
           }
+          buyCombo.push({
+            primaryLength: rules.BuyRules[n].primaryObject.length,
+            time: rules.BuyRules[n].buyTime,
+            actionAmnt: rules.BuyRules[n].desiredAction.amount,
+            actionLength: rules.BuyRules[n].desiredAction.length,
+            referencedLength: rules.BuyRules[n].referencedObject.length
+          })
         }
 
         for (let n = 0; n < sellCombinations.length; n++) {
           count++
+          let sellCombo: any[] = []
           for (let s = 0; s < rules.SellRules.length; s++) {
-
-
             for (let p = 0; p < sellCombinations[n].length; p++) {
               if (sellCombinations[n][p].name == s + 'A') {
                 rules.SellRules[s].desiredAction.amount = sellCombinations[n][p].value
@@ -817,6 +822,12 @@ export class ServerTradeScreenComponent implements OnInit {
                 rules.SellRules[s].desiredAction.length = sellCombinations[n][p].value
               }
             }
+            sellCombo.push({
+              primaryLength: rules.SellRules[s].primaryObject.length,
+              actionAmnt: rules.SellRules[s].desiredAction.amount,
+              actionLength: rules.SellRules[s].desiredAction.length,
+              referencedLength: rules.SellRules[s].referencedObject.length
+            })
           }
 
           let buySell = 'Buy'
@@ -899,25 +910,6 @@ export class ServerTradeScreenComponent implements OnInit {
 
             }
           }
-          let buyCombo: any[] = []
-          for (let i = 0; i < rules.BuyRules.length; i++) {
-            buyCombo.push({
-              primaryLength: rules.BuyRules[i].primaryObject.length,
-              time: rules.BuyRules[i].buyTime,
-              actionAmnt: rules.BuyRules[i].desiredAction.amount,
-              actionLength: rules.BuyRules[i].desiredAction.length,
-              referencedLength: rules.BuyRules[i].referencedObject.length
-            })
-          }
-          let sellCombo: any[] = []
-          for (let i = 0; i < rules.SellRules.length; i++) {
-            sellCombo.push({
-              primaryLength: rules.SellRules[i].primaryObject.length,
-              actionAmnt: rules.SellRules[i].desiredAction.amount,
-              actionLength: rules.SellRules[i].desiredAction.length,
-              referencedLength: rules.SellRules[i].referencedObject.length
-            })
-          }
           returnData.push({ wins: wins, losses: losses, profit: profit, buyCombos: buyCombo, sellCombos: sellCombo })
         }
 
@@ -927,7 +919,6 @@ export class ServerTradeScreenComponent implements OnInit {
 
 
     }
-    console.log('count:' + count)
     return returnData
 
   }
