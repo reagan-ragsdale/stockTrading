@@ -818,6 +818,7 @@ export class ServerTradeScreenComponent implements OnInit {
             }
           }
           console.timeEnd('sell rules')
+
           let buySell = 'Buy'
           let orderLocations: orderLocation[] = []
           let profit = 0
