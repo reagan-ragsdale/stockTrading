@@ -23,8 +23,8 @@ export const socketCall = async (): Promise<void> => {
     startDate.setHours(5, 0, 0, 0)
     let startTime = startDate.getTime()
     let endingTime = startTime + 53990000
-
-    let activeStrategies: string[] = ['MACrossover', 'VWAP Trend']
+    let listOfTradableStocks: string[] = ['AAPL', 'TSLA', 'PLTR']
+    let activeStrategies: string[] = ['MA Drop']
 
     //admin user to start websocket
     const userData = await dbTokenRepo.findFirst({ id: 'asdfghjkl' }) as DbTOkens
@@ -85,7 +85,7 @@ export const socketCall = async (): Promise<void> => {
                 "SchwabClientCustomerId": userData.schwabClientCustomerId,
                 "SchwabClientCorrelId": userData.schwabClientCorrelId,
                 "parameters": {
-                    "keys": "AAPL, MSFT, PLTR, AMD, TSLA, XOM,NVO, NEE, NVDA",
+                    "keys": "AAPL, MSFT, PLTR, AMD, TSLA, XOM,NVO, NEE, NVDA, AMZN, GOOG",
                     "fields": "0,1,2,3,4,5,6,7,8,9,10,33"
                 }
             }
@@ -133,69 +133,71 @@ export const socketCall = async (): Promise<void> => {
 
                             //push the data into what will be sent to the database 
                             insertData.push(data)
-                            for (let strategy = 0; strategy < activeStrategies.length; strategy++) {
-                                //change below to point to schwab order table
-                                let lastOrder = userOrders.filter(e => e.stockName == data.stockName && e.tradeStrategy == activeStrategies[strategy])
-                                let isBuy = true;
-                                if (lastOrder.length > 0) {
-                                    isBuy = lastOrder[0].orderType == 'Sell' ? true : false;
-                                }
-
-                                if (isBuy) {
-                                    let result = ServerTradeStrategies.shouldExecuteOrder(data, activeStrategies[strategy], lastOrder)
-                                    //console.log(result)
-                                    if (result.shouldTrade && (data.askPrice < (userFinance?.spending! + 1))) {
-                                        //add below to send to schwab and also insert into schwab order table
-                                        let orderId = Math.floor(Math.random() * 10000000000)
-                                        await dbOrdersRepo.insert({
-                                            userId: 'Shared',
-                                            stockName: data.stockName,
-                                            orderType: 'Buy',
-                                            stockPrice: data.askPrice,
-                                            shareQty: 1,
-                                            orderId: orderId,
-                                            tradeStrategy: activeStrategies[strategy],
-                                            orderTime: data.time
-                                        })
-
-                                        orderPlaced = true
-                                        //below should be changed to get new schwab amount
-                                        let newSpending = userFinance?.spending! - data.askPrice
-                                        await simFinRepo.save({ ...userFinance, spending: newSpending })
-                                        userFinance = await simFinRepo.findFirst({ userId: 'Shared' })
-                                        if (result.log !== null) {
-                                            result.log.tradingAmount = userFinance?.spending!
-                                            result.log.orderId = orderId
-                                            result.log.shares = 1
-                                            LoggerController.addToLog(result.log)
-                                        }
+                            if (listOfTradableStocks.includes(data.stockName)) {
+                                for (let strategy = 0; strategy < activeStrategies.length; strategy++) {
+                                    //change below to point to schwab order table
+                                    let lastOrder = userOrders.filter(e => e.stockName == data.stockName && e.tradeStrategy == activeStrategies[strategy])
+                                    let isBuy = true;
+                                    if (lastOrder.length > 0) {
+                                        isBuy = lastOrder[0].orderType == 'Sell' ? true : false;
                                     }
 
-                                }
-                                else {
-                                    let result = ServerTradeStrategies.shouldExecuteOrder(data, activeStrategies[strategy], lastOrder)
-                                    if (result.shouldTrade) {
-                                        //schwab
-                                        await dbOrdersRepo.insert({
-                                            userId: 'Shared',
-                                            stockName: data.stockName,
-                                            orderType: 'Sell',
-                                            stockPrice: data.bidPrice,
-                                            shareQty: lastOrder[0].shareQty,
-                                            orderId: lastOrder[0].orderId,
-                                            tradeStrategy: activeStrategies[strategy],
-                                            orderTime: data.time
-                                        })
-                                        orderPlaced = true
-                                        if (result.log !== null) {
+                                    if (isBuy) {
+                                        let result = ServerTradeStrategies.shouldExecuteOrder(data, activeStrategies[strategy], lastOrder)
+                                        //console.log(result)
+                                        if (result.shouldTrade && (data.askPrice < (userFinance?.spending! + 1))) {
+                                            //add below to send to schwab and also insert into schwab order table
+                                            let orderId = Math.floor(Math.random() * 10000000000)
+                                            await dbOrdersRepo.insert({
+                                                userId: 'Shared',
+                                                stockName: data.stockName,
+                                                orderType: 'Buy',
+                                                stockPrice: data.askPrice,
+                                                shareQty: 1,
+                                                orderId: orderId,
+                                                tradeStrategy: activeStrategies[strategy],
+                                                orderTime: data.time
+                                            })
+
+                                            orderPlaced = true
+                                            //below should be changed to get new schwab amount
+                                            let newSpending = userFinance?.spending! - data.askPrice
+                                            await simFinRepo.save({ ...userFinance, spending: newSpending })
+                                            userFinance = await simFinRepo.findFirst({ userId: 'Shared' })
+                                            if (result.log !== null) {
+                                                result.log.tradingAmount = userFinance?.spending!
+                                                result.log.orderId = orderId
+                                                result.log.shares = 1
+                                                LoggerController.addToLog(result.log)
+                                            }
+                                        }
+
+                                    }
+                                    else {
+                                        let result = ServerTradeStrategies.shouldExecuteOrder(data, activeStrategies[strategy], lastOrder)
+                                        if (result.shouldTrade) {
+                                            //schwab
+                                            await dbOrdersRepo.insert({
+                                                userId: 'Shared',
+                                                stockName: data.stockName,
+                                                orderType: 'Sell',
+                                                stockPrice: data.bidPrice,
+                                                shareQty: lastOrder[0].shareQty,
+                                                orderId: lastOrder[0].orderId,
+                                                tradeStrategy: activeStrategies[strategy],
+                                                orderTime: data.time
+                                            })
+                                            orderPlaced = true
+                                            if (result.log !== null) {
+                                                result.log.tradingAmount = userFinance?.spending!
+                                                result.log.shares = 1
+                                                LoggerController.addToLog(result.log)
+                                            }
+                                        }
+                                        else if (result.shouldTrade == false && result.log !== null) {
                                             result.log.tradingAmount = userFinance?.spending!
-                                            result.log.shares = 1
                                             LoggerController.addToLog(result.log)
                                         }
-                                    }
-                                    else if (result.shouldTrade == false && result.log !== null) {
-                                        result.log.tradingAmount = userFinance?.spending!
-                                        LoggerController.addToLog(result.log)
                                     }
                                 }
                             }
@@ -216,8 +218,7 @@ export const socketCall = async (): Promise<void> => {
                                     quantity: 1,
                                     instrument: {
                                         symbol: "SID",
-                                        assetType: "EQUITY",
-                                        description: 'Test Description'
+                                        assetType: "EQUITY"
                                     }
                                 }
                             ]
@@ -244,8 +245,7 @@ export const socketCall = async (): Promise<void> => {
                                     quantity: 1,
                                     instrument: {
                                         symbol: "SID",
-                                        assetType: "EQUITY",
-                                        description: 'Test Description 2'
+                                        assetType: "EQUITY"
                                     }
                                 }
                             ]

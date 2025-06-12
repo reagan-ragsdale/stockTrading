@@ -831,7 +831,8 @@ export class ServerTradeScreenComponent implements OnInit {
           }
 
           let buySell = 'Buy'
-          let orderLocations: orderLocation[] = []
+          let orderLocations: any[] = []
+          let lastOrderPrice: number = 0
           let profit = 0
           let numberOfConsecutiveLosses = 0
           let timeOutPeriod = 0
@@ -845,7 +846,8 @@ export class ServerTradeScreenComponent implements OnInit {
                 buyArray.push(this.operators[rules.BuyRules[j].desiredAction.type](rules.BuyRules[j], m))
               }
               if (!buyArray.includes(false) && this.stockDataForSelectedDay[m].time >= timeOutPeriod && numberOfConsecutiveLosses < rules.NumberOfLossesInARowToStop) {
-                orderLocations.push({ buySell: 'Buy', price: this.stockDataForSelectedDay[m].stockPrice, date: this.stockDataForSelectedDay[m].time, dateString: new Date(this.stockDataForSelectedDay[m].time).toLocaleTimeString() })
+                //orderLocations.push({ buySell: 'Buy', price: this.stockDataForSelectedDay[m].stockPrice })
+                lastOrderPrice = this.stockDataForSelectedDay[m].stockPrice
                 buySell = 'Sell'
                 for (let j = 0; j < rules.SellRules.length; j++) {
                   if (rules.SellRules[j].desiredAction.type == 'Trailing Stop') {
@@ -861,22 +863,23 @@ export class ServerTradeScreenComponent implements OnInit {
               for (let j = 0; j < rules.SellRules.length; j++) {
                 if (rules.SellRules[j].desiredAction.type == 'Trailing Stop' && (this.stockDataForSelectedDay[m].stockPrice > rules.SellRules[j].tradeHigh)) {
                   rules.SellRules[j].tradeHigh = this.stockDataForSelectedDay[m].stockPrice
-                  if (rules.SellRules[j].tradeHigh >= (orderLocations[orderLocations.length - 1].price + rules.SellRules[j].desiredAction.amount)) {
+                  if (rules.SellRules[j].tradeHigh >= (lastOrderPrice + rules.SellRules[j].desiredAction.amount)) {
                     rules.SellRules[j].desiredAction.current = rules.SellRules[j].tradeHigh - rules.SellRules[j].desiredAction.amount
                   }
                 }
                 if (rules.SellRules[j].andOr == 'Or') {
                   buyArray.push([])
-                  buyArray[buyArray.length - 1].push(this.operators[rules.SellRules[j].desiredAction.type](rules.SellRules[j], m, orderLocations[orderLocations.length - 1].price))
+                  buyArray[buyArray.length - 1].push(this.operators[rules.SellRules[j].desiredAction.type](rules.SellRules[j], m, lastOrderPrice))
                 }
                 else {
-                  buyArray[buyArray.length - 1].push(this.operators[rules.SellRules[j].desiredAction.type](rules.SellRules[j], m, orderLocations[orderLocations.length - 1].price))
+                  buyArray[buyArray.length - 1].push(this.operators[rules.SellRules[j].desiredAction.type](rules.SellRules[j], m, lastOrderPrice))
                 }
 
               }
               if (m == this.stockDataForSelectedDay.length - 1) {
-                orderLocations.push({ buySell: 'Sell', price: this.stockDataForSelectedDay[m].stockPrice, date: this.stockDataForSelectedDay[m].time, dateString: new Date(this.stockDataForSelectedDay[m].time).toLocaleTimeString() })
-                profit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
+                //orderLocations.push({ buySell: 'Sell', price: this.stockDataForSelectedDay[m].stockPrice })
+                profit += this.stockDataForSelectedDay[m].stockPrice - lastOrderPrice
+                lastOrderPrice = this.stockDataForSelectedDay[m].stockPrice
                 if (profit > 0) {
                   wins++
                 }
@@ -892,8 +895,9 @@ export class ServerTradeScreenComponent implements OnInit {
                   shouldSell.push(buyArray[i].includes(false) ? false : true)
                 }
                 if (shouldSell.includes(true)) {
-                  orderLocations.push({ buySell: 'Sell', price: this.stockDataForSelectedDay[m].stockPrice, date: this.stockDataForSelectedDay[m].time, dateString: new Date(this.stockDataForSelectedDay[m].time).toLocaleTimeString() })
-                  profit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
+                  //orderLocations.push({ buySell: 'Sell', price: this.stockDataForSelectedDay[m].stockPrice})
+                  profit += this.stockDataForSelectedDay[m].stockPrice - lastOrderPrice
+                  lastOrderPrice = this.stockDataForSelectedDay[m].stockPrice
 
                   if (profit > 0) {
                     wins++
