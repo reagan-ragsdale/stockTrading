@@ -503,6 +503,7 @@ export class ServerTradeScreenComponent implements OnInit {
     for (let k = 0; k < this.distinctDates.length; k++) {
       await this.updateStockChartData(this.distinctDates[k])
       let listOfBuyLines: { [key: number]: { length: number, data: LineData[] }[] } = {}
+      console.time('initial buy lines')
       for (let i = 0; i < rules.BuyRules.length; i++) {
         if (rules.BuyRules[i].primaryObject.length > 1 && rules.BuyRules[i].primaryObject.lengthLoopChecked) {
           if (listOfBuyLines[rules.BuyRules[i].primaryObject.lineId] == undefined) {
@@ -622,13 +623,17 @@ export class ServerTradeScreenComponent implements OnInit {
           }
         }
       }
+      console.timeEnd('initial buy lines')
 
 
-
+      console.time('generate combinations')
       const allCombinations = this.generateCombinations(listOfBuyLines);
+      console.timeEnd('generate combinations')
       console.log(listOfBuyLines)
 
+      console.time('add rule')
       let result = this.addRule2(listOfBuyLines, allCombinations, rules)
+      console.timeEnd('add rule')
       finalResult.push(result)
     }
     let summedResults = []
@@ -708,7 +713,7 @@ export class ServerTradeScreenComponent implements OnInit {
 
 
 
-
+      console.time('non buy line combinations')
       let nonBuyLineCombinations: { [key: string]: { value: number }[] } = {}
       for (let n = 0; n < rules.BuyRules.length; n++) {
         if (rules.BuyRules[n].buyTimeChecked) {
@@ -760,8 +765,12 @@ export class ServerTradeScreenComponent implements OnInit {
           }
         }
       }
+      console.timeEnd('non buy line combinations')
+      console.time('generate non line combinations')
       let buyCombinations = this.generateNonLineCombinations(nonBuyLineCombinations)
       let sellCombinations = this.generateNonLineCombinations(nonSellLineCombinations)
+      console.timeEnd('generate non line combinations')
+      console.time('final loop')
       for (let k = 0; k < buyCombinations.length; k++) {
         for (let n = 0; n < rules.BuyRules.length; n++) {
           if (buyLines[rules.BuyRules[n].primaryObject.lineId] != undefined) {
@@ -830,7 +839,7 @@ export class ServerTradeScreenComponent implements OnInit {
               for (let j = 0; j < rules.BuyRules.length; j++) {
                 buyArray.push(this.operators[rules.BuyRules[j].desiredAction.type](rules.BuyRules[j], m))
               }
-              if (!buyArray.includes(false) && this.stockDataForSelectedDay[i].time >= timeOutPeriod && numberOfConsecutiveLosses < rules.NumberOfLossesInARowToStop) {
+              if (!buyArray.includes(false) && this.stockDataForSelectedDay[m].time >= timeOutPeriod && numberOfConsecutiveLosses < rules.NumberOfLossesInARowToStop) {
                 orderLocations.push({ buySell: 'Buy', price: this.stockDataForSelectedDay[m].stockPrice, date: this.stockDataForSelectedDay[m].time, dateString: new Date(this.stockDataForSelectedDay[m].time).toLocaleTimeString() })
                 buySell = 'Sell'
                 for (let j = 0; j < rules.SellRules.length; j++) {
@@ -919,7 +928,7 @@ export class ServerTradeScreenComponent implements OnInit {
         }
 
       }
-
+      console.timeEnd('final loop')
 
 
 
