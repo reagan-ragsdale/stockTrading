@@ -503,7 +503,6 @@ export class ServerTradeScreenComponent implements OnInit {
     for (let k = 0; k < this.distinctDates.length; k++) {
       await this.updateStockChartData(this.distinctDates[k])
       let listOfBuyLines: { [key: number]: { length: number, data: LineData[] }[] } = {}
-      console.time('initial buy lines')
       for (let i = 0; i < rules.BuyRules.length; i++) {
         if (rules.BuyRules[i].primaryObject.length > 1 && rules.BuyRules[i].primaryObject.lengthLoopChecked) {
           if (listOfBuyLines[rules.BuyRules[i].primaryObject.lineId] == undefined) {
@@ -623,17 +622,9 @@ export class ServerTradeScreenComponent implements OnInit {
           }
         }
       }
-      console.timeEnd('initial buy lines')
-
-
-      console.time('generate combinations')
       const allCombinations = this.generateCombinations(listOfBuyLines);
-      console.timeEnd('generate combinations')
       console.log(listOfBuyLines)
-
-      console.time('add rule')
       let result = this.addRule2(listOfBuyLines, allCombinations, rules)
-      console.timeEnd('add rule')
       finalResult.push(result)
     }
     let summedResults = []
@@ -713,7 +704,6 @@ export class ServerTradeScreenComponent implements OnInit {
 
 
 
-      console.time('non buy line combinations')
       let nonBuyLineCombinations: { [key: string]: { value: number }[] } = {}
       for (let n = 0; n < rules.BuyRules.length; n++) {
         if (rules.BuyRules[n].buyTimeChecked) {
@@ -765,13 +755,11 @@ export class ServerTradeScreenComponent implements OnInit {
           }
         }
       }
-      console.timeEnd('non buy line combinations')
-      console.time('generate non line combinations')
       let buyCombinations = this.generateNonLineCombinations(nonBuyLineCombinations)
       let sellCombinations = this.generateNonLineCombinations(nonSellLineCombinations)
-      console.timeEnd('generate non line combinations')
       console.time('final loop')
       for (let k = 0; k < buyCombinations.length; k++) {
+        console.time('buy rules')
         for (let n = 0; n < rules.BuyRules.length; n++) {
           if (buyLines[rules.BuyRules[n].primaryObject.lineId] != undefined) {
             const keys = Object.keys(buyLines);
@@ -792,15 +780,18 @@ export class ServerTradeScreenComponent implements OnInit {
             if (buyCombinations[k][p].name == n + 'A') {
               rules.BuyRules[n].buyTime = buyCombinations[k][p].value
             }
-            if (buyCombinations[k][p].name == n + 'B') {
+            else if (buyCombinations[k][p].name == n + 'B') {
               rules.BuyRules[n].desiredAction.amount = buyCombinations[k][p].value
             }
-            if (buyCombinations[k][p].name == n + 'C') {
+            else if (buyCombinations[k][p].name == n + 'C') {
               rules.BuyRules[n].desiredAction.length = buyCombinations[k][p].value
             }
           }
         }
+        console.timeEnd('buy rules')
+
         for (let n = 0; n < sellCombinations.length; n++) {
+          console.time('sell rules')
           for (let s = 0; s < rules.SellRules.length; s++) {
             if (buyLines[rules.SellRules[s].primaryObject.lineId] != undefined) {
               const keys = Object.keys(buyLines);
@@ -821,11 +812,12 @@ export class ServerTradeScreenComponent implements OnInit {
               if (sellCombinations[n][p].name == s + 'A') {
                 rules.SellRules[s].desiredAction.amount = sellCombinations[n][p].value
               }
-              if (sellCombinations[n][p].name == s + 'B') {
+              else if (sellCombinations[n][p].name == s + 'B') {
                 rules.SellRules[s].desiredAction.length = sellCombinations[n][p].value
               }
             }
           }
+          console.timeEnd('sell rules')
           let buySell = 'Buy'
           let orderLocations: orderLocation[] = []
           let profit = 0
@@ -833,6 +825,7 @@ export class ServerTradeScreenComponent implements OnInit {
           let timeOutPeriod = 0
           let wins = 0
           let losses = 0
+          console.time('stock buy')
           for (let m = counter; m < this.stockDataForSelectedDay.length; m++) {
             if (buySell == 'Buy') {
               let buyArray = []
@@ -905,6 +898,7 @@ export class ServerTradeScreenComponent implements OnInit {
 
             }
           }
+          console.time('stock buy')
           let buyCombo: any[] = []
           for (let i = 0; i < rules.BuyRules.length; i++) {
             buyCombo.push({
