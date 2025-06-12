@@ -710,13 +710,58 @@ export class ServerTradeScreenComponent implements OnInit {
 
 
       let nonBuyLineCombinations: { [key: string]: { value: number }[] } = {}
-
+      for (let n = 0; n < rules.BuyRules.length; n++) {
+        if (rules.BuyRules[n].buyTimeChecked) {
+          nonBuyLineCombinations[rules.BuyRules[n].buyTimeUId] = []
+          let from = rules.BuyRules[n].buyTimeCheckFromAmnt
+          let to = rules.BuyRules[n].buyTimeCheckToAmnt
+          let step = rules.BuyRules[n].buyTimeCheckStepAmnt
+          for (let k = from; k <= to; k += step) {
+            nonBuyLineCombinations[rules.BuyRules[n].buyTimeUId].push({ value: k })
+          }
+        }
+        if (rules.BuyRules[n].desiredAction.amountLoopChecked) {
+          nonBuyLineCombinations[rules.BuyRules[n].desiredAction.amountLoopUId] = []
+          let from = rules.BuyRules[n].desiredAction.amountLoopCheckFromAmnt
+          let to = rules.BuyRules[n].desiredAction.amountLoopCheckToAmnt
+          let step = rules.BuyRules[n].desiredAction.amountLoopCheckStepAmnt
+          for (let k = from; k <= to; k += step) {
+            nonBuyLineCombinations[rules.BuyRules[n].desiredAction.amountLoopUId].push({ value: k })
+          }
+        }
+        if (rules.BuyRules[n].desiredAction.lengthLoopChecked) {
+          nonBuyLineCombinations[rules.BuyRules[n].desiredAction.lengthLoopUId] = []
+          let from = rules.BuyRules[n].desiredAction.lengthLoopCheckFromAmnt
+          let to = rules.BuyRules[n].desiredAction.lengthLoopCheckToAmnt
+          let step = rules.BuyRules[n].desiredAction.lengthLoopCheckStepAmnt
+          for (let k = from; k <= to; k += step) {
+            nonBuyLineCombinations[rules.BuyRules[n].desiredAction.lengthLoopUId].push({ value: k })
+          }
+        }
+      }
       let nonSellLineCombinations: { [key: string]: { value: number }[] } = {}
-
+      for (let s = 0; s < rules.SellRules.length; s++) {
+        if (rules.SellRules[s].desiredAction.amountLoopChecked) {
+          nonSellLineCombinations[rules.SellRules[s].desiredAction.amountLoopUId] = []
+          let from = rules.SellRules[s].desiredAction.amountLoopCheckFromAmnt
+          let to = rules.SellRules[s].desiredAction.amountLoopCheckToAmnt
+          let step = rules.SellRules[s].desiredAction.amountLoopCheckStepAmnt
+          for (let k = from; k <= to; k += step) {
+            nonSellLineCombinations[rules.SellRules[s].desiredAction.amountLoopUId].push({ value: k })
+          }
+        }
+        if (rules.SellRules[s].desiredAction.lengthLoopChecked) {
+          nonSellLineCombinations[rules.SellRules[s].desiredAction.lengthLoopUId] = []
+          let from = rules.SellRules[s].desiredAction.lengthLoopCheckFromAmnt
+          let to = rules.SellRules[s].desiredAction.lengthLoopCheckToAmnt
+          let step = rules.SellRules[s].desiredAction.lengthLoopCheckStepAmnt
+          for (let k = from; k <= to; k += step) {
+            nonSellLineCombinations[rules.SellRules[s].desiredAction.lengthLoopUId].push({ value: k })
+          }
+        }
+      }
       let buyCombinations = this.generateNonLineCombinations(nonBuyLineCombinations)
       let sellCombinations = this.generateNonLineCombinations(nonSellLineCombinations)
-      console.log(buyCombinations)
-      console.log(sellCombinations)
       for (let k = 0; k < buyCombinations.length; k++) {
         for (let n = 0; n < rules.BuyRules.length; n++) {
           if (buyLines[rules.BuyRules[n].primaryObject.lineId] != undefined) {
@@ -733,33 +778,7 @@ export class ServerTradeScreenComponent implements OnInit {
             rules.BuyRules[n].referencedObject.data = buyLines[rules.BuyRules[n].referencedObject.lineId][comboIndex].data
             rules.BuyRules[n].referencedObject.length = buyLines[rules.BuyRules[n].referencedObject.lineId][comboIndex].length
           }
-          if (rules.BuyRules[n].buyTimeChecked) {
-            nonBuyLineCombinations[rules.BuyRules[n].buyTimeUId] = []
-            let from = rules.BuyRules[n].buyTimeCheckFromAmnt
-            let to = rules.BuyRules[n].buyTimeCheckToAmnt
-            let step = rules.BuyRules[n].buyTimeCheckStepAmnt
-            for (let k = from; k <= to; k += step) {
-              nonBuyLineCombinations[rules.BuyRules[n].buyTimeUId].push({ value: k })
-            }
-          }
-          if (rules.BuyRules[n].desiredAction.amountLoopChecked) {
-            nonBuyLineCombinations[rules.BuyRules[n].desiredAction.amountLoopUId] = []
-            let from = rules.BuyRules[n].desiredAction.amountLoopCheckFromAmnt
-            let to = rules.BuyRules[n].desiredAction.amountLoopCheckToAmnt
-            let step = rules.BuyRules[n].desiredAction.amountLoopCheckStepAmnt
-            for (let k = from; k <= to; k += step) {
-              nonBuyLineCombinations[rules.BuyRules[n].desiredAction.amountLoopUId].push({ value: k })
-            }
-          }
-          if (rules.BuyRules[n].desiredAction.lengthLoopChecked) {
-            nonBuyLineCombinations[rules.BuyRules[n].desiredAction.lengthLoopUId] = []
-            let from = rules.BuyRules[n].desiredAction.lengthLoopCheckFromAmnt
-            let to = rules.BuyRules[n].desiredAction.lengthLoopCheckToAmnt
-            let step = rules.BuyRules[n].desiredAction.lengthLoopCheckStepAmnt
-            for (let k = from; k <= to; k += step) {
-              nonBuyLineCombinations[rules.BuyRules[n].desiredAction.lengthLoopUId].push({ value: k })
-            }
-          }
+
           for (let p = 0; p < buyCombinations[k].length; p++) {
             if (buyCombinations[k][p].name == n + 'A') {
               rules.BuyRules[n].buyTime = buyCombinations[k][p].value
@@ -788,24 +807,7 @@ export class ServerTradeScreenComponent implements OnInit {
               rules.SellRules[s].referencedObject.data = buyLines[rules.SellRules[s].referencedObject.lineId][comboIndex].data
               rules.SellRules[s].referencedObject.length = buyLines[rules.SellRules[s].referencedObject.lineId][comboIndex].length
             }
-            if (rules.SellRules[s].desiredAction.amountLoopChecked) {
-              nonSellLineCombinations[rules.SellRules[s].desiredAction.amountLoopUId] = []
-              let from = rules.SellRules[s].desiredAction.amountLoopCheckFromAmnt
-              let to = rules.SellRules[s].desiredAction.amountLoopCheckToAmnt
-              let step = rules.SellRules[s].desiredAction.amountLoopCheckStepAmnt
-              for (let k = from; k <= to; k += step) {
-                nonSellLineCombinations[rules.SellRules[s].desiredAction.amountLoopUId].push({ value: k })
-              }
-            }
-            if (rules.SellRules[s].desiredAction.lengthLoopChecked) {
-              nonSellLineCombinations[rules.SellRules[s].desiredAction.lengthLoopUId] = []
-              let from = rules.SellRules[s].desiredAction.lengthLoopCheckFromAmnt
-              let to = rules.SellRules[s].desiredAction.lengthLoopCheckToAmnt
-              let step = rules.SellRules[s].desiredAction.lengthLoopCheckStepAmnt
-              for (let k = from; k <= to; k += step) {
-                nonSellLineCombinations[rules.SellRules[s].desiredAction.lengthLoopUId].push({ value: k })
-              }
-            }
+
             for (let p = 0; p < sellCombinations[n].length; p++) {
               if (sellCombinations[n][p].name == s + 'A') {
                 rules.SellRules[s].desiredAction.amount = sellCombinations[n][p].value
