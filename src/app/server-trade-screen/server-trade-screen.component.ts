@@ -733,6 +733,20 @@ export class ServerTradeScreenComponent implements OnInit {
             nonBuyLineCombinations[rules.BuyRules[n].desiredAction.lengthLoopUId].push({ value: k })
           }
         }
+        if (buyLines[rules.BuyRules[n].primaryObject.lineId] != undefined) {
+          const keys = Object.keys(buyLines);
+          let index = keys.indexOf(rules.BuyRules[n].primaryObject.lineId.toString());
+          let comboIndex = combinations[i][index]
+          rules.BuyRules[n].primaryObject.data = buyLines[rules.BuyRules[n].primaryObject.lineId][comboIndex].data
+          rules.BuyRules[n].primaryObject.length = buyLines[rules.BuyRules[n].primaryObject.lineId][comboIndex].length
+        }
+        if (buyLines[rules.BuyRules[n].referencedObject.lineId] != undefined) {
+          const keys = Object.keys(buyLines);
+          let index = keys.indexOf(rules.BuyRules[n].referencedObject.lineId.toString());
+          let comboIndex = combinations[i][index]
+          rules.BuyRules[n].referencedObject.data = buyLines[rules.BuyRules[n].referencedObject.lineId][comboIndex].data
+          rules.BuyRules[n].referencedObject.length = buyLines[rules.BuyRules[n].referencedObject.lineId][comboIndex].length
+        }
       }
       let nonSellLineCombinations: { [key: string]: { value: number }[] } = {}
       for (let s = 0; s < rules.SellRules.length; s++) {
@@ -754,6 +768,20 @@ export class ServerTradeScreenComponent implements OnInit {
             nonSellLineCombinations[rules.SellRules[s].desiredAction.lengthLoopUId].push({ value: k })
           }
         }
+        if (buyLines[rules.SellRules[s].primaryObject.lineId] != undefined) {
+          const keys = Object.keys(buyLines);
+          let index = keys.indexOf(rules.SellRules[s].primaryObject.lineId.toString());
+          let comboIndex = combinations[i][index]
+          rules.SellRules[s].primaryObject.data = buyLines[rules.SellRules[s].primaryObject.lineId][comboIndex].data
+          rules.SellRules[s].primaryObject.length = buyLines[rules.SellRules[s].primaryObject.lineId][comboIndex].length
+        }
+        if (buyLines[rules.SellRules[s].referencedObject.lineId] != undefined) {
+          const keys = Object.keys(buyLines);
+          let index = keys.indexOf(rules.SellRules[s].referencedObject.lineId.toString());
+          let comboIndex = combinations[i][index]
+          rules.SellRules[s].referencedObject.data = buyLines[rules.SellRules[s].referencedObject.lineId][comboIndex].data
+          rules.SellRules[s].referencedObject.length = buyLines[rules.SellRules[s].referencedObject.lineId][comboIndex].length
+        }
       }
       let buyCombinations = this.generateNonLineCombinations(nonBuyLineCombinations)
       let sellCombinations = this.generateNonLineCombinations(nonSellLineCombinations)
@@ -761,21 +789,6 @@ export class ServerTradeScreenComponent implements OnInit {
       for (let k = 0; k < buyCombinations.length; k++) {
         console.time('buy rules')
         for (let n = 0; n < rules.BuyRules.length; n++) {
-          if (buyLines[rules.BuyRules[n].primaryObject.lineId] != undefined) {
-            const keys = Object.keys(buyLines);
-            let index = keys.indexOf(rules.BuyRules[n].primaryObject.lineId.toString());
-            let comboIndex = combinations[i][index]
-            rules.BuyRules[n].primaryObject.data = buyLines[rules.BuyRules[n].primaryObject.lineId][comboIndex].data
-            rules.BuyRules[n].primaryObject.length = buyLines[rules.BuyRules[n].primaryObject.lineId][comboIndex].length
-          }
-          if (buyLines[rules.BuyRules[n].referencedObject.lineId] != undefined) {
-            const keys = Object.keys(buyLines);
-            let index = keys.indexOf(rules.BuyRules[n].referencedObject.lineId.toString());
-            let comboIndex = combinations[i][index]
-            rules.BuyRules[n].referencedObject.data = buyLines[rules.BuyRules[n].referencedObject.lineId][comboIndex].data
-            rules.BuyRules[n].referencedObject.length = buyLines[rules.BuyRules[n].referencedObject.lineId][comboIndex].length
-          }
-
           for (let p = 0; p < buyCombinations[k].length; p++) {
             if (buyCombinations[k][p].name == n + 'A') {
               rules.BuyRules[n].buyTime = buyCombinations[k][p].value
@@ -793,20 +806,7 @@ export class ServerTradeScreenComponent implements OnInit {
         for (let n = 0; n < sellCombinations.length; n++) {
           console.time('sell rules')
           for (let s = 0; s < rules.SellRules.length; s++) {
-            if (buyLines[rules.SellRules[s].primaryObject.lineId] != undefined) {
-              const keys = Object.keys(buyLines);
-              let index = keys.indexOf(rules.SellRules[s].primaryObject.lineId.toString());
-              let comboIndex = combinations[i][index]
-              rules.SellRules[s].primaryObject.data = buyLines[rules.SellRules[s].primaryObject.lineId][comboIndex].data
-              rules.SellRules[s].primaryObject.length = buyLines[rules.SellRules[s].primaryObject.lineId][comboIndex].length
-            }
-            if (buyLines[rules.SellRules[s].referencedObject.lineId] != undefined) {
-              const keys = Object.keys(buyLines);
-              let index = keys.indexOf(rules.SellRules[s].referencedObject.lineId.toString());
-              let comboIndex = combinations[i][index]
-              rules.SellRules[s].referencedObject.data = buyLines[rules.SellRules[s].referencedObject.lineId][comboIndex].data
-              rules.SellRules[s].referencedObject.length = buyLines[rules.SellRules[s].referencedObject.lineId][comboIndex].length
-            }
+
 
             for (let p = 0; p < sellCombinations[n].length; p++) {
               if (sellCombinations[n][p].name == s + 'A') {
@@ -898,7 +898,7 @@ export class ServerTradeScreenComponent implements OnInit {
 
             }
           }
-          console.time('stock buy')
+          console.timeEnd('stock buy')
           let buyCombo: any[] = []
           for (let i = 0; i < rules.BuyRules.length; i++) {
             buyCombo.push({
