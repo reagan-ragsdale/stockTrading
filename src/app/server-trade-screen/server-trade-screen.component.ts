@@ -693,6 +693,7 @@ export class ServerTradeScreenComponent implements OnInit {
   addRule2(buyLines: { [key: number]: { length: number, data: LineData[] }[] }, combinations: number[][], rules: RuleDto) {
 
     let returnData = []
+    let count = 0
     for (let i = 0; i < combinations.length; i++) {
       let counter = 0
       for (let j = 0; j < combinations[i].length; j++) {
@@ -787,7 +788,6 @@ export class ServerTradeScreenComponent implements OnInit {
       let sellCombinations = this.generateNonLineCombinations(nonSellLineCombinations)
       console.time('final loop')
       for (let k = 0; k < buyCombinations.length; k++) {
-        console.time('buy rules')
         for (let n = 0; n < rules.BuyRules.length; n++) {
           for (let p = 0; p < buyCombinations[k].length; p++) {
             if (buyCombinations[k][p].name == n + 'A') {
@@ -801,10 +801,8 @@ export class ServerTradeScreenComponent implements OnInit {
             }
           }
         }
-        console.timeEnd('buy rules')
 
         for (let n = 0; n < sellCombinations.length; n++) {
-          console.time('sell rules')
           for (let s = 0; s < rules.SellRules.length; s++) {
 
 
@@ -817,7 +815,6 @@ export class ServerTradeScreenComponent implements OnInit {
               }
             }
           }
-          console.timeEnd('sell rules')
 
           let buySell = 'Buy'
           let orderLocations: orderLocation[] = []
@@ -826,8 +823,8 @@ export class ServerTradeScreenComponent implements OnInit {
           let timeOutPeriod = 0
           let wins = 0
           let losses = 0
-          console.time('stock buy')
           for (let m = counter; m < this.stockDataForSelectedDay.length; m++) {
+            count++
             if (buySell == 'Buy') {
               let buyArray = []
               for (let j = 0; j < rules.BuyRules.length; j++) {
@@ -899,7 +896,6 @@ export class ServerTradeScreenComponent implements OnInit {
 
             }
           }
-          console.timeEnd('stock buy')
           let buyCombo: any[] = []
           for (let i = 0; i < rules.BuyRules.length; i++) {
             buyCombo.push({
@@ -928,6 +924,7 @@ export class ServerTradeScreenComponent implements OnInit {
 
 
     }
+    console.log('count:' + count)
     return returnData
 
   }
