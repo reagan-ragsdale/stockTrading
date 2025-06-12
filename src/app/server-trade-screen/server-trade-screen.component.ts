@@ -831,25 +831,40 @@ export class ServerTradeScreenComponent implements OnInit {
           }
 
           let buySell = 'Buy'
-          let orderLocations: any[] = []
           let lastOrderPrice: number = 0
           let profit = 0
           let numberOfConsecutiveLosses = 0
           let timeOutPeriod = 0
           let wins = 0
           let losses = 0
-          for (let m = counter; m < this.stockDataForSelectedDay.length; m++) {
 
-            if (buySell == 'Buy') {
-              let buyArray = []
-              for (let j = 0; j < rules.BuyRules.length; j++) {
-                buyArray.push(this.operators[rules.BuyRules[j].desiredAction.type](rules.BuyRules[j], m))
+          const buyRulesLength = rules.BuyRules.length
+          const sellRulesLength = rules.SellRules.length
+          const stockData = this.stockDataForSelectedDay
+          const stockDataLength = stockData.length
+          const operators = this.operators
+          const maxConsecutiveLosses = rules.TimeOutAfterStopLossSell
+          const timeOutMultiplier = rules.TimeOutAfterStopLossSell * 60000
+
+          const buyArray = new Array(buyRulesLength)
+
+          let sellGroups: boolean[][] = []
+          for (let m = counter; m < stockDataLength; m++) {
+            const currentData = stockData[m]
+            const currentPrice = currentData.stockPrice
+            const currentTime = currentData.time
+            if (buySell === 'Buy') {
+              let allBuyConditionsMet = true
+              for (let j = 0; j < buyRulesLength; j++) {
+                if (!this.operators[rules.BuyRules[j].desiredAction.type](rules.BuyRules[j], m)) {
+                  allBuyConditionsMet = false
+                  break
+                }
               }
-              if (!buyArray.includes(false) && this.stockDataForSelectedDay[m].time >= timeOutPeriod && numberOfConsecutiveLosses < rules.NumberOfLossesInARowToStop) {
-                //orderLocations.push({ buySell: 'Buy', price: this.stockDataForSelectedDay[m].stockPrice })
+              if (allBuyConditionsMet && currentTime >= timeOutPeriod && numberOfConsecutiveLosses < maxConsecutiveLosses) {
                 lastOrderPrice = this.stockDataForSelectedDay[m].stockPrice
                 buySell = 'Sell'
-                for (let j = 0; j < rules.SellRules.length; j++) {
+                for (let j = 0; j < sellRulesLength; j++) {
                   if (rules.SellRules[j].desiredAction.type == 'Trailing Stop') {
                     rules.SellRules[j].desiredAction.current = 0
                     rules.SellRules[j].tradeHigh = this.stockDataForSelectedDay[m].stockPrice
@@ -858,29 +873,32 @@ export class ServerTradeScreenComponent implements OnInit {
               }
             }
             else {
-              let buyArray: boolean[][] = [[]]
 
-              for (let j = 0; j < rules.SellRules.length; j++) {
-                if (rules.SellRules[j].desiredAction.type == 'Trailing Stop' && (this.stockDataForSelectedDay[m].stockPrice > rules.SellRules[j].tradeHigh)) {
-                  rules.SellRules[j].tradeHigh = this.stockDataForSelectedDay[m].stockPrice
-                  if (rules.SellRules[j].tradeHigh >= (lastOrderPrice + rules.SellRules[j].desiredAction.amount)) {
-                    rules.SellRules[j].desiredAction.current = rules.SellRules[j].tradeHigh - rules.SellRules[j].desiredAction.amount
+              sellGroups.length = 0
+              sellGroups.push([])
+              for (let j = 0; j < sellRulesLength; j++) {
+                const sellRule = rules.SellRules[j]
+                if (sellRule.desiredAction.type === 'Trailing Stop' && currentPrice > sellRule.tradeHigh) {
+                  sellRule.tradeHigh = currentPrice
+                  if (sellRule.tradeHigh >= (lastOrderPrice + sellRule.desiredAction.amount)) {
+                    sellRule.desiredAction.current = sellRule.tradeHigh - sellRule.desiredAction.amount
                   }
                 }
-                if (rules.SellRules[j].andOr == 'Or') {
+                if (sellRule.andOr == 'Or') {
                   buyArray.push([])
-                  buyArray[buyArray.length - 1].push(this.operators[rules.SellRules[j].desiredAction.type](rules.SellRules[j], m, lastOrderPrice))
                 }
-                else {
-                  buyArray[buyArray.length - 1].push(this.operators[rules.SellRules[j].desiredAction.type](rules.SellRules[j], m, lastOrderPrice))
-                }
+                const conditionResult = operators[sellRule.desiredAction.type](sellRule, m, lastOrderPrice)
+                sellGroups[sellGroups.length - 1].push(conditionResult)
+
 
               }
-              if (m == this.stockDataForSelectedDay.length - 1) {
-                //orderLocations.push({ buySell: 'Sell', price: this.stockDataForSelectedDay[m].stockPrice })
-                profit += this.stockDataForSelectedDay[m].stockPrice - lastOrderPrice
-                lastOrderPrice = this.stockDataForSelectedDay[m].stockPrice
-                if (profit > 0) {
+
+              const isLastDataPoint = m === stockDataLength - 1
+
+              if (isLastDataPoint) {
+                const tradeProfit = currentPrice - lastOrderPrice
+                profit += tradeProfit
+                if (tradeProfit > 0) {
                   wins++
                 }
                 else {
@@ -890,21 +908,18 @@ export class ServerTradeScreenComponent implements OnInit {
                 buySell = 'Buy'
               }
               else {
-                let shouldSell: boolean[] = []
-                for (let i = 0; i < buyArray.length; i++) {
-                  shouldSell.push(buyArray[i].includes(false) ? false : true)
-                }
-                if (shouldSell.includes(true)) {
-                  //orderLocations.push({ buySell: 'Sell', price: this.stockDataForSelectedDay[m].stockPrice})
-                  profit += this.stockDataForSelectedDay[m].stockPrice - lastOrderPrice
-                  lastOrderPrice = this.stockDataForSelectedDay[m].stockPrice
+                const shouldSell = sellGroups.some(group => group.every(condition => condition))
 
-                  if (profit > 0) {
+                if (shouldSell) {
+                  const tradeProfit = currentPrice - lastOrderPrice
+                  profit += tradeProfit
+
+                  if (tradeProfit > 0) {
                     wins++
                   }
                   else {
                     numberOfConsecutiveLosses++
-                    timeOutPeriod = (rules.TimeOutAfterStopLossSell * 60000) + this.stockDataForSelectedDay[m].time
+                    timeOutPeriod = timeOutMultiplier + currentTime
                     losses++
                   }
                   buySell = 'Buy'
