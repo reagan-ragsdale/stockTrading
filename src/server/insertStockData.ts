@@ -254,6 +254,7 @@ export const socketCall = async (): Promise<void> => {
                             ]
                         }
                         let response = await placeOrderForAccount(userData, order)
+                        console.log(response)
                         console.log('here after buy')
                         LoggerController.addToSchwabLog(response)
                         schwabOrders = await getOrdersForAccount(userData.accountNum, userData.accessToken)
