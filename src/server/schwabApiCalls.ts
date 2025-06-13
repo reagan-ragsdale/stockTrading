@@ -32,6 +32,7 @@ export const getAccountNumbers = async (accessToken: string): Promise<any> => {
 //get the information for the account based on the above number
 export const getAccountInfo = async (accountInfo: DbTOkens): Promise<any> => {
     try {
+        console.log(accountInfo.accountNum)
         const url = `https://api.schwabapi.com/trader/v1/accounts/${accountInfo.accountNum}`;
         const options = {
             method: 'GET',
@@ -56,7 +57,7 @@ export const getOrdersForAccount = async (accountInfo: DbTOkens): Promise<any> =
 
         let startDate = new Date()
         startDate.setHours(5, 0, 0, 0)
-        let fromDate = startDate.toUTCString()
+        let fromDate = startDate.toISOString()
         let toDate = new Date().toISOString()
         const url = `https://api.schwabapi.com/trader/v1/accounts/${accountInfo.accountNum}/orders?fromEnteredTime=${fromDate}&toEnteredTime=${toDate}`;
         const options = {
