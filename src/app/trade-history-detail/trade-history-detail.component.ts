@@ -320,12 +320,12 @@ export class TradeHistoryDetailComponent implements OnInit {
   }
   async getOrders() {
     let schwabOrders = await SchwabController.getOrdersCall(this.userData)
-    console.log('sell orders below')
+    console.log('get orders below')
     console.log(schwabOrders)
   }
   async getAccount() {
     let schwabPosition = await SchwabController.getAccountInfoCall(this.userData)
-    console.log('sell schwab positions below')
+    console.log('get schwab positions below')
     console.log(schwabPosition)
   }
 
