@@ -284,10 +284,10 @@ export class TradeHistoryDetailComponent implements OnInit {
     let response = await SchwabController.placeOrdersCall(this.userData, order)
     console.log('buy response below')
     console.log(response)
-    let schwabOrders = await SchwabController.getOrdersCall(this.userData)
+    let schwabOrders = await SchwabController.getOrdersCall(this.userData.accountNum, this.userData.accessToken)
     console.log('buy orders below')
     console.log(schwabOrders)
-    let schwabPosition = await SchwabController.getAccountInfoCall(this.userData)
+    let schwabPosition = await SchwabController.getAccountInfoCall(this.userData.accountNum, this.userData.accessToken)
     console.log('buy schwab positions below')
     console.log(schwabPosition)
   }
@@ -311,20 +311,20 @@ export class TradeHistoryDetailComponent implements OnInit {
     let response = await SchwabController.placeOrdersCall(this.userData, order)
     console.log('response sell below')
     console.log(response)
-    let schwabOrders = await SchwabController.getOrdersCall(this.userData)
+    let schwabOrders = await SchwabController.getOrdersCall(this.userData.accountNum, this.userData.accessToken)
     console.log('sell orders below')
     console.log(schwabOrders)
-    let schwabPosition = await SchwabController.getAccountInfoCall(this.userData)
+    let schwabPosition = await SchwabController.getAccountInfoCall(this.userData.accountNum, this.userData.accessToken)
     console.log('sell schwab positions below')
     console.log(schwabPosition)
   }
   async getOrders() {
-    let schwabOrders = await SchwabController.getOrdersCall(this.userData)
+    let schwabOrders = await SchwabController.getOrdersCall(this.userData.accountNum, this.userData.accessToken)
     console.log('get orders below')
     console.log(schwabOrders)
   }
   async getAccount() {
-    let schwabPosition = await SchwabController.getAccountInfoCall(this.userData)
+    let schwabPosition = await SchwabController.getAccountInfoCall(this.userData.accountNum, this.userData.accessToken)
     console.log('get schwab positions below')
     console.log(schwabPosition)
   }

@@ -20,13 +20,13 @@ export class SchwabController {
 
    }
    @BackendMethod({ allowed: true })
-   static async getAccountInfoCall(accountInfo: DbTOkens): Promise<any> {
-      return await SchwabController.getAccountInfo(accountInfo)
+   static async getAccountInfoCall(accountNum: string, accessToken: string): Promise<any> {
+      return await SchwabController.getAccountInfo(accountNum, accessToken)
 
    }
    @BackendMethod({ allowed: true })
-   static async getOrdersCall(accountInfo: DbTOkens): Promise<any> {
-      return await SchwabController.getOrdersForAccount(accountInfo)
+   static async getOrdersCall(accountNum: string, accessToken: string): Promise<any> {
+      return await SchwabController.getOrdersForAccount(accountNum, accessToken)
 
    }
    @BackendMethod({ allowed: true })
