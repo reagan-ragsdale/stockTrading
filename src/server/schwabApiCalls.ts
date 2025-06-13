@@ -80,6 +80,7 @@ export const getOrdersForAccount = async (accountNum: string, accessToken: strin
 //place an order for an account
 export const placeOrderForAccount = async (accountInfo: DbTOkens, order: SchwabOrderDTO) => {
     try {
+        console.log('here')
         console.log(order)
         const url = `https://api.schwabapi.com/trader/v1/accounts/${accountInfo.accountNum}/orders`;
         const options = {
@@ -109,7 +110,9 @@ export const placeOrderForAccount = async (accountInfo: DbTOkens, order: SchwabO
         };
 
         const response = await fetch(url, options);
+        console.log('before json')
         const result = await response.json();
+        console.log('after json')
         return result
     }
     catch (error: any) {
