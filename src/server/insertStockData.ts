@@ -164,7 +164,7 @@ export const socketCall = async (): Promise<void> => {
                                             ]
                                         }
                                         let response = await placeOrderForAccount(userData, schwabOrder)
-                                        if (response.length == 0) {
+                                        if (response == 201) {
                                             schwabOrders = await getOrdersForAccount(userData.accountNum, userData.accessToken)
                                             let lastOrder = schwabOrders[0]
                                             await dbSchwabOrdersRepo.insert({
@@ -220,7 +220,8 @@ export const socketCall = async (): Promise<void> => {
                             ]
                         }
                         let response = await placeOrderForAccount(userData, schwabOrder)
-                        if (response.length == 0) {
+                        console.log(response)
+                        if (response == 201) {
                             schwabOrders = await getOrdersForAccount(userData.accountNum, userData.accessToken)
                             let lastOrder = schwabOrders[0]
                             await dbSchwabOrdersRepo.insert({
@@ -255,7 +256,8 @@ export const socketCall = async (): Promise<void> => {
                             ]
                         }
                         let response = await placeOrderForAccount(userData, schwabOrder)
-                        if (response.length == 0) {
+                        console.log(response)
+                        if (response == 201) {
                             schwabOrders = await getOrdersForAccount(userData.accountNum, userData.accessToken)
                             let lastOrder = schwabOrders[0]
                             await dbSchwabOrdersRepo.insert({
