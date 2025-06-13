@@ -30,7 +30,7 @@ export const getAccountNumbers = async (accessToken: string): Promise<any> => {
 }
 
 //get the information for the account based on the above number
-export const getAccountInfo = async (accountNum: string, accessToken: string): Promise<any> => {
+export const getAccountInfo = async (accountNum: string, accessToken: string) => {
     try {
         const url = `https://api.schwabapi.com/trader/v1/accounts/${accountNum}`;
         const options = {
@@ -52,7 +52,7 @@ export const getAccountInfo = async (accountNum: string, accessToken: string): P
 }
 
 //get a list of orders for the account
-export const getOrdersForAccount = async (accountNum: string, accessToken: string): Promise<any> => {
+export const getOrdersForAccount = async (accountNum: string, accessToken: string) => {
     try {
 
         let startDate = new Date()
@@ -78,7 +78,7 @@ export const getOrdersForAccount = async (accountNum: string, accessToken: strin
     }
 }
 //place an order for an account
-export const placeOrderForAccount = async (accountInfo: DbTOkens, order: SchwabOrderDTO): Promise<any> => {
+export const placeOrderForAccount = async (accountInfo: DbTOkens, order: SchwabOrderDTO) => {
     try {
         const url = `https://api.schwabapi.com/trader/v1/accounts/${accountInfo.accountNum}/orders`;
         const options = {
