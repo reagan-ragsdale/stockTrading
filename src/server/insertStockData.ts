@@ -256,7 +256,7 @@ export const socketCall = async (): Promise<void> => {
                                     await dbSchwabOrdersRepo.insert({
                                         accountNum: userData.accountNum,
                                         stockName: data.stockName,
-                                        orderType: "BUY",
+                                        orderType: "SELL",
                                         stockPrice: lastOrder.orderActivityCollection[0].executionLegs[0].price,
                                         shareQty: lastOrder.quantity,
                                         orderId: lastOrder.orderId,
@@ -269,15 +269,16 @@ export const socketCall = async (): Promise<void> => {
                             }
 
                         }
-                        //insert all stocks data into the db
-                        await dbCurrentDayStockDataRepo.insert(insertData)
-                        count++
-                        //update the orders if there was an order placed
-
                     }
+                    //insert all stocks data into the db
+                    await dbCurrentDayStockDataRepo.insert(insertData)
+                    count++
+                    //update the orders if there was an order placed
+
                 }
             }
         }
+
         catch (error: any) {
             console.log('insertStockData server call: ' + error.message)
         }
