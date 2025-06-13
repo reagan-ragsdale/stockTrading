@@ -14,6 +14,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule, MatRippleModule } from '@angular/material/core';
 import { FormsModule } from '@angular/forms';
+import { remult } from "remult";
+import { SchwabController } from '../../shared/controllers/SchwabController';
+import { SchwabOrderDTO } from '../Dtos/TradingBotDtos';
+import { dbTokenRepo, DbTOkens } from '../../shared/tasks/dbTokens';
 
 
 @Component({
@@ -28,7 +32,7 @@ export class TradeHistoryDetailComponent implements OnInit {
 
   startDate: string = ''
   endDate: string = ''
-
+  remult = remult;
   selectedStockName: string = ''
   isLoading: boolean = true
   distinctStocks: string[] = ['All']
@@ -260,6 +264,72 @@ export class TradeHistoryDetailComponent implements OnInit {
     return returnTime
   }
 
+  async onBuy() {
+    let order: SchwabOrderDTO = {
+      orderType: "MARKET",
+      session: "NORMAL",
+      duration: "DAY",
+      orderStrategyType: "SINGLE",
+      orderLegCollection: [
+        {
+          instruction: "BUY",
+          quantity: 1,
+          instrument: {
+            symbol: "SID",
+            assetType: "EQUITY"
+          }
+        }
+      ]
+    }
+    let response = await SchwabController.placeOrdersCall(this.userData, order)
+    console.log('buy response below')
+    console.log(response)
+    let schwabOrders = await SchwabController.getOrdersCall(this.userData)
+    console.log('buy orders below')
+    console.log(schwabOrders)
+    let schwabPosition = await SchwabController.getAccountInfoCall(this.userData)
+    console.log('buy schwab positions below')
+    console.log(schwabPosition)
+  }
+  async onSell() {
+    let order: SchwabOrderDTO = {
+      orderType: "MARKET",
+      session: "NORMAL",
+      duration: "DAY",
+      orderStrategyType: "SINGLE",
+      orderLegCollection: [
+        {
+          instruction: "SELL",
+          quantity: 1,
+          instrument: {
+            symbol: "SID",
+            assetType: "EQUITY"
+          }
+        }
+      ]
+    }
+    let response = await SchwabController.placeOrdersCall(this.userData, order)
+    console.log('response sell below')
+    console.log(response)
+    let schwabOrders = await SchwabController.getOrdersCall(this.userData)
+    console.log('sell orders below')
+    console.log(schwabOrders)
+    let schwabPosition = await SchwabController.getAccountInfoCall(this.userData)
+    console.log('sell schwab positions below')
+    console.log(schwabPosition)
+  }
+  async getOrders() {
+    let schwabOrders = await SchwabController.getOrdersCall(this.userData)
+    console.log('sell orders below')
+    console.log(schwabOrders)
+  }
+  async getAccount() {
+    let schwabPosition = await SchwabController.getAccountInfoCall(this.userData)
+    console.log('sell schwab positions below')
+    console.log(schwabPosition)
+  }
+
+  public userData!: DbTOkens
   async ngOnInit() {
     this.isLoading = true
     this.allOrders = await OrderController.getAllSharedOrders()
@@ -270,6 +340,7 @@ export class TradeHistoryDetailComponent implements OnInit {
     this.selectedStrategy = this.distinctStrategies[0]
     await this.getUserFinanceData()
     this.claculateOrderDetails()
+    this.userData = await dbTokenRepo.findFirst({ id: 'asdfghjkl' }) as DbTOkens
 
 
 

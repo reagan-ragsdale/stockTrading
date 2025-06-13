@@ -24,7 +24,7 @@ export const getAccountNumbers = async (accessToken: string): Promise<any> => {
         return result
     }
     catch (error: any) {
-        console.log('refreshToken server: ' + error.message)
+        console.log('Schwab get account numbers eror: ' + error.message)
         return ''
     }
 }
@@ -45,7 +45,7 @@ export const getAccountInfo = async (accountInfo: DbTOkens): Promise<any> => {
         return result
     }
     catch (error: any) {
-        console.log('refreshToken server: ' + error.message)
+        console.log('Schwab get account info error: ' + error.message)
         return ''
     }
 }
@@ -71,7 +71,7 @@ export const getOrdersForAccount = async (accountInfo: DbTOkens): Promise<any> =
         return result
     }
     catch (error: any) {
-        console.log('refreshToken server: ' + error.message)
+        console.log('Schwab get orders for account error: ' + error.message)
         return ''
     }
 }
@@ -130,7 +130,7 @@ export const replaceOrderForAccount = async (accountNumber: string, accessToken:
         return result
     }
     catch (error: any) {
-        console.log('refreshToken server: ' + error.message)
+        console.log('aschwab replace order error: ' + error.message)
         return ''
     }
 }
