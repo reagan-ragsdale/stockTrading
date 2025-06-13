@@ -269,15 +269,16 @@ export const socketCall = async (): Promise<void> => {
                             }
 
                         }
-                        //insert all stocks data into the db
-                        await dbCurrentDayStockDataRepo.insert(insertData)
-                        count++
-                        //update the orders if there was an order placed
-
                     }
+                    //insert all stocks data into the db
+                    await dbCurrentDayStockDataRepo.insert(insertData)
+                    count++
+                    //update the orders if there was an order placed
+
                 }
             }
         }
+
         catch (error: any) {
             console.log('insertStockData server call: ' + error.message)
         }
