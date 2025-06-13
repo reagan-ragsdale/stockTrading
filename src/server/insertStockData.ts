@@ -165,7 +165,9 @@ export const socketCall = async (): Promise<void> => {
                                         }
                                         let response = await placeOrderForAccount(userData, schwabOrder)
                                         if (response.length == 0) {
-                                            schwabOrders = await getOrdersForAccount(userData.accountNum, userData.accessToken)
+                                            let promiseResult = await Promise.all([getOrdersForAccount(userData.accountNum, userData.accessToken), getAccountInfo(userData.accountNum, userData.accessToken)])
+                                            schwabOrders = promiseResult[0]
+                                            schwabPosition = promiseResult[1]
                                             let lastOrder = schwabOrders[0]
                                             await dbSchwabOrdersRepo.insert({
                                                 accountNum: userData.accountNum,
@@ -177,7 +179,6 @@ export const socketCall = async (): Promise<void> => {
                                                 tradeStrategy: activeStrategies[strategy],
                                                 orderTime: data.time
                                             })
-                                            schwabPosition = await getAccountInfo(userData.accountNum, userData.accessToken)
                                             result.log!.tradingAmount = schwabPosition.securitiesAccount.currentBalances.cashAvailableForTrading - schwabPosition.securitiesAccount.currentBalances.unsettledCash
                                             result.log!.orderId = lastOrder.orderId
                                             result.log!.shares = 1
@@ -199,7 +200,82 @@ export const socketCall = async (): Promise<void> => {
 
 
                     }
+                    if (count == 0) {
+                        console.time('buy time')
+                        let schwabOrder: SchwabOrderDTO = {
+                            orderType: "MARKET",
+                            session: "NORMAL",
+                            duration: "DAY",
+                            orderStrategyType: "SINGLE",
+                            orderLegCollection: [
+                                {
+                                    instruction: "BUY",
+                                    quantity: 1,
+                                    instrument: {
+                                        symbol: "SID",
+                                        assetType: "EQUITY"
+                                    }
+                                }
+                            ]
+                        }
+                        let response = await placeOrderForAccount(userData, schwabOrder)
+                        if (response.length == 0) {
+                            let promiseResult = await Promise.all([getOrdersForAccount(userData.accountNum, userData.accessToken), getAccountInfo(userData.accountNum, userData.accessToken)])
+                            schwabOrders = promiseResult[0]
+                            schwabPosition = promiseResult[1]
+                            let lastOrder = schwabOrders[0]
+                            await dbSchwabOrdersRepo.insert({
+                                accountNum: userData.accountNum,
+                                stockName: "SID",
+                                orderType: "BUY",
+                                stockPrice: lastOrder.orderActivityCollection[0].executionLegs[0].price,
+                                shareQty: lastOrder.quantity,
+                                orderId: lastOrder.orderId,
+                                tradeStrategy: 'TEST',
+                                orderTime: 0
+                            })
+                        }
+                        console.timeEnd('buy time')
+                    }
+                    else if (count == 20) {
+                        console.time('sell time')
+                        let schwabOrder: SchwabOrderDTO = {
+                            orderType: "MARKET",
+                            session: "NORMAL",
+                            duration: "DAY",
+                            orderStrategyType: "SINGLE",
+                            orderLegCollection: [
+                                {
+                                    instruction: "SELL",
+                                    quantity: 1,
+                                    instrument: {
+                                        symbol: "SID",
+                                        assetType: "EQUITY"
+                                    }
+                                }
+                            ]
+                        }
+                        let response = await placeOrderForAccount(userData, schwabOrder)
+                        if (response.length == 0) {
+                            let promiseResult = await Promise.all([getOrdersForAccount(userData.accountNum, userData.accessToken), getAccountInfo(userData.accountNum, userData.accessToken)])
+                            schwabOrders = promiseResult[0]
+                            schwabPosition = promiseResult[1]
+                            let lastOrder = schwabOrders[0]
+                            await dbSchwabOrdersRepo.insert({
+                                accountNum: userData.accountNum,
+                                stockName: "SID",
+                                orderType: "SELL",
+                                stockPrice: lastOrder.orderActivityCollection[0].executionLegs[0].price,
+                                shareQty: lastOrder.quantity,
+                                orderId: lastOrder.orderId,
+                                tradeStrategy: 'TEST',
+                                orderTime: 0
+                            })
+                        }
+                        console.timeEnd('sell time')
+                    }
                     //insert all stocks data into the db
+                    count++
                     await dbCurrentDayStockDataRepo.insert(insertData)
 
                     //update the orders if there was an order placed
