@@ -116,7 +116,6 @@ export const socketCall = async (): Promise<void> => {
             if (Object.hasOwn(newEvent, 'data') && hasBeenSent == true) {
                 if (newEvent.data[0].service == 'LEVELONE_EQUITIES') {
                     let insertData: DbCurrentDayStockData[] = []
-                    let orderPlaced = false;
                     //loop through each stock
                     for (let i = 0; i < newEvent.data[0].content.length; i++) {
                         //if the message contains either the bid, ask or last price then we want to proceed
@@ -136,7 +135,7 @@ export const socketCall = async (): Promise<void> => {
 
                             //push the data into what will be sent to the database 
                             insertData.push(data)
-                            /* if (listOfTradableStocks.includes(data.stockName)) {
+                            if (listOfTradableStocks.includes(data.stockName)) {
                                 for (let strategy = 0; strategy < activeStrategies.length; strategy++) {
                                     //change below to point to schwab order table
                                     let lastOrder = localSchwabOrders.filter(e => e.stockName == data.stockName && e.tradeStrategy == activeStrategies[strategy])
@@ -194,87 +193,15 @@ export const socketCall = async (): Promise<void> => {
 
 
                                 }
-                            } */
+                            }
 
                         }
 
 
-                    }
-                    if (count == 0) {
-                        console.time('buy time')
-                        let schwabOrder: SchwabOrderDTO = {
-                            orderType: "MARKET",
-                            session: "NORMAL",
-                            duration: "DAY",
-                            orderStrategyType: "SINGLE",
-                            orderLegCollection: [
-                                {
-                                    instruction: "BUY",
-                                    quantity: 1,
-                                    instrument: {
-                                        symbol: "SID",
-                                        assetType: "EQUITY"
-                                    }
-                                }
-                            ]
-                        }
-                        let response = await placeOrderForAccount(userData, schwabOrder)
-                        if (response.length == 0) {
-                            schwabOrders = await getOrdersForAccount(userData.accountNum, userData.accessToken)
-                            let lastOrder = schwabOrders[0]
-                            await dbSchwabOrdersRepo.insert({
-                                accountNum: userData.accountNum,
-                                stockName: "SID",
-                                orderType: "BUY",
-                                stockPrice: lastOrder.orderActivityCollection[0].executionLegs[0].price,
-                                shareQty: lastOrder.quantity,
-                                orderId: lastOrder.orderId,
-                                tradeStrategy: 'TEST',
-                                orderTime: 0
-                            })
-                            schwabPosition = await getAccountInfo(userData.accountNum, userData.accessToken)
-                        }
-                        console.timeEnd('buy time')
-                    }
-                    else if (count == 20) {
-                        console.time('sell time')
-                        let schwabOrder: SchwabOrderDTO = {
-                            orderType: "MARKET",
-                            session: "NORMAL",
-                            duration: "DAY",
-                            orderStrategyType: "SINGLE",
-                            orderLegCollection: [
-                                {
-                                    instruction: "SELL",
-                                    quantity: 1,
-                                    instrument: {
-                                        symbol: "SID",
-                                        assetType: "EQUITY"
-                                    }
-                                }
-                            ]
-                        }
-                        let response = await placeOrderForAccount(userData, schwabOrder)
-                        if (response.length == 0) {
-                            schwabOrders = await getOrdersForAccount(userData.accountNum, userData.accessToken)
-                            let lastOrder = schwabOrders[0]
-                            await dbSchwabOrdersRepo.insert({
-                                accountNum: userData.accountNum,
-                                stockName: "SID",
-                                orderType: "SELL",
-                                stockPrice: lastOrder.orderActivityCollection[0].executionLegs[0].price,
-                                shareQty: lastOrder.quantity,
-                                orderId: lastOrder.orderId,
-                                tradeStrategy: 'TEST',
-                                orderTime: 0
-                            })
-                            schwabPosition = await getAccountInfo(userData.accountNum, userData.accessToken)
-                        }
-                        console.timeEnd('sell time')
                     }
                     //insert all stocks data into the db
                     await dbCurrentDayStockDataRepo.insert(insertData)
-                    count++
+
                     //update the orders if there was an order placed
 
                 }
