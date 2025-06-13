@@ -111,9 +111,18 @@ export const placeOrderForAccount = async (accountInfo: DbTOkens, order: SchwabO
 
         const response = await fetch(url, options);
         console.log('before json')
-        const result = await response.json();
+        console.log(response)
         console.log('after json')
-        return result
+        try {
+            const result = await response.json();
+            return result
+        }
+        catch (error: any) {
+            return []
+        }
+
+
+
     }
     catch (error: any) {
         console.log('Schwab place order error: ' + error.message)
