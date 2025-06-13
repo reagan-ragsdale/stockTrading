@@ -1,5 +1,6 @@
 import { DbCurrentDayStockData } from "../../shared/tasks/dbCurrentDayStockData"
 import { DbOrders } from "../../shared/tasks/dbOrders";
+import { DbSchwabOrders } from "../../shared/tasks/dbSchwabOrders";
 import { DayTradeValues, MADropData, MADropDto, MovingAvergeCrossoverDto, stockDataInfo, StockInfo, stockMACrossData, stockVWAPCrossData, tradeLogDto, VWAPTrendCrossDto } from "../Dtos/TradingBotDtos"
 
 type stockStrategyType = DayTradeValues;
@@ -13,8 +14,8 @@ export class ServerTradeStrategies {
     private static MADropMap = new Map<string, MADropDto>()
     private static MADropDataMap = new Map<string, MADropData>()
     private static stockInfoMap = new Map<string, StockInfo>()
-    private static listOfTradableStocks: string[] = ['AAPL', 'TSLA', 'MSFT', 'AMD', 'PLTR', 'XOM', 'NVO', 'NEE', 'NVDA']
-    private static activeStrategies: string[] = ['MACrossover', 'VWAP Trend']
+    private static listOfTradableStocks: string[] = ['AAPL', 'TSLA', 'MSFT', 'AMD', 'PLTR', 'XOM', 'NVO', 'NEE', 'NVDA', 'AMZN', 'GOOG']
+    private static activeStrategies: string[] = ['MA Drop']
     private static startTime: number = 0
     private static endTime: number = 0
 
@@ -99,7 +100,7 @@ export class ServerTradeStrategies {
     }
 
 
-    static shouldExecuteOrder(stockData: DbCurrentDayStockData, strategy: string, lastOrder: DbOrders[]): { shouldTrade: boolean, log: tradeLogDto | null } {
+    static shouldExecuteOrder(stockData: DbCurrentDayStockData, strategy: string, lastOrder: DbSchwabOrders[], isBuy: boolean, balance: number): { shouldTrade: boolean, tradeType?: string, log: tradeLogDto | null } {
         let stockStrategy = this.stockInfoMap.get(JSON.stringify({ stockName: stockData.stockName, tradeStrategy: strategy }))!
         switch (strategy) {
             case 'MACrossover':
@@ -107,14 +108,14 @@ export class ServerTradeStrategies {
             case 'VWAP Trend':
                 return this.shouldExecuteVWAPTrend(stockData, stockStrategy, this.VWAPTrendMap.get(stockData.stockName)!, this.stockVWAPDataMap.get(stockData.stockName)!, lastOrder)
             case 'MA Drop':
-                return this.shouldExecuteMADrop(stockData, stockStrategy, this.MADropMap.get(stockData.stockName)!, this.MADropDataMap.get(stockData.stockName)!, lastOrder)
+                return this.shouldExecuteMADrop(stockData, stockStrategy, this.MADropMap.get(stockData.stockName)!, this.MADropDataMap.get(stockData.stockName)!, lastOrder, isBuy, balance)
             default:
                 return { shouldTrade: false, log: null }
         }
 
 
     }
-    private static shouldExecuteMovingAverageCrossover(stockData: DbCurrentDayStockData, stockInfo: StockInfo, stockStrategyInfo: MovingAvergeCrossoverDto, stockStrategyData: stockMACrossData, lastOrder: DbOrders[]): { shouldTrade: boolean, log: tradeLogDto | null } {
+    private static shouldExecuteMovingAverageCrossover(stockData: DbCurrentDayStockData, stockInfo: StockInfo, stockStrategyInfo: MovingAvergeCrossoverDto, stockStrategyData: stockMACrossData, lastOrder: DbSchwabOrders[]): { shouldTrade: boolean, tradeType?: string, log: tradeLogDto | null } {
 
         stockStrategyData.priceHistory.push(stockData.stockPrice)
         stockStrategyData.volumeHistory.push(stockData.volume)
@@ -352,7 +353,7 @@ export class ServerTradeStrategies {
     //buy when the 1800 rolling vwap dips below the cumulative vwap by .002
     //and when the rolling wap last 120 ticks trend turns positive
     //sell when the rolling 1200 vwap is grater than the cumulative vwap
-    private static shouldExecuteVWAPTrend(stockData: DbCurrentDayStockData, stockInfo: StockInfo, stockStrategyInfo: VWAPTrendCrossDto, stockStrategyData: stockVWAPCrossData, lastOrder: DbOrders[]): { shouldTrade: boolean, log: tradeLogDto | null } {
+    private static shouldExecuteVWAPTrend(stockData: DbCurrentDayStockData, stockInfo: StockInfo, stockStrategyInfo: VWAPTrendCrossDto, stockStrategyData: stockVWAPCrossData, lastOrder: DbSchwabOrders[]): { shouldTrade: boolean, tradeType?: string, log: tradeLogDto | null } {
 
         stockStrategyData.priceHistory.push(stockData.stockPrice)
         stockStrategyData.volumeHistory.push(stockData.volume)
@@ -543,7 +544,7 @@ export class ServerTradeStrategies {
         return { shouldTrade: false, log: nonTradeLog }
     }
 
-    private static shouldExecuteMADrop(stockData: DbCurrentDayStockData, stockInfo: StockInfo, stockStrategyInfo: MADropDto, stockStrategyData: MADropData, lastOrder: DbOrders[]): { shouldTrade: boolean, log: tradeLogDto | null } {
+    private static shouldExecuteMADrop(stockData: DbCurrentDayStockData, stockInfo: StockInfo, stockStrategyInfo: MADropDto, stockStrategyData: MADropData, lastOrder: DbSchwabOrders[], isBuy: boolean, balance: number): { shouldTrade: boolean, tradeType?: string, log: tradeLogDto | null } {
 
         stockStrategyData.priceHistory.push(stockData.stockPrice)
         stockStrategyData.lastPrice = stockData.stockPrice
@@ -592,10 +593,6 @@ export class ServerTradeStrategies {
                 stockStrategyData.SellTrend = (stockStrategyData.SellTrendData[stockStrategyData.SellTrendData.length - 1] - stockStrategyData.SellTrendData[0]) / stockStrategyInfo.SellTrendLength
             }
 
-            let isBuy = true;
-            if (lastOrder.length > 0) {
-                isBuy = lastOrder[0].orderType == 'Sell' ? true : false;
-            }
             if (stockInfo.numberOfTrades == 0 && stockStrategyInfo.WaitTime > 0) {
                 if (stockData.time < (this.startTime + stockStrategyInfo.WaitTime)) {
                     stockInfo.canTrade = false
@@ -636,12 +633,12 @@ export class ServerTradeStrategies {
                 }
             }
 
-            if (isBuy && stockInfo.canTrade && stockInfo.numberOfLosses < 2 && stockStrategyData.BuyTrendData.length >= stockStrategyInfo.BuyTrendLength) {
+            if (isBuy && stockInfo.canTrade && stockInfo.numberOfLosses < 2 && stockStrategyData.BuyTrendData.length >= stockStrategyInfo.BuyTrendLength && stockData.askPrice < balance) {
                 if ((((stockStrategyData.EMA - stockStrategyData.CumulativeSMA) / stockStrategyData.CumulativeSMA) < (stockStrategyInfo.BuyDipAmt * -1)) && stockStrategyData.BuyTrend > 0) {
                     stockInfo.numberOfTrades++
                     stockInfo.stopLoss = stockData.askPrice * (1 - stockStrategyInfo.StopLossAmt)
                     return {
-                        shouldTrade: true, log: {
+                        shouldTrade: true, tradeType: 'BUY', log: {
                             stockName: stockData.stockName,
                             strategy: 'MA Drop',
                             tradingAmount: 0,
@@ -658,7 +655,7 @@ export class ServerTradeStrategies {
             }
             else if (!isBuy && stockInfo.canTrade && stockStrategyData.SellTrendData.length >= stockStrategyInfo.SellTrendLength) {
 
-                if ((((stockStrategyData.EMA - stockStrategyData.CumulativeSMA) / stockStrategyData.CumulativeSMA) > stockStrategyInfo.SellDipAmt) && stockStrategyData.SellTrend > 0) {
+                if ((((stockStrategyData.EMA - stockStrategyData.CumulativeSMA) / stockStrategyData.CumulativeSMA) > stockStrategyInfo.SellDipAmt) && stockStrategyData.SellTrend < 0) {
                     stockInfo.numberOfTrades++
                     stockInfo.stopLoss = 0
                     stockInfo.tradeHigh = 0
@@ -667,7 +664,7 @@ export class ServerTradeStrategies {
                         stockInfo.numberOfLosses++
                     }
                     return {
-                        shouldTrade: true, log: {
+                        shouldTrade: true, tradeType: 'SELL', log: {
                             stockName: stockData.stockName,
                             strategy: 'MA Drop',
                             tradingAmount: 0,
