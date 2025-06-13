@@ -328,6 +328,11 @@ export class TradeHistoryDetailComponent implements OnInit {
     console.log('get schwab positions below')
     console.log(schwabPosition)
   }
+  async getAccountNums() {
+    let accountNums = await SchwabController.getAccountsNumberCall(this.userData.accessToken)
+    console.log('account nums below')
+    console.log(accountNums)
+  }
 
   public userData!: DbTOkens
   async ngOnInit() {

@@ -40,6 +40,8 @@
       mat-raised-button color="primary" aria-label="Search" (click)="getOrders()">Get orders</button>
     <button *ngIf="remult.isAllowed('admin')" style="margin-top: auto; margin-bottom: auto; margin-left: .5rem;"
       mat-raised-button color="primary" aria-label="Search" (click)="getAccount()">Get Account</button>
+    <button *ngIf="remult.isAllowed('admin')" style="margin-top: auto; margin-bottom: auto; margin-left: .5rem;"
+      mat-raised-button color="primary" aria-label="Search" (click)="getAccountNums()">Get Account Num</button>
     <div style="display:flex; align-items: end; gap: 1rem; margin-left:1rem; width:100%;">
       <h3>Total: {{totalProfit | currency:'USD':'symbol'}}</h3>
       <h3 style="margin-left:auto;">Wins: {{totalWins}}</h3>
