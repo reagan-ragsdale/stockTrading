@@ -80,6 +80,7 @@ export const getOrdersForAccount = async (accountNum: string, accessToken: strin
 //place an order for an account
 export const placeOrderForAccount = async (accountInfo: DbTOkens, order: SchwabOrderDTO) => {
     try {
+        console.log(order)
         const url = `https://api.schwabapi.com/trader/v1/accounts/${accountInfo.accountNum}/orders`;
         const options = {
             method: 'POST',
