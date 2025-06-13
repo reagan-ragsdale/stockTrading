@@ -40,6 +40,7 @@ export const socketCall = async (): Promise<void> => {
 
     let schwabOrders = await getOrdersForAccount(userData.accountNum, userData.accessToken)
     let schwabPosition = await getAccountInfo(userData.accountNum, userData.accessToken)
+    let amountAvailableToTrade = schwabPosition.securitiesAccount.currentBalances.cashAvailableForTrading - schwabPosition.securitiesAccount.currentBalances.unsettledCash
     let count = 0
 
 
@@ -143,8 +144,7 @@ export const socketCall = async (): Promise<void> => {
                                     if (lastOrder.length > 0) {
                                         isBuy = lastOrder[0].orderType == 'Sell' ? true : false;
                                     }
-                                    let balance = schwabPosition.securitiesAccount.currentBalances.cashAvailableForTrading - schwabPosition.securitiesAccount.currentBalances.unsettledCash + 3
-                                    let result = ServerTradeStrategies.shouldExecuteOrder(data, activeStrategies[strategy], lastOrder, isBuy, balance)
+                                    let result = ServerTradeStrategies.shouldExecuteOrder(data, activeStrategies[strategy], lastOrder, isBuy, amountAvailableToTrade + 3)
                                     if (result.shouldTrade) {
                                         //add below to send to schwab and also insert into schwab order table
                                         let schwabOrder: SchwabOrderDTO = {
@@ -165,9 +165,7 @@ export const socketCall = async (): Promise<void> => {
                                         }
                                         let response = await placeOrderForAccount(userData, schwabOrder)
                                         if (response.length == 0) {
-                                            let promiseResult = await Promise.all([getOrdersForAccount(userData.accountNum, userData.accessToken), getAccountInfo(userData.accountNum, userData.accessToken)])
-                                            schwabOrders = promiseResult[0]
-                                            schwabPosition = promiseResult[1]
+                                            schwabOrders = await getOrdersForAccount(userData.accountNum, userData.accessToken)
                                             let lastOrder = schwabOrders[0]
                                             await dbSchwabOrdersRepo.insert({
                                                 accountNum: userData.accountNum,
@@ -179,7 +177,10 @@ export const socketCall = async (): Promise<void> => {
                                                 tradeStrategy: activeStrategies[strategy],
                                                 orderTime: data.time
                                             })
-                                            result.log!.tradingAmount = schwabPosition.securitiesAccount.currentBalances.cashAvailableForTrading - schwabPosition.securitiesAccount.currentBalances.unsettledCash
+                                            if (result.tradeType! == 'BUY') {
+                                                amountAvailableToTrade = amountAvailableToTrade - lastOrder.orderActivityCollection[0].executionLegs[0].price
+                                            }
+                                            result.log!.tradingAmount = amountAvailableToTrade
                                             result.log!.orderId = lastOrder.orderId
                                             result.log!.shares = 1
                                             LoggerController.addToLog(result.log!)
@@ -220,9 +221,7 @@ export const socketCall = async (): Promise<void> => {
                         }
                         let response = await placeOrderForAccount(userData, schwabOrder)
                         if (response.length == 0) {
-                            let promiseResult = await Promise.all([getOrdersForAccount(userData.accountNum, userData.accessToken), getAccountInfo(userData.accountNum, userData.accessToken)])
-                            schwabOrders = promiseResult[0]
-                            schwabPosition = promiseResult[1]
+                            schwabOrders = await getOrdersForAccount(userData.accountNum, userData.accessToken)
                             let lastOrder = schwabOrders[0]
                             await dbSchwabOrdersRepo.insert({
                                 accountNum: userData.accountNum,
@@ -257,9 +256,7 @@ export const socketCall = async (): Promise<void> => {
                         }
                         let response = await placeOrderForAccount(userData, schwabOrder)
                         if (response.length == 0) {
-                            let promiseResult = await Promise.all([getOrdersForAccount(userData.accountNum, userData.accessToken), getAccountInfo(userData.accountNum, userData.accessToken)])
-                            schwabOrders = promiseResult[0]
-                            schwabPosition = promiseResult[1]
+                            schwabOrders = await getOrdersForAccount(userData.accountNum, userData.accessToken)
                             let lastOrder = schwabOrders[0]
                             await dbSchwabOrdersRepo.insert({
                                 accountNum: userData.accountNum,
