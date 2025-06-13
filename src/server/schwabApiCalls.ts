@@ -37,7 +37,8 @@ export const getAccountInfo = async (accountInfo: DbTOkens): Promise<any> => {
         const options = {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${accountInfo.accessToken}`
+                'Authorization': `Bearer ${accountInfo.accessToken}`,
+                'accept': 'application/json'
             }
         };
 
@@ -63,7 +64,8 @@ export const getOrdersForAccount = async (accountInfo: DbTOkens): Promise<any> =
         const options = {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${accountInfo.accessToken}`
+                'Authorization': `Bearer ${accountInfo.accessToken}`,
+                'accept': 'application/json'
             }
         };
 
