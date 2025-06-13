@@ -105,7 +105,7 @@ export const api = remultExpress({
     //orig 30 13
     if (process.env['environment'] == 'Prod') {
       cron.schedule('0 11 * * 2-6', () => getDailyStockInfo()),
-        cron.schedule('00 19 * * 1-5', () => socketCall()),
+        cron.schedule('30 13 * * 1-5', () => socketCall()),
 
         cron.schedule('0 9 * * 1,4', () => resetTokens()),
         cron.schedule('*/25 * * * *', () => loadNewToken()),
