@@ -256,7 +256,7 @@ export const socketCall = async (): Promise<void> => {
                                     await dbSchwabOrdersRepo.insert({
                                         accountNum: userData.accountNum,
                                         stockName: data.stockName,
-                                        orderType: "BUY",
+                                        orderType: "SELL",
                                         stockPrice: lastOrder.orderActivityCollection[0].executionLegs[0].price,
                                         shareQty: lastOrder.quantity,
                                         orderId: lastOrder.orderId,
