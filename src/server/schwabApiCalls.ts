@@ -32,12 +32,15 @@ export const getAccountNumbers = async (accessToken: string): Promise<any> => {
 //get the information for the account based on the above number
 export const getAccountInfo = async (accountInfo: DbTOkens): Promise<any> => {
     try {
-        console.log(accountInfo.accountNum)
-        const url = `https://api.schwabapi.com/trader/v1/accounts/${accountInfo.accountNum}`;
+
+        const accountNum = accountInfo.accountNum
+        const accessToken = accountInfo.accessToken
+        console.log(accountNum)
+        const url = `https://api.schwabapi.com/trader/v1/accounts/${accountNum}`;
         const options = {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${accountInfo.accessToken}`,
+                'Authorization': `Bearer ${accessToken}`,
                 'accept': 'application/json'
             }
         };
