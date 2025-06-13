@@ -35,8 +35,8 @@ export const socketCall = async (): Promise<void> => {
 
 
 
-    let schwabOrders = await SchwabController.getOrdersCall(userData)
-    let schwabPosition = await SchwabController.getAccountInfoCall(userData)
+    let schwabOrders = await SchwabController.getOrdersCall(userData.accountNum, userData.accessToken)
+    let schwabPosition = await SchwabController.getAccountInfoCall(userData.accountNum, userData.accessToken)
     let count = 0
 
     LogService.insertSchwabLog(schwabOrders)
@@ -226,8 +226,8 @@ export const socketCall = async (): Promise<void> => {
                         let response = await SchwabController.placeOrdersCall(userData, order)
                         console.log('here after buy')
                         LoggerController.addToSchwabLog(response)
-                        schwabOrders = await SchwabController.getOrdersCall(userData)
-                        schwabPosition = await SchwabController.getAccountInfoCall(userData)
+                        schwabOrders = await SchwabController.getOrdersCall(userData.accountNum, userData.accessToken)
+                        schwabPosition = await SchwabController.getAccountInfoCall(userData.accountNum, userData.accessToken)
                         LoggerController.addToSchwabLog(schwabOrders)
                         LoggerController.addToSchwabLog(schwabPosition)
 
@@ -253,8 +253,8 @@ export const socketCall = async (): Promise<void> => {
                         let response = await SchwabController.placeOrdersCall(userData, order)
                         console.log('here after buy')
                         LoggerController.addToSchwabLog(response)
-                        schwabOrders = await SchwabController.getOrdersCall(userData)
-                        schwabPosition = await SchwabController.getAccountInfoCall(userData)
+                        schwabOrders = await SchwabController.getOrdersCall(userData.accountNum, userData.accessToken)
+                        schwabPosition = await SchwabController.getAccountInfoCall(userData.accountNum, userData.accessToken)
                         LoggerController.addToSchwabLog(schwabOrders)
                         LoggerController.addToSchwabLog(schwabPosition)
 

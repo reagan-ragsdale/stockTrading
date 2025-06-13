@@ -30,12 +30,8 @@ export const getAccountNumbers = async (accessToken: string): Promise<any> => {
 }
 
 //get the information for the account based on the above number
-export const getAccountInfo = async (accountInfo: DbTOkens): Promise<any> => {
+export const getAccountInfo = async (accountNum: string, accessToken: string): Promise<any> => {
     try {
-
-        const accountNum = accountInfo.accountNum
-        const accessToken = accountInfo.accessToken
-        console.log(accountNum)
         const url = `https://api.schwabapi.com/trader/v1/accounts/${accountNum}`;
         const options = {
             method: 'GET',
@@ -56,18 +52,18 @@ export const getAccountInfo = async (accountInfo: DbTOkens): Promise<any> => {
 }
 
 //get a list of orders for the account
-export const getOrdersForAccount = async (accountInfo: DbTOkens): Promise<any> => {
+export const getOrdersForAccount = async (accountNum: string, accessToken: string): Promise<any> => {
     try {
 
         let startDate = new Date()
         startDate.setHours(5, 0, 0, 0)
         let fromDate = startDate.toISOString()
         let toDate = new Date().toISOString()
-        const url = `https://api.schwabapi.com/trader/v1/accounts/${accountInfo.accountNum}/orders?fromEnteredTime=${fromDate}&toEnteredTime=${toDate}`;
+        const url = `https://api.schwabapi.com/trader/v1/accounts/${accountNum}/orders?fromEnteredTime=${fromDate}&toEnteredTime=${toDate}`;
         const options = {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${accountInfo.accessToken}`,
+                'Authorization': `Bearer ${accessToken}`,
                 'accept': 'application/json'
             }
         };
