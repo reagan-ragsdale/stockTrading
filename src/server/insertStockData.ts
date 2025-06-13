@@ -53,6 +53,8 @@ export const socketCall = async (): Promise<void> => {
     stockLastTradesMap.set('NVO', { lastPrice: 0, lastAsk: 0, lastBid: 0 })
     stockLastTradesMap.set('NEE', { lastPrice: 0, lastAsk: 0, lastBid: 0 })
     stockLastTradesMap.set('NVDA', { lastPrice: 0, lastAsk: 0, lastBid: 0 })
+    stockLastTradesMap.set('AMZN', { lastPrice: 0, lastAsk: 0, lastBid: 0 })
+    stockLastTradesMap.set('GOOG', { lastPrice: 0, lastAsk: 0, lastBid: 0 })
 
     ServerTradeStrategies.initialize()
 
