@@ -33,8 +33,6 @@ export const socketCall = async (): Promise<void> => {
     let schwabOrders = await getOrdersForAccount(userData.accountNum, userData.accessToken)
     let schwabPosition = await getAccountInfo(userData.accountNum, userData.accessToken)
     let amountAvailableToTrade = schwabPosition.securitiesAccount.currentBalances.cashAvailableForTrading - schwabPosition.securitiesAccount.currentBalances.unsettledCash
-    let count = 0
-
 
     let stockLastTradesMap = new Map<string, lastTrade>()
     stockLastTradesMap.set('AAPL', { lastPrice: 0, lastAsk: 0, lastBid: 0 })
@@ -183,80 +181,7 @@ export const socketCall = async (): Promise<void> => {
 
 
                 }
-                if (count == 0) {
-                    let schwabOrder: SchwabOrderDTO = {
-                        orderType: "MARKET",
-                        session: "NORMAL",
-                        duration: "DAY",
-                        orderStrategyType: "SINGLE",
-                        orderLegCollection: [
-                            {
-                                instruction: "BUY",
-                                quantity: 1,
-                                instrument: {
-                                    symbol: "SID",
-                                    assetType: "EQUITY"
-                                }
-                            }
-                        ]
-                    }
-                    let response = await placeOrderForAccount(userData, schwabOrder)
-                    console.log(response)
-                    if (response == 201) {
-                        schwabOrders = await getOrdersForAccount(userData.accountNum, userData.accessToken)
-                        let lastOrder = schwabOrders[0]
-                        await dbSchwabOrdersRepo.insert({
-                            accountNum: userData.accountNum,
-                            stockName: "SID",
-                            orderType: "BUY",
-                            stockPrice: lastOrder.orderActivityCollection[0].executionLegs[0].price,
-                            shareQty: lastOrder.quantity,
-                            orderId: lastOrder.orderId,
-                            tradeStrategy: 'TEST',
-                            orderTime: 0
-                        })
-                    }
-                }
-                else if (count == 20) {
-                    let schwabOrder: SchwabOrderDTO = {
-                        orderType: "MARKET",
-                        session: "NORMAL",
-                        duration: "DAY",
-                        orderStrategyType: "SINGLE",
-                        orderLegCollection: [
-                            {
-                                instruction: "SELL",
-                                quantity: 1,
-                                instrument: {
-                                    symbol: "SID",
-                                    assetType: "EQUITY"
-                                }
-                            }
-                        ]
-                    }
-                    let response = await placeOrderForAccount(userData, schwabOrder)
-                    console.log(response)
-                    if (response == 201) {
-                        schwabOrders = await getOrdersForAccount(userData.accountNum, userData.accessToken)
-                        let lastOrder = schwabOrders[0]
-                        await dbSchwabOrdersRepo.insert({
-                            accountNum: userData.accountNum,
-                            stockName: "SID",
-                            orderType: "SELL",
-                            stockPrice: lastOrder.orderActivityCollection[0].executionLegs[0].price,
-                            shareQty: lastOrder.quantity,
-                            orderId: lastOrder.orderId,
-                            tradeStrategy: 'TEST',
-                            orderTime: 0
-                        })
-                    }
-                }
-                //insert all stocks data into the db
-                count++
                 await dbCurrentDayStockDataRepo.insert(insertData)
-
-                //update the orders if there was an order placed
-
             }
 
         }
