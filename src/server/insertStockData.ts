@@ -10,6 +10,7 @@ import { ServerTradeStrategies } from "../app/services/serverTradeStrategies.js"
 import { SchwabController } from "../shared/controllers/SchwabController.js";
 import { LogService } from "../app/services/LogService.js";
 import { SchwabOrderDTO } from "../app/Dtos/TradingBotDtos.js";
+import { getAccountInfo, getOrdersForAccount, placeOrderForAccount } from "./schwabApiCalls.js";
 
 type lastTrade = {
     lastPrice: number;
@@ -35,8 +36,8 @@ export const socketCall = async (): Promise<void> => {
 
 
 
-    let schwabOrders = await SchwabController.getOrdersCall(userData.accountNum, userData.accessToken)
-    let schwabPosition = await SchwabController.getAccountInfoCall(userData.accountNum, userData.accessToken)
+    let schwabOrders = await getOrdersForAccount(userData.accountNum, userData.accessToken)
+    let schwabPosition = await getAccountInfo(userData.accountNum, userData.accessToken)
     let count = 0
 
     LogService.insertSchwabLog(schwabOrders)
@@ -223,11 +224,11 @@ export const socketCall = async (): Promise<void> => {
                                 }
                             ]
                         }
-                        let response = await SchwabController.placeOrdersCall(userData, order)
+                        let response = await placeOrderForAccount(userData, order)
                         console.log('here after buy')
                         LoggerController.addToSchwabLog(response)
-                        schwabOrders = await SchwabController.getOrdersCall(userData.accountNum, userData.accessToken)
-                        schwabPosition = await SchwabController.getAccountInfoCall(userData.accountNum, userData.accessToken)
+                        schwabOrders = await getOrdersForAccount(userData.accountNum, userData.accessToken)
+                        schwabPosition = await getAccountInfo(userData.accountNum, userData.accessToken)
                         LoggerController.addToSchwabLog(schwabOrders)
                         LoggerController.addToSchwabLog(schwabPosition)
 
@@ -250,11 +251,11 @@ export const socketCall = async (): Promise<void> => {
                                 }
                             ]
                         }
-                        let response = await SchwabController.placeOrdersCall(userData, order)
+                        let response = await placeOrderForAccount(userData, order)
                         console.log('here after buy')
                         LoggerController.addToSchwabLog(response)
-                        schwabOrders = await SchwabController.getOrdersCall(userData.accountNum, userData.accessToken)
-                        schwabPosition = await SchwabController.getAccountInfoCall(userData.accountNum, userData.accessToken)
+                        schwabOrders = await getOrdersForAccount(userData.accountNum, userData.accessToken)
+                        schwabPosition = await getAccountInfo(userData.accountNum, userData.accessToken)
                         LoggerController.addToSchwabLog(schwabOrders)
                         LoggerController.addToSchwabLog(schwabPosition)
 
