@@ -73,11 +73,11 @@ export class ServerTradeStrategies {
         //this.MADropMap.set('NEE', { EMALength: 0, BuyTrendLength: 0, SellTrendLength: 0, BuyDipAmt: 0, SellDipAmt: 0, WaitTime: 1800000, StopLossAmt: .003 })
         //this.MADropMap.set('NVDA', { EMALength: 0, BuyTrendLength: 0, SellTrendLength: 0, BuyDipAmt: 0, SellDipAmt: 0, WaitTime: 1800000, StopLossAmt: .003 })
 
-        this.MADropDataMap.set('AAPL', { priceHistory: [], EMA: 0, CumulativePrice: 0, CumulativeSMA: 0, BuyTrend: 0, BuyTrendData: [], SellTrend: 0, SellTrendData: [], lastPrice: 0, lastAsk: 0, lastBid: 0 })
+        this.MADropDataMap.set('AAPL', { priceHistoryLength: 0, EMA: 0, CumulativePrice: 0, CumulativeSMA: 0, BuyTrend: 0, BuyTrendData: [], SellTrend: 0, SellTrendData: [] })
         //this.MADropDataMap.set('MSFT', { priceHistory: [], EMA: 0, CumulativePrice: 0, CumulativeSMA: 0, BuyTrend: 0, BuyTrendData: [], SellTrend: 0, SellTrendData: [], lastPrice: 0, lastAsk: 0, lastBid: 0 })
-        this.MADropDataMap.set('PLTR', { priceHistory: [], EMA: 0, CumulativePrice: 0, CumulativeSMA: 0, BuyTrend: 0, BuyTrendData: [], SellTrend: 0, SellTrendData: [], lastPrice: 0, lastAsk: 0, lastBid: 0 })
+        this.MADropDataMap.set('PLTR', { priceHistoryLength: 0, EMA: 0, CumulativePrice: 0, CumulativeSMA: 0, BuyTrend: 0, BuyTrendData: [], SellTrend: 0, SellTrendData: [] })
         //this.MADropDataMap.set('AMD', { priceHistory: [], EMA: 0, CumulativePrice: 0, CumulativeSMA: 0, BuyTrend: 0, BuyTrendData: [], SellTrend: 0, SellTrendData: [], lastPrice: 0, lastAsk: 0, lastBid: 0 })
-        this.MADropDataMap.set('TSLA', { priceHistory: [], EMA: 0, CumulativePrice: 0, CumulativeSMA: 0, BuyTrend: 0, BuyTrendData: [], SellTrend: 0, SellTrendData: [], lastPrice: 0, lastAsk: 0, lastBid: 0 })
+        this.MADropDataMap.set('TSLA', { priceHistoryLength: 0, EMA: 0, CumulativePrice: 0, CumulativeSMA: 0, BuyTrend: 0, BuyTrendData: [], SellTrend: 0, SellTrendData: [] })
         //this.MADropDataMap.set('XOM', { priceHistory: [], EMA: 0, CumulativePrice: 0, CumulativeSMA: 0, BuyTrend: 0, BuyTrendData: [], SellTrend: 0, SellTrendData: [], lastPrice: 0, lastAsk: 0, lastBid: 0 })
         //this.MADropDataMap.set('NVO', { priceHistory: [], EMA: 0, CumulativePrice: 0, CumulativeSMA: 0, BuyTrend: 0, BuyTrendData: [], SellTrend: 0, SellTrendData: [], lastPrice: 0, lastAsk: 0, lastBid: 0 })
         //this.MADropDataMap.set('NEE', { priceHistory: [], EMA: 0, CumulativePrice: 0, CumulativeSMA: 0, BuyTrend: 0, BuyTrendData: [], SellTrend: 0, SellTrendData: [], lastPrice: 0, lastAsk: 0, lastBid: 0 })
@@ -581,27 +581,24 @@ export class ServerTradeStrategies {
         else {
             return { shouldTrade: false, log: null }
         } */
-        stockStrategyData.priceHistory.push(stockData.stockPrice)
-        stockStrategyData.lastPrice = stockData.stockPrice
-        stockStrategyData.lastAsk = stockData.askPrice
-        stockStrategyData.lastBid = stockData.bidPrice
+        stockStrategyData.priceHistoryLength += 1
         let nonTradeLog: tradeLogDto | null = null
 
         const multiplyer = 2 / (stockStrategyInfo.EMALength + 1)
 
-        if (stockStrategyData.priceHistory.length < stockStrategyInfo.EMALength) {
+        if (stockStrategyData.priceHistoryLength < stockStrategyInfo.EMALength) {
             stockStrategyData.CumulativePrice += stockData.stockPrice
         }
-        else if (stockStrategyData.priceHistory.length == stockStrategyInfo.EMALength) {
+        else if (stockStrategyData.priceHistoryLength == stockStrategyInfo.EMALength) {
             stockStrategyData.CumulativePrice += stockData.stockPrice
-            stockStrategyData.CumulativeSMA = stockStrategyData.CumulativePrice / stockStrategyData.priceHistory.length
-            stockStrategyData.EMA = stockStrategyData.CumulativePrice / stockStrategyData.priceHistory.length
+            stockStrategyData.CumulativeSMA = stockStrategyData.CumulativePrice / stockStrategyData.priceHistoryLength
+            stockStrategyData.EMA = stockStrategyData.CumulativePrice / stockStrategyData.priceHistoryLength
             stockStrategyData.BuyTrendData.push(stockStrategyData.EMA)
             stockStrategyData.SellTrendData.push(stockStrategyData.EMA)
         }
-        else if (stockStrategyData.priceHistory.length > stockStrategyInfo.EMALength) {
+        else if (stockStrategyData.priceHistoryLength > stockStrategyInfo.EMALength) {
             stockStrategyData.CumulativePrice += stockData.stockPrice
-            stockStrategyData.CumulativeSMA = stockStrategyData.CumulativePrice / stockStrategyData.priceHistory.length
+            stockStrategyData.CumulativeSMA = stockStrategyData.CumulativePrice / stockStrategyData.priceHistoryLength
             stockStrategyData.EMA = (stockData.stockPrice * multiplyer) + (stockStrategyData.EMA * (1 - multiplyer))
             if (stockStrategyData.BuyTrendData.length < stockStrategyInfo.BuyTrendLength - 1) {
                 stockStrategyData.BuyTrendData.push(stockStrategyData.EMA)
