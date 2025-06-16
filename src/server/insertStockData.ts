@@ -144,7 +144,8 @@ export const socketCall = async (): Promise<void> => {
                                     ]
                                 }
                                 let response = await placeOrderForAccount(userData, schwabOrder)
-                                if (response.status == 201) {
+                                if (response.code == 201) {
+                                    console.log('Trade')
                                     schwabOrders = await getOrdersForAccount(userData.accountNum, userData.accessToken)
                                     let lastOrder = schwabOrders[0]
                                     await dbSchwabOrdersRepo.insert({
@@ -167,8 +168,8 @@ export const socketCall = async (): Promise<void> => {
                                     LoggerController.addToLog(result.log!)
                                 }
                                 else {
-                                    console.log('Buy error')
-                                    console.log(await response.json())
+                                    console.log('Trade error')
+                                    console.log(response.code + ' - ' + response.message)
                                 }
                             }
                             else if (result.log != null) {

@@ -1,4 +1,4 @@
-import { SchwabOrderDTO } from "../app/Dtos/TradingBotDtos";
+import { OrderApiResponse, SchwabOrderDTO } from "../app/Dtos/TradingBotDtos";
 import { AuthController } from "../shared/controllers/AuthController";
 import { dbTokenRepo, DbTOkens } from "../shared/tasks/dbTokens.js";
 
@@ -79,6 +79,10 @@ export const getOrdersForAccount = async (accountNum: string, accessToken: strin
 }
 //place an order for an account
 export const placeOrderForAccount = async (accountInfo: DbTOkens, order: SchwabOrderDTO) => {
+    let returnData: OrderApiResponse = {
+        code: 0,
+        message: ''
+    }
     try {
         const url = `https://api.schwabapi.com/trader/v1/accounts/${accountInfo.accountNum}/orders`;
         const options = {
@@ -108,12 +112,25 @@ export const placeOrderForAccount = async (accountInfo: DbTOkens, order: SchwabO
         };
 
         const response = await fetch(url, options);
-        return response
+
+        if (response.status == 201) {
+            returnData.code = 201
+            returnData.message = 'Success'
+        }
+        else {
+            const result = await response.json()
+            returnData.code = response.status
+            returnData.message = result.message
+        }
+        return returnData
     }
     catch (error: any) {
         console.log('Schwab place order error: ' + error.message)
-        return error
+        returnData.code = 999
+        returnData.message = error.message
     }
+    return returnData
+
 }
 //replace an order for an account
 export const replaceOrderForAccount = async (accountNumber: string, accessToken: string, orderId: number): Promise<any> => {
