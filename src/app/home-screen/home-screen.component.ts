@@ -341,6 +341,10 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
         let newData: LineData[] = this.calculateRollingVWAP(this.listOfAddedLines[i].lineLength)
         this.listOfAddedLines[i].data = newData
       }
+      else if (this.listOfAddedLines[i].lineType == 'Cumulative SMA') {
+        let newData: LineData[] = this.calculateCumulativeSMA()
+        this.listOfAddedLines[i].data = newData
+      }
       let selectedDataSet = this.stockChart.data.datasets.filter((e: { label: string; }) => e.label == this.listOfAddedLines[i].lineType + ' - ' + this.listOfAddedLines[i].lineLength.toString())[0]
       selectedDataSet.data = this.listOfAddedLines[i].data.map(e => e.value)
     }
@@ -405,6 +409,9 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       }
       else if (newLines[i].lineType == 'Rolling VWAP') {
         lineData = this.calculateRollingVWAP(newLines[i].lineLength)
+      }
+      else if (newLines[i].lineType == 'Cumulative SMA') {
+        lineData = this.calculateCumulativeSMA()
       }
       this.listOfAddedLines.push({ id: newLines[i].id, lineType: newLines[i].lineType, lineLength: newLines[i].lineLength, data: lineData })
 
@@ -485,6 +492,15 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       returnData.push({ value: vwap, time: this.chartInfo[i].time });
     }
 
+    return returnData
+  }
+  calculateCumulativeSMA() {
+    let returnData: LineData[] = []
+    let cumulativePrice: number = 0
+    for (let i = 0; i < this.chartInfo.length; i++) {
+      cumulativePrice += this.chartInfo[i].stockPrice
+      returnData.push({ value: cumulativePrice / (i + 1), time: this.chartInfo[i].time })
+    }
     return returnData
   }
   resetZoom() {
@@ -848,25 +864,8 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
     this.schwabWebsocket!.close()
   }
 
-  tradeBuyOrSell = 'Buy'
-  placeTrade() {
 
-  }
 
-  async placeOrder(buyOrSell: string) {
-    this.isOrderPending = true;
-    let order: stockOrder = {
-      orderType: buyOrSell,
-      stockName: this.selectedStockName,
-      stockPrice: this.selectedStockCurrent,
-      shareQty: buyOrSell == 'Buy' ? this.userSimFinData[0].spending / this.selectedStockCurrent : this.selectedStockData.shareQty,
-      orderTime: this.chartData.time[this.chartData.time.length - 1]
-    }
-    await OrderService.executeOrder(order, this.selectedStockHistoryData[0])
-    await this.getUserFinanceData()
-    await this.getStockInfo()
-    this.isOrderPending = false
-  }
 
   async getMovers() {
     const url = 'https://api.schwabapi.com/marketdata/v1/movers/NYSE?sort=PERCENT_CHANGE_UP&frequency=1';
