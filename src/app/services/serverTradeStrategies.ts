@@ -13,7 +13,7 @@ export class ServerTradeStrategies {
     private static MADropMap = new Map<string, MADropDto>()
     private static MADropDataMap = new Map<string, MADropData>()
     private static stockInfoMap = new Map<string, StockInfo>()
-    private static listOfTradableStocks: string[] = ['AAPL', 'TSLA', 'MSFT', 'AMD', 'PLTR', 'XOM', 'NVO', 'NEE', 'NVDA', 'AMZN', 'GOOG']
+    private static listOfTradableStocks: string[] = ['AAPL', 'TSLA', 'PLTR']
     private static activeStrategies: string[] = ['MA Drop']
     private static startTime: number = 0
     private static endTime: number = 0
