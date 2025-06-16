@@ -1,5 +1,4 @@
 import { DbCurrentDayStockData } from "../../shared/tasks/dbCurrentDayStockData"
-import { DbOrders } from "../../shared/tasks/dbOrders";
 import { DbSchwabOrders } from "../../shared/tasks/dbSchwabOrders";
 import { DayTradeValues, MADropData, MADropDto, MovingAvergeCrossoverDto, stockDataInfo, StockInfo, stockMACrossData, stockVWAPCrossData, tradeLogDto, VWAPTrendCrossDto } from "../Dtos/TradingBotDtos"
 
@@ -546,6 +545,42 @@ export class ServerTradeStrategies {
 
     private static shouldExecuteMADrop(stockData: DbCurrentDayStockData, stockInfo: StockInfo, stockStrategyInfo: MADropDto, stockStrategyData: MADropData, lastOrder: DbSchwabOrders[], isBuy: boolean, balance: number): { shouldTrade: boolean, tradeType?: string, log: tradeLogDto | null } {
 
+
+        if (stockData.stockName == 'PLTR' && isBuy && lastOrder.length == 0) {
+            return {
+                shouldTrade: true, tradeType: 'BUY', log: {
+                    stockName: stockData.stockName,
+                    strategy: 'MA Drop',
+                    tradingAmount: 0,
+                    orderId: 0,
+                    shares: 0,
+                    dayTradeValues: structuredClone(stockStrategyInfo),
+                    stockInfo: structuredClone(stockInfo),
+                    stockDataInfo: structuredClone(stockStrategyData),
+                    logType: 'Buy',
+                    time: stockData.time,
+                }
+            }
+        }
+        else if (stockData.stockName == 'PLTR' && !isBuy && lastOrder.length == 1) {
+            return {
+                shouldTrade: true, tradeType: 'SELL', log: {
+                    stockName: stockData.stockName,
+                    strategy: 'MA Drop',
+                    tradingAmount: 0,
+                    orderId: lastOrder[0].orderId,
+                    shares: 0,
+                    dayTradeValues: structuredClone(stockStrategyInfo),
+                    stockInfo: structuredClone(stockInfo),
+                    stockDataInfo: structuredClone(stockStrategyData),
+                    logType: 'Sell',
+                    time: stockData.time,
+                }
+            }
+        }
+        else {
+            return { shouldTrade: false, log: null }
+        }
         stockStrategyData.priceHistory.push(stockData.stockPrice)
         stockStrategyData.lastPrice = stockData.stockPrice
         stockStrategyData.lastAsk = stockData.askPrice
@@ -611,7 +646,7 @@ export class ServerTradeStrategies {
                         logType: '',
                         time: stockData.time,
                     }
-                    nonTradeLog.logType += 'Stock Free To Trade After Initial Wait Time - '
+                    //nonTradeLog.logType += 'Stock Free To Trade After Initial Wait Time - '
                 }
             }
             if (stockInfo.numberOfTrades > 0 && stockInfo.canTrade == false) {
@@ -629,7 +664,7 @@ export class ServerTradeStrategies {
                         logType: '',
                         time: stockData.time,
                     }
-                    nonTradeLog.logType += 'Stock Free To Trade After Stop Loss Timeout - '
+                    //nonTradeLog.logType += 'Stock Free To Trade After Stop Loss Timeout - '
                 }
             }
 
