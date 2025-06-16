@@ -546,7 +546,7 @@ export class ServerTradeStrategies {
     private static shouldExecuteMADrop(stockData: DbCurrentDayStockData, stockInfo: StockInfo, stockStrategyInfo: MADropDto, stockStrategyData: MADropData, lastOrder: DbSchwabOrders[], isBuy: boolean, balance: number): { shouldTrade: boolean, tradeType?: string, log: tradeLogDto | null } {
 
 
-        if (stockData.stockName == 'PLTR' && isBuy && lastOrder.length == 0) {
+        /* if (stockData.stockName == 'PLTR' && isBuy && lastOrder.length == 0) {
             return {
                 shouldTrade: true, tradeType: 'BUY', log: {
                     stockName: stockData.stockName,
@@ -580,7 +580,7 @@ export class ServerTradeStrategies {
         }
         else {
             return { shouldTrade: false, log: null }
-        }
+        } */
         stockStrategyData.priceHistory.push(stockData.stockPrice)
         stockStrategyData.lastPrice = stockData.stockPrice
         stockStrategyData.lastAsk = stockData.askPrice
