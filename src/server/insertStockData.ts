@@ -97,7 +97,7 @@ export const socketCall = async (): Promise<void> => {
         try {
             //if its a data response and meets the other criteria then we proceed with the data collection and the bot
             if (Object.hasOwn(newEvent, 'data') && hasBeenSent == true && newEvent.data[0].service == 'LEVELONE_EQUITIES') {
-                let insertData: DbCurrentDayStockData[] = []
+                //let insertData: DbCurrentDayStockData[] = []
                 //loop through each stock
                 for (let i = 0; i < newEvent.data[0].content.length; i++) {
                     //if the message contains either the bid, ask or last price then we want to proceed
@@ -116,7 +116,7 @@ export const socketCall = async (): Promise<void> => {
                         lastPrices.lastBid = data.bidPrice
 
                         //push the data into what will be sent to the database 
-                        insertData.push(data)
+                        //insertData.push(data)
                         for (let strategy = 0; strategy < activeStrategies.length; strategy++) {
                             //change below to point to schwab order table
                             let lastOrder = localSchwabOrders.filter(e => e.stockName == data.stockName && e.tradeStrategy == activeStrategies[strategy])
@@ -182,7 +182,7 @@ export const socketCall = async (): Promise<void> => {
 
 
                 }
-                await dbCurrentDayStockDataRepo.insert(insertData)
+                //await dbCurrentDayStockDataRepo.insert(insertData)
             }
 
         }
