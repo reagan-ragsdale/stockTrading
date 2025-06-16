@@ -687,7 +687,7 @@ export class ServerTradeStrategies {
                     stockInfo.canTrade = false
                     stockInfo.numberOfLosses++
                     return {
-                        shouldTrade: true, log: {
+                        shouldTrade: true, tradeType: 'SELL', log: {
                             stockName: stockData.stockName,
                             strategy: 'MA Drop',
                             tradingAmount: 0,
