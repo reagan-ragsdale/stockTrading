@@ -708,7 +708,7 @@ export class ServerTradeStrategies {
                     stockInfo.stopLossGainThreshold = 0
                     stockInfo.canTrade = false
                     return {
-                        shouldTrade: true, log: {
+                        shouldTrade: true, tradeType: 'SELL', log: {
                             stockName: stockData.stockName,
                             strategy: 'MA Drop',
                             tradingAmount: 0,
