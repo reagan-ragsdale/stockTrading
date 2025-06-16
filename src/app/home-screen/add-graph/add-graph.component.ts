@@ -37,6 +37,9 @@ export class AddGraphComponent {
       data: []
     })
   }
+  notCumulative(lineType: string): boolean {
+    return !(lineType == 'Cumulative VWAP' || lineType == 'Cumulative SMA')
+  }
   removeLine(id: number) {
     this.listOfLinesIncoming = this.listOfLinesIncoming.filter(e => e.id != id)
   }
