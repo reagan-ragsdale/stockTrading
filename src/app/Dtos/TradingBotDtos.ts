@@ -74,7 +74,7 @@ export type MADropDto = {
     StopLossAmt: number;
 }
 export type MADropData = {
-    priceHistory: number[];
+    priceHistoryLength: number;
     EMA: number;
     CumulativePrice: number;
     CumulativeSMA: number;
@@ -82,9 +82,6 @@ export type MADropData = {
     BuyTrendData: number[];
     SellTrend: number;
     SellTrendData: number[];
-    lastPrice: number;
-    lastBid: number;
-    lastAsk: number;
 }
 
 
