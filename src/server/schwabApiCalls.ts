@@ -108,16 +108,11 @@ export const placeOrderForAccount = async (accountInfo: DbTOkens, order: SchwabO
         };
 
         const response = await fetch(url, options);
-        if (response.status == 201) {
-            return 201
-        }
-        else {
-            return 500
-        }
+        return response
     }
     catch (error: any) {
         console.log('Schwab place order error: ' + error.message)
-        return ''
+        return error
     }
 }
 //replace an order for an account
