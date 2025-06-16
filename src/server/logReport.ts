@@ -99,9 +99,9 @@ export const createExcel = async (logArray: tradeLogDto[]): Promise<excelJS.Buff
                 description: filteredByOrder[j].logType,
                 tradingAmount: filteredByOrder[j].tradingAmount,
                 shares: filteredByOrder[j].shares,
-                lastPrice: filteredByOrder[j].stockDataInfo.lastPrice,
-                lastAsk: filteredByOrder[j].stockDataInfo.lastAsk,
-                lastBid: filteredByOrder[j].stockDataInfo.lastBid,
+                lastPrice: 0,
+                lastAsk: 0,
+                lastBid: 0,
                 canTrade: filteredByOrder[j].stockInfo.canTrade,
                 numberOfTrades: filteredByOrder[j].stockInfo.numberOfTrades,
                 stopLoss: filteredByOrder[j].stockInfo.stopLoss,
@@ -121,7 +121,7 @@ export const createExcel = async (logArray: tradeLogDto[]): Promise<excelJS.Buff
                 shortSmaSellLength: filteredByOrder[j].dayTradeValues.SmaShortSell */
             })
             if (filteredByOrder[j].shares == 1) {
-                stockResults.push({ stockName: filteredByOrder[j].stockName, orderType: filteredByOrder[j].logType, buyPrice: filteredByOrder[j].stockDataInfo.lastAsk, sellPrice: filteredByOrder[j].stockDataInfo.lastBid })
+                stockResults.push({ stockName: filteredByOrder[j].stockName, orderType: filteredByOrder[j].logType, buyPrice: 0, sellPrice: 0 })
             }
         }
         worksheet.addRow(blankRow)
