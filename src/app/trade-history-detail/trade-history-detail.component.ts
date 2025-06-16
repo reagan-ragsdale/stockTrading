@@ -18,6 +18,7 @@ import { remult } from "remult";
 import { SchwabController } from '../../shared/controllers/SchwabController';
 import { SchwabOrderDTO } from '../Dtos/TradingBotDtos';
 import { dbTokenRepo, DbTOkens } from '../../shared/tasks/dbTokens';
+import { DbSchwabOrders, dbSchwabOrdersRepo } from '../../shared/tasks/dbSchwabOrders';
 
 
 @Component({
@@ -36,11 +37,11 @@ export class TradeHistoryDetailComponent implements OnInit {
   selectedStockName: string = ''
   isLoading: boolean = true
   distinctStocks: string[] = ['All']
-  selectedStockOrders: DbOrders[] = []
+  selectedStockOrders: DbSchwabOrders[] = []
   displayedColumns: string[] = ["Trade", "Stock", "Shares", "Price", "Date", "Time", 'Trade Strategy']
   dateTypes: string[] = ['All', 'Today', 'This Week', 'This Month', 'Choose Date']
   dateType: string = this.dateTypes[0]
-  allOrders: DbOrders[] = []
+  allOrders: DbSchwabOrders[] = []
   totalProfit: number = 0
   totalWins: number = 0
   totalLosses: number = 0
@@ -75,10 +76,10 @@ export class TradeHistoryDetailComponent implements OnInit {
   }
 
   async getStockOrders() {
-    this.selectedStockOrders = await OrderController.getSharedOrdersByStockName(this.selectedStockName)
+    this.selectedStockOrders = await dbSchwabOrdersRepo.find({ where: { stockName: this.selectedStockName }, orderBy: { orderTime: 'desc' } })
   }
   async onSubmitSearch() {
-    this.allOrders = await OrderController.getAllSharedOrders()
+    this.allOrders = await dbSchwabOrdersRepo.find({ orderBy: { orderTime: 'desc' } })
     if (this.selectedStockName == 'All') {
       if (this.dateType == 'All') {
         if (this.selectedStrategy == 'All') {
@@ -235,7 +236,7 @@ export class TradeHistoryDetailComponent implements OnInit {
         let filteredStockOrders = this.selectedStockOrders.filter(e => e.stockName == distinctStocks[j] && e.tradeStrategy == distinctTradeStrategies[k])
         for (let i = 0; i < filteredStockOrders.length - 1; i++) {
           //need to find each pair of buy and sells
-          if (filteredStockOrders[i].orderType == 'Sell' && filteredStockOrders[i + 1].orderType == 'Buy') {
+          if (filteredStockOrders[i].orderType == 'SELL' && filteredStockOrders[i + 1].orderType == 'BUY') {
             let profitShare = (filteredStockOrders[i].stockPrice - filteredStockOrders[i + 1].stockPrice)
             let profit = ((filteredStockOrders[i].shareQty * filteredStockOrders[i].stockPrice) - (filteredStockOrders[i + 1].stockPrice * filteredStockOrders[i + 1].shareQty))
             this.totalProfit += profit
@@ -264,80 +265,13 @@ export class TradeHistoryDetailComponent implements OnInit {
     return returnTime
   }
 
-  async onBuy() {
-    let order: SchwabOrderDTO = {
-      orderType: "MARKET",
-      session: "NORMAL",
-      duration: "DAY",
-      orderStrategyType: "SINGLE",
-      orderLegCollection: [
-        {
-          instruction: "BUY",
-          quantity: 1,
-          instrument: {
-            symbol: "SID",
-            assetType: "EQUITY"
-          }
-        }
-      ]
-    }
-    let response = await SchwabController.placeOrdersCall(this.userData, order)
-    console.log('buy response below')
-    console.log(response)
-    let schwabOrders = await SchwabController.getOrdersCall(this.userData.accountNum, this.userData.accessToken)
-    console.log('buy orders below')
-    console.log(schwabOrders)
-    let schwabPosition = await SchwabController.getAccountInfoCall(this.userData.accountNum, this.userData.accessToken)
-    console.log('buy schwab positions below')
-    console.log(schwabPosition)
-  }
-  async onSell() {
-    let order: SchwabOrderDTO = {
-      orderType: "MARKET",
-      session: "NORMAL",
-      duration: "DAY",
-      orderStrategyType: "SINGLE",
-      orderLegCollection: [
-        {
-          instruction: "SELL",
-          quantity: 1,
-          instrument: {
-            symbol: "SID",
-            assetType: "EQUITY"
-          }
-        }
-      ]
-    }
-    let response = await SchwabController.placeOrdersCall(this.userData, order)
-    console.log('response sell below')
-    console.log(response)
-    let schwabOrders = await SchwabController.getOrdersCall(this.userData.accountNum, this.userData.accessToken)
-    console.log('sell orders below')
-    console.log(schwabOrders)
-    let schwabPosition = await SchwabController.getAccountInfoCall(this.userData.accountNum, this.userData.accessToken)
-    console.log('sell schwab positions below')
-    console.log(schwabPosition)
-  }
-  async getOrders() {
-    let schwabOrders = await SchwabController.getOrdersCall(this.userData.accountNum, this.userData.accessToken)
-    console.log('get orders below')
-    console.log(schwabOrders)
-  }
-  async getAccount() {
-    let schwabPosition = await SchwabController.getAccountInfoCall(this.userData.accountNum, this.userData.accessToken)
-    console.log('get schwab positions below')
-    console.log(schwabPosition)
-  }
-  async getAccountNums() {
-    let accountNums = await SchwabController.getAccountsNumberCall(this.userData.accessToken)
-    console.log('account nums below')
-    console.log(accountNums)
-  }
+
 
   public userData!: DbTOkens
   async ngOnInit() {
     this.isLoading = true
-    this.allOrders = await OrderController.getAllSharedOrders()
+    //this.allOrders = await OrderController.getAllSharedOrders()
+    this.allOrders = await dbSchwabOrdersRepo.find({ orderBy: { orderTime: 'desc' } })
     this.distinctStocks = this.distinctStocks.concat(this.allOrders.map(e => e.stockName).filter((v, i, a) => a.indexOf(v) === i))
     this.selectedStockName = this.distinctStocks[0]
     this.selectedStockOrders = this.allOrders
