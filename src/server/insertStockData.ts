@@ -24,7 +24,7 @@ export const socketCall = async (): Promise<void> => {
     let activeStrategies: string[] = ['MA Drop']
 
     //admin user to start websocket
-    const userData = await dbTokenRepo.findFirst({ id: 'asdfghjkl' }) as DbTOkens
+    let userData = await dbTokenRepo.findFirst({ id: 'asdfghjkl' }) as DbTOkens
 
     let localSchwabOrders = await dbSchwabOrdersRepo.find({ where: { accountNum: userData.accountNum }, orderBy: { orderTime: 'desc' } })
 
@@ -96,6 +96,8 @@ export const socketCall = async (): Promise<void> => {
         }
         try {
             //if its a data response and meets the other criteria then we proceed with the data collection and the bot
+            let accessToken = ServerTradeStrategies.getAccessToken()
+            console.log(accessToken)
             if (Object.hasOwn(newEvent, 'data') && hasBeenSent == true && newEvent.data[0].service == 'LEVELONE_EQUITIES') {
                 //let insertData: DbCurrentDayStockData[] = []
                 //loop through each stock
@@ -114,6 +116,7 @@ export const socketCall = async (): Promise<void> => {
                         lastPrices.lastPrice = data.stockPrice
                         lastPrices.lastAsk = data.askPrice
                         lastPrices.lastBid = data.bidPrice
+
 
                         //push the data into what will be sent to the database 
                         //insertData.push(data)
@@ -143,10 +146,11 @@ export const socketCall = async (): Promise<void> => {
                                         }
                                     ]
                                 }
-                                let response = await placeOrderForAccount(userData, schwabOrder)
+                                let accessToken = ServerTradeStrategies.getAccessToken()
+                                let response = await placeOrderForAccount(userData.accountNum, accessToken, schwabOrder)
                                 if (response.code == 201) {
                                     console.log('Trade')
-                                    schwabOrders = await getOrdersForAccount(userData.accountNum, userData.accessToken)
+                                    schwabOrders = await getOrdersForAccount(userData.accountNum, accessToken)
                                     let lastOrder = schwabOrders[0]
                                     await dbSchwabOrdersRepo.insert({
                                         accountNum: userData.accountNum,
@@ -206,5 +210,9 @@ export const socketCall = async (): Promise<void> => {
 
 
 
+
+}
+
+const updateToken = () => {
 
 }

@@ -18,7 +18,15 @@ export class ServerTradeStrategies {
     private static startTime: number = 0
     private static endTime: number = 0
 
+    private static accessToken: string = ''
 
+
+    public static setAccessToken(accessToken: string): void {
+        this.accessToken = accessToken
+    }
+    public static getAccessToken(): string {
+        return this.accessToken
+    }
 
 
     static initialize() {
