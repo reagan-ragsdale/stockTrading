@@ -120,6 +120,7 @@ export const placeOrderForAccount = async (accountInfo: DbTOkens, order: SchwabO
         else {
             const result = await response.json()
             returnData.code = response.status
+            console.log(result)
             returnData.message = result.message
         }
         return returnData
