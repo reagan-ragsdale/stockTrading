@@ -97,8 +97,6 @@ export const socketCall = async (): Promise<void> => {
         }
         try {
             //if its a data response and meets the other criteria then we proceed with the data collection and the bot
-            let accessToken = ServerTradeStrategies.getAccessToken()
-            console.log(accessToken)
             if (Object.hasOwn(newEvent, 'data') && hasBeenSent == true && newEvent.data[0].service == 'LEVELONE_EQUITIES') {
                 //let insertData: DbCurrentDayStockData[] = []
                 //loop through each stock
