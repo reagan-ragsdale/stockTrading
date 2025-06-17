@@ -78,17 +78,17 @@ export const getOrdersForAccount = async (accountNum: string, accessToken: strin
     }
 }
 //place an order for an account
-export const placeOrderForAccount = async (accountInfo: DbTOkens, order: SchwabOrderDTO) => {
+export const placeOrderForAccount = async (accountNum: string, accessToken: string, order: SchwabOrderDTO) => {
     let returnData: OrderApiResponse = {
         code: 0,
         message: ''
     }
     try {
-        const url = `https://api.schwabapi.com/trader/v1/accounts/${accountInfo.accountNum}/orders`;
+        const url = `https://api.schwabapi.com/trader/v1/accounts/${accountNum}/orders`;
         const options = {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${accountInfo.accessToken}`,
+                'Authorization': `Bearer ${accessToken}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(
@@ -120,8 +120,7 @@ export const placeOrderForAccount = async (accountInfo: DbTOkens, order: SchwabO
         else {
             const result = await response.json()
             returnData.code = response.status
-            console.log(result)
-            returnData.message = result.message
+            returnData.message = result.errors[0].title + ' - ' + result.errors[0].detail
         }
         return returnData
     }
