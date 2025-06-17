@@ -40,6 +40,7 @@ export const socketCall = async (): Promise<void> => {
     stockLastTradesMap.set('TSLA', { lastPrice: 0, lastAsk: 0, lastBid: 0 })
 
     ServerTradeStrategies.initialize()
+    ServerTradeStrategies.setAccessToken(userData.accessToken)
 
     //intitalize websocket
     const schwabWebsocket = new WebSocket(userData.streamerSocketUrl)
