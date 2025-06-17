@@ -30,8 +30,8 @@ export class SchwabController {
 
    }
    @BackendMethod({ allowed: true })
-   static async placeOrdersCall(accountInfo: DbTOkens, order: SchwabOrderDTO): Promise<any> {
-      return await SchwabController.placeOrderForAccount(accountInfo, order)
+   static async placeOrdersCall(accountNum: string, accessToken: string, order: SchwabOrderDTO): Promise<any> {
+      return await SchwabController.placeOrderForAccount(accountNum, accessToken, order)
 
    }
 
