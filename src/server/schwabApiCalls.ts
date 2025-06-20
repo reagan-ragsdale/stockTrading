@@ -120,7 +120,9 @@ export const placeOrderForAccount = async (accountNum: string, accessToken: stri
         else {
             const result = await response.json()
             returnData.code = response.status
-            returnData.message = result.errors[0].title + ' - ' + result.errors[0].detail
+            console.log(result)
+            //returnData.message = result.errors[0].title + ' - ' + result.errors[0].detail
+            returnData.message = "Error"
         }
         return returnData
     }

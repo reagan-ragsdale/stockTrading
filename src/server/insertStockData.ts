@@ -119,68 +119,67 @@ export const socketCall = async (): Promise<void> => {
 
                         //push the data into what will be sent to the database 
                         //insertData.push(data)
-                        for (let strategy = 0; strategy < activeStrategies.length; strategy++) {
-                            //change below to point to schwab order table
-                            let lastOrder = localSchwabOrders.filter(e => e.stockName == data.stockName && e.tradeStrategy == activeStrategies[strategy])
-                            let isBuy = true;
-                            if (lastOrder.length > 0) {
-                                isBuy = lastOrder[0].orderType == 'Sell' ? true : false;
-                            }
-                            let result = ServerTradeStrategies.shouldExecuteOrder(data, activeStrategies[strategy], lastOrder, isBuy, amountAvailableToTrade + 3)
-                            if (result.shouldTrade) {
-                                //add below to send to schwab and also insert into schwab order table
-                                let schwabOrder: SchwabOrderDTO = {
-                                    orderType: "MARKET",
-                                    session: "NORMAL",
-                                    duration: "DAY",
-                                    orderStrategyType: "SINGLE",
-                                    orderLegCollection: [
-                                        {
-                                            instruction: result.tradeType!,
-                                            quantity: 1,
-                                            instrument: {
-                                                symbol: data.stockName,
-                                                assetType: "EQUITY"
-                                            }
-                                        }
-                                    ]
-                                }
-                                let accessToken = ServerTradeStrategies.getAccessToken()
-                                let response = await placeOrderForAccount(userData.accountNum, accessToken, schwabOrder)
-                                if (response.code == 201) {
-                                    console.log('Trade')
-                                    schwabOrders = await getOrdersForAccount(userData.accountNum, accessToken)
-                                    let lastOrder = schwabOrders[0]
-                                    await dbSchwabOrdersRepo.insert({
-                                        accountNum: userData.accountNum,
-                                        stockName: data.stockName,
-                                        orderType: result.tradeType!,
-                                        stockPrice: lastOrder.orderActivityCollection[0].executionLegs[0].price,
-                                        shareQty: lastOrder.quantity,
-                                        orderId: lastOrder.orderId,
-                                        tradeStrategy: activeStrategies[strategy],
-                                        orderTime: data.time
-                                    })
-                                    if (result.tradeType! == 'BUY') {
-                                        amountAvailableToTrade = amountAvailableToTrade - lastOrder.orderActivityCollection[0].executionLegs[0].price
-                                    }
-                                    localSchwabOrders = await dbSchwabOrdersRepo.find({ where: { accountNum: userData.accountNum }, orderBy: { orderTime: 'desc' } })
-                                    result.log!.tradingAmount = amountAvailableToTrade
-                                    result.log!.orderId = lastOrder.orderId
-                                    result.log!.shares = 1
-                                    LoggerController.addToLog(result.log!)
-                                }
-                                else {
-                                    console.log('Trade error')
-                                    console.log(response.code + ' - ' + response.message)
-                                }
-                            }
-                            else if (result.log != null) {
-                                LoggerController.addToLog(result.log)
-                            }
-
-
+                        //for (let strategy = 0; strategy < activeStrategies.length; strategy++) {
+                        let lastOrder = localSchwabOrders.filter(e => e.stockName == data.stockName && e.tradeStrategy == 'MA Drop')
+                        let isBuy = true;
+                        if (lastOrder.length > 0) {
+                            isBuy = lastOrder[0].orderType == 'Sell' ? true : false;
                         }
+                        let result = ServerTradeStrategies.shouldExecuteOrder(data, 'MA Drop', lastOrder, isBuy, amountAvailableToTrade + 3)
+                        if (result.shouldTrade) {
+                            //add below to send to schwab and also insert into schwab order table
+                            let schwabOrder: SchwabOrderDTO = {
+                                orderType: "MARKET",
+                                session: "NORMAL",
+                                duration: "DAY",
+                                orderStrategyType: "SINGLE",
+                                orderLegCollection: [
+                                    {
+                                        instruction: result.tradeType!,
+                                        quantity: 1,
+                                        instrument: {
+                                            symbol: data.stockName,
+                                            assetType: "EQUITY"
+                                        }
+                                    }
+                                ]
+                            }
+                            let accessToken = ServerTradeStrategies.getAccessToken()
+                            let response = await placeOrderForAccount(userData.accountNum, accessToken, schwabOrder)
+                            if (response.code == 201) {
+                                console.log('Trade')
+                                schwabOrders = await getOrdersForAccount(userData.accountNum, accessToken)
+                                let lastOrder = schwabOrders[0]
+                                await dbSchwabOrdersRepo.insert({
+                                    accountNum: userData.accountNum,
+                                    stockName: data.stockName,
+                                    orderType: result.tradeType!,
+                                    stockPrice: lastOrder.orderActivityCollection[0].executionLegs[0].price,
+                                    shareQty: lastOrder.quantity,
+                                    orderId: lastOrder.orderId,
+                                    tradeStrategy: 'MA Drop',
+                                    orderTime: data.time
+                                })
+                                if (result.tradeType! == 'BUY') {
+                                    amountAvailableToTrade = amountAvailableToTrade - lastOrder.orderActivityCollection[0].executionLegs[0].price
+                                }
+                                localSchwabOrders = await dbSchwabOrdersRepo.find({ where: { accountNum: userData.accountNum }, orderBy: { orderTime: 'desc' } })
+                                result.log!.tradingAmount = amountAvailableToTrade
+                                result.log!.orderId = lastOrder.orderId
+                                result.log!.shares = 1
+                                LoggerController.addToLog(result.log!)
+                            }
+                            else {
+                                console.log('Trade error')
+                                console.log(response.code + ' - ' + response.message)
+                            }
+                        }
+                        else if (result.log != null) {
+                            LoggerController.addToLog(result.log)
+                        }
+
+
+                        //}
 
                     }
 

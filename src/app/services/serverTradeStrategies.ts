@@ -554,23 +554,7 @@ export class ServerTradeStrategies {
     private static shouldExecuteMADrop(stockData: DbCurrentDayStockData, stockInfo: StockInfo, stockStrategyInfo: MADropDto, stockStrategyData: MADropData, lastOrder: DbSchwabOrders[], isBuy: boolean, balance: number): { shouldTrade: boolean, tradeType?: string, log: tradeLogDto | null } {
 
 
-        /* if (stockData.stockName == 'PLTR' && isBuy && lastOrder.length == 0) {
-            return {
-                shouldTrade: true, tradeType: 'BUY', log: {
-                    stockName: stockData.stockName,
-                    strategy: 'MA Drop',
-                    tradingAmount: 0,
-                    orderId: 0,
-                    shares: 0,
-                    dayTradeValues: structuredClone(stockStrategyInfo),
-                    stockInfo: structuredClone(stockInfo),
-                    stockDataInfo: structuredClone(stockStrategyData),
-                    logType: 'Buy',
-                    time: stockData.time,
-                }
-            }
-        }
-        else if (stockData.stockName == 'PLTR' && !isBuy && lastOrder.length == 1) {
+        if (!isBuy && stockInfo.numberOfTrades == 0) {
             return {
                 shouldTrade: true, tradeType: 'SELL', log: {
                     stockName: stockData.stockName,
@@ -581,65 +565,81 @@ export class ServerTradeStrategies {
                     dayTradeValues: structuredClone(stockStrategyInfo),
                     stockInfo: structuredClone(stockInfo),
                     stockDataInfo: structuredClone(stockStrategyData),
-                    logType: 'Sell',
+                    logType: 'Sell begining of day',
                     time: stockData.time,
                 }
             }
         }
-        else {
-            return { shouldTrade: false, log: null }
-        } */
         stockStrategyData.priceHistoryLength += 1
         let nonTradeLog: tradeLogDto | null = null
 
         const multiplyer = 2 / (stockStrategyInfo.EMALength + 1)
 
-        if (stockStrategyData.priceHistoryLength < stockStrategyInfo.EMALength) {
-            stockStrategyData.CumulativePrice += stockData.stockPrice
-        }
-        else if (stockStrategyData.priceHistoryLength == stockStrategyInfo.EMALength) {
-            stockStrategyData.CumulativePrice += stockData.stockPrice
-            stockStrategyData.CumulativeSMA = stockStrategyData.CumulativePrice / stockStrategyData.priceHistoryLength
-            stockStrategyData.EMA = stockStrategyData.CumulativePrice / stockStrategyData.priceHistoryLength
-            stockStrategyData.BuyTrendData.push(stockStrategyData.EMA)
-            stockStrategyData.SellTrendData.push(stockStrategyData.EMA)
-        }
-        else if (stockStrategyData.priceHistoryLength > stockStrategyInfo.EMALength) {
-            stockStrategyData.CumulativePrice += stockData.stockPrice
-            stockStrategyData.CumulativeSMA = stockStrategyData.CumulativePrice / stockStrategyData.priceHistoryLength
-            stockStrategyData.EMA = (stockData.stockPrice * multiplyer) + (stockStrategyData.EMA * (1 - multiplyer))
-            if (stockStrategyData.BuyTrendData.length < stockStrategyInfo.BuyTrendLength - 1) {
-                stockStrategyData.BuyTrendData.push(stockStrategyData.EMA)
-            }
-            else if (stockStrategyData.BuyTrendData.length == stockStrategyInfo.BuyTrendLength - 1) {
-                stockStrategyData.BuyTrendData.push(stockStrategyData.EMA)
-                stockStrategyData.BuyTrend = (stockStrategyData.BuyTrendData[stockStrategyData.BuyTrendData.length - 1] - stockStrategyData.BuyTrendData[0]) / stockStrategyInfo.BuyTrendLength
-            }
-            else if (stockStrategyData.BuyTrendData.length > stockStrategyInfo.BuyTrendLength - 1) {
-                stockStrategyData.BuyTrendData.shift()
-                stockStrategyData.BuyTrendData.push(stockStrategyData.EMA)
-                stockStrategyData.BuyTrend = (stockStrategyData.BuyTrendData[stockStrategyData.BuyTrendData.length - 1] - stockStrategyData.BuyTrendData[0]) / stockStrategyInfo.BuyTrendLength
-            }
-            if (stockStrategyData.SellTrendData.length < stockStrategyInfo.SellTrendLength - 1) {
-                stockStrategyData.SellTrendData.push(stockStrategyData.EMA)
-            }
-            else if (stockStrategyData.SellTrendData.length == stockStrategyInfo.SellTrendLength - 1) {
-                stockStrategyData.SellTrendData.push(stockStrategyData.EMA)
-                stockStrategyData.SellTrend = (stockStrategyData.SellTrendData[stockStrategyData.SellTrendData.length - 1] - stockStrategyData.SellTrendData[0]) / stockStrategyInfo.SellTrendLength
-            }
-            else if (stockStrategyData.SellTrendData.length > stockStrategyInfo.SellTrendLength - 1) {
-                stockStrategyData.SellTrendData.shift()
-                stockStrategyData.SellTrendData.push(stockStrategyData.EMA)
-                stockStrategyData.SellTrend = (stockStrategyData.SellTrendData[stockStrategyData.SellTrendData.length - 1] - stockStrategyData.SellTrendData[0]) / stockStrategyInfo.SellTrendLength
-            }
+        stockStrategyData.CumulativePrice += stockData.stockPrice
+        stockStrategyData.CumulativeSMA = stockStrategyData.CumulativePrice / stockStrategyData.priceHistoryLength
 
-            if (stockInfo.numberOfTrades == 0 && stockStrategyInfo.WaitTime > 0) {
-                if (stockData.time < (this.startTime + stockStrategyInfo.WaitTime)) {
-                    stockInfo.canTrade = false
+        if (stockStrategyData.priceHistoryLength <= stockStrategyInfo.EMALength) {
+            if (stockStrategyData.priceHistoryLength == stockStrategyInfo.EMALength) {
+                stockStrategyData.EMA = stockStrategyData.CumulativePrice / stockStrategyData.priceHistoryLength
+                stockStrategyData.BuyTrendData.push(stockStrategyData.EMA)
+                stockStrategyData.SellTrendData.push(stockStrategyData.EMA)
+            }
+            return { shouldTrade: false, log: null }
+        }
+
+
+        stockStrategyData.EMA = (stockData.stockPrice * multiplyer) + (stockStrategyData.EMA * (1 - multiplyer))
+        if (stockStrategyData.BuyTrendData.length >= stockStrategyInfo.BuyTrendLength) {
+            stockStrategyData.BuyTrendData.shift();
+        }
+        stockStrategyData.BuyTrendData.push(stockStrategyData.EMA);
+
+        if (stockStrategyData.BuyTrendData.length >= stockStrategyInfo.BuyTrendLength) {
+            stockStrategyData.BuyTrend =
+                (stockStrategyData.BuyTrendData[stockStrategyData.BuyTrendData.length - 1] - stockStrategyData.BuyTrendData[0]) / stockStrategyInfo.BuyTrendLength;
+        }
+
+        if (stockStrategyData.SellTrendData.length >= stockStrategyInfo.SellTrendLength) {
+            stockStrategyData.SellTrendData.shift();
+        }
+        stockStrategyData.SellTrendData.push(stockStrategyData.EMA);
+
+        if (stockStrategyData.SellTrendData.length >= stockStrategyInfo.SellTrendLength) {
+            stockStrategyData.SellTrend =
+                (stockStrategyData.SellTrendData[stockStrategyData.SellTrendData.length - 1] - stockStrategyData.SellTrendData[0]) / stockStrategyInfo.SellTrendLength;
+        }
+
+
+        if (stockData.time >= (this.startTime + stockStrategyInfo.WaitTime) && stockInfo.numberOfTrades == 0) {
+            stockInfo.canTrade = true
+        }
+
+
+        if (stockInfo.numberOfTrades > 0 && stockInfo.canTrade == false) {
+            if ((Date.now() - lastOrder[0].orderTime) > 1800000) {
+                stockInfo.canTrade = true
+                nonTradeLog ??= {
+                    stockName: stockData.stockName,
+                    strategy: 'MA Drop',
+                    tradingAmount: 0,
+                    orderId: 0,
+                    shares: 0,
+                    dayTradeValues: structuredClone(stockStrategyInfo),
+                    stockInfo: structuredClone(stockInfo),
+                    stockDataInfo: structuredClone(stockStrategyData),
+                    logType: '',
+                    time: stockData.time,
                 }
-                else {
-                    stockInfo.canTrade = true
-                    nonTradeLog ??= {
+                nonTradeLog.logType += 'Stock Free To Trade After Stop Loss Timeout - '
+            }
+        }
+
+        if (isBuy && stockInfo.canTrade && stockInfo.numberOfLosses < 2 && stockStrategyData.BuyTrendData.length >= stockStrategyInfo.BuyTrendLength && stockData.askPrice < balance) {
+            if ((((stockStrategyData.EMA - stockStrategyData.CumulativeSMA) / stockStrategyData.CumulativeSMA) < (stockStrategyInfo.BuyDipAmt * -1)) && stockStrategyData.BuyTrend > 0) {
+                stockInfo.numberOfTrades++
+                stockInfo.stopLoss = stockData.askPrice * (1 - stockStrategyInfo.StopLossAmt)
+                return {
+                    shouldTrade: true, tradeType: 'BUY', log: {
                         stockName: stockData.stockName,
                         strategy: 'MA Drop',
                         tradingAmount: 0,
@@ -648,123 +648,84 @@ export class ServerTradeStrategies {
                         dayTradeValues: structuredClone(stockStrategyInfo),
                         stockInfo: structuredClone(stockInfo),
                         stockDataInfo: structuredClone(stockStrategyData),
-                        logType: '',
+                        logType: 'Buy',
                         time: stockData.time,
                     }
-                    //nonTradeLog.logType += 'Stock Free To Trade After Initial Wait Time - '
                 }
             }
-            if (stockInfo.numberOfTrades > 0 && stockInfo.canTrade == false) {
-                if ((Date.now() - lastOrder[0].orderTime) > 1800000) {
-                    stockInfo.canTrade = true
-                    nonTradeLog ??= {
-                        stockName: stockData.stockName,
-                        strategy: 'MA Drop',
-                        tradingAmount: 0,
-                        orderId: 0,
-                        shares: 0,
-                        dayTradeValues: structuredClone(stockStrategyInfo),
-                        stockInfo: structuredClone(stockInfo),
-                        stockDataInfo: structuredClone(stockStrategyData),
-                        logType: '',
-                        time: stockData.time,
-                    }
-                    //nonTradeLog.logType += 'Stock Free To Trade After Stop Loss Timeout - '
-                }
-            }
+        }
+        else if (!isBuy && stockInfo.canTrade && stockStrategyData.SellTrendData.length >= stockStrategyInfo.SellTrendLength) {
 
-            if (isBuy && stockInfo.canTrade && stockInfo.numberOfLosses < 2 && stockStrategyData.BuyTrendData.length >= stockStrategyInfo.BuyTrendLength && stockData.askPrice < balance) {
-                if ((((stockStrategyData.EMA - stockStrategyData.CumulativeSMA) / stockStrategyData.CumulativeSMA) < (stockStrategyInfo.BuyDipAmt * -1)) && stockStrategyData.BuyTrend > 0) {
-                    stockInfo.numberOfTrades++
-                    stockInfo.stopLoss = stockData.askPrice * (1 - stockStrategyInfo.StopLossAmt)
-                    return {
-                        shouldTrade: true, tradeType: 'BUY', log: {
-                            stockName: stockData.stockName,
-                            strategy: 'MA Drop',
-                            tradingAmount: 0,
-                            orderId: 0,
-                            shares: 0,
-                            dayTradeValues: structuredClone(stockStrategyInfo),
-                            stockInfo: structuredClone(stockInfo),
-                            stockDataInfo: structuredClone(stockStrategyData),
-                            logType: 'Buy',
-                            time: stockData.time,
-                        }
-                    }
-                }
-            }
-            else if (!isBuy && stockInfo.canTrade && stockStrategyData.SellTrendData.length >= stockStrategyInfo.SellTrendLength) {
-
-                if ((((stockStrategyData.EMA - stockStrategyData.CumulativeSMA) / stockStrategyData.CumulativeSMA) > stockStrategyInfo.SellDipAmt) && stockStrategyData.SellTrend < 0) {
-                    stockInfo.numberOfTrades++
-                    stockInfo.stopLoss = 0
-                    stockInfo.tradeHigh = 0
-                    stockInfo.stopLossGainThreshold = 0
-                    if (stockData.bidPrice < lastOrder[0].stockPrice) {
-                        stockInfo.numberOfLosses++
-                    }
-                    return {
-                        shouldTrade: true, tradeType: 'SELL', log: {
-                            stockName: stockData.stockName,
-                            strategy: 'MA Drop',
-                            tradingAmount: 0,
-                            orderId: lastOrder[0].orderId,
-                            shares: 0,
-                            dayTradeValues: structuredClone(stockStrategyInfo),
-                            stockInfo: structuredClone(stockInfo),
-                            stockDataInfo: structuredClone(stockStrategyData),
-                            logType: 'Sell',
-                            time: stockData.time,
-                        }
-                    }
-                }
-
-                else if (stockData.bidPrice <= stockInfo.stopLoss) {
-                    stockInfo.numberOfTrades++
-                    stockInfo.stopLoss = 0
-                    stockInfo.tradeHigh = 0
-                    stockInfo.stopLossGainThreshold = 0
-                    stockInfo.canTrade = false
+            if ((((stockStrategyData.EMA - stockStrategyData.CumulativeSMA) / stockStrategyData.CumulativeSMA) > stockStrategyInfo.SellDipAmt) && stockStrategyData.SellTrend < 0) {
+                stockInfo.numberOfTrades++
+                stockInfo.stopLoss = 0
+                stockInfo.tradeHigh = 0
+                stockInfo.stopLossGainThreshold = 0
+                if (stockData.bidPrice < lastOrder[0].stockPrice) {
                     stockInfo.numberOfLosses++
-                    return {
-                        shouldTrade: true, tradeType: 'SELL', log: {
-                            stockName: stockData.stockName,
-                            strategy: 'MA Drop',
-                            tradingAmount: 0,
-                            orderId: lastOrder[0].orderId,
-                            shares: 0,
-                            dayTradeValues: structuredClone(stockStrategyInfo),
-                            stockInfo: structuredClone(stockInfo),
-                            stockDataInfo: structuredClone(stockStrategyData),
-                            logType: 'Stop Loss Sell',
-                            time: stockData.time,
-                        }
-                    }
                 }
-                else if (stockData.time > this.endTime) {
-                    stockInfo.numberOfTrades++
-                    stockInfo.stopLoss = 0
-                    stockInfo.tradeHigh = 0
-                    stockInfo.stopLossGainThreshold = 0
-                    stockInfo.canTrade = false
-                    return {
-                        shouldTrade: true, tradeType: 'SELL', log: {
-                            stockName: stockData.stockName,
-                            strategy: 'MA Drop',
-                            tradingAmount: 0,
-                            orderId: lastOrder[0].orderId,
-                            shares: 0,
-                            dayTradeValues: structuredClone(stockStrategyInfo),
-                            stockInfo: structuredClone(stockInfo),
-                            stockDataInfo: structuredClone(stockStrategyData),
-                            logType: 'End Of Day Sell',
-                            time: stockData.time,
-                        }
+                return {
+                    shouldTrade: true, tradeType: 'SELL', log: {
+                        stockName: stockData.stockName,
+                        strategy: 'MA Drop',
+                        tradingAmount: 0,
+                        orderId: lastOrder[0].orderId,
+                        shares: 0,
+                        dayTradeValues: structuredClone(stockStrategyInfo),
+                        stockInfo: structuredClone(stockInfo),
+                        stockDataInfo: structuredClone(stockStrategyData),
+                        logType: 'Sell',
+                        time: stockData.time,
                     }
                 }
             }
 
+            else if (stockData.bidPrice <= stockInfo.stopLoss) {
+                stockInfo.numberOfTrades++
+                stockInfo.stopLoss = 0
+                stockInfo.tradeHigh = 0
+                stockInfo.stopLossGainThreshold = 0
+                stockInfo.canTrade = false
+                stockInfo.numberOfLosses++
+                return {
+                    shouldTrade: true, tradeType: 'SELL', log: {
+                        stockName: stockData.stockName,
+                        strategy: 'MA Drop',
+                        tradingAmount: 0,
+                        orderId: lastOrder[0].orderId,
+                        shares: 0,
+                        dayTradeValues: structuredClone(stockStrategyInfo),
+                        stockInfo: structuredClone(stockInfo),
+                        stockDataInfo: structuredClone(stockStrategyData),
+                        logType: 'Stop Loss Sell',
+                        time: stockData.time,
+                    }
+                }
+            }
+            else if (stockData.time > this.endTime) {
+                stockInfo.numberOfTrades++
+                stockInfo.stopLoss = 0
+                stockInfo.tradeHigh = 0
+                stockInfo.stopLossGainThreshold = 0
+                stockInfo.canTrade = false
+                return {
+                    shouldTrade: true, tradeType: 'SELL', log: {
+                        stockName: stockData.stockName,
+                        strategy: 'MA Drop',
+                        tradingAmount: 0,
+                        orderId: lastOrder[0].orderId,
+                        shares: 0,
+                        dayTradeValues: structuredClone(stockStrategyInfo),
+                        stockInfo: structuredClone(stockInfo),
+                        stockDataInfo: structuredClone(stockStrategyData),
+                        logType: 'End Of Day Sell',
+                        time: stockData.time,
+                    }
+                }
+            }
         }
+
+
 
 
 

@@ -10,7 +10,10 @@ export const loadNewToken = async () => {
         let token = await refreshCall(users[i])
         if (token != '') {
             await AuthController.updateGlobalAccessToken(token, users[i].userId)
-            ServerTradeStrategies.setAccessToken(token)
+            if (users[i].id == 'asdfghjkl') {
+                ServerTradeStrategies.setAccessToken(token)
+            }
+
         }
         else {
             await AuthController.setNeedsNewTokens(users[i].userId)
