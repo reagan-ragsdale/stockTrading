@@ -554,22 +554,7 @@ export class ServerTradeStrategies {
     private static shouldExecuteMADrop(stockData: DbCurrentDayStockData, stockInfo: StockInfo, stockStrategyInfo: MADropDto, stockStrategyData: MADropData, lastOrder: DbSchwabOrders[], isBuy: boolean, balance: number): { shouldTrade: boolean, tradeType?: string, log: tradeLogDto | null } {
 
 
-        if (!isBuy && stockInfo.numberOfTrades == 0) {
-            return {
-                shouldTrade: true, tradeType: 'SELL', log: {
-                    stockName: stockData.stockName,
-                    strategy: 'MA Drop',
-                    tradingAmount: 0,
-                    orderId: lastOrder[0].orderId,
-                    shares: 0,
-                    dayTradeValues: structuredClone(stockStrategyInfo),
-                    stockInfo: structuredClone(stockInfo),
-                    stockDataInfo: structuredClone(stockStrategyData),
-                    logType: 'Sell begining of day',
-                    time: stockData.time,
-                }
-            }
-        }
+
         stockStrategyData.priceHistoryLength += 1
         let nonTradeLog: tradeLogDto | null = null
 
