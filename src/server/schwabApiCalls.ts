@@ -142,13 +142,9 @@ export const placeOrderForAccount = async (accountNum: string, accessToken: stri
             console.log(response)
             const order = response.headers.get('Location')
 
-            const responseData = await response.json();
-            console.log('Trade response data')
-            console.log(responseData)
 
-            const orderId = order ?
-                order.split('/').pop() :
-                responseData.orderId;
+
+            const orderId = order ? Number(order.split('/').pop()) : 0
 
             returnData.code = 201
             returnData.message = ''
