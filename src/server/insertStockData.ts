@@ -126,7 +126,7 @@ export const socketCall = async (): Promise<void> => {
                         let lastOrder = localSchwabOrders.filter(e => e.stockName == data.stockName && e.tradeStrategy == 'MA Drop')
                         let isBuy = true;
                         if (lastOrder.length > 0) {
-                            isBuy = lastOrder[0].orderType == 'Sell' ? true : false;
+                            isBuy = lastOrder[0].orderType == 'SELL' ? true : false;
                         }
                         let result = ServerTradeStrategies.shouldExecuteOrder(data, 'MA Drop', lastOrder, isBuy, amountAvailableToTrade + 3)
                         if (result.shouldTrade && lastPrices.pauseTrade == false) {
