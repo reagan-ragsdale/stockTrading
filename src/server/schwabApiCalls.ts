@@ -52,7 +52,7 @@ export const getAccountInfo = async (accountNum: string, accessToken: string) =>
 }
 
 //get a list of orders for the account
-export const getOrdersForAccount = async (accountNum: string, accessToken: string) => {
+export const getOrdersForAccount = async (accountNum: string, accessToken: string): Promise<any[]> => {
     try {
 
         let startDate = new Date()
@@ -69,12 +69,36 @@ export const getOrdersForAccount = async (accountNum: string, accessToken: strin
         };
 
         const response = await fetch(url, options);
+        console.log('get specific order response')
+        console.log(response)
         const result = await response.json();
         return result
     }
     catch (error: any) {
         console.log('Schwab get orders for account error: ' + error.message)
-        return ''
+        return []
+    }
+}
+
+//get specific order by id
+export const getOrdersForAccountById = async (accountNum: string, accessToken: string, orderId: number): Promise<any> => {
+    try {
+        const url = `https://api.schwabapi.com/trader/v1/accounts/${accountNum}/orders/${orderId}`;
+        const options = {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'accept': 'application/json'
+            }
+        };
+
+        const response = await fetch(url, options);
+        const result = await response.json();
+        return result
+    }
+    catch (error: any) {
+        console.log('Schwab get orders for account error: ' + error.message)
+        return {}
     }
 }
 //place an order for an account
@@ -113,18 +137,29 @@ export const placeOrderForAccount = async (accountNum: string, accessToken: stri
 
         const response = await fetch(url, options);
 
-        if (response.status == 201) {
+        if (response.ok) {
+            console.log('Trade response')
+            console.log(response)
+            const order = response.headers.get('Location')
+
+            const responseData = await response.json();
+            console.log('Trade response data')
+            console.log(responseData)
+
+            const orderId = order ?
+                order.split('/').pop() :
+                responseData.orderId;
+
             returnData.code = 201
-            returnData.message = 'Success'
+            returnData.message = ''
+            returnData.orderId = orderId
         }
         else {
-            const result = await response.json()
             returnData.code = response.status
-            console.log(result)
-            //returnData.message = result.errors[0].title + ' - ' + result.errors[0].detail
-            returnData.message = "Error"
+            returnData.message = 'Error'
         }
-        return returnData
+
+
     }
     catch (error: any) {
         console.log('Schwab place order error: ' + error.message)

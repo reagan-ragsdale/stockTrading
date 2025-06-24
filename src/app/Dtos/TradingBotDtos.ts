@@ -107,6 +107,7 @@ export type SchwabOrderDTO = {
 export type OrderApiResponse = {
     code: number;
     message: string;
+    orderId?: number;
 }
 
 

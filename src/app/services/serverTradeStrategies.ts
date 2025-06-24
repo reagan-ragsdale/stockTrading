@@ -574,24 +574,17 @@ export class ServerTradeStrategies {
 
 
         stockStrategyData.EMA = (stockData.stockPrice * multiplyer) + (stockStrategyData.EMA * (1 - multiplyer))
-        if (stockStrategyData.BuyTrendData.length >= stockStrategyInfo.BuyTrendLength) {
-            stockStrategyData.BuyTrendData.shift();
-        }
+
         stockStrategyData.BuyTrendData.push(stockStrategyData.EMA);
-
-        if (stockStrategyData.BuyTrendData.length >= stockStrategyInfo.BuyTrendLength) {
-            stockStrategyData.BuyTrend =
-                (stockStrategyData.BuyTrendData[stockStrategyData.BuyTrendData.length - 1] - stockStrategyData.BuyTrendData[0]) / stockStrategyInfo.BuyTrendLength;
+        if (stockStrategyData.BuyTrendData.length > stockStrategyInfo.BuyTrendLength) {
+            stockStrategyData.BuyTrendData.shift();
+            stockStrategyData.BuyTrend = (stockStrategyData.BuyTrendData[stockStrategyData.BuyTrendData.length - 1] - stockStrategyData.BuyTrendData[0]) / stockStrategyInfo.BuyTrendLength;
         }
 
-        if (stockStrategyData.SellTrendData.length >= stockStrategyInfo.SellTrendLength) {
-            stockStrategyData.SellTrendData.shift();
-        }
         stockStrategyData.SellTrendData.push(stockStrategyData.EMA);
-
-        if (stockStrategyData.SellTrendData.length >= stockStrategyInfo.SellTrendLength) {
-            stockStrategyData.SellTrend =
-                (stockStrategyData.SellTrendData[stockStrategyData.SellTrendData.length - 1] - stockStrategyData.SellTrendData[0]) / stockStrategyInfo.SellTrendLength;
+        if (stockStrategyData.SellTrendData.length > stockStrategyInfo.SellTrendLength) {
+            stockStrategyData.SellTrendData.shift();
+            stockStrategyData.SellTrend = (stockStrategyData.SellTrendData[stockStrategyData.SellTrendData.length - 1] - stockStrategyData.SellTrendData[0]) / stockStrategyInfo.SellTrendLength;
         }
 
 
