@@ -10,13 +10,15 @@ import { ServerTradeStrategies } from "../app/services/serverTradeStrategies.js"
 import { SchwabController } from "../shared/controllers/SchwabController.js";
 import { LogService } from "../app/services/LogService.js";
 import { SchwabOrderDTO } from "../app/Dtos/TradingBotDtos.js";
-import { getAccountInfo, getOrdersForAccount, placeOrderForAccount } from "./schwabApiCalls.js";
-import { dbSchwabOrdersRepo } from "../shared/tasks/dbSchwabOrders.js";
+import { getAccountInfo, getOrdersForAccount, getOrdersForAccountById, placeOrderForAccount } from "./schwabApiCalls.js";
+import { DbSchwabOrders, dbSchwabOrdersRepo } from "../shared/tasks/dbSchwabOrders.js";
 
 type lastTrade = {
     lastPrice: number;
     lastAsk: number;
     lastBid: number;
+    pauseTrade: boolean;
+    tradeId: number;
 }
 
 export const socketCall = async (): Promise<void> => {
@@ -35,9 +37,9 @@ export const socketCall = async (): Promise<void> => {
     let amountAvailableToTrade = schwabPosition.securitiesAccount.currentBalances.cashAvailableForTrading - schwabPosition.securitiesAccount.currentBalances.unsettledCash
 
     let stockLastTradesMap = new Map<string, lastTrade>()
-    stockLastTradesMap.set('AAPL', { lastPrice: 0, lastAsk: 0, lastBid: 0 })
-    stockLastTradesMap.set('PLTR', { lastPrice: 0, lastAsk: 0, lastBid: 0 })
-    stockLastTradesMap.set('TSLA', { lastPrice: 0, lastAsk: 0, lastBid: 0 })
+    stockLastTradesMap.set('AAPL', { lastPrice: 0, lastAsk: 0, lastBid: 0, pauseTrade: false, tradeId: 0 })
+    stockLastTradesMap.set('PLTR', { lastPrice: 0, lastAsk: 0, lastBid: 0, pauseTrade: false, tradeId: 0 })
+    stockLastTradesMap.set('TSLA', { lastPrice: 0, lastAsk: 0, lastBid: 0, pauseTrade: false, tradeId: 0 })
 
     ServerTradeStrategies.initialize()
     ServerTradeStrategies.setAccessToken(userData.accessToken)
@@ -100,6 +102,7 @@ export const socketCall = async (): Promise<void> => {
             if (Object.hasOwn(newEvent, 'data') && hasBeenSent == true && newEvent.data[0].service == 'LEVELONE_EQUITIES') {
                 //let insertData: DbCurrentDayStockData[] = []
                 //loop through each stock
+                let accessToken = ServerTradeStrategies.getAccessToken()
                 for (let i = 0; i < newEvent.data[0].content.length; i++) {
                     //if the message contains either the bid, ask or last price then we want to proceed
                     if (Object.hasOwn(newEvent.data[0].content[i], '3')) {
@@ -126,7 +129,7 @@ export const socketCall = async (): Promise<void> => {
                             isBuy = lastOrder[0].orderType == 'Sell' ? true : false;
                         }
                         let result = ServerTradeStrategies.shouldExecuteOrder(data, 'MA Drop', lastOrder, isBuy, amountAvailableToTrade + 3)
-                        if (result.shouldTrade) {
+                        if (result.shouldTrade && lastPrices.pauseTrade == false) {
                             //add below to send to schwab and also insert into schwab order table
                             let schwabOrder: SchwabOrderDTO = {
                                 orderType: "MARKET",
@@ -144,35 +147,44 @@ export const socketCall = async (): Promise<void> => {
                                     }
                                 ]
                             }
-                            let accessToken = ServerTradeStrategies.getAccessToken()
                             let response = await placeOrderForAccount(userData.accountNum, accessToken, schwabOrder)
                             if (response.code == 201) {
                                 console.log('Trade')
-                                schwabOrders = await getOrdersForAccount(userData.accountNum, accessToken)
-                                let lastOrder = schwabOrders[0]
-                                await dbSchwabOrdersRepo.insert({
-                                    accountNum: userData.accountNum,
-                                    stockName: data.stockName,
-                                    orderType: result.tradeType!,
-                                    stockPrice: lastOrder.orderActivityCollection[0].executionLegs[0].price,
-                                    shareQty: lastOrder.quantity,
-                                    orderId: lastOrder.orderId,
-                                    tradeStrategy: 'MA Drop',
-                                    orderTime: data.time
-                                })
-                                if (result.tradeType! == 'BUY') {
-                                    amountAvailableToTrade = amountAvailableToTrade - lastOrder.orderActivityCollection[0].executionLegs[0].price
-                                }
-                                localSchwabOrders = await dbSchwabOrdersRepo.find({ where: { accountNum: userData.accountNum }, orderBy: { orderTime: 'desc' } })
-                                result.log!.tradingAmount = amountAvailableToTrade
-                                result.log!.orderId = lastOrder.orderId
-                                result.log!.shares = 1
-                                LoggerController.addToLog(result.log!)
+                                lastPrices.tradeId = response.orderId!
+                                lastPrices.pauseTrade = true;
                             }
                             else {
                                 console.log('Trade error')
                                 console.log(response.code + ' - ' + response.message)
                             }
+                        }
+                        else if (lastPrices.pauseTrade == true) {
+                            let newSchwabOrder = await getOrdersForAccountById(userData.accountNum, accessToken, lastPrices.tradeId)
+
+                            if (Object.keys(newSchwabOrder).length > 0) {
+                                let newInsertData: DbSchwabOrders = {
+                                    accountNum: userData.accountNum,
+                                    stockName: data.stockName,
+                                    orderType: result.tradeType!,
+                                    stockPrice: newSchwabOrder.orderActivityCollection[0].executionLegs[0].price,
+                                    shareQty: newSchwabOrder.quantity,
+                                    orderId: newSchwabOrder.orderId,
+                                    tradeStrategy: 'MA Drop',
+                                    orderTime: data.time
+                                }
+                                await dbSchwabOrdersRepo.insert(newInsertData)
+                                if (result.tradeType! == 'BUY') {
+                                    amountAvailableToTrade = amountAvailableToTrade - newSchwabOrder.orderActivityCollection[0].executionLegs[0].price
+                                }
+                                localSchwabOrders.unshift(newInsertData)
+                                result.log!.tradingAmount = amountAvailableToTrade
+                                result.log!.orderId = newSchwabOrder.orderId
+                                result.log!.shares = 1
+                                LoggerController.addToLog(result.log!)
+                                lastPrices.pauseTrade = false;
+                            }
+
+
                         }
                         else if (result.log != null) {
                             LoggerController.addToLog(result.log)
