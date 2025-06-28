@@ -1065,6 +1065,7 @@ export class ServerTradeScreenComponent implements OnInit {
   }
   listOfBGCOlors: string[] = ['#1ca0de', '#eeb528', '#d82c2c', '#00BFFF', '#A8FF60', '#FF2ECC', '#FFD700', '#00FFFF', '#FF7F7F', '#DA70D6', '#FFA500', '#98FF98', '#C3B1E1']
   addNewLinesToGraph(lines: lineType[]) {
+    console.log(this.listOfAddedLines)
     this.stockChart.data.datasets = [this.stockChart.data.datasets[0]]
     let newListOfAddedLines = structuredClone(this.listOfAddedLines)
     newListOfAddedLines = newListOfAddedLines.filter(e => e.lineType != 'Price' && e.id != -10 && e.id != -11 && e.id != -12)
@@ -1089,9 +1090,9 @@ export class ServerTradeScreenComponent implements OnInit {
     for (let i = 0; i < newListOfAddedLines.length; i++) {
       let lineData: LineData[] = []
       if (newListOfAddedLines[i].lineType == 'SMA') {
-        lineData = this.calculateSMA(newListOfAddedLines[i].lineLength)
-        let filteredLine = newListOfAddedLines.filter(e => e.id == newListOfAddedLines[i].id)[0]
-        filteredLine.data = lineData
+        newListOfAddedLines[i].data = this.calculateSMA(newListOfAddedLines[i].lineLength)
+        //let filteredLine = newListOfAddedLines.filter(e => e.id == newListOfAddedLines[i].id)[0]
+        //filteredLine.data = lineData
       }
       else if (newListOfAddedLines[i].lineType == 'EMA') {
         lineData = this.calculateEMA(newListOfAddedLines[i].lineLength)
@@ -1236,7 +1237,7 @@ export class ServerTradeScreenComponent implements OnInit {
         returnData.push({ value: windowSum / lineLength, time: this.selectedInterDayStockData[j].date })
       }
     }
-
+    console.log(returnData)
 
     return returnData
 
