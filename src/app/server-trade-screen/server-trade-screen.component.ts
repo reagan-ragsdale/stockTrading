@@ -682,31 +682,34 @@ export class ServerTradeScreenComponent implements OnInit {
           }
         }
 
-        const allCombinations = this.generateCombinations(listOfBuyLines);
-        console.log(listOfBuyLines)
-        let result = this.addRule2(listOfBuyLines, allCombinations, rules)
-        finalResult.push(result)
+
       }
-    }
-    console.log(finalResult)
-    let summedResults = []
-    for (let i = 0; i < finalResult[0].length; i++) {
-      let profit = 0
-      let buyCombo = []
-      let sellCombo = []
-      let wins = 0
-      let losses = 0
-      for (let j = 0; j < finalResult.length; j++) {
-        profit += finalResult[j][i].profit
-        buyCombo = finalResult[j][i].buyCombos
-        sellCombo = finalResult[j][i].sellCombos
-        wins += finalResult[j][i].wins
-        losses += finalResult[j][i].losses
+      const allCombinations = this.generateCombinations(listOfBuyLines);
+      console.log(listOfBuyLines)
+      let result = this.addRule2(listOfBuyLines, allCombinations, rules)
+      /* finalResult.push(result)
+      console.log(finalResult)
+      let summedResults = []
+      for (let i = 0; i < finalResult[0].length; i++) {
+        let profit = 0
+        let buyCombo = []
+        let sellCombo = []
+        let wins = 0
+        let losses = 0
+        for (let j = 0; j < finalResult.length; j++) {
+          profit += finalResult[j][i].profit
+          buyCombo = finalResult[j][i].buyCombos
+          sellCombo = finalResult[j][i].sellCombos
+          wins += finalResult[j][i].wins
+          losses += finalResult[j][i].losses
+        }
+        summedResults.push({ profit: profit, buyCombo: buyCombo, sellCombo: sellCombo, wins: wins, losses: losses })
       }
-      summedResults.push({ profit: profit, buyCombo: buyCombo, sellCombo: sellCombo, wins: wins, losses: losses })
+      summedResults.sort((a, b) => b.profit - a.profit) */
+      result.sort((a, b) => b.profit - a.profit)
+      console.log(result)
     }
-    summedResults.sort((a, b) => b.profit - a.profit)
-    console.log(summedResults)
+
     this.isLoading = false;
 
   }
