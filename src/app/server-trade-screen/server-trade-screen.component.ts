@@ -1070,7 +1070,7 @@ export class ServerTradeScreenComponent implements OnInit {
     let newListOfAddedLines = structuredClone(this.listOfAddedLines)
     newListOfAddedLines = newListOfAddedLines.filter(e => e.lineType != 'Price' && e.id != -10 && e.id != -11 && e.id != -12)
     let priceData: LineData[] = []
-    if (this.intraDayChecked) {
+    /* if (this.intraDayChecked) {
       for (let i = 0; i < this.stockDataForSelectedDay.length; i++) {
         priceData.push({ value: this.stockDataForSelectedDay[i].stockPrice, time: this.stockDataForSelectedDay[i].time })
       }
@@ -1085,7 +1085,7 @@ export class ServerTradeScreenComponent implements OnInit {
       lineLength: 1,
       id: -1,
       data: priceData
-    })
+    }) */
 
     for (let i = 0; i < newListOfAddedLines.length; i++) {
       let lineData: LineData[] = []
