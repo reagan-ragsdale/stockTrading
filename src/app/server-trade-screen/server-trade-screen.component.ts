@@ -1069,55 +1069,26 @@ export class ServerTradeScreenComponent implements OnInit {
     this.stockChart.data.datasets = [this.stockChart.data.datasets[0]]
     let newListOfAddedLines = structuredClone(this.listOfAddedLines)
     newListOfAddedLines = newListOfAddedLines.filter(e => e.lineType != 'Price' && e.id != -10 && e.id != -11 && e.id != -12)
-    let priceData: LineData[] = []
-    /* if (this.intraDayChecked) {
-      for (let i = 0; i < this.stockDataForSelectedDay.length; i++) {
-        priceData.push({ value: this.stockDataForSelectedDay[i].stockPrice, time: this.stockDataForSelectedDay[i].time })
-      }
-    }
-    else {
-      for (let i = 0; i < this.selectedInterDayStockData.length; i++) {
-        priceData.push({ value: this.selectedInterDayStockData[i].close, time: this.selectedInterDayStockData[i].date })
-      }
-    }
-    newListOfAddedLines.push({
-      lineType: 'Price',
-      lineLength: 1,
-      id: -1,
-      data: priceData
-    }) */
 
     for (let i = 0; i < newListOfAddedLines.length; i++) {
       let lineData: LineData[] = []
       if (newListOfAddedLines[i].lineType == 'SMA') {
         newListOfAddedLines[i].data = this.calculateSMA(newListOfAddedLines[i].lineLength)
-        //let filteredLine = newListOfAddedLines.filter(e => e.id == newListOfAddedLines[i].id)[0]
-        //filteredLine.data = lineData
       }
       else if (newListOfAddedLines[i].lineType == 'EMA') {
-        lineData = this.calculateEMA(newListOfAddedLines[i].lineLength)
-        let filteredLine = newListOfAddedLines.filter(e => e.id == newListOfAddedLines[i].id)[0]
-        filteredLine.data = lineData
+        newListOfAddedLines[i].data = this.calculateEMA(newListOfAddedLines[i].lineLength)
       }
       else if (newListOfAddedLines[i].lineType == 'Cumulative VWAP') {
-        lineData = this.calculateCumulativeVWAP();
-        let filteredLine = newListOfAddedLines.filter(e => e.id == newListOfAddedLines[i].id)[0]
-        filteredLine.data = lineData
+        newListOfAddedLines[i].data = this.calculateCumulativeVWAP();
       }
       else if (newListOfAddedLines[i].lineType == 'Rolling VWAP') {
-        lineData = this.calculateRollingVWAP(newListOfAddedLines[i].lineLength);
-        let filteredLine = newListOfAddedLines.filter(e => e.id == newListOfAddedLines[i].id)[0]
-        filteredLine.data = lineData
+        newListOfAddedLines[i].data = this.calculateRollingVWAP(newListOfAddedLines[i].lineLength);
       }
       else if (newListOfAddedLines[i].lineType == 'Cumulative SMA') {
-        lineData = this.calculateCumulativeSMA()
-        let filteredLine = newListOfAddedLines.filter(e => e.id == newListOfAddedLines[i].id)[0]
-        filteredLine.data = lineData
+        newListOfAddedLines[i].data = this.calculateCumulativeSMA()
       }
       else if (newListOfAddedLines[i].lineType == 'Cumulative EMA') {
-        lineData = this.calculateCumulativeEMA()
-        let filteredLine = newListOfAddedLines.filter(e => e.id == newListOfAddedLines[i].id)[0]
-        filteredLine.data = lineData
+        newListOfAddedLines[i].data = this.calculateCumulativeEMA()
       }
       this.stockChart.data.datasets.push({
         label: newListOfAddedLines[i].lineType + ' - ' + newListOfAddedLines[i].lineLength,
@@ -1139,59 +1110,30 @@ export class ServerTradeScreenComponent implements OnInit {
     this.stockChart.data.datasets = [this.stockChart.data.datasets[0]]
     let newListOfAddedLines = structuredClone(this.listOfAddedLines)
     newListOfAddedLines = newListOfAddedLines.filter(e => e.lineType != 'Price' && e.id != -10 && e.id != -11 && e.id != -12)
-    let priceData: LineData[] = []
-    if (this.intraDayChecked) {
-      for (let i = 0; i < this.stockDataForSelectedDay.length; i++) {
-        priceData.push({ value: this.stockDataForSelectedDay[i].stockPrice, time: this.stockDataForSelectedDay[i].time })
-      }
-    }
-    else {
-      for (let i = 0; i < this.selectedInterDayStockData.length; i++) {
-        priceData.push({ value: this.selectedInterDayStockData[i].close, time: this.selectedInterDayStockData[i].date })
-      }
-    }
-    newListOfAddedLines.push({
-      lineType: 'Price',
-      lineLength: 1,
-      id: -1,
-      data: priceData
-    })
 
+    let rules = structuredClone(this.listOfAddedRules)
     for (let i = 0; i < newListOfAddedLines.length; i++) {
-      let lineData: LineData[] = []
       if (newListOfAddedLines[i].lineType == 'SMA') {
-        lineData = this.calculateSMA(newListOfAddedLines[i].lineLength)
-        let filteredLine = newListOfAddedLines.filter(e => e.id == newListOfAddedLines[i].id)[0]
-        filteredLine.data = lineData
+        newListOfAddedLines[i].data = this.calculateSMA(newListOfAddedLines[i].lineLength)
       }
       else if (newListOfAddedLines[i].lineType == 'EMA') {
-        lineData = this.calculateEMA(newListOfAddedLines[i].lineLength)
-        let filteredLine = newListOfAddedLines.filter(e => e.id == newListOfAddedLines[i].id)[0]
-        filteredLine.data = lineData
+        newListOfAddedLines[i].data = this.calculateEMA(newListOfAddedLines[i].lineLength)
       }
       else if (newListOfAddedLines[i].lineType == 'Cumulative VWAP') {
-        lineData = this.calculateCumulativeVWAP();
-        let filteredLine = newListOfAddedLines.filter(e => e.id == newListOfAddedLines[i].id)[0]
-        filteredLine.data = lineData
+        newListOfAddedLines[i].data = this.calculateCumulativeVWAP();
       }
       else if (newListOfAddedLines[i].lineType == 'Rolling VWAP') {
-        lineData = this.calculateRollingVWAP(newListOfAddedLines[i].lineLength);
-        let filteredLine = newListOfAddedLines.filter(e => e.id == newListOfAddedLines[i].id)[0]
-        filteredLine.data = lineData
+        newListOfAddedLines[i].data = this.calculateRollingVWAP(newListOfAddedLines[i].lineLength);
       }
       else if (newListOfAddedLines[i].lineType == 'Cumulative SMA') {
-        lineData = this.calculateCumulativeSMA()
-        let filteredLine = newListOfAddedLines.filter(e => e.id == newListOfAddedLines[i].id)[0]
-        filteredLine.data = lineData
+        newListOfAddedLines[i].data = this.calculateCumulativeSMA()
       }
       else if (newListOfAddedLines[i].lineType == 'Cumulative EMA') {
-        lineData = this.calculateCumulativeEMA()
-        let filteredLine = newListOfAddedLines.filter(e => e.id == newListOfAddedLines[i].id)[0]
-        filteredLine.data = lineData
+        newListOfAddedLines[i].data = this.calculateCumulativeEMA()
       }
       this.listOfAddedLines = newListOfAddedLines
 
-      let rules = structuredClone(this.listOfAddedRules)
+
       for (let i = 0; i < rules.BuyRules.length; i++) {
         if (rules.BuyRules[i].primaryObject.type != "") {
           let filteredLine = this.listOfAddedLines.filter(e => e.lineType == rules.BuyRules[i].primaryObject.type && e.lineLength == rules.BuyRules[i].primaryObject.length)[0]
@@ -1214,11 +1156,8 @@ export class ServerTradeScreenComponent implements OnInit {
         }
 
       }
-
-      this.listOfAddedRules = rules
-
     }
-
+    this.listOfAddedRules = rules
   }
 
   calculateSMA(lineLength: number): LineData[] {
@@ -1550,10 +1489,10 @@ export class ServerTradeScreenComponent implements OnInit {
     "Crosses below:": (rule, index) => (rule.primaryObject.data[index].value == null || rule.referencedObject.data[index].value == null) ? false : (rule.primaryObject.data[index].value < rule.referencedObject.data[index].value && (rule.primaryObject.data[index - 1].value != null && rule.referencedObject.data[index - 1].value != null) && (rule.primaryObject.data[index - 1].value! >= rule.referencedObject.data[index - 1].value!)),
     "Dips below:": (rule, index) => (rule.primaryObject.data[index].value == null || rule.referencedObject.data[index].value == null) ? false : (((rule.primaryObject.data[index].value - rule.referencedObject.data[index].value) / rule.referencedObject.data[index].value) < (rule.desiredAction.amount * -1)),
     "Rises above:": (rule, index) => (rule.primaryObject.data[index].value == null || rule.referencedObject.data[index].value == null) ? false : (((rule.primaryObject.data[index].value - rule.referencedObject.data[index].value) / rule.referencedObject.data[index].value) > (rule.desiredAction.amount)),
-    "Take Profit": (rule, index, buyPrice) => (this.stockDataForSelectedDay[index].stockPrice >= (buyPrice! * (1 + rule.desiredAction.amount))),
-    "Stop Loss": (rule, index, buyPrice) => (this.stockDataForSelectedDay[index].stockPrice <= (buyPrice! * (1 - rule.desiredAction.amount))),
+    "Take Profit": (rule, index, buyPrice) => this.intraDayChecked ? (this.stockDataForSelectedDay[index].stockPrice <= (buyPrice! * (1 - rule.desiredAction.amount))) : (this.selectedInterDayStockData[index].close <= (buyPrice! * (1 - rule.desiredAction.amount))),
+    "Stop Loss": (rule, index, buyPrice) => this.intraDayChecked ? (this.stockDataForSelectedDay[index].stockPrice <= (buyPrice! * (1 - rule.desiredAction.amount))) : (this.selectedInterDayStockData[index].close <= (buyPrice! * (1 - rule.desiredAction.amount))),
     "After": (rule, index) => ('buyTime' in rule ? (this.stockDataForSelectedDay[index].time > (this.stockDataForSelectedDay[0].time + (rule.buyTime * 1000 * 60))) : false),
-    "Trailing Stop": (rule, index) => ('current' in rule.desiredAction ? (this.stockDataForSelectedDay[index].stockPrice <= rule.desiredAction.current) : false),
+    "Trailing Stop": (rule, index) => this.intraDayChecked ? ('current' in rule.desiredAction ? (this.stockDataForSelectedDay[index].stockPrice <= rule.desiredAction.current) : false) : ('current' in rule.desiredAction ? (this.selectedInterDayStockData[index].close <= rule.desiredAction.current) : false),
     "Trend Crosses Below:": (rule, index) => ((index >= (rule.primaryObject.length + rule.desiredAction.length) - 2) ? (this.getTrend(rule.primaryObject.data, rule.desiredAction.length, index) < rule.desiredAction.amount) : false),
     "Trend Crosses Above:": (rule, index) => ((index >= (rule.primaryObject.length + rule.desiredAction.length) - 2) ? (this.getTrend(rule.primaryObject.data, rule.desiredAction.length, index) > rule.desiredAction.amount) : false),
     "Is greater than:": (rule, index) => (rule.primaryObject.data[index].value == null || rule.referencedObject.data[index].value == null) ? false : (rule.primaryObject.data[index].value > rule.referencedObject.data[index].value),
@@ -1576,71 +1515,141 @@ export class ServerTradeScreenComponent implements OnInit {
     let numberOfConsecutiveLosses = 0
     let timeOutPeriod = 0
 
-    for (let i = counter; i < this.stockDataForSelectedDay.length; i++) {
-      if (buySell == 'Buy') {
-        let buyArray = []
-        for (let j = 0; j < this.listOfAddedRules.BuyRules.length; j++) {
-          buyArray.push(this.operators[this.listOfAddedRules.BuyRules[j].desiredAction.type](this.listOfAddedRules.BuyRules[j], i))
-        }
-        if (!buyArray.includes(false) && this.stockDataForSelectedDay[i].time >= timeOutPeriod && numberOfConsecutiveLosses < this.listOfAddedRules.NumberOfLossesInARowToStop) {
-          orderLocations.push({ buySell: 'Buy', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString() })
-          buySell = 'Sell'
-          for (let j = 0; j < this.listOfAddedRules.SellRules.length; j++) {
-            if (this.listOfAddedRules.SellRules[j].desiredAction.type == 'Trailing Stop') {
-              this.listOfAddedRules.SellRules[j].desiredAction.current = 0
-              this.listOfAddedRules.SellRules[j].tradeHigh = this.stockDataForSelectedDay[i].stockPrice
+    if (this.intraDayChecked) {
+      for (let i = counter; i < this.stockDataForSelectedDay.length; i++) {
+        if (buySell == 'Buy') {
+          let buyArray = []
+          for (let j = 0; j < this.listOfAddedRules.BuyRules.length; j++) {
+            buyArray.push(this.operators[this.listOfAddedRules.BuyRules[j].desiredAction.type](this.listOfAddedRules.BuyRules[j], i))
+          }
+          if (!buyArray.includes(false) && this.stockDataForSelectedDay[i].time >= timeOutPeriod && numberOfConsecutiveLosses < this.listOfAddedRules.NumberOfLossesInARowToStop) {
+            orderLocations.push({ buySell: 'Buy', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString() })
+            buySell = 'Sell'
+            for (let j = 0; j < this.listOfAddedRules.SellRules.length; j++) {
+              if (this.listOfAddedRules.SellRules[j].desiredAction.type == 'Trailing Stop') {
+                this.listOfAddedRules.SellRules[j].desiredAction.current = 0
+                this.listOfAddedRules.SellRules[j].tradeHigh = this.stockDataForSelectedDay[i].stockPrice
+              }
             }
           }
-        }
-      }
-      else {
-        let buyArray: boolean[][] = [[]]
-
-        for (let j = 0; j < this.listOfAddedRules.SellRules.length; j++) {
-          if (this.listOfAddedRules.SellRules[j].desiredAction.type == 'Trailing Stop' && (this.stockDataForSelectedDay[i].stockPrice > this.listOfAddedRules.SellRules[j].tradeHigh)) {
-            this.listOfAddedRules.SellRules[j].tradeHigh = this.stockDataForSelectedDay[i].stockPrice
-            if (this.listOfAddedRules.SellRules[j].tradeHigh >= (orderLocations[orderLocations.length - 1].price + this.listOfAddedRules.SellRules[j].desiredAction.amount)) {
-              this.listOfAddedRules.SellRules[j].desiredAction.current = this.listOfAddedRules.SellRules[j].tradeHigh - this.listOfAddedRules.SellRules[j].desiredAction.amount
-            }
-          }
-          if (this.listOfAddedRules.SellRules[j].andOr == 'Or') {
-            buyArray.push([])
-            buyArray[buyArray.length - 1].push(this.operators[this.listOfAddedRules.SellRules[j].desiredAction.type](this.listOfAddedRules.SellRules[j], i, orderLocations[orderLocations.length - 1].price))
-          }
-          else {
-            buyArray[buyArray.length - 1].push(this.operators[this.listOfAddedRules.SellRules[j].desiredAction.type](this.listOfAddedRules.SellRules[j], i, orderLocations[orderLocations.length - 1].price))
-          }
-
-        }
-        if (i == this.stockDataForSelectedDay.length - 1) {
-          orderLocations.push({ buySell: 'Sell', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString() })
-          profit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
-          buySell = 'Buy'
         }
         else {
-          let shouldSell: boolean[] = []
-          for (let i = 0; i < buyArray.length; i++) {
-            shouldSell.push(buyArray[i].includes(false) ? false : true)
-          }
-          if (shouldSell.includes(true)) {
-            orderLocations.push({ buySell: 'Sell', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString() })
-            profit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
+          let buyArray: boolean[][] = [[]]
 
-            if (profit > 0) {
-              //wins++
+          for (let j = 0; j < this.listOfAddedRules.SellRules.length; j++) {
+            if (this.listOfAddedRules.SellRules[j].desiredAction.type == 'Trailing Stop' && (this.stockDataForSelectedDay[i].stockPrice > this.listOfAddedRules.SellRules[j].tradeHigh)) {
+              this.listOfAddedRules.SellRules[j].tradeHigh = this.stockDataForSelectedDay[i].stockPrice
+              if (this.listOfAddedRules.SellRules[j].tradeHigh >= (orderLocations[orderLocations.length - 1].price + this.listOfAddedRules.SellRules[j].desiredAction.amount)) {
+                this.listOfAddedRules.SellRules[j].desiredAction.current = this.listOfAddedRules.SellRules[j].tradeHigh - this.listOfAddedRules.SellRules[j].desiredAction.amount
+              }
+            }
+            if (this.listOfAddedRules.SellRules[j].andOr == 'Or') {
+              buyArray.push([])
+              buyArray[buyArray.length - 1].push(this.operators[this.listOfAddedRules.SellRules[j].desiredAction.type](this.listOfAddedRules.SellRules[j], i, orderLocations[orderLocations.length - 1].price))
             }
             else {
-              numberOfConsecutiveLosses++
-              timeOutPeriod = (this.listOfAddedRules.TimeOutAfterStopLossSell * 60000) + this.stockDataForSelectedDay[i].time
-              //losses++
+              buyArray[buyArray.length - 1].push(this.operators[this.listOfAddedRules.SellRules[j].desiredAction.type](this.listOfAddedRules.SellRules[j], i, orderLocations[orderLocations.length - 1].price))
             }
+
+          }
+          if (i == this.stockDataForSelectedDay.length - 1) {
+            orderLocations.push({ buySell: 'Sell', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString() })
+            profit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
             buySell = 'Buy'
           }
+          else {
+            let shouldSell: boolean[] = []
+            for (let i = 0; i < buyArray.length; i++) {
+              shouldSell.push(buyArray[i].includes(false) ? false : true)
+            }
+            if (shouldSell.includes(true)) {
+              orderLocations.push({ buySell: 'Sell', price: this.stockDataForSelectedDay[i].stockPrice, date: this.stockDataForSelectedDay[i].time, dateString: new Date(this.stockDataForSelectedDay[i].time).toLocaleTimeString() })
+              profit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
+
+              if (profit > 0) {
+                //wins++
+              }
+              else {
+                numberOfConsecutiveLosses++
+                timeOutPeriod = (this.listOfAddedRules.TimeOutAfterStopLossSell * 60000) + this.stockDataForSelectedDay[i].time
+                //losses++
+              }
+              buySell = 'Buy'
+            }
+          }
+
+
         }
-
-
       }
     }
+    else {
+      for (let i = counter; i < this.selectedInterDayStockData.length; i++) {
+        if (buySell == 'Buy') {
+          let buyArray = []
+          for (let j = 0; j < this.listOfAddedRules.BuyRules.length; j++) {
+            buyArray.push(this.operators[this.listOfAddedRules.BuyRules[j].desiredAction.type](this.listOfAddedRules.BuyRules[j], i))
+          }
+          if (!buyArray.includes(false) && this.selectedInterDayStockData[i].date >= timeOutPeriod && numberOfConsecutiveLosses < this.listOfAddedRules.NumberOfLossesInARowToStop) {
+            orderLocations.push({ buySell: 'Buy', price: this.selectedInterDayStockData[i].close, date: this.selectedInterDayStockData[i].date, dateString: new Date(this.selectedInterDayStockData[i].date).toLocaleTimeString() })
+            buySell = 'Sell'
+            for (let j = 0; j < this.listOfAddedRules.SellRules.length; j++) {
+              if (this.listOfAddedRules.SellRules[j].desiredAction.type == 'Trailing Stop') {
+                this.listOfAddedRules.SellRules[j].desiredAction.current = 0
+                this.listOfAddedRules.SellRules[j].tradeHigh = this.selectedInterDayStockData[i].close
+              }
+            }
+          }
+        }
+        else {
+          let buyArray: boolean[][] = [[]]
+
+          for (let j = 0; j < this.listOfAddedRules.SellRules.length; j++) {
+            if (this.listOfAddedRules.SellRules[j].desiredAction.type == 'Trailing Stop' && (this.selectedInterDayStockData[i].close > this.listOfAddedRules.SellRules[j].tradeHigh)) {
+              this.listOfAddedRules.SellRules[j].tradeHigh = this.selectedInterDayStockData[i].close
+              if (this.listOfAddedRules.SellRules[j].tradeHigh >= (orderLocations[orderLocations.length - 1].price + this.listOfAddedRules.SellRules[j].desiredAction.amount)) {
+                this.listOfAddedRules.SellRules[j].desiredAction.current = this.listOfAddedRules.SellRules[j].tradeHigh - this.listOfAddedRules.SellRules[j].desiredAction.amount
+              }
+            }
+            if (this.listOfAddedRules.SellRules[j].andOr == 'Or') {
+              buyArray.push([])
+              buyArray[buyArray.length - 1].push(this.operators[this.listOfAddedRules.SellRules[j].desiredAction.type](this.listOfAddedRules.SellRules[j], i, orderLocations[orderLocations.length - 1].price))
+            }
+            else {
+              buyArray[buyArray.length - 1].push(this.operators[this.listOfAddedRules.SellRules[j].desiredAction.type](this.listOfAddedRules.SellRules[j], i, orderLocations[orderLocations.length - 1].price))
+            }
+
+          }
+          if (i == this.selectedInterDayStockData.length - 1) {
+            orderLocations.push({ buySell: 'Sell', price: this.selectedInterDayStockData[i].close, date: this.selectedInterDayStockData[i].date, dateString: new Date(this.selectedInterDayStockData[i].date).toLocaleTimeString() })
+            profit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
+            buySell = 'Buy'
+          }
+          else {
+            let shouldSell: boolean[] = []
+            for (let i = 0; i < buyArray.length; i++) {
+              shouldSell.push(buyArray[i].includes(false) ? false : true)
+            }
+            if (shouldSell.includes(true)) {
+              orderLocations.push({ buySell: 'Sell', price: this.selectedInterDayStockData[i].close, date: this.selectedInterDayStockData[i].date, dateString: new Date(this.selectedInterDayStockData[i].date).toLocaleTimeString() })
+              profit += orderLocations[orderLocations.length - 1].price - orderLocations[orderLocations.length - 2].price
+
+              if (profit > 0) {
+                //wins++
+              }
+              else {
+                numberOfConsecutiveLosses++
+                timeOutPeriod = (this.listOfAddedRules.TimeOutAfterStopLossSell * 60000) + this.selectedInterDayStockData[i].date
+                //losses++
+              }
+              buySell = 'Buy'
+            }
+          }
+
+
+        }
+      }
+    }
+
     return { orderLocations: orderLocations, profit: profit }
 
 
