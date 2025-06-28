@@ -1259,30 +1259,58 @@ export class ServerTradeScreenComponent implements OnInit {
   calculateEMA(lineLength: number): LineData[] {
     let returnData: LineData[] = []
     let windowSum = 0
-    for (let i = 0; i < lineLength - 1; i++) {
-      returnData.push({ value: null, time: this.stockDataForSelectedDay[i].time })
-      windowSum += this.stockDataForSelectedDay[i].stockPrice
-    }
-    windowSum += this.stockDataForSelectedDay[lineLength - 1].stockPrice
-    returnData.push({ value: windowSum / lineLength, time: this.stockDataForSelectedDay[lineLength - 1].time })
+    if (this.intraDayChecked) {
+      for (let i = 0; i < lineLength - 1; i++) {
+        returnData.push({ value: null, time: this.stockDataForSelectedDay[i].time })
+        windowSum += this.stockDataForSelectedDay[i].stockPrice
+      }
+      windowSum += this.stockDataForSelectedDay[lineLength - 1].stockPrice
+      returnData.push({ value: windowSum / lineLength, time: this.stockDataForSelectedDay[lineLength - 1].time })
 
-    let multiplyFactor = 2 / (lineLength + 1)
-    for (let i = lineLength; i < this.stockDataForSelectedDay.length; i++) {
-      let newVal = (this.stockDataForSelectedDay[i].stockPrice * multiplyFactor) + (returnData[returnData.length - 1].value! * (1 - multiplyFactor))
-      returnData.push({ value: newVal, time: this.stockDataForSelectedDay[i].time })
+      let multiplyFactor = 2 / (lineLength + 1)
+      for (let i = lineLength; i < this.stockDataForSelectedDay.length; i++) {
+        let newVal = (this.stockDataForSelectedDay[i].stockPrice * multiplyFactor) + (returnData[returnData.length - 1].value! * (1 - multiplyFactor))
+        returnData.push({ value: newVal, time: this.stockDataForSelectedDay[i].time })
+      }
     }
+    else {
+      for (let i = 0; i < lineLength - 1; i++) {
+        returnData.push({ value: null, time: this.selectedInterDayStockData[i].date })
+        windowSum += this.selectedInterDayStockData[i].close
+      }
+      windowSum += this.selectedInterDayStockData[lineLength - 1].close
+      returnData.push({ value: windowSum / lineLength, time: this.selectedInterDayStockData[lineLength - 1].date })
+
+      let multiplyFactor = 2 / (lineLength + 1)
+      for (let i = lineLength; i < this.selectedInterDayStockData.length; i++) {
+        let newVal = (this.selectedInterDayStockData[i].close * multiplyFactor) + (returnData[returnData.length - 1].value! * (1 - multiplyFactor))
+        returnData.push({ value: newVal, time: this.selectedInterDayStockData[i].date })
+      }
+    }
+
     return returnData
   }
   calculateCumulativeVWAP(): LineData[] {
     let returnData: LineData[] = []
     let cumulativePV = 0;
     let cumulativeVolume = 0;
-    for (let i = 0; i < this.stockDataForSelectedDay.length; i++) {
-      cumulativePV += this.stockDataForSelectedDay[i].stockPrice * this.stockDataForSelectedDay[i].volume;
-      cumulativeVolume += this.stockDataForSelectedDay[i].volume;
-      const vwap = cumulativePV / cumulativeVolume;
-      returnData.push({ value: vwap, time: this.stockDataForSelectedDay[i].time });
+    if (this.intraDayChecked) {
+      for (let i = 0; i < this.stockDataForSelectedDay.length; i++) {
+        cumulativePV += this.stockDataForSelectedDay[i].stockPrice * this.stockDataForSelectedDay[i].volume;
+        cumulativeVolume += this.stockDataForSelectedDay[i].volume;
+        const vwap = cumulativePV / cumulativeVolume;
+        returnData.push({ value: vwap, time: this.stockDataForSelectedDay[i].time });
+      }
     }
+    else {
+      for (let i = 0; i < this.selectedInterDayStockData.length; i++) {
+        cumulativePV += this.selectedInterDayStockData[i].close * this.selectedInterDayStockData[i].volume;
+        cumulativeVolume += this.selectedInterDayStockData[i].volume;
+        const vwap = cumulativePV / cumulativeVolume;
+        returnData.push({ value: vwap, time: this.selectedInterDayStockData[i].date });
+      }
+    }
+
 
     return returnData
   }
@@ -1290,20 +1318,39 @@ export class ServerTradeScreenComponent implements OnInit {
     let returnData: LineData[] = []
     let cumulativePV = 0;
     let cumulativeVolume = 0;
-    for (let i = 0; i < lineLength - 1; i++) {
-      cumulativePV += this.stockDataForSelectedDay[i].stockPrice * this.stockDataForSelectedDay[i].volume
-      cumulativeVolume += this.stockDataForSelectedDay[i].volume
-      returnData.push({ value: null, time: this.stockDataForSelectedDay[i].time })
+    if (this.intraDayChecked) {
+      for (let i = 0; i < lineLength - 1; i++) {
+        cumulativePV += this.stockDataForSelectedDay[i].stockPrice * this.stockDataForSelectedDay[i].volume
+        cumulativeVolume += this.stockDataForSelectedDay[i].volume
+        returnData.push({ value: null, time: this.stockDataForSelectedDay[i].time })
+      }
+      cumulativePV += this.stockDataForSelectedDay[lineLength - 1].stockPrice * this.stockDataForSelectedDay[lineLength - 1].volume
+      cumulativeVolume += this.stockDataForSelectedDay[lineLength - 1].volume
+      returnData.push({ value: cumulativePV / cumulativeVolume, time: this.stockDataForSelectedDay[lineLength - 1].time });
+      for (let i = lineLength; i < this.stockDataForSelectedDay.length; i++) {
+        cumulativePV += (this.stockDataForSelectedDay[i].stockPrice * this.stockDataForSelectedDay[i].volume) - (this.stockDataForSelectedDay[i - lineLength].stockPrice * this.stockDataForSelectedDay[i - lineLength].volume);
+        cumulativeVolume += this.stockDataForSelectedDay[i].volume - this.stockDataForSelectedDay[i - lineLength].volume;
+        const vwap = cumulativePV / cumulativeVolume;
+        returnData.push({ value: vwap, time: this.stockDataForSelectedDay[i].time });
+      }
     }
-    cumulativePV += this.stockDataForSelectedDay[lineLength - 1].stockPrice * this.stockDataForSelectedDay[lineLength - 1].volume
-    cumulativeVolume += this.stockDataForSelectedDay[lineLength - 1].volume
-    returnData.push({ value: cumulativePV / cumulativeVolume, time: this.stockDataForSelectedDay[lineLength - 1].time });
-    for (let i = lineLength; i < this.stockDataForSelectedDay.length; i++) {
-      cumulativePV += (this.stockDataForSelectedDay[i].stockPrice * this.stockDataForSelectedDay[i].volume) - (this.stockDataForSelectedDay[i - lineLength].stockPrice * this.stockDataForSelectedDay[i - lineLength].volume);
-      cumulativeVolume += this.stockDataForSelectedDay[i].volume - this.stockDataForSelectedDay[i - lineLength].volume;
-      const vwap = cumulativePV / cumulativeVolume;
-      returnData.push({ value: vwap, time: this.stockDataForSelectedDay[i].time });
+    else {
+      for (let i = 0; i < lineLength - 1; i++) {
+        cumulativePV += this.selectedInterDayStockData[i].close * this.selectedInterDayStockData[i].volume
+        cumulativeVolume += this.selectedInterDayStockData[i].volume
+        returnData.push({ value: null, time: this.selectedInterDayStockData[i].date })
+      }
+      cumulativePV += this.selectedInterDayStockData[lineLength - 1].close * this.selectedInterDayStockData[lineLength - 1].volume
+      cumulativeVolume += this.selectedInterDayStockData[lineLength - 1].volume
+      returnData.push({ value: cumulativePV / cumulativeVolume, time: this.selectedInterDayStockData[lineLength - 1].date });
+      for (let i = lineLength; i < this.selectedInterDayStockData.length; i++) {
+        cumulativePV += (this.selectedInterDayStockData[i].close * this.selectedInterDayStockData[i].volume) - (this.selectedInterDayStockData[i - lineLength].close * this.selectedInterDayStockData[i - lineLength].volume);
+        cumulativeVolume += this.selectedInterDayStockData[i].volume - this.selectedInterDayStockData[i - lineLength].volume;
+        const vwap = cumulativePV / cumulativeVolume;
+        returnData.push({ value: vwap, time: this.selectedInterDayStockData[i].date });
+      }
     }
+
 
     return returnData
   }
@@ -1323,77 +1370,131 @@ export class ServerTradeScreenComponent implements OnInit {
     let listOfDeviations: number[] = []
     let averageOfSqDev: number = 0
     let standardDeviation: number = 0
-    for (let i = 0; i < lineLength - 1; i++) {
-      window.push(this.stockDataForSelectedDay[i].stockPrice)
-      returnData[0].push({ value: null, time: this.stockDataForSelectedDay[i].time })
-      returnData[1].push({ value: null, time: this.stockDataForSelectedDay[i].time })
-      returnData[2].push({ value: null, time: this.stockDataForSelectedDay[i].time })
-      windowSum += this.stockDataForSelectedDay[i].stockPrice
-    }
-    windowSum += this.stockDataForSelectedDay[lineLength - 1].stockPrice
-    window.push(this.stockDataForSelectedDay[lineLength - 1].stockPrice)
-    mean = windowSum / lineLength
-    for (let i = 0; i < window.length; i++) {
-      listOfDeviations.push((window[i] - mean) * (window[i] - mean))
-    }
-    averageOfSqDev = listOfDeviations.reduce((sum, val) => sum + val, 0) / listOfDeviations.length
-    standardDeviation = Math.sqrt(averageOfSqDev)
-
-    returnData[0].push({ value: windowSum / lineLength, time: this.stockDataForSelectedDay[lineLength - 1].time })
-    returnData[1].push({ value: (windowSum / lineLength) + (2 * standardDeviation), time: this.stockDataForSelectedDay[lineLength - 1].time })
-    returnData[2].push({ value: (windowSum / lineLength) - (2 * standardDeviation), time: this.stockDataForSelectedDay[lineLength - 1].time })
-
-    let multiplyFactor = 2 / (lineLength + 1)
-    for (let i = lineLength; i < this.stockDataForSelectedDay.length; i++) {
-      listOfDeviations.length = 0
-      window.shift()
-      window.push(this.stockDataForSelectedDay[i].stockPrice)
-      let newVal = (this.stockDataForSelectedDay[i].stockPrice * multiplyFactor) + (returnData[0][returnData[0].length - 1].value! * (1 - multiplyFactor))
-      returnData[0].push({ value: newVal, time: this.stockDataForSelectedDay[i].time })
-      let sumOfWindow = window.reduce((sum, val) => sum + val, 0)
-      mean = sumOfWindow / lineLength
-      for (let j = 0; j < window.length; j++) {
-        listOfDeviations.push((window[j] - mean) * (window[j] - mean))
+    if (this.intraDayChecked) {
+      for (let i = 0; i < lineLength - 1; i++) {
+        window.push(this.stockDataForSelectedDay[i].stockPrice)
+        returnData[0].push({ value: null, time: this.stockDataForSelectedDay[i].time })
+        returnData[1].push({ value: null, time: this.stockDataForSelectedDay[i].time })
+        returnData[2].push({ value: null, time: this.stockDataForSelectedDay[i].time })
+        windowSum += this.stockDataForSelectedDay[i].stockPrice
+      }
+      windowSum += this.stockDataForSelectedDay[lineLength - 1].stockPrice
+      window.push(this.stockDataForSelectedDay[lineLength - 1].stockPrice)
+      mean = windowSum / lineLength
+      for (let i = 0; i < window.length; i++) {
+        listOfDeviations.push((window[i] - mean) * (window[i] - mean))
       }
       averageOfSqDev = listOfDeviations.reduce((sum, val) => sum + val, 0) / listOfDeviations.length
       standardDeviation = Math.sqrt(averageOfSqDev)
-      returnData[1].push({ value: newVal + (2 * standardDeviation), time: this.stockDataForSelectedDay[i].time })
-      returnData[2].push({ value: newVal - (2 * standardDeviation), time: this.stockDataForSelectedDay[i].time })
-      if (this.count == 0) {
-        console.log({
-          window: window,
-          sumOfWindow: sumOfWindow,
-          mean: mean,
-          listOfDeviations: listOfDeviations,
-          averageOfSqDev: averageOfSqDev,
-          standardDeviation: standardDeviation,
-          newVal: newVal
-        })
-        this.count++
+
+      returnData[0].push({ value: windowSum / lineLength, time: this.stockDataForSelectedDay[lineLength - 1].time })
+      returnData[1].push({ value: (windowSum / lineLength) + (2 * standardDeviation), time: this.stockDataForSelectedDay[lineLength - 1].time })
+      returnData[2].push({ value: (windowSum / lineLength) - (2 * standardDeviation), time: this.stockDataForSelectedDay[lineLength - 1].time })
+
+      let multiplyFactor = 2 / (lineLength + 1)
+      for (let i = lineLength; i < this.stockDataForSelectedDay.length; i++) {
+        listOfDeviations.length = 0
+        window.shift()
+        window.push(this.stockDataForSelectedDay[i].stockPrice)
+        let newVal = (this.stockDataForSelectedDay[i].stockPrice * multiplyFactor) + (returnData[0][returnData[0].length - 1].value! * (1 - multiplyFactor))
+        returnData[0].push({ value: newVal, time: this.stockDataForSelectedDay[i].time })
+        let sumOfWindow = window.reduce((sum, val) => sum + val, 0)
+        mean = sumOfWindow / lineLength
+        for (let j = 0; j < window.length; j++) {
+          listOfDeviations.push((window[j] - mean) * (window[j] - mean))
+        }
+        averageOfSqDev = listOfDeviations.reduce((sum, val) => sum + val, 0) / listOfDeviations.length
+        standardDeviation = Math.sqrt(averageOfSqDev)
+        returnData[1].push({ value: newVal + (2 * standardDeviation), time: this.stockDataForSelectedDay[i].time })
+        returnData[2].push({ value: newVal - (2 * standardDeviation), time: this.stockDataForSelectedDay[i].time })
+
       }
     }
+    else {
+      for (let i = 0; i < lineLength - 1; i++) {
+        window.push(this.selectedInterDayStockData[i].close)
+        returnData[0].push({ value: null, time: this.selectedInterDayStockData[i].date })
+        returnData[1].push({ value: null, time: this.selectedInterDayStockData[i].date })
+        returnData[2].push({ value: null, time: this.selectedInterDayStockData[i].date })
+        windowSum += this.selectedInterDayStockData[i].close
+      }
+      windowSum += this.selectedInterDayStockData[lineLength - 1].close
+      window.push(this.selectedInterDayStockData[lineLength - 1].close)
+      mean = windowSum / lineLength
+      for (let i = 0; i < window.length; i++) {
+        listOfDeviations.push((window[i] - mean) * (window[i] - mean))
+      }
+      averageOfSqDev = listOfDeviations.reduce((sum, val) => sum + val, 0) / listOfDeviations.length
+      standardDeviation = Math.sqrt(averageOfSqDev)
+
+      returnData[0].push({ value: windowSum / lineLength, time: this.selectedInterDayStockData[lineLength - 1].date })
+      returnData[1].push({ value: (windowSum / lineLength) + (2 * standardDeviation), time: this.selectedInterDayStockData[lineLength - 1].date })
+      returnData[2].push({ value: (windowSum / lineLength) - (2 * standardDeviation), time: this.selectedInterDayStockData[lineLength - 1].date })
+
+      let multiplyFactor = 2 / (lineLength + 1)
+      for (let i = lineLength; i < this.selectedInterDayStockData.length; i++) {
+        listOfDeviations.length = 0
+        window.shift()
+        window.push(this.selectedInterDayStockData[i].close)
+        let newVal = (this.selectedInterDayStockData[i].close * multiplyFactor) + (returnData[0][returnData[0].length - 1].value! * (1 - multiplyFactor))
+        returnData[0].push({ value: newVal, time: this.selectedInterDayStockData[i].date })
+        let sumOfWindow = window.reduce((sum, val) => sum + val, 0)
+        mean = sumOfWindow / lineLength
+        for (let j = 0; j < window.length; j++) {
+          listOfDeviations.push((window[j] - mean) * (window[j] - mean))
+        }
+        averageOfSqDev = listOfDeviations.reduce((sum, val) => sum + val, 0) / listOfDeviations.length
+        standardDeviation = Math.sqrt(averageOfSqDev)
+        returnData[1].push({ value: newVal + (2 * standardDeviation), time: this.selectedInterDayStockData[i].date })
+        returnData[2].push({ value: newVal - (2 * standardDeviation), time: this.selectedInterDayStockData[i].date })
+
+      }
+    }
+
     return returnData
   }
   calculateCumulativeSMA(): LineData[] {
     let returnData: LineData[] = []
     let cumulativePrice: number = 0
-    for (let i = 0; i < this.stockDataForSelectedDay.length; i++) {
-      cumulativePrice += this.stockDataForSelectedDay[i].stockPrice
-      const sma = cumulativePrice / (i + 1);
-      returnData.push({ value: sma, time: this.stockDataForSelectedDay[i].time });
+    if (this.intraDayChecked) {
+      for (let i = 0; i < this.stockDataForSelectedDay.length; i++) {
+        cumulativePrice += this.stockDataForSelectedDay[i].stockPrice
+        const sma = cumulativePrice / (i + 1);
+        returnData.push({ value: sma, time: this.stockDataForSelectedDay[i].time });
+      }
     }
+    else {
+      for (let i = 0; i < this.selectedInterDayStockData.length; i++) {
+        cumulativePrice += this.selectedInterDayStockData[i].close
+        const sma = cumulativePrice / (i + 1);
+        returnData.push({ value: sma, time: this.selectedInterDayStockData[i].date });
+      }
+    }
+
 
     return returnData
   }
   calculateCumulativeEMA(): LineData[] {
     let returnData: LineData[] = []
-    returnData.push({ value: this.stockDataForSelectedDay[0].stockPrice, time: this.stockDataForSelectedDay[0].time })
+    if (this.intraDayChecked) {
+      returnData.push({ value: this.stockDataForSelectedDay[0].stockPrice, time: this.stockDataForSelectedDay[0].time })
 
-    for (let i = 1; i < this.stockDataForSelectedDay.length; i++) {
-      let multiplyFactor = 2 / (i + 1)
-      let newVal = (this.stockDataForSelectedDay[i].stockPrice * multiplyFactor) + (returnData[returnData.length - 1].value! * (1 - multiplyFactor))
-      returnData.push({ value: newVal, time: this.stockDataForSelectedDay[i].time })
+      for (let i = 1; i < this.stockDataForSelectedDay.length; i++) {
+        let multiplyFactor = 2 / (i + 1)
+        let newVal = (this.stockDataForSelectedDay[i].stockPrice * multiplyFactor) + (returnData[returnData.length - 1].value! * (1 - multiplyFactor))
+        returnData.push({ value: newVal, time: this.stockDataForSelectedDay[i].time })
+      }
     }
+    else {
+      returnData.push({ value: this.selectedInterDayStockData[0].close, time: this.selectedInterDayStockData[0].date })
+
+      for (let i = 1; i < this.selectedInterDayStockData.length; i++) {
+        let multiplyFactor = 2 / (i + 1)
+        let newVal = (this.selectedInterDayStockData[i].close * multiplyFactor) + (returnData[returnData.length - 1].value! * (1 - multiplyFactor))
+        returnData.push({ value: newVal, time: this.selectedInterDayStockData[i].date })
+      }
+    }
+
 
     return returnData
   }
