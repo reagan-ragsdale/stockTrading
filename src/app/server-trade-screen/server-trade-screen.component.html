@@ -106,10 +106,10 @@
       <input matInput type="number" [(ngModel)]="sellParamCompare" placeholder="0.00" [min]="1" [max]="3600" step="1">
     </mat-form-field>  -->
     <button style="margin-left:auto;" mat-raised-button color="primary" (click)="onRunSimulation()">Run Sim</button>
-    <button style="margin-left:1rem;" mat-raised-button color="primary" (click)="onRunSimulationNew()">Run Sim All
+    <button *ngIf="intraDayChecked" style="margin-left:1rem;" mat-raised-button color="primary"
+      (click)="onRunSimulationNew()">Run Sim All
       Days</button>
-    <button style="margin-left:1rem;" mat-raised-button color="primary" (click)="algoLoopPopup()">Run Sim All
-      Days Loop</button>
+    <button style="margin-left:1rem;" mat-raised-button color="primary" (click)="algoLoopPopup()">Run Sim Loop</button>
     <!-- <h4 style="margin-left:1rem; color: #DBD4D1;">Total: {{bankTotal | currency:'USD':'symbol'}}</h4> -->
     <h4 style="margin-left:1rem; color: #DBD4D1;">Total Profit: {{totalProfit | currency:'USD':'symbol'}}</h4>
 
