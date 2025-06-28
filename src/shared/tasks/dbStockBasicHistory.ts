@@ -22,6 +22,9 @@ export class DbStockBasicHistory {
     close = 0
 
     @Fields.number()
+    volume = 0
+
+    @Fields.number()
     date = 0
 
 

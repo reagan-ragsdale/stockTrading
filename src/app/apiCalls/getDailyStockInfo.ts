@@ -29,6 +29,7 @@ export const getDailyStockInfo = async () => {
                 close: stockData.candles[j].close,
                 high: stockData.candles[j].high,
                 low: stockData.candles[j].low,
+                volume: stockData.candles[j].volume,
                 date: stockData.candles[j].datetime
             })
         }
