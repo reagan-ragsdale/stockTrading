@@ -6,16 +6,19 @@ export const getDailyStockInfo = async () => {
     //load daily basic stock data
     //then in the algo file check to see if the price is near the variaance in 
 
-    let stocks = (await dbStockHistoryDataRepo.groupBy({ group: ['stockName'], orderBy: { stockName: 'desc' } })).map(e => e.stockName)
-    
-    let startDate = new Date()
-    startDate.setHours(5, 0, 0, 0)
-    let startTime = startDate.getTime()
-    startTime = startTime - 86400000
-    let tempDate = 1743483600000
+    //let stocks = (await dbStockHistoryDataRepo.groupBy({ group: ['stockName'], orderBy: { stockName: 'desc' } })).map(e => e.stockName)
 
-    let insertData: DbStockBasicHistory[] = []
+    /*  let startDate = new Date()
+     startDate.setHours(5, 0, 0, 0)
+     let startTime = startDate.getTime()
+     startTime = startTime - 86400000 */
+
+    let stocks: string[] = ['INTC']
+    let startTime = 1262304000000;
+
+
     for (let i = 0; i < stocks.length; i++) {
+        let insertData: DbStockBasicHistory[] = []
         let stockData = await getHistoryStockData(stocks[i], startTime)
         for (let j = 0; j < stockData.candles.length; j++) {
             insertData.push({
@@ -24,12 +27,12 @@ export const getDailyStockInfo = async () => {
                 close: stockData.candles[j].close,
                 high: stockData.candles[j].high,
                 low: stockData.candles[j].low,
-                date: stockData.candles[j].datetime                
+                date: stockData.candles[j].datetime
             })
         }
-
+        await dbStockBasicHistoryRepo.insert(insertData)
     }
-    await dbStockBasicHistoryRepo.insert(insertData)
+
 
 
 
