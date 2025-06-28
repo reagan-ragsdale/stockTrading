@@ -119,7 +119,7 @@ export class ServerTradeScreenComponent implements OnInit {
       if (!this.intraDayChecked) {
         this.isLoading = true
         this.selectedInterDayStockData = this.allHistory.filter(e => e.stockName = this.selectedStockName)
-        this.calculateSmaValuesInterDaySingleRun()
+        //this.calculateSmaValuesInterDaySingleRun()
         this.updateChart()
         //this.runSimulation()
         this.isLoading = false
@@ -285,71 +285,6 @@ export class ServerTradeScreenComponent implements OnInit {
       }
     }
     return min - 2
-
-  }
-  createOrUpdateRsiChart() {
-
-    console.log('create chart')
-    this.rsiChart = new Chart("rsi-chart", {
-      type: 'line', //this denotes tha type of chart
-
-      data: {// values on X-Axis
-
-        labels: this.rsiData.map(e => e.date),
-
-        datasets: [
-          {
-            label: 'Price',
-            data: this.rsiData.map(e => e.rsiNum),
-            backgroundColor: '#54C964',
-            hoverBackgroundColor: '#54C964',
-            borderColor: '#54C964',
-            pointBackgroundColor: '#54C964',
-            pointBorderColor: '#54C964',
-            pointRadius: 0,
-            spanGaps: true
-          }
-        ]
-      },
-      options: {
-
-        aspectRatio: 2.5,
-        color: '#DBD4D1',
-        font: {
-          weight: 'bold'
-        },
-        elements: {
-          line: {
-            backgroundColor: '#54C964',
-            borderColor: '#54C964'
-          },
-          point: {
-            radius: 1,
-            hitRadius: 3
-          }
-        },
-        animation: false,
-
-        scales: {
-          y: {
-            max: Math.max(...this.rsiData.map(e => e.rsiNum)),
-            min: 0,
-            grid: {
-              color: 'hsl(18, 12%, 60%)'
-            },
-          },
-          x: {
-            grid: {
-              display: false,
-              color: 'hsl(18, 12%, 60%)'
-            },
-
-          }
-
-        }
-      }
-    })
-
 
   }
 
@@ -1098,75 +1033,11 @@ export class ServerTradeScreenComponent implements OnInit {
     this.stockChart.options.scales.y.min = this.getMinForChart(this.selectedInterDayStockData.map(e => e.close))
     this.stockChart.update()
   }
-  calcualateIntraDayRsi() {
-    this.rsiData.length = 0
-
-    /* let tradeHigh = 0
-    let tradeLow = 1000000
-    for (let i = 0; i < this.intraDayLongSma; i++) {
-      if (this.stockDataForSelectedDay[i].stockPrice > tradeHigh) {
-        tradeHigh = this.stockDataForSelectedDay[i].stockPrice
-      }
-      if (this.stockDataForSelectedDay[i].stockPrice < tradeLow) {
-        tradeLow = this.stockDataForSelectedDay[i].stockPrice
-      }
-      this.rsiData.push({ value: null, time: this.stockDataForSelectedDay[i].time })
-    }
-
-    for (let j = this.intraDayLongSma; j < this.stockDataForSelectedDay.length; j++) {
-      if (this.stockDataForSelectedDay[j].stockPrice > tradeHigh) {
-        tradeHigh = this.stockDataForSelectedDay[j].stockPrice
-      }
-      if (this.stockDataForSelectedDay[j].stockPrice < tradeLow) {
-        tradeLow = this.stockDataForSelectedDay[j].stockPrice
-      }
-      let newValue = (this.stockDataForSelectedDay[j].stockPrice - tradeLow) / (tradeHigh - tradeLow)
-      this.rsiData.push({ value: newValue * 100, time: this.stockDataForSelectedDay[j].time })
-    } */
-
-    /* this.rsiChart.data.datasets[0].data = [...this.rsiData.map(e => e.value)]
-    this.rsiChart.data.labels = [...this.rsiData.map(e => new Date(e.time).toLocaleTimeString())]
-    this.rsiChart.update() */
-
-
-
-  }
 
   selectedStockBasicHistoryData: DbStockBasicHistory[] = []
-  rsiDateRange: DbStockBasicHistory[] = []
-  rsiPeriodNum = 14
-  rsiData: any[] = []
   async getStockBasicHistoryData() {
     this.selectedStockBasicHistoryData = await dbStockBasicHistoryRepo.find({ where: { stockName: this.selectedStockName }, orderBy: { date: 'asc' } })
-    this.rsiDateRange = this.selectedStockBasicHistoryData.slice(this.interDayLongSma - this.rsiPeriodNum - 2)
 
-    let rsiUps = []
-    let rsiDowns = []
-    for (let i = 1; i <= this.rsiPeriodNum; i++) {
-      let change = this.rsiDateRange[i].close - this.rsiDateRange[i - 1].close
-      if (change >= 0) {
-        rsiUps.push(change)
-      }
-      else {
-        rsiDowns.push(Math.abs(change))
-      }
-    }
-    let avgUp = rsiUps.reduce((sum, val) => sum + val, 0) / this.rsiPeriodNum
-    let avgDown = rsiDowns.reduce((sum, val) => sum + val, 0) / this.rsiPeriodNum
-
-    for (let i = this.rsiPeriodNum + 1; i < this.rsiDateRange.length; i++) {
-      let change = this.rsiDateRange[i].close - this.rsiDateRange[i - 1].close;
-      let gain = change > 0 ? change : 0;
-      let loss = change < 0 ? Math.abs(change) : 0;
-
-      // Wilder's smoothing
-      avgUp = (avgUp * (this.rsiPeriodNum - 1) + gain) / this.rsiPeriodNum;
-      avgDown = (avgDown * (this.rsiPeriodNum - 1) + loss) / this.rsiPeriodNum;
-
-      const rs = avgDown === 0 ? 100 : avgUp / avgDown;
-      const rsi = 100 - (100 / (1 + rs));
-      this.rsiData.push({ rsiNum: rsi, date: new Date(this.rsiDateRange[i].date).toLocaleDateString() });
-    }
   }
 
   addLineDialogRef: any
@@ -1814,21 +1685,22 @@ export class ServerTradeScreenComponent implements OnInit {
     }
     return trend
   }
+  async loadInitialInterDayData() {
+    this.allHistory = await dbStockBasicHistoryRepo.find({ where: {}, orderBy: { stockName: 'asc', date: 'asc' } })
+    this.distinctStocks = this.allHistory.map(e => e.stockName).filter((v, i, a) => a.indexOf(v) === i)
+    this.selectedStockName = this.distinctStocks[0]
+    this.selectedInterDayStockData = this.allHistory.filter(e => e.stockName == this.selectedStockName)
+  }
 
   async ngOnInit() {
     Chart.register(annotationPlugin);
     Chart.register(...registerables)
     Chart.register(zoomPlugin)
     this.isLoading = true
-    this.allHistory = await dbStockBasicHistoryRepo.find({ where: {}, orderBy: { stockName: 'asc', date: 'asc' } })
-    this.distinctStocks = this.allHistory.map(e => e.stockName).filter((v, i, a) => a.indexOf(v) === i)
-    this.selectedStockName = this.distinctStocks[0]
-    this.selectedInterDayStockData = this.allHistory.filter(e => e.stockName == this.selectedStockName)
+    await this.loadInitialInterDayData()
+
     this.createOrUpdateChart()
     await this.getStockHistoricalData()
-    //await this.getStockBasicHistoryData();
-    let schwabRunInfo = LogService.getSchwabLog()
-    console.log(schwabRunInfo)
     this.isLoading = false;
 
   }
