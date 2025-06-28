@@ -334,60 +334,54 @@ export class ServerTradeScreenComponent implements OnInit {
   resultsInfo: any[] = []
   resultsColums: string[] = ["Profit", "NoTrades", "Profit Factor", "Wins", "Losses", "AvgWinAmt", "AvgLossAmt", "Expectancy"]
   onRunSimulation() {
-    if (this.intraDayChecked) {
-      this.isLoading = true
-      if (this.listOfAddedRules.BuyRules.length > 0 && this.listOfAddedRules.SellRules.length > 0) {
-        let result = this.addRule()
-        this.updateGraphBuyAndSellPointsIntraDayNew(result.orderLocations)
-        this.totalProfit = result.profit
+    this.isLoading = true
+    if (this.listOfAddedRules.BuyRules.length > 0 && this.listOfAddedRules.SellRules.length > 0) {
+      let result = this.addRule()
+      this.updateGraphBuyAndSellPointsIntraDayNew(result.orderLocations)
+      this.totalProfit = result.profit
 
-        this.resultsInfo = []
-        let grossProfit = 0
-        let grossLoss = 0
-        let wins = 0
-        let losses = 0
-        let winRate = 0
-        let lossRate = 0
-        let avgWinAmt = 0
-        let avgLossAmt = 0
-        for (let i = 0; i < result.orderLocations.length; i++) {
-          if (result.orderLocations[i].buySell == 'Sell') {
-            let proft = result.orderLocations[i].price - result.orderLocations[i - 1].price
-            if (proft < 0) {
-              grossLoss += proft
-              losses++
-            }
-            else {
-              wins++
-              grossProfit += proft
-            }
+      this.resultsInfo = []
+      let grossProfit = 0
+      let grossLoss = 0
+      let wins = 0
+      let losses = 0
+      let winRate = 0
+      let lossRate = 0
+      let avgWinAmt = 0
+      let avgLossAmt = 0
+      for (let i = 0; i < result.orderLocations.length; i++) {
+        if (result.orderLocations[i].buySell == 'Sell') {
+          let proft = result.orderLocations[i].price - result.orderLocations[i - 1].price
+          if (proft < 0) {
+            grossLoss += proft
+            losses++
+          }
+          else {
+            wins++
+            grossProfit += proft
           }
         }
-        winRate = wins == 0 ? 0 : wins / (result.orderLocations.length / 2)
-        lossRate = losses == 0 ? 0 : losses / (result.orderLocations.length / 2)
-        avgWinAmt = wins == 0 ? 0 : grossProfit / wins
-        avgLossAmt = losses == 0 ? 0 : grossLoss / losses
-        console.log([winRate, avgWinAmt, lossRate, avgLossAmt])
-        this.resultsInfo.push({
-          profit: result.profit,
-          numberOfTrades: result.orderLocations.length / 2,
-          profitFactor: grossLoss == 0 ? grossProfit : grossProfit / Math.abs(grossLoss),
-          wins: wins,
-          losses: losses,
-          avgWinAmt: avgWinAmt,
-          avgLossAmt: avgLossAmt,
-          expectancy: (avgWinAmt * winRate) - (avgLossAmt * lossRate)
-        })
       }
+      winRate = wins == 0 ? 0 : wins / (result.orderLocations.length / 2)
+      lossRate = losses == 0 ? 0 : losses / (result.orderLocations.length / 2)
+      avgWinAmt = wins == 0 ? 0 : grossProfit / wins
+      avgLossAmt = losses == 0 ? 0 : grossLoss / losses
+      console.log([winRate, avgWinAmt, lossRate, avgLossAmt])
+      this.resultsInfo.push({
+        profit: result.profit,
+        numberOfTrades: result.orderLocations.length / 2,
+        profitFactor: grossLoss == 0 ? grossProfit : grossProfit / Math.abs(grossLoss),
+        wins: wins,
+        losses: losses,
+        avgWinAmt: avgWinAmt,
+        avgLossAmt: avgLossAmt,
+        expectancy: (avgWinAmt * winRate) - (avgLossAmt * lossRate)
+      })
+    }
 
-      //this.runSimulationIntraDayNew()
-      this.isLoading = false
-    }
-    else {
-      //this.isLoading = true
-      //this.runSimulation()
-      //this.isLoading = false
-    }
+    //this.runSimulationIntraDayNew()
+    this.isLoading = false
+
   }
   async onRunSimulationNew() {
     if (this.intraDayChecked) {
@@ -936,22 +930,43 @@ export class ServerTradeScreenComponent implements OnInit {
   updateGraphBuyAndSellPointsIntraDayNew(orderLocations: orderLocation[]) {
     console.log(orderLocations)
     this.annotationsArray = []
-    for (let i = 0; i < orderLocations.length; i++) {
-      this.annotationsArray.push({
-        type: 'line',
-        //display: this.selectedStockHistoryData.length > 0,
+    if (this.intraDayChecked) {
+      for (let i = 0; i < orderLocations.length; i++) {
+        this.annotationsArray.push({
+          type: 'line',
+          //display: this.selectedStockHistoryData.length > 0,
 
-        xMin: this.stockDataForSelectedDay.findIndex(x => x.time == orderLocations[i].date),
-        xMax: this.stockDataForSelectedDay.findIndex(x => x.time == orderLocations[i].date),
-        borderColor: '#7874ff',
-        borderWidth: 2,
-        label: {
-          display: true,
-          content: orderLocations[i].buySell + ': ' + orderLocations[i].price,
-          position: 'end'
-        }
-      })
+          xMin: this.stockDataForSelectedDay.findIndex(x => x.time == orderLocations[i].date),
+          xMax: this.stockDataForSelectedDay.findIndex(x => x.time == orderLocations[i].date),
+          borderColor: '#7874ff',
+          borderWidth: 2,
+          label: {
+            display: true,
+            content: orderLocations[i].buySell + ': ' + orderLocations[i].price,
+            position: 'end'
+          }
+        })
+      }
     }
+    else {
+      for (let i = 0; i < orderLocations.length; i++) {
+        this.annotationsArray.push({
+          type: 'line',
+          //display: this.selectedStockHistoryData.length > 0,
+
+          xMin: this.selectedInterDayStockData.findIndex(x => x.date == orderLocations[i].date),
+          xMax: this.selectedInterDayStockData.findIndex(x => x.date == orderLocations[i].date),
+          borderColor: '#7874ff',
+          borderWidth: 2,
+          label: {
+            display: true,
+            content: orderLocations[i].buySell + ': ' + orderLocations[i].price,
+            position: 'end'
+          }
+        })
+      }
+    }
+
     this.stockChart.options.plugins.annotation.annotations = this.annotationsArray
     this.stockChart.update()
   }
