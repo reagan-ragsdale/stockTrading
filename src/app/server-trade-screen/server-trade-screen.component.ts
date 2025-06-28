@@ -1291,6 +1291,7 @@ export class ServerTradeScreenComponent implements OnInit {
     console.log(this.listOfAddedLines)
     this.stockChart.data.datasets = [this.stockChart.data.datasets[0]]
     let newListOfAddedLines = structuredClone(this.listOfAddedLines)
+    this.listOfAddedLines.length = 0
     newListOfAddedLines = newListOfAddedLines.filter(e => e.lineType != 'Price' && e.id != -10 && e.id != -11 && e.id != -12)
 
     for (let i = 0; i < newListOfAddedLines.length; i++) {
@@ -1313,19 +1314,78 @@ export class ServerTradeScreenComponent implements OnInit {
       else if (newListOfAddedLines[i].lineType == 'Cumulative EMA') {
         newListOfAddedLines[i].data = this.calculateCumulativeEMA()
       }
-      this.stockChart.data.datasets.push({
-        label: newListOfAddedLines[i].lineType + ' - ' + newListOfAddedLines[i].lineLength,
-        data: newListOfAddedLines[i].data.map(e => e.value),
-        backgroundColor: this.listOfBGCOlors[i],
-        hoverBackgroundColor: this.listOfBGCOlors[i],
-        borderColor: this.listOfBGCOlors[i],
-        pointBackgroundColor: this.listOfBGCOlors[i],
-        pointBorderColor: this.listOfBGCOlors[i],
-        pointRadius: 0,
-        spanGaps: true
-      })
+      if (newListOfAddedLines[i].lineType == 'Bollinger Bands') {
+        let bollingerData: LineData[][] = this.calculateBollingerBands(newListOfAddedLines[i].lineLength)
+        //let filteredLine = this.listOfAddedLines.filter(e => e.id == linesNew[i].id)[0]
+        //filteredLine.data = lineData
+        this.listOfAddedLines.push({
+          id: -10,
+          lineType: 'Bollinger Band EMA',
+          lineLength: newListOfAddedLines[i].lineLength,
+          data: bollingerData[0]
+        })
+        this.listOfAddedLines.push({
+          id: -11,
+          lineType: 'Bollinger Band Upper',
+          lineLength: newListOfAddedLines[i].lineLength,
+          data: bollingerData[1]
+        })
+        this.listOfAddedLines.push({
+          id: -12,
+          lineType: 'Bollinger Band Lower',
+          lineLength: newListOfAddedLines[i].lineLength,
+          data: bollingerData[2]
+        })
+        this.stockChart.data.datasets.push({
+          label: newListOfAddedLines[i].lineType + ' - ' + newListOfAddedLines[i].lineLength + ' EMA',
+          data: bollingerData[0].map(e => e.value),
+          backgroundColor: this.listOfBGCOlors[i],
+          hoverBackgroundColor: this.listOfBGCOlors[i],
+          borderColor: this.listOfBGCOlors[i],
+          pointBackgroundColor: this.listOfBGCOlors[i],
+          pointBorderColor: this.listOfBGCOlors[i],
+          pointRadius: 0,
+          spanGaps: true
+        })
+        this.stockChart.data.datasets.push({
+          label: newListOfAddedLines[i].lineType + ' - ' + newListOfAddedLines[i].lineLength + ' Upper',
+          data: bollingerData[1].map(e => e.value),
+          backgroundColor: this.listOfBGCOlors[i],
+          hoverBackgroundColor: this.listOfBGCOlors[i],
+          borderColor: this.listOfBGCOlors[i],
+          pointBackgroundColor: this.listOfBGCOlors[i],
+          pointBorderColor: this.listOfBGCOlors[i],
+          pointRadius: 0,
+          spanGaps: true
+        })
+        this.stockChart.data.datasets.push({
+          label: newListOfAddedLines[i].lineType + ' - ' + newListOfAddedLines[i].lineLength + ' Lower',
+          data: bollingerData[2].map(e => e.value),
+          backgroundColor: this.listOfBGCOlors[i],
+          hoverBackgroundColor: this.listOfBGCOlors[i],
+          borderColor: this.listOfBGCOlors[i],
+          pointBackgroundColor: this.listOfBGCOlors[i],
+          pointBorderColor: this.listOfBGCOlors[i],
+          pointRadius: 0,
+          spanGaps: true
+        })
+      }
+      else {
+        this.stockChart.data.datasets.push({
+          label: newListOfAddedLines[i].lineType + ' - ' + newListOfAddedLines[i].lineLength,
+          data: newListOfAddedLines[i].data.map(e => e.value),
+          backgroundColor: this.listOfBGCOlors[i],
+          hoverBackgroundColor: this.listOfBGCOlors[i],
+          borderColor: this.listOfBGCOlors[i],
+          pointBackgroundColor: this.listOfBGCOlors[i],
+          pointBorderColor: this.listOfBGCOlors[i],
+          pointRadius: 0,
+          spanGaps: true
+        })
+      }
+
     }
-    this.listOfAddedLines = newListOfAddedLines
+    this.listOfAddedLines.concat(newListOfAddedLines)
 
     this.stockChart.update();
   }
