@@ -1119,8 +1119,20 @@ export class ServerTradeScreenComponent implements OnInit {
         let filteredLine = newListOfAddedLines.filter(e => e.id == newListOfAddedLines[i].id)[0]
         filteredLine.data = lineData
       }
+      this.stockChart.data.datasets.push({
+        label: newListOfAddedLines[i].lineType + ' - ' + newListOfAddedLines[i].lineLength,
+        data: newListOfAddedLines[i].data.map(e => e.value),
+        backgroundColor: this.listOfBGCOlors[i],
+        hoverBackgroundColor: this.listOfBGCOlors[i],
+        borderColor: this.listOfBGCOlors[i],
+        pointBackgroundColor: this.listOfBGCOlors[i],
+        pointBorderColor: this.listOfBGCOlors[i],
+        pointRadius: 0,
+        spanGaps: true
+      })
     }
     this.listOfAddedLines = newListOfAddedLines
+
     this.stockChart.update();
   }
   addNewLinesToGraphNew() {
