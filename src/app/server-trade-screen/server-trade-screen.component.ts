@@ -431,8 +431,137 @@ export class ServerTradeScreenComponent implements OnInit {
     console.log(rules)
 
     let finalResult = []
-    for (let k = 0; k < this.distinctDates.length; k++) {
-      await this.updateStockChartData(this.distinctDates[k])
+    if (this.intraDayChecked) {
+      for (let k = 0; k < this.distinctDates.length; k++) {
+        await this.updateStockChartData(this.distinctDates[k])
+        let listOfBuyLines: { [key: number]: { length: number, data: LineData[] }[] } = {}
+        for (let i = 0; i < rules.BuyRules.length; i++) {
+          if (rules.BuyRules[i].primaryObject.length > 1 && rules.BuyRules[i].primaryObject.lengthLoopChecked) {
+            if (listOfBuyLines[rules.BuyRules[i].primaryObject.lineId] == undefined) {
+              listOfBuyLines[rules.BuyRules[i].primaryObject.lineId] = []
+              let from = rules.BuyRules[i].primaryObject.lengthLoopCheckFromAmnt
+              let to = rules.BuyRules[i].primaryObject.lengthLoopCheckToAmnt
+              let step = rules.BuyRules[i].primaryObject.lengthLoopCheckStepAmnt
+              for (let j = from; j <= to; j += step) {
+                if (rules.BuyRules[i].primaryObject.type == 'EMA') {
+                  listOfBuyLines[rules.BuyRules[i].primaryObject.lineId].push({ length: j, data: this.calculateEMA(j) })
+                }
+                else if (rules.BuyRules[i].primaryObject.type == 'SMA') {
+                  listOfBuyLines[rules.BuyRules[i].primaryObject.lineId].push({ length: j, data: this.calculateSMA(j) })
+                }
+                else if (rules.BuyRules[i].primaryObject.type == 'Rolling VWAP') {
+                  listOfBuyLines[rules.BuyRules[i].primaryObject.lineId].push({ length: j, data: this.calculateRollingVWAP(j) })
+                }
+              }
+            }
+          }
+          else if ((listOfBuyLines[rules.BuyRules[i].primaryObject.lineId] == undefined && rules.BuyRules[i].primaryObject.length == 1)) {
+            listOfBuyLines[rules.BuyRules[i].primaryObject.lineId] = []
+            if (rules.BuyRules[i].primaryObject.type == 'Cumulative SMA') {
+              listOfBuyLines[rules.BuyRules[i].primaryObject.lineId].push({ length: rules.BuyRules[i].primaryObject.length, data: this.calculateCumulativeSMA() })
+            }
+            else if (rules.BuyRules[i].primaryObject.type == 'Cumulative VWAP') {
+              listOfBuyLines[rules.BuyRules[i].primaryObject.lineId].push({ length: rules.BuyRules[i].primaryObject.length, data: this.calculateCumulativeVWAP() })
+            }
+            //listOfBuyLines[rules.BuyRules[i].primaryObject.lineId].push({ length: rules.BuyRules[i].primaryObject.length, data: rules.BuyRules[i].primaryObject.data })
+          }
+          if (rules.BuyRules[i].referencedObject.length > 1 && rules.BuyRules[i].referencedObject.lengthLoopChecked) {
+            if (listOfBuyLines[rules.BuyRules[i].referencedObject.lineId] == undefined) {
+              listOfBuyLines[rules.BuyRules[i].referencedObject.lineId] = []
+              let from = rules.BuyRules[i].referencedObject.lengthLoopCheckFromAmnt
+              let to = rules.BuyRules[i].referencedObject.lengthLoopCheckToAmnt
+              let step = rules.BuyRules[i].referencedObject.lengthLoopCheckStepAmnt
+              for (let j = from; j <= to; j += step) {
+                if (rules.BuyRules[i].referencedObject.type == 'EMA') {
+                  listOfBuyLines[rules.BuyRules[i].referencedObject.lineId].push({ length: j, data: this.calculateEMA(j) })
+                }
+                else if (rules.BuyRules[i].referencedObject.type == 'SMA') {
+                  listOfBuyLines[rules.BuyRules[i].referencedObject.lineId].push({ length: j, data: this.calculateSMA(j) })
+                }
+                else if (rules.BuyRules[i].referencedObject.type == 'Rolling VWAP') {
+                  listOfBuyLines[rules.BuyRules[i].referencedObject.lineId].push({ length: j, data: this.calculateRollingVWAP(j) })
+                }
+
+              }
+            }
+          }
+          else if ((listOfBuyLines[rules.BuyRules[i].referencedObject.lineId] == undefined && rules.BuyRules[i].referencedObject.length == 1)) {
+            listOfBuyLines[rules.BuyRules[i].referencedObject.lineId] = []
+            if (rules.BuyRules[i].referencedObject.type == 'Cumulative SMA') {
+              listOfBuyLines[rules.BuyRules[i].referencedObject.lineId].push({ length: rules.BuyRules[i].referencedObject.length, data: this.calculateCumulativeSMA() })
+            }
+            else if (rules.BuyRules[i].referencedObject.type == 'Cumulative VWAP') {
+              listOfBuyLines[rules.BuyRules[i].referencedObject.lineId].push({ length: rules.BuyRules[i].referencedObject.length, data: this.calculateCumulativeVWAP() })
+            }
+          }
+        }
+
+        for (let i = 0; i < rules.SellRules.length; i++) {
+          if (rules.SellRules[i].primaryObject.length > 1 && rules.SellRules[i].primaryObject.lengthLoopChecked) {
+            if (listOfBuyLines[rules.SellRules[i].primaryObject.lineId] == undefined) {
+              listOfBuyLines[rules.SellRules[i].primaryObject.lineId] = []
+              let from = rules.SellRules[i].primaryObject.lengthLoopCheckFromAmnt
+              let to = rules.SellRules[i].primaryObject.lengthLoopCheckToAmnt
+              let step = rules.SellRules[i].primaryObject.lengthLoopCheckStepAmnt
+              for (let j = from; j <= to; j += step) {
+                if (rules.SellRules[i].primaryObject.type == 'EMA') {
+                  listOfBuyLines[rules.SellRules[i].primaryObject.lineId].push({ length: j, data: this.calculateEMA(j) })
+                }
+                else if (rules.SellRules[i].primaryObject.type == 'SMA') {
+                  listOfBuyLines[rules.SellRules[i].primaryObject.lineId].push({ length: j, data: this.calculateSMA(j) })
+                }
+                else if (rules.SellRules[i].primaryObject.type == 'Rolling VWAP') {
+                  listOfBuyLines[rules.SellRules[i].primaryObject.lineId].push({ length: j, data: this.calculateRollingVWAP(j) })
+                }
+              }
+            }
+          }
+          else if ((listOfBuyLines[rules.SellRules[i].primaryObject.lineId] == undefined && rules.SellRules[i].primaryObject.length == 1)) {
+            listOfBuyLines[rules.SellRules[i].primaryObject.lineId] = []
+            if (rules.SellRules[i].primaryObject.type == 'Cumulative SMA') {
+              listOfBuyLines[rules.SellRules[i].primaryObject.lineId].push({ length: rules.SellRules[i].primaryObject.length, data: this.calculateCumulativeSMA() })
+            }
+            else if (rules.SellRules[i].primaryObject.type == 'Cumulative VWAP') {
+              listOfBuyLines[rules.SellRules[i].primaryObject.lineId].push({ length: rules.SellRules[i].primaryObject.length, data: this.calculateCumulativeVWAP() })
+            }
+          }
+          if (rules.SellRules[i].referencedObject.length > 1 && rules.SellRules[i].referencedObject.lengthLoopChecked) {
+            if (listOfBuyLines[rules.SellRules[i].referencedObject.lineId] == undefined) {
+              listOfBuyLines[rules.SellRules[i].referencedObject.lineId] = []
+              let from = rules.SellRules[i].referencedObject.lengthLoopCheckFromAmnt
+              let to = rules.SellRules[i].referencedObject.lengthLoopCheckToAmnt
+              let step = rules.SellRules[i].referencedObject.lengthLoopCheckStepAmnt
+              for (let j = from; j <= to; j += step) {
+                if (rules.SellRules[i].referencedObject.type == 'EMA') {
+                  listOfBuyLines[rules.SellRules[i].referencedObject.lineId].push({ length: j, data: this.calculateEMA(j) })
+                }
+                else if (rules.SellRules[i].referencedObject.type == 'SMA') {
+                  listOfBuyLines[rules.SellRules[i].referencedObject.lineId].push({ length: j, data: this.calculateSMA(j) })
+                }
+                else if (rules.SellRules[i].referencedObject.type == 'Rolling VWAP') {
+                  listOfBuyLines[rules.SellRules[i].referencedObject.lineId].push({ length: j, data: this.calculateRollingVWAP(j) })
+                }
+              }
+            }
+          }
+          else if ((listOfBuyLines[rules.SellRules[i].referencedObject.lineId] == undefined && rules.SellRules[i].referencedObject.length == 1)) {
+            listOfBuyLines[rules.SellRules[i].referencedObject.lineId] = []
+            if (rules.SellRules[i].referencedObject.type == 'Cumulative SMA') {
+              listOfBuyLines[rules.SellRules[i].referencedObject.lineId].push({ length: rules.SellRules[i].referencedObject.length, data: this.calculateCumulativeSMA() })
+            }
+            else if (rules.SellRules[i].referencedObject.type == 'Cumulative VWAP') {
+              listOfBuyLines[rules.SellRules[i].referencedObject.lineId].push({ length: rules.SellRules[i].referencedObject.length, data: this.calculateCumulativeVWAP() })
+            }
+          }
+        }
+        const allCombinations = this.generateCombinations(listOfBuyLines);
+        console.log(listOfBuyLines)
+        let result = this.addRule2(listOfBuyLines, allCombinations, rules)
+        finalResult.push(result)
+      }
+    }
+    else {
+
       let listOfBuyLines: { [key: number]: { length: number, data: LineData[] }[] } = {}
       for (let i = 0; i < rules.BuyRules.length; i++) {
         if (rules.BuyRules[i].primaryObject.length > 1 && rules.BuyRules[i].primaryObject.lengthLoopChecked) {
@@ -552,12 +681,14 @@ export class ServerTradeScreenComponent implements OnInit {
             listOfBuyLines[rules.SellRules[i].referencedObject.lineId].push({ length: rules.SellRules[i].referencedObject.length, data: this.calculateCumulativeVWAP() })
           }
         }
+
+        const allCombinations = this.generateCombinations(listOfBuyLines);
+        console.log(listOfBuyLines)
+        let result = this.addRule2(listOfBuyLines, allCombinations, rules)
+        finalResult.push(result)
       }
-      const allCombinations = this.generateCombinations(listOfBuyLines);
-      console.log(listOfBuyLines)
-      let result = this.addRule2(listOfBuyLines, allCombinations, rules)
-      finalResult.push(result)
     }
+
     let summedResults = []
     for (let i = 0; i < finalResult[0].length; i++) {
       let profit = 0
@@ -770,7 +901,7 @@ export class ServerTradeScreenComponent implements OnInit {
           let losses = 0
 
 
-          const stockData = this.stockDataForSelectedDay
+
           const operators = this.operators
           const buyRules = rules.BuyRules
           const sellRules = rules.SellRules
@@ -778,74 +909,148 @@ export class ServerTradeScreenComponent implements OnInit {
           const timeoutMs = rules.TimeOutAfterStopLossSell * 60000
 
 
-
-          for (let m = counter; m < stockData.length; m++) {
-            if (buySell === 'Buy') {
-              if (stockData[m].time < timeOutPeriod || numberOfConsecutiveLosses >= maxLosses) {
-                continue
-              }
-              let canBuy = true
-              for (let j = 0; j < buyRules.length; j++) {
-                if (!operators[buyRules[j].desiredAction.type](buyRules[j], m)) {
-                  canBuy = false
-                  break
+          if (this.intraDayChecked) {
+            const stockData = this.stockDataForSelectedDay
+            for (let m = counter; m < stockData.length; m++) {
+              if (buySell === 'Buy') {
+                if (stockData[m].time < timeOutPeriod || numberOfConsecutiveLosses >= maxLosses) {
+                  continue
                 }
-              }
-              if (canBuy) {
-                lastOrderPrice = stockData[m].stockPrice
-                buySell = 'Sell'
-                for (let j = 0; j < sellRules.length; j++) {
-                  if (sellRules[j].desiredAction.type == 'Trailing Stop') {
-                    sellRules[j].desiredAction.current = 0
-                    sellRules[j].tradeHigh = stockData[m].stockPrice
+                let canBuy = true
+                for (let j = 0; j < buyRules.length; j++) {
+                  if (!operators[buyRules[j].desiredAction.type](buyRules[j], m)) {
+                    canBuy = false
+                    break
                   }
                 }
+                if (canBuy) {
+                  lastOrderPrice = stockData[m].stockPrice
+                  buySell = 'Sell'
+                  for (let j = 0; j < sellRules.length; j++) {
+                    if (sellRules[j].desiredAction.type == 'Trailing Stop') {
+                      sellRules[j].desiredAction.current = 0
+                      sellRules[j].tradeHigh = stockData[m].stockPrice
+                    }
+                  }
+                }
+              }
+              else {
+                const currentPrice = stockData[m].stockPrice
+                let orGroupIndex = 0
+                let orGroups = [true]
+                for (let j = 0; j < sellRules.length; j++) {
+                  const sellRule = sellRules[j]
+                  if (sellRule.desiredAction.type === 'Trailing Stop' && currentPrice > sellRule.tradeHigh) {
+                    sellRule.tradeHigh = currentPrice
+                    if (sellRule.tradeHigh >= (lastOrderPrice + sellRule.desiredAction.amount)) {
+                      sellRule.desiredAction.current = sellRule.tradeHigh - sellRule.desiredAction.amount
+                    }
+                  }
+                  if (sellRule.andOr == 'Or') {
+                    orGroupIndex++
+                    orGroups[orGroupIndex] = true
+                  }
+                  if (!operators[sellRule.desiredAction.type](sellRule, m, lastOrderPrice)) {
+                    orGroups[orGroupIndex] = false
+                  }
+
+
+                }
+
+                const shouldSell = m === stockData.length - 1 || orGroups.some(group => group)
+
+                if (shouldSell) {
+                  const tradeProfit = currentPrice - lastOrderPrice
+                  profit += tradeProfit
+                  if (tradeProfit > 0) {
+                    wins++
+                  }
+                  else {
+                    losses++
+                    numberOfConsecutiveLosses++
+                    timeOutPeriod = timeoutMs + stockData[m].time
+                  }
+
+                  buySell = 'Buy'
+                }
+
+
+
               }
             }
-            else {
-              const currentPrice = stockData[m].stockPrice
-              let orGroupIndex = 0
-              let orGroups = [true]
-              for (let j = 0; j < sellRules.length; j++) {
-                const sellRule = sellRules[j]
-                if (sellRule.desiredAction.type === 'Trailing Stop' && currentPrice > sellRule.tradeHigh) {
-                  sellRule.tradeHigh = currentPrice
-                  if (sellRule.tradeHigh >= (lastOrderPrice + sellRule.desiredAction.amount)) {
-                    sellRule.desiredAction.current = sellRule.tradeHigh - sellRule.desiredAction.amount
+
+          }
+          else {
+            const stockData = this.selectedInterDayStockData
+            for (let m = counter; m < stockData.length; m++) {
+              if (buySell === 'Buy') {
+                if (stockData[m].date < timeOutPeriod || numberOfConsecutiveLosses >= maxLosses) {
+                  continue
+                }
+                let canBuy = true
+                for (let j = 0; j < buyRules.length; j++) {
+                  if (!operators[buyRules[j].desiredAction.type](buyRules[j], m)) {
+                    canBuy = false
+                    break
                   }
                 }
-                if (sellRule.andOr == 'Or') {
-                  orGroupIndex++
-                  orGroups[orGroupIndex] = true
+                if (canBuy) {
+                  lastOrderPrice = stockData[m].close
+                  buySell = 'Sell'
+                  for (let j = 0; j < sellRules.length; j++) {
+                    if (sellRules[j].desiredAction.type == 'Trailing Stop') {
+                      sellRules[j].desiredAction.current = 0
+                      sellRules[j].tradeHigh = stockData[m].close
+                    }
+                  }
                 }
-                if (!operators[sellRule.desiredAction.type](sellRule, m, lastOrderPrice)) {
-                  orGroups[orGroupIndex] = false
+              }
+              else {
+                const currentPrice = stockData[m].close
+                let orGroupIndex = 0
+                let orGroups = [true]
+                for (let j = 0; j < sellRules.length; j++) {
+                  const sellRule = sellRules[j]
+                  if (sellRule.desiredAction.type === 'Trailing Stop' && currentPrice > sellRule.tradeHigh) {
+                    sellRule.tradeHigh = currentPrice
+                    if (sellRule.tradeHigh >= (lastOrderPrice + sellRule.desiredAction.amount)) {
+                      sellRule.desiredAction.current = sellRule.tradeHigh - sellRule.desiredAction.amount
+                    }
+                  }
+                  if (sellRule.andOr == 'Or') {
+                    orGroupIndex++
+                    orGroups[orGroupIndex] = true
+                  }
+                  if (!operators[sellRule.desiredAction.type](sellRule, m, lastOrderPrice)) {
+                    orGroups[orGroupIndex] = false
+                  }
+
+
                 }
+
+                const shouldSell = m === stockData.length - 1 || orGroups.some(group => group)
+
+                if (shouldSell) {
+                  const tradeProfit = currentPrice - lastOrderPrice
+                  profit += tradeProfit
+                  if (tradeProfit > 0) {
+                    wins++
+                  }
+                  else {
+                    losses++
+                    numberOfConsecutiveLosses++
+                    timeOutPeriod = timeoutMs + stockData[m].date
+                  }
+
+                  buySell = 'Buy'
+                }
+
 
 
               }
-
-              const shouldSell = m === stockData.length - 1 || orGroups.some(group => group)
-
-              if (shouldSell) {
-                const tradeProfit = currentPrice - lastOrderPrice
-                profit += tradeProfit
-                if (tradeProfit > 0) {
-                  wins++
-                }
-                else {
-                  losses++
-                  numberOfConsecutiveLosses++
-                  timeOutPeriod = timeoutMs + stockData[m].time
-                }
-
-                buySell = 'Buy'
-              }
-
-
-
             }
           }
+
           returnData.push({ wins: wins, losses: losses, profit: profit, buyCombos: buyCombo, sellCombos: sellCombo })
         }
 
