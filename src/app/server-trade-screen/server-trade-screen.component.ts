@@ -97,6 +97,8 @@ export class ServerTradeScreenComponent implements OnInit {
   intraDayShortSellSma: number = 0
   intraDayShortBuySma: number = 0
 
+  selectedStockData: DbStockBasicHistory[] | DbStockHistoryData[] = []
+
   interDayLongSma: number = 0;
   interDayMediumSma: number = 0
   interDayShortSma: number = 0
@@ -1209,16 +1211,32 @@ export class ServerTradeScreenComponent implements OnInit {
   calculateSMA(lineLength: number): LineData[] {
     let returnData: LineData[] = []
     let windowSum = 0
-    for (let i = 0; i < lineLength - 1; i++) {
-      returnData.push({ value: null, time: this.stockDataForSelectedDay[i].time })
-      windowSum += this.stockDataForSelectedDay[i].stockPrice
+
+    if (this.intraDayChecked) {
+      for (let i = 0; i < lineLength - 1; i++) {
+        returnData.push({ value: null, time: this.stockDataForSelectedDay[i].time })
+        windowSum += this.stockDataForSelectedDay[i].stockPrice
+      }
+      windowSum += this.stockDataForSelectedDay[lineLength - 1].stockPrice
+      returnData.push({ value: windowSum / lineLength, time: this.stockDataForSelectedDay[lineLength - 1].time })
+      for (let j = lineLength; j < this.stockDataForSelectedDay.length; j++) {
+        windowSum += this.stockDataForSelectedDay[j].stockPrice - this.stockDataForSelectedDay[j - lineLength].stockPrice
+        returnData.push({ value: windowSum / lineLength, time: this.stockDataForSelectedDay[j].time })
+      }
     }
-    windowSum += this.stockDataForSelectedDay[lineLength - 1].stockPrice
-    returnData.push({ value: windowSum / lineLength, time: this.stockDataForSelectedDay[lineLength - 1].time })
-    for (let j = lineLength; j < this.stockDataForSelectedDay.length; j++) {
-      windowSum += this.stockDataForSelectedDay[j].stockPrice - this.stockDataForSelectedDay[j - lineLength].stockPrice
-      returnData.push({ value: windowSum / lineLength, time: this.stockDataForSelectedDay[j].time })
+    else {
+      for (let i = 0; i < lineLength - 1; i++) {
+        returnData.push({ value: null, time: this.selectedInterDayStockData[i].date })
+        windowSum += this.selectedInterDayStockData[i].close
+      }
+      windowSum += this.selectedInterDayStockData[lineLength - 1].close
+      returnData.push({ value: windowSum / lineLength, time: this.selectedInterDayStockData[lineLength - 1].date })
+      for (let j = lineLength; j < this.selectedInterDayStockData.length; j++) {
+        windowSum += this.selectedInterDayStockData[j].close - this.selectedInterDayStockData[j - lineLength].close
+        returnData.push({ value: windowSum / lineLength, time: this.selectedInterDayStockData[j].date })
+      }
     }
+
 
     return returnData
 
