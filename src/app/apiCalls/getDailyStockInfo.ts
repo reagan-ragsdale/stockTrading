@@ -21,6 +21,7 @@ export const getDailyStockInfo = async () => {
         let insertData: DbStockBasicHistory[] = []
         let stockData = await getHistoryStockData(stocks[i], startTime)
         console.log(stockData)
+
         for (let j = 0; j < stockData.candles.length; j++) {
             insertData.push({
                 stockName: stockData.symbol,
