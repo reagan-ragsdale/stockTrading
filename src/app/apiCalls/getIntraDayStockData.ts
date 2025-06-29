@@ -27,7 +27,7 @@ export const getIntraDayStockData = async () => {
                         askPrice: stockData[j].price,
                         bidPrice: stockData[j].price,
                         volume: stockData[j].size,
-                        time: stockData[j].sip_timestamp / 1000000,
+                        time: Math.round(stockData[j].sip_timestamp / 1000000),
                         date: inputDate
                     })
                 }
