@@ -1938,6 +1938,7 @@ export class ServerTradeScreenComponent implements OnInit {
 
 
   }
+
   refreshRules() {
     for (let i = 0; i < this.listOfAddedRules.BuyRules.length; i++) {
       let filteredLineData = this.listOfAddedLines.filter(e => e.lineType == this.listOfAddedRules.BuyRules[i].primaryObject.type && e.lineLength == this.listOfAddedRules.BuyRules[i].primaryObject.length)

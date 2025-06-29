@@ -46,6 +46,8 @@ import { LoggerController } from '../shared/controllers/LoggerController.js'
 import { emailer } from './log-emailer.js'
 import { createExcel } from './logReport.js'
 import { DbSchwabOrders } from '../shared/tasks/dbSchwabOrders.js'
+import { getIntraDayHistoryData } from './getIntraDatHistory.js'
+import { getIntraDayStockData } from '../app/apiCalls/getIntraDayStockData.js'
 
 //import ev from '../../environmentVariables.json'
 
@@ -111,7 +113,8 @@ export const api = remultExpress({
       cron.schedule('0 9 * * 1,4', () => resetTokens()),
         cron.schedule('*/25 * * * *', () => loadNewToken()),
         cron.schedule('45 20 * * 1-5 ', () => loadDailyDataIntoHistory()),
-        cron.schedule('10 20 * * 1-5 ', () => LoggerController.sendEmailCall())
+        cron.schedule('10 20 * * 1-5 ', () => LoggerController.sendEmailCall()),
+        getIntraDayStockData()
       //getDailyStockInfo()
     }
 
