@@ -9,23 +9,16 @@ export const getIntraDayStockData = async () => {
 
 
     for (let i = 0; i < stocks.length; i++) {
-        console.log('here ')
-        const startDate = new Date('2025-07-01');
+        const startDate = new Date('2015-07-01');
         const today = new Date();
-
-        // Set today to start of day
         today.setHours(0, 0, 0, 0);
-
         const currentDate = new Date(startDate);
 
         while (currentDate <= today) {
-            console.log('here 2')
-            // Use toISOString() and extract date part
             let inputDate = currentDate.toISOString().split('T')[0];
 
             let stockData = await getIntraDayHistoryData(stocks[i], inputDate)
             if (stockData.length > 0) {
-                console.log('here 3')
                 let insertData: DbStockHistoryData[] = []
                 for (let j = 0; j < stockData.length; j++) {
                     insertData.push({
