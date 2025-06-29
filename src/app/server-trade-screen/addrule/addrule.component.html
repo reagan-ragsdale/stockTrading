@@ -130,7 +130,7 @@
                         </mat-select>
                     </mat-form-field>
                     <mat-form-field
-                        *ngIf="sellRule.conditionType == 'Line Action' && sellRule.desiredAction.type != 'Trend Crosses Below:'"
+                        *ngIf="sellRule.conditionType == 'Line Action' && sellRule.desiredAction.type != 'Trend Crosses Below:' && sellRule.desiredAction.type != 'Is Greater than previous buy'"
                         style="width:fit-content;">
                         <mat-label>Referenced Object</mat-label>
                         <mat-select disableRipple [(value)]="sellRule.referencedObject.name">

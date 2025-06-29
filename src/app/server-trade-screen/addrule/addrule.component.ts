@@ -32,8 +32,8 @@ export class AddRuleComponent {
   selectedBuyLine: string = ''
   selectedSellLine: string = ''
   availableBuyActions: string[] = ['Crosses above:', 'Dips below:', 'Rises above:', 'Trend Crosses Above:', 'Crosses below:', 'Is greater than:', 'Is less than:']
-  availableSellPriceActions: string[] = ['Take Profit', 'Stop Loss', 'Trailing Stop']
-  availableSellLineActions: string[] = ['Crosses below:', 'Dips below:', 'Rises above:', 'Trend Crosses Below:', 'Crosses above:', 'Is greater than:', 'Is less than:']
+  availableSellPriceActions: string[] = ['Take Profit', 'Stop Loss', 'Trailing Stop',]
+  availableSellLineActions: string[] = ['Crosses below:', 'Dips below:', 'Rises above:', 'Trend Crosses Below:', 'Crosses above:', 'Is greater than:', 'Is less than:', 'Is Greater than previous buy']
   sellConditionTypes: string[] = ['Line Action', 'Price Action']
   buyConditionTypes: string[] = ['Line', 'Time']
   timeConditions: string[] = ['After']
