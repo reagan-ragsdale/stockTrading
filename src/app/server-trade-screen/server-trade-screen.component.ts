@@ -1779,7 +1779,8 @@ export class ServerTradeScreenComponent implements OnInit {
     "Trend Crosses Below:": (rule, index) => ((index >= (rule.primaryObject.length + rule.desiredAction.length) - 2) ? (this.getTrend(rule.primaryObject.data, rule.desiredAction.length, index) < rule.desiredAction.amount) : false),
     "Trend Crosses Above:": (rule, index) => ((index >= (rule.primaryObject.length + rule.desiredAction.length) - 2) ? (this.getTrend(rule.primaryObject.data, rule.desiredAction.length, index) > rule.desiredAction.amount) : false),
     "Is greater than:": (rule, index) => (rule.primaryObject.data[index].value == null || rule.referencedObject.data[index].value == null) ? false : (rule.primaryObject.data[index].value > rule.referencedObject.data[index].value),
-    "Is less than:": (rule, index) => (rule.primaryObject.data[index].value == null || rule.referencedObject.data[index].value == null) ? false : (rule.primaryObject.data[index].value < rule.referencedObject.data[index].value)
+    "Is less than:": (rule, index) => (rule.primaryObject.data[index].value == null || rule.referencedObject.data[index].value == null) ? false : (rule.primaryObject.data[index].value < rule.referencedObject.data[index].value),
+    "Is Greater than previous buy": (rule, index, buyPrice) => this.intraDayChecked ? (false) : (rule.primaryObject.data[index].value! > buyPrice!)
   };
 
   addRule() {
