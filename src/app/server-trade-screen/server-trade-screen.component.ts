@@ -1292,7 +1292,7 @@ export class ServerTradeScreenComponent implements OnInit {
     this.stockChart.data.datasets = [this.stockChart.data.datasets[0]]
     let newListOfAddedLines = structuredClone(this.listOfAddedLines)
     this.listOfAddedLines.length = 0
-    newListOfAddedLines = newListOfAddedLines.filter(e => e.lineType != 'Price' && e.id != -10 && e.id != -11 && e.id != -12)
+    //newListOfAddedLines = newListOfAddedLines.filter(e => e.lineType != 'Price' && e.id != -10 && e.id != -11 && e.id != -12)
 
     for (let i = 0; i < newListOfAddedLines.length; i++) {
       let lineData: LineData[] = []
@@ -1385,7 +1385,7 @@ export class ServerTradeScreenComponent implements OnInit {
       }
 
     }
-    this.listOfAddedLines.concat(newListOfAddedLines)
+    this.listOfAddedLines = this.listOfAddedLines.concat(newListOfAddedLines)
 
     this.stockChart.update();
   }
