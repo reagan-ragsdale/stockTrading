@@ -9,22 +9,37 @@ export const getIntraDayStockData = async () => {
 
 
     for (let i = 0; i < stocks.length; i++) {
-        let insertData: DbStockHistoryData[] = []
-        let stockData = await getIntraDayHistoryData(stocks[i], '2015-07-01')
-        console.log(stockData)
+        const startDate = new Date('2025-07-01');
+        const today = new Date();
 
-        /*  for (let j = 0; j < stockData.candles.length; j++) {
-             insertData.push({
-                 stockName: stockData.symbol,
-                 open: stockData.candles[j].open,
-                 close: stockData.candles[j].close,
-                 high: stockData.candles[j].high,
-                 low: stockData.candles[j].low,
-                 volume: stockData.candles[j].volume,
-                 date: stockData.candles[j].datetime
-             })
-         }
-         await dbStockBasicHistoryRepo.insert(insertData) */
+        // Set today to start of day
+        today.setHours(0, 0, 0, 0);
+
+        const currentDate = new Date(startDate);
+
+        while (currentDate <= today) {
+            // Use toISOString() and extract date part
+            let inputDate = currentDate.toISOString().split('T')[0];
+
+            let stockData = await getIntraDayHistoryData(stocks[i], inputDate)
+            if (stockData.length > 0) {
+                let insertData: DbStockHistoryData[] = []
+                for (let j = 0; j < stockData.length; j++) {
+                    insertData.push({
+                        stockName: stocks[i],
+                        stockPrice: stockData[j].price,
+                        askPrice: stockData[j].price,
+                        bidPrice: stockData[j].price,
+                        volume: stockData[j].size,
+                        time: stockData[j].sip_timestamp / 1000000,
+                        date: inputDate
+                    })
+                }
+                await dbStockHistoryDataRepo.insert(insertData);
+            }
+            currentDate.setDate(currentDate.getDate() + 1);
+        }
+
     }
 
 
