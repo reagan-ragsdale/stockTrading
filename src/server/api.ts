@@ -73,7 +73,7 @@ PolygonController.getIntraDayData = getIntraDayHistoryData
 
 
 export const api = remultExpress({
-  controllers: [AuthController, SimFinance, OAuthContoller, OrderController, StockController, RegFinanceController, RegressionOrderController, RegressionStockController, StockHistoryController, SimulationController, SchwabController, LoggerController],
+  controllers: [AuthController, SimFinance, OAuthContoller, OrderController, StockController, RegFinanceController, RegressionOrderController, RegressionStockController, StockHistoryController, SimulationController, SchwabController, LoggerController, PolygonController],
   entities: [
     Task,
     Users,
