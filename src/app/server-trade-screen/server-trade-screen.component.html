@@ -229,6 +229,15 @@
   </div>
   <div style="display: flex; flex-direction: column;">
     <div style="display:flex; gap: 1rem;">
+      <mat-form-field class="example-full-width">
+        <mat-label>State</mat-label>
+        <input matInput aria-label="State" [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete">
+          @for (stock of filteredStocks; track stock) {
+          <mat-option [value]="stock">{{stock}}</mat-option>
+          }
+        </mat-autocomplete>
+      </mat-form-field>
       <mat-form-field style="width:fit-content;">
         <mat-label>Select a Stock</mat-label>
         <mat-select disableRipple [(value)]="selectedStockName">

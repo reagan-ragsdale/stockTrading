@@ -138,14 +138,14 @@ export const placeOrderForAccount = async (accountNum: string, accessToken: stri
         const response = await fetch(url, options);
 
         if (response.ok) {
-            console.log('Trade response')
-            console.log(response)
+
             const order = response.headers.get('Location')
 
 
 
             const orderId = order ? Number(order.split('/').pop()) : 0
-
+            console.log('Order id from api')
+            console.log(orderId)
             returnData.code = 201
             returnData.message = ''
             returnData.orderId = orderId
