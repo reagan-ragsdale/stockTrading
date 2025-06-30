@@ -26,7 +26,7 @@ import { LogService } from '../services/LogService';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { tickerRepo } from '../../shared/tasks/tickers';
 import { map, Observable, startWith } from 'rxjs';
-import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDatepickerInputEvent, MatDatepickerModule } from '@angular/material/datepicker';
 
 
 type OperatorFunction = (rule: BuyRule | SellRule, index: number, buyPrice?: number) => boolean;
@@ -1083,8 +1083,8 @@ export class ServerTradeScreenComponent implements OnInit {
 
   }
   /* Intra Day */
-  async onSelectedDateChange(event: any) {
-    console.log(event)
+  async onSelectedDateChange(event: MatDatepickerInputEvent<Date>) {
+    console.log(event.value)
     /*  if (event.isUserInput == true) {
        this.isLoading = true
        this.selectedDate = event.source.value
