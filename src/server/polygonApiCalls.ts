@@ -25,9 +25,11 @@ export const getAllTickers = async (symbol?: string): Promise<any> => {
     const apiKey = process.env["PolygonApiKey"];
     let url = ''
     if (symbol) {
+        console.log('here 1')
         url = `https://api.polygon.io/v3/reference/tickers?ticker.gt=${symbol}&type=CS&market=stocks&exchange=XNAS&active=true&order=asc&limit=1000&sort=ticker&apiKey=${apiKey}`
     }
     else {
+        console.log('here 2')
         url = `https://api.polygon.io/v3/reference/tickers?type=CS&market=stocks&active=true&order=asc&limit=1000&sort=ticker&apiKey=${apiKey}`;
     }
     try {

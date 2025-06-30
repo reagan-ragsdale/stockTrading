@@ -16,7 +16,7 @@ async function sendTickerCall(symbol?: string) {
                 tickerData.push({ name: tickerInfo[i].ticker })
             }
             await tickerRepo.insert(tickerData)
-            if (tickerInfo.length < 1000) {
+            if (tickerInfo.length == 1000) {
                 await sendTickerCall(tickerInfo[tickerInfo.length - 1].ticker)
             }
         }
@@ -29,7 +29,7 @@ async function sendTickerCall(symbol?: string) {
                 tickerData.push({ name: tickerInfo[i].ticker })
             }
             await tickerRepo.insert(tickerData)
-            if (tickerInfo.length < 1000) {
+            if (tickerInfo.length == 1000) {
                 await sendTickerCall(tickerInfo[tickerInfo.length - 1].ticker)
             }
         }
