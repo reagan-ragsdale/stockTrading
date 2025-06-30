@@ -2011,7 +2011,7 @@ export class ServerTradeScreenComponent implements OnInit {
     this.isLoading = true
     this.distinctStocks = (await tickerRepo.find()).map(e => e.name)
     //this.filteredStocks = this.distinctStocks
-    await this.loadInitialInterDayData()
+    //await this.loadInitialInterDayData()
 
     this.createOrUpdateChart()
     await this.getStockHistoricalData()
