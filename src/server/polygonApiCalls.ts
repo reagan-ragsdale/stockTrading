@@ -7,6 +7,7 @@ export const getIntraDayHistoryData = async (stockName: string, date: string): P
         const response = await fetch(url);
         if (response.ok) {
             const result = await response.json();
+            console.log(result)
             return result.results
         }
         else {
