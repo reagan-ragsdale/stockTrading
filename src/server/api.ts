@@ -49,6 +49,8 @@ import { DbSchwabOrders } from '../shared/tasks/dbSchwabOrders.js'
 import { getIntraDayStockData } from '../app/apiCalls/getIntraDayStockData.js'
 import { getAllTickersCall } from '../app/apiCalls/getAllTickers.js'
 import { tickers } from '../shared/tasks/tickers.js'
+import { PolygonController } from '../shared/controllers/PolygonController.js'
+import { getIntraDayHistoryData } from './polygonApiCalls.js'
 
 //import ev from '../../environmentVariables.json'
 
@@ -65,6 +67,7 @@ SchwabController.placeOrderForAccount = placeOrderForAccount
 SchwabController.getOrderByIdForAccount = getOrdersForAccountById
 LoggerController.sendEmail = emailer
 LoggerController.generateExcel = createExcel
+PolygonController.getIntraDayData = getIntraDayHistoryData
 
 
 
