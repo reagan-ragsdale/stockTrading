@@ -1092,6 +1092,7 @@ export class ServerTradeScreenComponent implements OnInit {
     if (this.selectedStockName != '') {
       this.isLoading = true;
       this.stockDataForSelectedDay = await PolygonController.getAccountsNumberCall(this.selectedStockName, this.selectedDate)
+      console.log(this.stockDataForSelectedDay)
       this.updateChartIntraDay()
       this.addNewLinesToGraph(this.listOfAddedLines)
       this.refreshRules()
