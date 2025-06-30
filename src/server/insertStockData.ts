@@ -19,6 +19,7 @@ type lastTrade = {
     lastBid: number;
     pauseTrade: boolean;
     tradeId: number;
+    tradeType: string;
 }
 
 export const socketCall = async (): Promise<void> => {
@@ -37,9 +38,9 @@ export const socketCall = async (): Promise<void> => {
     let amountAvailableToTrade = schwabPosition.securitiesAccount.currentBalances.cashAvailableForTrading - schwabPosition.securitiesAccount.currentBalances.unsettledCash
 
     let stockLastTradesMap = new Map<string, lastTrade>()
-    stockLastTradesMap.set('AAPL', { lastPrice: 0, lastAsk: 0, lastBid: 0, pauseTrade: false, tradeId: 0 })
-    stockLastTradesMap.set('PLTR', { lastPrice: 0, lastAsk: 0, lastBid: 0, pauseTrade: false, tradeId: 0 })
-    stockLastTradesMap.set('TSLA', { lastPrice: 0, lastAsk: 0, lastBid: 0, pauseTrade: false, tradeId: 0 })
+    stockLastTradesMap.set('AAPL', { lastPrice: 0, lastAsk: 0, lastBid: 0, pauseTrade: false, tradeId: 0, tradeType: '' })
+    stockLastTradesMap.set('PLTR', { lastPrice: 0, lastAsk: 0, lastBid: 0, pauseTrade: false, tradeId: 0, tradeType: '' })
+    stockLastTradesMap.set('TSLA', { lastPrice: 0, lastAsk: 0, lastBid: 0, pauseTrade: false, tradeId: 0, tradeType: '' })
 
     ServerTradeStrategies.initialize()
     ServerTradeStrategies.setAccessToken(userData.accessToken)
@@ -151,6 +152,7 @@ export const socketCall = async (): Promise<void> => {
                             if (response.code == 201) {
                                 console.log('Trade')
                                 lastPrices.tradeId = response.orderId!
+                                lastPrices.tradeType = result.tradeType!
                                 lastPrices.pauseTrade = true;
                             }
                             else {
@@ -162,10 +164,13 @@ export const socketCall = async (): Promise<void> => {
                             let newSchwabOrder = await getOrdersForAccountById(userData.accountNum, accessToken, lastPrices.tradeId)
 
                             if (Object.keys(newSchwabOrder).length > 0) {
+                                console.log('get order below')
+                                console.log(newSchwabOrder)
+                                //if (newSchwabOrder.status == 'FILLED') {
                                 let newInsertData: DbSchwabOrders = {
                                     accountNum: userData.accountNum,
                                     stockName: data.stockName,
-                                    orderType: result.tradeType!,
+                                    orderType: lastPrices.tradeType,
                                     stockPrice: newSchwabOrder.orderActivityCollection[0].executionLegs[0].price,
                                     shareQty: newSchwabOrder.quantity,
                                     orderId: newSchwabOrder.orderId,
@@ -177,11 +182,13 @@ export const socketCall = async (): Promise<void> => {
                                     amountAvailableToTrade = amountAvailableToTrade - newSchwabOrder.orderActivityCollection[0].executionLegs[0].price
                                 }
                                 localSchwabOrders.unshift(newInsertData)
-                                result.log!.tradingAmount = amountAvailableToTrade
-                                result.log!.orderId = newSchwabOrder.orderId
-                                result.log!.shares = 1
-                                LoggerController.addToLog(result.log!)
+                                //result.log!.tradingAmount = 0
+                                //result.log!.orderId = newSchwabOrder.orderId
+                                //result.log!.shares = 1
+                                //LoggerController.addToLog(result.log!)
                                 lastPrices.pauseTrade = false;
+                                // }
+
                             }
 
 

@@ -23,6 +23,8 @@ import { dbOrdersRepo } from '../../shared/tasks/dbOrders';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import { AlgoLoopComponent } from "./algo-loop/algo-loop.component";
 import { LogService } from '../services/LogService';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { tickerRepo } from '../../shared/tasks/tickers';
 
 
 type OperatorFunction = (rule: BuyRule | SellRule, index: number, buyPrice?: number) => boolean;
@@ -62,7 +64,7 @@ type nonLineValues = {
 
 @Component({
   selector: 'app-server-trade-screen',
-  imports: [MatCheckboxModule, CommonModule, MatTableModule, MatIconModule, MatProgressSpinnerModule, MatFormFieldModule, MatSelectModule, MatButtonModule, MatInputModule, FormsModule, MatSlideToggleModule, AddLineComponent, AddRuleComponent, AlgoLoopComponent],
+  imports: [MatCheckboxModule, MatAutocompleteModule, CommonModule, MatTableModule, MatIconModule, MatProgressSpinnerModule, MatFormFieldModule, MatSelectModule, MatButtonModule, MatInputModule, FormsModule, MatSlideToggleModule, AddLineComponent, AddRuleComponent, AlgoLoopComponent],
   templateUrl: './server-trade-screen.component.html',
   styleUrl: './server-trade-screen.component.css'
 })
@@ -80,6 +82,7 @@ export class ServerTradeScreenComponent implements OnInit {
   stockChart: any;
   rsiChart: any;
   distinctStocks: string[] = []
+  filteredStocks: string[] = []
   annotationsArray: any[] = []
   intraDayChecked: boolean = false;
   distinctDates: string[] = []
@@ -1994,6 +1997,8 @@ export class ServerTradeScreenComponent implements OnInit {
     Chart.register(...registerables)
     Chart.register(zoomPlugin)
     this.isLoading = true
+    this.distinctStocks = (await tickerRepo.find()).map(e => e.name)
+    this.filteredStocks = this.distinctStocks
     await this.loadInitialInterDayData()
 
     this.createOrUpdateChart()
