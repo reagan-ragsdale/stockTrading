@@ -1,5 +1,5 @@
 
-import { getIntraDayHistoryData } from "../../server/getIntraDatHistory.js"
+import { getIntraDayHistoryData } from "../../server/polygonApiCalls.js"
 import { DbStockHistoryData, dbStockHistoryDataRepo } from "../../shared/tasks/dbStockHistoryData.js"
 
 export const getIntraDayStockData = async () => {
