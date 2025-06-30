@@ -48,6 +48,7 @@ import { createExcel } from './logReport.js'
 import { DbSchwabOrders } from '../shared/tasks/dbSchwabOrders.js'
 import { getIntraDayStockData } from '../app/apiCalls/getIntraDayStockData.js'
 import { getAllTickersCall } from '../app/apiCalls/getAllTickers.js'
+import { tickers } from '../shared/tasks/tickers.js'
 
 //import ev from '../../environmentVariables.json'
 
@@ -89,7 +90,8 @@ export const api = remultExpress({
     DbStockDashInfo,
     DbAlgorithmList,
     DbListOfProfits,
-    DbSchwabOrders
+    DbSchwabOrders,
+    tickers
   ],
   admin: true,
   getUser: (req) => req.session!['user'],
