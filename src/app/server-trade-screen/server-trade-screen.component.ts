@@ -26,6 +26,7 @@ import { LogService } from '../services/LogService';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { tickerRepo } from '../../shared/tasks/tickers';
 import { map, Observable, startWith } from 'rxjs';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 
 type OperatorFunction = (rule: BuyRule | SellRule, index: number, buyPrice?: number) => boolean;
@@ -65,7 +66,7 @@ type nonLineValues = {
 
 @Component({
   selector: 'app-server-trade-screen',
-  imports: [MatCheckboxModule, ReactiveFormsModule, MatAutocompleteModule, CommonModule, MatTableModule, MatIconModule, MatProgressSpinnerModule, MatFormFieldModule, MatSelectModule, MatButtonModule, MatInputModule, FormsModule, MatSlideToggleModule, AddLineComponent, AddRuleComponent, AlgoLoopComponent],
+  imports: [MatCheckboxModule, MatDatepickerModule, ReactiveFormsModule, MatAutocompleteModule, CommonModule, MatTableModule, MatIconModule, MatProgressSpinnerModule, MatFormFieldModule, MatSelectModule, MatButtonModule, MatInputModule, FormsModule, MatSlideToggleModule, AddLineComponent, AddRuleComponent, AlgoLoopComponent],
   templateUrl: './server-trade-screen.component.html',
   styleUrl: './server-trade-screen.component.css'
 })
@@ -1083,21 +1084,22 @@ export class ServerTradeScreenComponent implements OnInit {
   }
   /* Intra Day */
   async onSelectedDateChange(event: any) {
-    if (event.isUserInput == true) {
-      this.isLoading = true
-      this.selectedDate = event.source.value
-      await this.updateStockChartData(this.selectedDate)
-      //this.calculateIntraDaySma()
-      this.updateChartIntraDay()
-      //this.updateVolumeChartIntraDay()
-      this.addNewLinesToGraph(this.listOfAddedLines)
-      this.refreshRules()
-      this.onRunSimulation()
-
-      //this.runSimulationIntraDay()
-      //this.topAlgos = []
-      this.isLoading = false
-    }
+    console.log(event)
+    /*  if (event.isUserInput == true) {
+       this.isLoading = true
+       this.selectedDate = event.source.value
+       await this.updateStockChartData(this.selectedDate)
+       //this.calculateIntraDaySma()
+       this.updateChartIntraDay()
+       //this.updateVolumeChartIntraDay()
+       this.addNewLinesToGraph(this.listOfAddedLines)
+       this.refreshRules()
+       this.onRunSimulation()
+ 
+       //this.runSimulationIntraDay()
+       //this.topAlgos = []
+       this.isLoading = false
+     } */
   }
   async getStockHistoricalData() {
     this.distinctDates = (await dbStockHistoryDataRepo.groupBy({ where: { stockName: this.selectedStockName }, group: ['date'], orderBy: { date: 'desc' } })).map(e => e.date)
@@ -2003,8 +2005,9 @@ export class ServerTradeScreenComponent implements OnInit {
     this.selectedStockName = this.distinctStocks[0]
     this.selectedInterDayStockData = this.allHistory.filter(e => e.stockName == this.selectedStockName)
   }
-  onStockIsSelected(event: any) {
-    console.log(event)
+  async onStockIsSelected(event: any) {
+    this.selectedStockName = event.option.value
+    //await this.get
   }
 
   async ngOnInit() {
@@ -2015,9 +2018,9 @@ export class ServerTradeScreenComponent implements OnInit {
     this.distinctStocks = (await tickerRepo.find()).map(e => e.name)
     //this.filteredStocks = this.distinctStocks
     //await this.loadInitialInterDayData()
-
+    this.intraDayChecked = true
     this.createOrUpdateChart()
-    await this.getStockHistoricalData()
+    //await this.getStockHistoricalData()
     this.isLoading = false;
 
   }

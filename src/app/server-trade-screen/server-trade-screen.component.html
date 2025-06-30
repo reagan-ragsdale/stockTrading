@@ -241,20 +241,29 @@
           </mat-autocomplete>
         </mat-form-field>
       </form>
-      <mat-form-field style="width:fit-content;">
+      <form>
+        <mat-form-field>
+          <mat-label>Date</mat-label>
+          <input matInput [matDatepicker]="picker" (dateChange)="onSelectedDateChange($event)" />
+          <mat-hint>MM/DD/YYYY</mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </form>
+      <!-- <mat-form-field style="width:fit-content;">
         <mat-label>Select a Stock</mat-label>
         <mat-select disableRipple [(value)]="selectedStockName">
           <mat-option *ngFor="let stock of distinctStocks" value="{{stock}}"
             (onSelectionChange)="onSelectedStockChange($event)">{{stock}}</mat-option>
         </mat-select>
-      </mat-form-field>
-      <mat-form-field *ngIf="intraDayChecked" style="width:fit-content;">
+      </mat-form-field> -->
+      <!-- <mat-form-field *ngIf="intraDayChecked" style="width:fit-content;">
         <mat-label>Select a Date</mat-label>
         <mat-select disableRipple [(value)]="selectedDate">
           <mat-option *ngFor="let date of distinctDates" value="{{date}}"
             (onSelectionChange)="onSelectedDateChange($event)">{{date}}</mat-option>
         </mat-select>
-      </mat-form-field>
+      </mat-form-field> -->
     </div>
 
     <canvas style="width:100% !important;" id="stock-chart">{{stockChart}}</canvas>
