@@ -27,6 +27,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { tickerRepo } from '../../shared/tasks/tickers';
 import { map, Observable, startWith } from 'rxjs';
 import { MatDatepickerInputEvent, MatDatepickerModule } from '@angular/material/datepicker';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 
 type OperatorFunction = (rule: BuyRule | SellRule, index: number, buyPrice?: number) => boolean;
@@ -68,6 +69,7 @@ type nonLineValues = {
   selector: 'app-server-trade-screen',
   imports: [MatCheckboxModule, MatDatepickerModule, ReactiveFormsModule, MatAutocompleteModule, CommonModule, MatTableModule, MatIconModule, MatProgressSpinnerModule, MatFormFieldModule, MatSelectModule, MatButtonModule, MatInputModule, FormsModule, MatSlideToggleModule, AddLineComponent, AddRuleComponent, AlgoLoopComponent],
   templateUrl: './server-trade-screen.component.html',
+  providers: [provideNativeDateAdapter()],
   styleUrl: './server-trade-screen.component.css'
 })
 
