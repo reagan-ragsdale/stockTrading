@@ -9,7 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { DbStockHistoryData, dbStockHistoryDataRepo } from '../../shared/tasks/dbStockHistoryData';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -25,6 +25,7 @@ import { AlgoLoopComponent } from "./algo-loop/algo-loop.component";
 import { LogService } from '../services/LogService';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { tickerRepo } from '../../shared/tasks/tickers';
+import { map, Observable, startWith } from 'rxjs';
 
 
 type OperatorFunction = (rule: BuyRule | SellRule, index: number, buyPrice?: number) => boolean;
@@ -64,12 +65,20 @@ type nonLineValues = {
 
 @Component({
   selector: 'app-server-trade-screen',
-  imports: [MatCheckboxModule, MatAutocompleteModule, CommonModule, MatTableModule, MatIconModule, MatProgressSpinnerModule, MatFormFieldModule, MatSelectModule, MatButtonModule, MatInputModule, FormsModule, MatSlideToggleModule, AddLineComponent, AddRuleComponent, AlgoLoopComponent],
+  imports: [MatCheckboxModule, ReactiveFormsModule, MatAutocompleteModule, CommonModule, MatTableModule, MatIconModule, MatProgressSpinnerModule, MatFormFieldModule, MatSelectModule, MatButtonModule, MatInputModule, FormsModule, MatSlideToggleModule, AddLineComponent, AddRuleComponent, AlgoLoopComponent],
   templateUrl: './server-trade-screen.component.html',
   styleUrl: './server-trade-screen.component.css'
 })
 
 export class ServerTradeScreenComponent implements OnInit {
+  stateCtrl = new FormControl('');
+  filteredStocks: Observable<string[]>;
+  constructor() {
+    this.filteredStocks = this.stateCtrl.valueChanges.pipe(
+      startWith(''),
+      map(stock => (stock ? this._filterStocks(stock) : this.distinctStocks.slice())),
+    );
+  }
   isLoading: boolean = false;
   listOfServerAlgos: serverAlgos[] = []
   userAlgos: DbAlgorithmList | undefined = undefined
@@ -82,7 +91,6 @@ export class ServerTradeScreenComponent implements OnInit {
   stockChart: any;
   rsiChart: any;
   distinctStocks: string[] = []
-  filteredStocks: string[] = []
   annotationsArray: any[] = []
   intraDayChecked: boolean = false;
   distinctDates: string[] = []
@@ -111,7 +119,11 @@ export class ServerTradeScreenComponent implements OnInit {
   @ViewChild('addRuleTemplate', { static: true }) addRuleTemplate!: TemplateRef<any>;
   @ViewChild('algoLoopTemplate', { static: true }) algoLoopTemplate!: TemplateRef<any>;
 
+  private _filterStocks(value: string): string[] {
+    const filterValue = value.toLowerCase();
 
+    return this.distinctStocks.filter(stock => stock.toLowerCase().includes(filterValue));
+  }
   async saveAlgos() {
     await dbAlgorithmListRepo.save({ ...this.userAlgos, sma200sma50: this.listOfServerAlgos[0].isSelected })
   }
@@ -1998,7 +2010,7 @@ export class ServerTradeScreenComponent implements OnInit {
     Chart.register(zoomPlugin)
     this.isLoading = true
     this.distinctStocks = (await tickerRepo.find()).map(e => e.name)
-    this.filteredStocks = this.distinctStocks
+    //this.filteredStocks = this.distinctStocks
     await this.loadInitialInterDayData()
 
     this.createOrUpdateChart()
