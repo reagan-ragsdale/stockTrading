@@ -2003,6 +2003,9 @@ export class ServerTradeScreenComponent implements OnInit {
     this.selectedStockName = this.distinctStocks[0]
     this.selectedInterDayStockData = this.allHistory.filter(e => e.stockName == this.selectedStockName)
   }
+  onStockIsSelected(event: any) {
+    console.log(event)
+  }
 
   async ngOnInit() {
     Chart.register(annotationPlugin);
