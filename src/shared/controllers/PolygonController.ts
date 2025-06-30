@@ -11,7 +11,7 @@ export class PolygonController {
     static getIntraDayData: typeof getIntraDayHistoryData
 
     @BackendMethod({ allowed: true })
-    static async getAccountsNumberCall(stockName: string, date: string): Promise<DbStockHistoryData[]> {
+    static async getIntraDayDataCall(stockName: string, date: string): Promise<DbStockHistoryData[]> {
         console.log('here in controller')
         let data = await PolygonController.getIntraDayData(stockName, date)
         let returnData: DbStockHistoryData[] = []
