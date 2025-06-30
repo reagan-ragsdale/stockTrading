@@ -1086,7 +1086,8 @@ export class ServerTradeScreenComponent implements OnInit {
   }
   /* Intra Day */
   async onSelectedDateChange(event: MatDatepickerInputEvent<Date>) {
-    console.log(event.value)
+    this.selectedDate = new Date(event.value!).toISOString().split('T')[0]
+    console.log(this.selectedDate)
     /*  if (event.isUserInput == true) {
        this.isLoading = true
        this.selectedDate = event.source.value
