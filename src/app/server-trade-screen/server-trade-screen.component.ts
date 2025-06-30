@@ -28,6 +28,7 @@ import { tickerRepo } from '../../shared/tasks/tickers';
 import { map, Observable, startWith } from 'rxjs';
 import { MatDatepickerInputEvent, MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { PolygonController } from '../../shared/controllers/PolygonController';
 
 
 type OperatorFunction = (rule: BuyRule | SellRule, index: number, buyPrice?: number) => boolean;
@@ -1088,6 +1089,14 @@ export class ServerTradeScreenComponent implements OnInit {
   async onSelectedDateChange(event: MatDatepickerInputEvent<Date>) {
     this.selectedDate = new Date(event.value!).toISOString().split('T')[0]
     console.log(this.selectedDate)
+    if (this.selectedStockName != '') {
+      this.isLoading = true;
+      this.stockDataForSelectedDay = await PolygonController.getAccountsNumberCall(this.selectedStockName, this.selectedDate)
+      this.updateChartIntraDay()
+      this.addNewLinesToGraph(this.listOfAddedLines)
+      this.refreshRules()
+      this.isLoading = false;
+    }
     /*  if (event.isUserInput == true) {
        this.isLoading = true
        this.selectedDate = event.source.value
