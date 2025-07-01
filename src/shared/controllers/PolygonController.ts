@@ -30,6 +30,17 @@ export class PolygonController {
                         })
                     }
                 }
+                else {
+                    returnData.push({
+                        stockName: stockName,
+                        stockPrice: data[j].price,
+                        askPrice: data[j].price,
+                        bidPrice: data[j].price,
+                        volume: data[j].size,
+                        time: Math.round(data[j].sip_timestamp / 1000000000),
+                        date: date
+                    })
+                }
 
 
 
