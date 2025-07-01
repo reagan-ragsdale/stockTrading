@@ -3,6 +3,7 @@ export type lineType = {
     lineLength: number;
     lineType: string;
     data: LineData[];
+    channelFactor: number;
 }
 
 export type RuleDto = {
