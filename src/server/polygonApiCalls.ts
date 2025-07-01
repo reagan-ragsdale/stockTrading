@@ -73,7 +73,9 @@ export const getAllTickers = async (symbol?: string): Promise<any> => {
 async function getUrl(url: string, exchange: string) {
     const response = await fetch(url);
     if (response.ok) {
+
         const result = await response.json();
+        console.log('here in get url')
         for (let i = 0; i < result.results.length; i++) {
             if (result.results[i].exchange == exchangeCodes.get(exchange)) {
                 data.push(result.results[i])
