@@ -33,7 +33,7 @@ export const socketCall = async (): Promise<void> => {
 
 
 
-    let schwabOrders = await getOrdersForAccount(userData.accountNum, userData.accessToken)
+    //let schwabOrders = await getOrdersForAccount(userData.accountNum, userData.accessToken)
     let schwabPosition = await getAccountInfo(userData.accountNum, userData.accessToken)
     let amountAvailableToTrade = schwabPosition.securitiesAccount.currentBalances.cashAvailableForTrading - schwabPosition.securitiesAccount.currentBalances.unsettledCash
 
@@ -164,30 +164,28 @@ export const socketCall = async (): Promise<void> => {
                             let newSchwabOrder = await getOrdersForAccountById(userData.accountNum, accessToken, lastPrices.tradeId)
 
                             if (Object.keys(newSchwabOrder).length > 0) {
-                                console.log('get order below')
-                                console.log(newSchwabOrder)
-                                //if (newSchwabOrder.status == 'FILLED') {
-                                let newInsertData: DbSchwabOrders = {
-                                    accountNum: userData.accountNum,
-                                    stockName: data.stockName,
-                                    orderType: lastPrices.tradeType,
-                                    stockPrice: newSchwabOrder.orderActivityCollection[0].executionLegs[0].price,
-                                    shareQty: newSchwabOrder.quantity,
-                                    orderId: newSchwabOrder.orderId,
-                                    tradeStrategy: 'MA Drop',
-                                    orderTime: data.time
+                                if (newSchwabOrder.status == 'FILLED') {
+                                    let newInsertData: DbSchwabOrders = {
+                                        accountNum: userData.accountNum,
+                                        stockName: data.stockName,
+                                        orderType: lastPrices.tradeType,
+                                        stockPrice: newSchwabOrder.orderActivityCollection[0].executionLegs[0].price,
+                                        shareQty: newSchwabOrder.quantity,
+                                        orderId: newSchwabOrder.orderId,
+                                        tradeStrategy: 'MA Drop',
+                                        orderTime: data.time
+                                    }
+                                    await dbSchwabOrdersRepo.insert(newInsertData)
+                                    if (result.tradeType! == 'BUY') {
+                                        amountAvailableToTrade = amountAvailableToTrade - newSchwabOrder.orderActivityCollection[0].executionLegs[0].price
+                                    }
+                                    localSchwabOrders.unshift(newInsertData)
+                                    //result.log!.tradingAmount = 0
+                                    //result.log!.orderId = newSchwabOrder.orderId
+                                    //result.log!.shares = 1
+                                    //LoggerController.addToLog(result.log!)
+                                    lastPrices.pauseTrade = false;
                                 }
-                                await dbSchwabOrdersRepo.insert(newInsertData)
-                                if (result.tradeType! == 'BUY') {
-                                    amountAvailableToTrade = amountAvailableToTrade - newSchwabOrder.orderActivityCollection[0].executionLegs[0].price
-                                }
-                                localSchwabOrders.unshift(newInsertData)
-                                //result.log!.tradingAmount = 0
-                                //result.log!.orderId = newSchwabOrder.orderId
-                                //result.log!.shares = 1
-                                //LoggerController.addToLog(result.log!)
-                                lastPrices.pauseTrade = false;
-                                // }
 
                             }
 
