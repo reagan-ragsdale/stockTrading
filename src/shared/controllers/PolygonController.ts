@@ -17,15 +17,20 @@ export class PolygonController {
         let returnData: DbStockHistoryData[] = []
         if (data.length > 0) {
             for (let j = 0; j < data.length; j++) {
-                returnData.push({
-                    stockName: stockName,
-                    stockPrice: data[j].price,
-                    askPrice: data[j].price,
-                    bidPrice: data[j].price,
-                    volume: data[j].size,
-                    time: Math.round(data[j].sip_timestamp / 1000000000),
-                    date: date
-                })
+                if (returnData.length > 0) {
+                    if (returnData[returnData.length - 1].time != Math.round(data[j].sip_timestamp / 1000000000)) {
+                        returnData.push({
+                            stockName: stockName,
+                            stockPrice: data[j].price,
+                            askPrice: data[j].price,
+                            bidPrice: data[j].price,
+                            volume: data[j].size,
+                            time: Math.round(data[j].sip_timestamp / 1000000000),
+                            date: date
+                        })
+                    }
+                }
+
 
 
             }
