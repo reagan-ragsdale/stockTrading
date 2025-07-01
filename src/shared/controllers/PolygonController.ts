@@ -18,14 +18,14 @@ export class PolygonController {
         if (data.length > 0) {
             for (let j = 0; j < data.length; j++) {
                 if (returnData.length > 0) {
-                    if (returnData[returnData.length - 1].time != Math.round(data[j].sip_timestamp / 1000000000)) {
+                    if (returnData[returnData.length - 1].time != (Math.round(data[j].sip_timestamp / 1000000000) * 1000)) {
                         returnData.push({
                             stockName: stockName,
                             stockPrice: data[j].price,
                             askPrice: data[j].price,
                             bidPrice: data[j].price,
                             volume: data[j].size,
-                            time: Math.round(data[j].sip_timestamp / 1000000000),
+                            time: Math.round(data[j].sip_timestamp / 1000000000) * 1000,
                             date: date
                         })
                     }
@@ -37,7 +37,7 @@ export class PolygonController {
                         askPrice: data[j].price,
                         bidPrice: data[j].price,
                         volume: data[j].size,
-                        time: Math.round(data[j].sip_timestamp / 1000000000),
+                        time: Math.round(data[j].sip_timestamp / 1000000000) * 1000,
                         date: date
                     })
                 }
