@@ -413,7 +413,7 @@ export class HomeScreenComponent implements OnInit, OnDestroy {
       else if (newLines[i].lineType == 'Cumulative SMA') {
         lineData = this.calculateCumulativeSMA()
       }
-      this.listOfAddedLines.push({ id: newLines[i].id, lineType: newLines[i].lineType, lineLength: newLines[i].lineLength, data: lineData })
+      this.listOfAddedLines.push({ id: newLines[i].id, lineType: newLines[i].lineType, lineLength: newLines[i].lineLength, data: lineData, channelFactor: 0 })
 
       this.stockChart.data.datasets.push({
         label: newLines[i].lineType + ' - ' + newLines[i].lineLength.toString(),

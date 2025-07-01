@@ -34,7 +34,8 @@ export class AddGraphComponent {
       id: this.listOfLinesIncoming.length,
       lineType: '',
       lineLength: 0,
-      data: []
+      data: [],
+      channelFactor: 0
     })
   }
   notCumulative(lineType: string): boolean {
