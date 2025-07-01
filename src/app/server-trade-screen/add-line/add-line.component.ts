@@ -22,7 +22,7 @@ export class AddLineComponent implements OnInit {
   @Input() listOfLinesIncoming: lineType[] = []
   readonly dialogRef = inject(MatDialogRef<AddLineComponent>);
 
-  lineTypes: string[] = ['SMA', 'EMA', 'Cumulative SMA', 'Cumulative EMA', 'Cumulative VWAP', 'Rolling VWAP', 'Bollinger Bands']
+  lineTypes: string[] = ['SMA', 'EMA', 'Cumulative SMA', 'Cumulative EMA', 'Cumulative VWAP', 'Rolling VWAP', 'Bollinger Bands', 'Keltner Channels']
   addedListOfLines: lineType[] = []
 
   addLine() {
@@ -30,7 +30,8 @@ export class AddLineComponent implements OnInit {
       id: this.addedListOfLines.length,
       lineLength: 1,
       lineType: '',
-      data: []
+      data: [],
+      channelFactor: 0
     })
   }
   removeLine(id: number) {
@@ -45,6 +46,12 @@ export class AddLineComponent implements OnInit {
       return false
     }
     return true
+  }
+  isChannel(lineType: string): boolean {
+    if (lineType == 'Bollinger Bands' || lineType == 'Keltner Channels') {
+      return true
+    }
+    return false
   }
 
   onSubmit() {

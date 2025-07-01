@@ -18,8 +18,14 @@
             <mat-form-field *ngIf="hasLength(line.lineType)" class="example-full-width" style="max-width: 110px;">
                 <mat-label>Length</mat-label>
                 <input matInput type="number" required [(ngModel)]="line.lineLength" placeholder="0.00" [max]="5400"
-                    [min]="60">
+                    [min]="2">
             </mat-form-field>
+            <mat-form-field *ngIf="isChannel(line.lineType)" class="example-full-width" style="max-width: 110px;">
+                <mat-label>Channel Factor</mat-label>
+                <input matInput type="number" required [(ngModel)]="line.lineLength" placeholder="0.00" [max]="100"
+                    [min]="0">
+            </mat-form-field>
+
             <button style="margin-top:auto; margin-bottom:auto;" mat-icon-button aria-label="Delete Line"
                 (click)="removeLine(line.id)">
                 <mat-icon style="color: black;">delete</mat-icon>

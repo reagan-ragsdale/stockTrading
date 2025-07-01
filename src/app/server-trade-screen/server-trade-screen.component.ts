@@ -1346,26 +1346,29 @@ export class ServerTradeScreenComponent implements OnInit {
         newListOfAddedLines[i].data = this.calculateCumulativeEMA()
       }
       if (newListOfAddedLines[i].lineType == 'Bollinger Bands') {
-        let bollingerData: LineData[][] = this.calculateBollingerBands(newListOfAddedLines[i].lineLength)
+        let bollingerData: LineData[][] = this.calculateBollingerBands(newListOfAddedLines[i].lineLength, newListOfAddedLines[i].channelFactor)
         //let filteredLine = this.listOfAddedLines.filter(e => e.id == linesNew[i].id)[0]
         //filteredLine.data = lineData
         this.listOfAddedLines.push({
           id: -10,
           lineType: 'Bollinger Band EMA',
           lineLength: newListOfAddedLines[i].lineLength,
-          data: bollingerData[0]
+          data: bollingerData[0],
+          channelFactor: newListOfAddedLines[i].channelFactor
         })
         this.listOfAddedLines.push({
           id: -11,
           lineType: 'Bollinger Band Upper',
           lineLength: newListOfAddedLines[i].lineLength,
-          data: bollingerData[1]
+          data: bollingerData[1],
+          channelFactor: newListOfAddedLines[i].channelFactor
         })
         this.listOfAddedLines.push({
           id: -12,
           lineType: 'Bollinger Band Lower',
           lineLength: newListOfAddedLines[i].lineLength,
-          data: bollingerData[2]
+          data: bollingerData[2],
+          channelFactor: newListOfAddedLines[i].channelFactor
         })
         this.stockChart.data.datasets.push({
           label: newListOfAddedLines[i].lineType + ' - ' + newListOfAddedLines[i].lineLength + ' EMA',
@@ -1392,6 +1395,65 @@ export class ServerTradeScreenComponent implements OnInit {
         this.stockChart.data.datasets.push({
           label: newListOfAddedLines[i].lineType + ' - ' + newListOfAddedLines[i].lineLength + ' Lower',
           data: bollingerData[2].map(e => e.value),
+          backgroundColor: this.listOfBGCOlors[i],
+          hoverBackgroundColor: this.listOfBGCOlors[i],
+          borderColor: this.listOfBGCOlors[i],
+          pointBackgroundColor: this.listOfBGCOlors[i],
+          pointBorderColor: this.listOfBGCOlors[i],
+          pointRadius: 0,
+          spanGaps: true
+        })
+      }
+      else if (newListOfAddedLines[i].lineType == 'Keltner Channels') {
+        let keltnerData: LineData[][] = this.calculateKeltnerChannel(newListOfAddedLines[i].lineLength, newListOfAddedLines[i].channelFactor)
+        //let filteredLine = this.listOfAddedLines.filter(e => e.id == linesNew[i].id)[0]
+        //filteredLine.data = lineData
+        this.listOfAddedLines.push({
+          id: -10,
+          lineType: 'Keltner Channel EMA',
+          lineLength: newListOfAddedLines[i].lineLength,
+          data: keltnerData[0],
+          channelFactor: newListOfAddedLines[i].channelFactor
+        })
+        this.listOfAddedLines.push({
+          id: -11,
+          lineType: 'Keltner Channel Upper',
+          lineLength: newListOfAddedLines[i].lineLength,
+          data: keltnerData[1],
+          channelFactor: newListOfAddedLines[i].channelFactor
+        })
+        this.listOfAddedLines.push({
+          id: -12,
+          lineType: 'Keltner Channel Lower',
+          lineLength: newListOfAddedLines[i].lineLength,
+          data: keltnerData[2],
+          channelFactor: newListOfAddedLines[i].channelFactor
+        })
+        this.stockChart.data.datasets.push({
+          label: newListOfAddedLines[i].lineType + ' - ' + newListOfAddedLines[i].lineLength + ' EMA',
+          data: keltnerData[0].map(e => e.value),
+          backgroundColor: this.listOfBGCOlors[i],
+          hoverBackgroundColor: this.listOfBGCOlors[i],
+          borderColor: this.listOfBGCOlors[i],
+          pointBackgroundColor: this.listOfBGCOlors[i],
+          pointBorderColor: this.listOfBGCOlors[i],
+          pointRadius: 0,
+          spanGaps: true
+        })
+        this.stockChart.data.datasets.push({
+          label: newListOfAddedLines[i].lineType + ' - ' + newListOfAddedLines[i].lineLength + ' Upper',
+          data: keltnerData[1].map(e => e.value),
+          backgroundColor: this.listOfBGCOlors[i],
+          hoverBackgroundColor: this.listOfBGCOlors[i],
+          borderColor: this.listOfBGCOlors[i],
+          pointBackgroundColor: this.listOfBGCOlors[i],
+          pointBorderColor: this.listOfBGCOlors[i],
+          pointRadius: 0,
+          spanGaps: true
+        })
+        this.stockChart.data.datasets.push({
+          label: newListOfAddedLines[i].lineType + ' - ' + newListOfAddedLines[i].lineLength + ' Lower',
+          data: keltnerData[2].map(e => e.value),
           backgroundColor: this.listOfBGCOlors[i],
           hoverBackgroundColor: this.listOfBGCOlors[i],
           borderColor: this.listOfBGCOlors[i],
@@ -1608,7 +1670,7 @@ export class ServerTradeScreenComponent implements OnInit {
     return returnData
   }
 
-  calculateBollingerBands(lineLength: number): LineData[][] {
+  calculateBollingerBands(lineLength: number, channelFactor: number): LineData[][] {
     this.count = 0
     let returnData: LineData[][] = []
     let averageData: LineData[] = []
@@ -1641,8 +1703,8 @@ export class ServerTradeScreenComponent implements OnInit {
       standardDeviation = Math.sqrt(averageOfSqDev)
 
       returnData[0].push({ value: windowSum / lineLength, time: this.stockDataForSelectedDay[lineLength - 1].time })
-      returnData[1].push({ value: (windowSum / lineLength) + (2 * standardDeviation), time: this.stockDataForSelectedDay[lineLength - 1].time })
-      returnData[2].push({ value: (windowSum / lineLength) - (2 * standardDeviation), time: this.stockDataForSelectedDay[lineLength - 1].time })
+      returnData[1].push({ value: (windowSum / lineLength) + (channelFactor * standardDeviation), time: this.stockDataForSelectedDay[lineLength - 1].time })
+      returnData[2].push({ value: (windowSum / lineLength) - (channelFactor * standardDeviation), time: this.stockDataForSelectedDay[lineLength - 1].time })
 
       let multiplyFactor = 2 / (lineLength + 1)
       for (let i = lineLength; i < this.stockDataForSelectedDay.length; i++) {
@@ -1658,8 +1720,8 @@ export class ServerTradeScreenComponent implements OnInit {
         }
         averageOfSqDev = listOfDeviations.reduce((sum, val) => sum + val, 0) / listOfDeviations.length
         standardDeviation = Math.sqrt(averageOfSqDev)
-        returnData[1].push({ value: newVal + (2 * standardDeviation), time: this.stockDataForSelectedDay[i].time })
-        returnData[2].push({ value: newVal - (2 * standardDeviation), time: this.stockDataForSelectedDay[i].time })
+        returnData[1].push({ value: newVal + (channelFactor * standardDeviation), time: this.stockDataForSelectedDay[i].time })
+        returnData[2].push({ value: newVal - (channelFactor * standardDeviation), time: this.stockDataForSelectedDay[i].time })
 
       }
     }
@@ -1681,8 +1743,8 @@ export class ServerTradeScreenComponent implements OnInit {
       standardDeviation = Math.sqrt(averageOfSqDev)
 
       returnData[0].push({ value: windowSum / lineLength, time: this.selectedInterDayStockData[lineLength - 1].date })
-      returnData[1].push({ value: (windowSum / lineLength) + (2 * standardDeviation), time: this.selectedInterDayStockData[lineLength - 1].date })
-      returnData[2].push({ value: (windowSum / lineLength) - (2 * standardDeviation), time: this.selectedInterDayStockData[lineLength - 1].date })
+      returnData[1].push({ value: (windowSum / lineLength) + (channelFactor * standardDeviation), time: this.selectedInterDayStockData[lineLength - 1].date })
+      returnData[2].push({ value: (windowSum / lineLength) - (channelFactor * standardDeviation), time: this.selectedInterDayStockData[lineLength - 1].date })
 
       let multiplyFactor = 2 / (lineLength + 1)
       for (let i = lineLength; i < this.selectedInterDayStockData.length; i++) {
@@ -1698,8 +1760,8 @@ export class ServerTradeScreenComponent implements OnInit {
         }
         averageOfSqDev = listOfDeviations.reduce((sum, val) => sum + val, 0) / listOfDeviations.length
         standardDeviation = Math.sqrt(averageOfSqDev)
-        returnData[1].push({ value: newVal + (2 * standardDeviation), time: this.selectedInterDayStockData[i].date })
-        returnData[2].push({ value: newVal - (2 * standardDeviation), time: this.selectedInterDayStockData[i].date })
+        returnData[1].push({ value: newVal + (channelFactor * standardDeviation), time: this.selectedInterDayStockData[i].date })
+        returnData[2].push({ value: newVal - (channelFactor * standardDeviation), time: this.selectedInterDayStockData[i].date })
 
       }
     }
@@ -1758,6 +1820,47 @@ export class ServerTradeScreenComponent implements OnInit {
     SellRules: [],
     NumberOfLossesInARowToStop: 0,
     TimeOutAfterStopLossSell: 0
+  }
+  calculateKeltnerChannel(lineLength: number, channelFactor: number): LineData[][] {
+    let returnData: LineData[][] = []
+    let averageData: LineData[] = []
+    returnData.push(averageData)
+    let upperData: LineData[] = []
+    returnData.push(upperData)
+    let lowerData: LineData[] = []
+    returnData.push(lowerData)
+    let windowSum = 0
+    let tr = 0
+    let atr = 0
+    for (let i = 0; i < lineLength - 1; i++) {
+      returnData[0].push({ value: null, time: this.stockDataForSelectedDay[i].time })
+      returnData[1].push({ value: null, time: this.stockDataForSelectedDay[i].time })
+      returnData[2].push({ value: null, time: this.stockDataForSelectedDay[i].time })
+      if (i > 0) {
+        tr += Math.abs(this.stockDataForSelectedDay[i].stockPrice - this.stockDataForSelectedDay[i - 1].stockPrice)
+      }
+      windowSum += this.stockDataForSelectedDay[i].stockPrice
+    }
+    tr += Math.abs(this.stockDataForSelectedDay[lineLength - 1].stockPrice - this.stockDataForSelectedDay[lineLength - 2].stockPrice)
+    windowSum += this.stockDataForSelectedDay[lineLength - 1].stockPrice
+    atr = tr / lineLength
+    returnData[0].push({ value: windowSum / lineLength, time: this.stockDataForSelectedDay[lineLength - 1].time })
+    returnData[1].push({ value: (windowSum / lineLength) + (channelFactor * (tr / lineLength)), time: this.stockDataForSelectedDay[lineLength - 1].time })
+    returnData[2].push({ value: (windowSum / lineLength) - (channelFactor * (tr / lineLength)), time: this.stockDataForSelectedDay[lineLength - 1].time })
+
+    let multiplyFactor = 2 / (lineLength + 1)
+    for (let i = lineLength; i < this.stockDataForSelectedDay.length; i++) {
+      let newVal = (this.stockDataForSelectedDay[i].stockPrice * multiplyFactor) + (returnData[0][returnData[0].length - 1].value! * (1 - multiplyFactor))
+      let newAtr = (Math.abs(this.stockDataForSelectedDay[i].stockPrice - this.stockDataForSelectedDay[i - 1].stockPrice) * multiplyFactor) + (atr * (1 - multiplyFactor))
+      atr = newAtr
+      returnData[0].push({ value: newVal, time: this.stockDataForSelectedDay[i].time })
+      returnData[1].push({ value: newVal + (channelFactor * newAtr), time: this.stockDataForSelectedDay[i].time })
+      returnData[2].push({ value: newVal - (channelFactor * newAtr), time: this.stockDataForSelectedDay[i].time })
+
+    }
+
+
+    return returnData
   }
   addRuleToGraph() {
     this.addRuleDialogRef = this.dialog.open(this.addRuleTemplate, {
