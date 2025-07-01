@@ -1,7 +1,7 @@
 import { BackendMethod, remult } from 'remult'
 import { getIntraDayHistoryData } from '../../server/polygonApiCalls'
 import { DbStockHistoryData } from '../tasks/dbStockHistoryData'
-import { reusedFunctions } from '../../app/services/reusedFunctions'
+import { reusedFunctions } from '../../app/services/reusedFunctions.js'
 
 
 

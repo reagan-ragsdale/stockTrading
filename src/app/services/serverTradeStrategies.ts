@@ -72,10 +72,10 @@ export class ServerTradeStrategies {
   */
 
         this.MADropMap.set('TSLA', { EMALength: 450, BuyTrendLength: 50, SellTrendLength: 110, BuyDipAmt: 0.002, SellDipAmt: 0.002, WaitTime: 3600000, StopLossAmt: .003 })
-        this.MADropMap.set('AAPL', { EMALength: 750, BuyTrendLength: 50, SellTrendLength: 130, BuyDipAmt: 0.004, SellDipAmt: 0.002, WaitTime: 1800000, StopLossAmt: .003 })
+        this.MADropMap.set('AAPL', { EMALength: 750, BuyTrendLength: 50, SellTrendLength: 130, BuyDipAmt: 0.004, SellDipAmt: 0.002, WaitTime: 1800000, StopLossAmt: .004 })
         //this.MADropMap.set('MSFT', { EMALength: 0, BuyTrendLength: 0, SellTrendLength: 0, BuyDipAmt: 0, SellDipAmt: 0, WaitTime: 1800000, StopLossAmt: .003 })
         //this.MADropMap.set('AMD', { EMALength: 0, BuyTrendLength: 0, SellTrendLength: 0, BuyDipAmt: 0, SellDipAmt: 0, WaitTime: 1800000, StopLossAmt: .003 })
-        this.MADropMap.set('PLTR', { EMALength: 700, BuyTrendLength: 90, SellTrendLength: 180, BuyDipAmt: 0.005, SellDipAmt: 0.002, WaitTime: 1800000, StopLossAmt: .003 })
+        this.MADropMap.set('PLTR', { EMALength: 700, BuyTrendLength: 90, SellTrendLength: 180, BuyDipAmt: 0.005, SellDipAmt: 0.002, WaitTime: 1800000, StopLossAmt: .005 })
         //this.MADropMap.set('XOM', { EMALength: 0, BuyTrendLength: 0, SellTrendLength: 0, BuyDipAmt: 0, SellDipAmt: 0, WaitTime: 1800000, StopLossAmt: .003 })
         //this.MADropMap.set('NVO', { EMALength: 0, BuyTrendLength: 0, SellTrendLength: 0, BuyDipAmt: 0, SellDipAmt: 0, WaitTime: 1800000, StopLossAmt: .003 })
         //this.MADropMap.set('NEE', { EMALength: 0, BuyTrendLength: 0, SellTrendLength: 0, BuyDipAmt: 0, SellDipAmt: 0, WaitTime: 1800000, StopLossAmt: .003 })
