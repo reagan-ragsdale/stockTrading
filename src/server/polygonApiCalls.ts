@@ -74,7 +74,7 @@ async function getUrl(url: string, exchange: string) {
             }
         }
         if (result.next_url) {
-            await getUrl(result.nextUrl, exchange)
+            await getUrl(result.next_url, exchange)
         }
     }
 
