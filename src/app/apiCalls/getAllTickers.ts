@@ -13,7 +13,7 @@ async function sendTickerCall(symbol?: string) {
         if (tickerInfo.length > 0) {
             let tickerData: tickers[] = []
             for (let i = 0; i < tickerInfo.length; i++) {
-                tickerData.push({ name: tickerInfo[i].ticker })
+                tickerData.push({ name: tickerInfo[i].ticker, exchange: tickerInfo[i].primary_exchange })
             }
             await tickerRepo.insert(tickerData)
             if (tickerInfo.length == 1000) {
@@ -26,7 +26,7 @@ async function sendTickerCall(symbol?: string) {
         if (tickerInfo.length > 0) {
             let tickerData: tickers[] = []
             for (let i = 0; i < tickerInfo.length; i++) {
-                tickerData.push({ name: tickerInfo[i].ticker })
+                tickerData.push({ name: tickerInfo[i].ticker, exchange: tickerInfo[i].primary_exchange })
             }
             await tickerRepo.insert(tickerData)
             if (tickerInfo.length == 1000) {

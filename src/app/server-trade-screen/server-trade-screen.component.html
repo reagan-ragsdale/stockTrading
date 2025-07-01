@@ -236,7 +236,7 @@
           <input matInput aria-label="State" [matAutocomplete]="auto" [formControl]="stateCtrl">
           <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onStockIsSelected($event)">
             @for (stock of filteredStocks | async; track stock) {
-            <mat-option [value]="stock">{{stock}}</mat-option>
+            <mat-option [value]="stock.name">{{stock.name}}</mat-option>
             }
           </mat-autocomplete>
         </mat-form-field>

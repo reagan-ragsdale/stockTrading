@@ -16,8 +16,8 @@ export const getIntraDayStockData = async () => {
 
         while (currentDate <= today) {
             let inputDate = currentDate.toISOString().split('T')[0];
-
-            let stockData = await getIntraDayHistoryData(stocks[i], inputDate)
+            let exchange = ''
+            let stockData = await getIntraDayHistoryData(stocks[i], inputDate, exchange)
             if (stockData.length > 0) {
                 let insertData: DbStockHistoryData[] = []
                 for (let j = 0; j < stockData.length; j++) {

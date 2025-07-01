@@ -11,9 +11,9 @@ export class PolygonController {
     static getIntraDayData: typeof getIntraDayHistoryData
 
     @BackendMethod({ allowed: true })
-    static async getIntraDayDataCall(stockName: string, date: string): Promise<DbStockHistoryData[]> {
+    static async getIntraDayDataCall(stockName: string, date: string, exchange: string): Promise<DbStockHistoryData[]> {
         console.log('here in controller')
-        let data = await PolygonController.getIntraDayData(stockName, date)
+        let data = await PolygonController.getIntraDayData(stockName, date, exchange)
         let returnData: DbStockHistoryData[] = []
         if (data.length > 0) {
             for (let j = 0; j < data.length; j++) {
@@ -26,6 +26,8 @@ export class PolygonController {
                     time: Math.round(data[j].sip_timestamp / 1000000),
                     date: date
                 })
+
+
             }
         }
         return returnData

@@ -48,7 +48,7 @@ import { createExcel } from './logReport.js'
 import { DbSchwabOrders } from '../shared/tasks/dbSchwabOrders.js'
 import { tickers } from '../shared/tasks/tickers.js'
 import { PolygonController } from '../shared/controllers/PolygonController.js'
-import { getIntraDayHistoryData } from './polygonApiCalls.js'
+import { getAllTickers, getIntraDayHistoryData } from './polygonApiCalls.js'
 
 //import ev from '../../environmentVariables.json'
 
@@ -116,7 +116,8 @@ export const api = remultExpress({
         cron.schedule('0 9 * * 1,4', () => resetTokens()),
         cron.schedule('*/25 * * * *', () => loadNewToken()),
         //cron.schedule('45 20 * * 1-5 ', () => loadDailyDataIntoHistory()),
-        cron.schedule('10 20 * * 1-5 ', () => LoggerController.sendEmailCall())
+        cron.schedule('10 20 * * 1-5 ', () => LoggerController.sendEmailCall()),
+        getAllTickers()
       //getDailyStockInfo()
     }
 
