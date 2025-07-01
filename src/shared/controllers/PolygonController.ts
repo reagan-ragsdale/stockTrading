@@ -1,7 +1,7 @@
 import { BackendMethod, remult } from 'remult'
 import { getIntraDayHistoryData } from '../../server/polygonApiCalls'
 import { DbStockHistoryData } from '../tasks/dbStockHistoryData'
-import { reusedFunctions } from '../../app/services/reusedFunctions.js'
+//import { reusedFunctions } from '../../app/services/reusedFunctions.js'
 
 
 
@@ -19,7 +19,8 @@ export class PolygonController {
         if (data.length > 0) {
             for (let j = 0; j < data.length; j++) {
                 if (returnData.length > 0) {
-                    if (returnData[returnData.length - 1].time != (Math.round(data[j].sip_timestamp / 1000000000) * 1000) && reusedFunctions.isWithinTradingHoursLocal(Math.round(data[j].sip_timestamp / 1000000000) * 1000)) {
+                    // && reusedFunctions.isWithinTradingHoursLocal(Math.round(data[j].sip_timestamp / 1000000000) * 1000)
+                    if (returnData[returnData.length - 1].time != (Math.round(data[j].sip_timestamp / 1000000000) * 1000)) {
                         returnData.push({
                             stockName: stockName,
                             stockPrice: data[j].price,
@@ -31,7 +32,8 @@ export class PolygonController {
                         })
                     }
                 }
-                else if (reusedFunctions.isWithinTradingHoursLocal(Math.round(data[j].sip_timestamp / 1000000000) * 1000)) {
+                //if (reusedFunctions.isWithinTradingHoursLocal(Math.round(data[j].sip_timestamp / 1000000000) * 1000))
+                else {
                     returnData.push({
                         stockName: stockName,
                         stockPrice: data[j].price,
