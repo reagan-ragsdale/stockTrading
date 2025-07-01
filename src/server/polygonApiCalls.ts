@@ -73,6 +73,7 @@ export const getAllTickers = async (symbol?: string): Promise<any> => {
 async function getUrl(url: string, exchange: string) {
     console.log('dalskdfa;')
     const response = await fetch(url);
+    console.log(response)
     if (response.ok) {
 
         const result = await response.json();
