@@ -72,7 +72,7 @@ export const getAllTickers = async (symbol?: string): Promise<any> => {
 }
 async function getUrl(url: string, exchange: string) {
     let apiKey = process.env["PolygonApiKey"]
-    let newUrl = url + '?apiKey=' + apiKey
+    let newUrl = url + '&apiKey=' + apiKey
     const response = await fetch(newUrl);
     console.log(response)
     if (response.ok) {
