@@ -80,6 +80,7 @@ async function getUrl(url: string, exchange: string) {
             }
         }
         if (result.next_url) {
+            console.log(result.next_url)
             console.log('here in result url 2')
             await getUrl(result.next_url, exchange)
         }
