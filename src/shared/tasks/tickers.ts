@@ -11,6 +11,9 @@ export class tickers {
     @Fields.string()
     name = ""
 
+    @Fields.string()
+    exchange = ""
+
     @Fields.createdAt()
     createdAt?: Date
 

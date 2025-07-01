@@ -24,7 +24,7 @@ import zoomPlugin from 'chartjs-plugin-zoom';
 import { AlgoLoopComponent } from "./algo-loop/algo-loop.component";
 import { LogService } from '../services/LogService';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { tickerRepo } from '../../shared/tasks/tickers';
+import { tickerRepo, tickers } from '../../shared/tasks/tickers';
 import { map, Observable, startWith } from 'rxjs';
 import { MatDatepickerInputEvent, MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
@@ -76,7 +76,7 @@ type nonLineValues = {
 
 export class ServerTradeScreenComponent implements OnInit {
   stateCtrl = new FormControl('');
-  filteredStocks: Observable<string[]>;
+  filteredStocks: Observable<tickers[]>;
   constructor() {
     this.filteredStocks = this.stateCtrl.valueChanges.pipe(
       startWith(''),
@@ -94,7 +94,7 @@ export class ServerTradeScreenComponent implements OnInit {
   selectedStockName: string = ''
   stockChart: any;
   rsiChart: any;
-  distinctStocks: string[] = []
+  distinctStocks: tickers[] = []
   annotationsArray: any[] = []
   intraDayChecked: boolean = false;
   distinctDates: string[] = []
@@ -123,10 +123,10 @@ export class ServerTradeScreenComponent implements OnInit {
   @ViewChild('addRuleTemplate', { static: true }) addRuleTemplate!: TemplateRef<any>;
   @ViewChild('algoLoopTemplate', { static: true }) algoLoopTemplate!: TemplateRef<any>;
 
-  private _filterStocks(value: string): string[] {
+  private _filterStocks(value: string): tickers[] {
     const filterValue = value.toLowerCase();
 
-    return this.distinctStocks.filter(stock => stock.toLowerCase().includes(filterValue));
+    return this.distinctStocks.filter(stock => stock.name.toLowerCase().includes(filterValue));
   }
   async saveAlgos() {
     await dbAlgorithmListRepo.save({ ...this.userAlgos, sma200sma50: this.listOfServerAlgos[0].isSelected })
@@ -1091,7 +1091,8 @@ export class ServerTradeScreenComponent implements OnInit {
     console.log(this.selectedDate)
     if (this.selectedStockName != '') {
       this.isLoading = true;
-      this.stockDataForSelectedDay = await PolygonController.getIntraDayDataCall(this.selectedStockName, this.selectedDate)
+      let exchange = this.distinctStocks.filter(e => e.name == this.selectedStockName)[0].exchange
+      this.stockDataForSelectedDay = await PolygonController.getIntraDayDataCall(this.selectedStockName, this.selectedDate, exchange)
       console.log(this.stockDataForSelectedDay)
       this.updateChartIntraDay()
       this.addNewLinesToGraph(this.listOfAddedLines)
@@ -2014,8 +2015,8 @@ export class ServerTradeScreenComponent implements OnInit {
   }
   async loadInitialInterDayData() {
     this.allHistory = await dbStockBasicHistoryRepo.find({ where: {}, orderBy: { stockName: 'asc', date: 'asc' } })
-    this.distinctStocks = this.allHistory.map(e => e.stockName).filter((v, i, a) => a.indexOf(v) === i)
-    this.selectedStockName = this.distinctStocks[0]
+    //this.distinctStocks = this.allHistory.map(e => e.stockName).filter((v, i, a) => a.indexOf(v) === i)
+    this.selectedStockName = this.distinctStocks[0].name
     this.selectedInterDayStockData = this.allHistory.filter(e => e.stockName == this.selectedStockName)
   }
   async onStockIsSelected(event: any) {
@@ -2028,7 +2029,7 @@ export class ServerTradeScreenComponent implements OnInit {
     Chart.register(...registerables)
     Chart.register(zoomPlugin)
     this.isLoading = true
-    this.distinctStocks = (await tickerRepo.find()).map(e => e.name)
+    this.distinctStocks = await tickerRepo.find()
     //this.filteredStocks = this.distinctStocks
     //await this.loadInitialInterDayData()
     this.intraDayChecked = true
