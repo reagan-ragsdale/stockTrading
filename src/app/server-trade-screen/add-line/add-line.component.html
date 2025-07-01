@@ -22,7 +22,7 @@
             </mat-form-field>
             <mat-form-field *ngIf="isChannel(line.lineType)" class="example-full-width" style="max-width: 110px;">
                 <mat-label>Channel Factor</mat-label>
-                <input matInput type="number" required [(ngModel)]="line.lineLength" placeholder="0.00" [max]="100"
+                <input matInput type="number" required [(ngModel)]="line.channelFactor" placeholder="0.00" [max]="100"
                     [min]="0">
             </mat-form-field>
 
