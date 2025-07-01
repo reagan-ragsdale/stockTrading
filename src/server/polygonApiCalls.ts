@@ -15,7 +15,7 @@ export const getIntraDayHistoryData = async (stockName: string, date: string, ex
         const response = await fetch(url);
         if (response.ok) {
             const result = await response.json();
-            console.log(result)
+            console.log(result.next_url)
             for (let i = 0; i < result.results.length; i++) {
                 if (result.results[i].exchange == exchangeCodes.get(exchange)) {
                     data.push(result.results[i])
