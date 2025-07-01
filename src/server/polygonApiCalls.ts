@@ -71,8 +71,9 @@ export const getAllTickers = async (symbol?: string): Promise<any> => {
 
 }
 async function getUrl(url: string, exchange: string) {
-    console.log('dalskdfa;')
-    const response = await fetch(url);
+    let apiKey = process.env["PolygonApiKey"]
+    let newUrl = url + '?apiKey=' + apiKey
+    const response = await fetch(newUrl);
     console.log(response)
     if (response.ok) {
 
