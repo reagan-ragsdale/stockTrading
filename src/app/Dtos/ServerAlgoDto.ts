@@ -11,7 +11,7 @@ export type RuleDto = {
     SellRules: SellRule[];
     NumberOfLossesInARowToStop: number;
     TimeOutAfterStopLossSell: number;
-
+    StartDate: string;
 
 }
 export type LineData = {

@@ -23,7 +23,8 @@ export class AddRuleComponent {
     BuyRules: [],
     SellRules: [],
     NumberOfLossesInARowToStop: 0,
-    TimeOutAfterStopLossSell: 0
+    TimeOutAfterStopLossSell: 0,
+    StartDate: ''
   }
   @Input() listOfLinesIncoming: lineType[] = []
   readonly dialogRef = inject(MatDialogRef<AddRuleComponent>);

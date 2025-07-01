@@ -1819,7 +1819,8 @@ export class ServerTradeScreenComponent implements OnInit {
     BuyRules: [],
     SellRules: [],
     NumberOfLossesInARowToStop: 0,
-    TimeOutAfterStopLossSell: 0
+    TimeOutAfterStopLossSell: 0,
+    StartDate: ''
   }
   calculateKeltnerChannel(lineLength: number, channelFactor: number): LineData[][] {
     let returnData: LineData[][] = []
