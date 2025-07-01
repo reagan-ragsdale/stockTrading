@@ -10,11 +10,12 @@ exchangeCodes.set('XASE', 1)
 export const getIntraDayHistoryData = async (stockName: string, date: string, exchange: string): Promise<any> => {
     data.length = 0
     const apiKey = process.env["PolygonApiKey"];
-    const url = `https://api.polygon.io/v3/trades/${stockName}?timestamp=${date}&order=asc&limit=50000&sort=timestamp&apiKey=${apiKey}`;
+    const url = `https://api.polygon.io/v3/trades/${stockName}?timestamp=${date}&order=asc&limit=50&sort=timestamp&apiKey=${apiKey}`;
     try {
         const response = await fetch(url);
         if (response.ok) {
             const result = await response.json();
+            console.log(result)
             for (let i = 0; i < result.results.length; i++) {
                 if (result.results[i].exchange == exchangeCodes.get(exchange)) {
                     data.push(result.results[i])
