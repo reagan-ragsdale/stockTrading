@@ -1,6 +1,12 @@
 
 let data = []
 
+let exchangeCodes = new Map<string, number>();
+exchangeCodes.set('XNYS', 10)
+exchangeCodes.set('XNAS', 12)
+exchangeCodes.set('BATS', 19)
+exchangeCodes.set('XASE', 1)
+
 export const getIntraDayHistoryData = async (stockName: string, date: string, exchange: string): Promise<any> => {
     data.length = 0
     const apiKey = process.env["PolygonApiKey"];
@@ -11,7 +17,7 @@ export const getIntraDayHistoryData = async (stockName: string, date: string, ex
             const result = await response.json();
             console.log(result)
             for (let i = 0; i < result.results.length; i++) {
-                if (result.results[i].exchange == exchange) {
+                if (result.results[i].exchange == exchangeCodes.get(exchange)) {
                     data.push(result.results)
                 }
             }
@@ -69,7 +75,7 @@ async function getUrl(url: string, exchange: string) {
         const result = await response.json();
         console.log(result)
         for (let i = 0; i < result.results.length; i++) {
-            if (result.results[i].exchange == exchange) {
+            if (result.results[i].exchange == exchangeCodes.get(exchange)) {
                 data.push(result.results)
             }
         }
