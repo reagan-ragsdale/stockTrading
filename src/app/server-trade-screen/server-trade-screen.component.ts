@@ -448,7 +448,7 @@ export class ServerTradeScreenComponent implements OnInit {
     this.isLoading = true
     let rules = structuredClone(this.listOfAddedRules)
     console.log(rules)
-
+    //const worker = new Worker('../services/worker.js')
     let finalResult = []
     if (this.intraDayChecked) {
       let exchange = this.distinctStocks.filter(e => e.name == this.selectedStockName)[0].exchange
@@ -1937,7 +1937,7 @@ export class ServerTradeScreenComponent implements OnInit {
     "Crosses below:": (rule, index) => (rule.primaryObject.data[index].value == null || rule.referencedObject.data[index].value == null) ? false : (rule.primaryObject.data[index].value < rule.referencedObject.data[index].value && (rule.primaryObject.data[index - 1].value != null && rule.referencedObject.data[index - 1].value != null) && (rule.primaryObject.data[index - 1].value! >= rule.referencedObject.data[index - 1].value!)),
     "Dips below:": (rule, index) => (rule.primaryObject.data[index].value == null || rule.referencedObject.data[index].value == null) ? false : (((rule.primaryObject.data[index].value - rule.referencedObject.data[index].value) / rule.referencedObject.data[index].value) < (rule.desiredAction.amount * -1)),
     "Rises above:": (rule, index) => (rule.primaryObject.data[index].value == null || rule.referencedObject.data[index].value == null) ? false : (((rule.primaryObject.data[index].value - rule.referencedObject.data[index].value) / rule.referencedObject.data[index].value) > (rule.desiredAction.amount)),
-    "Take Profit": (rule, index, buyPrice) => this.intraDayChecked ? (this.stockDataForSelectedDay[index].stockPrice <= (buyPrice! * (1 - rule.desiredAction.amount))) : (this.selectedInterDayStockData[index].close <= (buyPrice! * (1 - rule.desiredAction.amount))),
+    "Take Profit": (rule, index, buyPrice) => this.intraDayChecked ? (this.stockDataForSelectedDay[index].stockPrice >= (buyPrice! * (1 + rule.desiredAction.amount))) : (this.selectedInterDayStockData[index].close <= (buyPrice! * (1 - rule.desiredAction.amount))),
     "Stop Loss": (rule, index, buyPrice) => this.intraDayChecked ? (this.stockDataForSelectedDay[index].stockPrice <= (buyPrice! * (1 - rule.desiredAction.amount))) : (this.selectedInterDayStockData[index].close <= (buyPrice! * (1 - rule.desiredAction.amount))),
     "After": (rule, index) => ('buyTime' in rule ? (this.stockDataForSelectedDay[index].time > (this.stockDataForSelectedDay[0].time + (rule.buyTime * 1000 * 60))) : false),
     "Trailing Stop": (rule, index) => this.intraDayChecked ? ('current' in rule.desiredAction ? (this.stockDataForSelectedDay[index].stockPrice <= rule.desiredAction.current) : false) : ('current' in rule.desiredAction ? (this.selectedInterDayStockData[index].close <= rule.desiredAction.current) : false),
