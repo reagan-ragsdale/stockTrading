@@ -101,7 +101,7 @@ export const socketCall = async (): Promise<void> => {
         try {
             //if its a data response and meets the other criteria then we proceed with the data collection and the bot
             if (Object.hasOwn(newEvent, 'data') && hasBeenSent == true && newEvent.data[0].service == 'LEVELONE_EQUITIES') {
-                //let insertData: DbCurrentDayStockData[] = []
+                let insertData: DbCurrentDayStockData[] = []
                 //loop through each stock
                 let accessToken = ServerTradeStrategies.getAccessToken()
                 for (let i = 0; i < newEvent.data[0].content.length; i++) {
@@ -122,7 +122,7 @@ export const socketCall = async (): Promise<void> => {
 
 
                         //push the data into what will be sent to the database 
-                        //insertData.push(data)
+                        insertData.push(data)
                         //for (let strategy = 0; strategy < activeStrategies.length; strategy++) {
                         let lastOrder = localSchwabOrders.filter(e => e.stockName == data.stockName && e.tradeStrategy == 'MA Drop')
                         let isBuy = true;
@@ -202,7 +202,7 @@ export const socketCall = async (): Promise<void> => {
 
 
                 }
-                //await dbCurrentDayStockDataRepo.insert(insertData)
+                await dbCurrentDayStockDataRepo.insert(insertData)
             }
 
         }
