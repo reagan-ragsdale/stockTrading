@@ -179,7 +179,8 @@ export const socketCall = async (): Promise<void> => {
                                     if (result.tradeType! == 'BUY') {
                                         amountAvailableToTrade = amountAvailableToTrade - newSchwabOrder.orderActivityCollection[0].executionLegs[0].price
                                     }
-                                    localSchwabOrders.unshift(newInsertData)
+                                    localSchwabOrders.push(newInsertData)
+                                    localSchwabOrders.sort((a, b) => b.orderTime - a.orderTime)
                                     //result.log!.tradingAmount = 0
                                     //result.log!.orderId = newSchwabOrder.orderId
                                     //result.log!.shares = 1
