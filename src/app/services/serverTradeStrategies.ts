@@ -592,6 +592,7 @@ export class ServerTradeStrategies {
 
             if (stockInfo.numberOfTrades > 0 && stockInfo.canTrade == false) {
                 if ((Date.now() - lastOrder[0].orderTime) > 1800000) {
+                    console.log(lastOrder[0].orderTime)
                     stockInfo.canTrade = true
                     nonTradeLog ??= {
                         stockName: stockData.stockName,
