@@ -3,12 +3,8 @@
 import { DbCurrentDayStockData, dbCurrentDayStockDataRepo } from "../shared/tasks/dbCurrentDayStockData.js"
 import { dbTokenRepo, DbTOkens } from "../shared/tasks/dbTokens.js"
 import { WebSocket } from 'ws';
-import { dbOrdersRepo } from "../shared/tasks/dbOrders.js";
 import { LoggerController } from "../shared/controllers/LoggerController.js";
-import { simFinRepo } from "../shared/tasks/simFinance.js";
 import { ServerTradeStrategies } from "../app/services/serverTradeStrategies.js";
-import { SchwabController } from "../shared/controllers/SchwabController.js";
-import { LogService } from "../app/services/LogService.js";
 import { SchwabOrderDTO } from "../app/Dtos/TradingBotDtos.js";
 import { getAccountInfo, getOrdersForAccount, getOrdersForAccountById, placeOrderForAccount } from "./schwabApiCalls.js";
 import { DbSchwabOrders, dbSchwabOrdersRepo } from "../shared/tasks/dbSchwabOrders.js";
@@ -165,6 +161,7 @@ export const socketCall = async (): Promise<void> => {
 
                             if (Object.keys(newSchwabOrder).length > 0) {
                                 if (newSchwabOrder.status == 'FILLED') {
+
                                     let newInsertData: DbSchwabOrders = {
                                         accountNum: userData.accountNum,
                                         stockName: data.stockName,
@@ -175,7 +172,8 @@ export const socketCall = async (): Promise<void> => {
                                         tradeStrategy: 'MA Drop',
                                         orderTime: data.time
                                     }
-                                    await dbSchwabOrdersRepo.insert(newInsertData)
+                                    //await dbSchwabOrdersRepo.insert(newInsertData) 
+                                    lastPrices.pauseTrade = false;
                                     if (result.tradeType! == 'BUY') {
                                         amountAvailableToTrade = amountAvailableToTrade - newSchwabOrder.orderActivityCollection[0].executionLegs[0].price
                                     }
@@ -185,7 +183,7 @@ export const socketCall = async (): Promise<void> => {
                                     //result.log!.orderId = newSchwabOrder.orderId
                                     //result.log!.shares = 1
                                     //LoggerController.addToLog(result.log!)
-                                    lastPrices.pauseTrade = false;
+
                                 }
 
                             }
