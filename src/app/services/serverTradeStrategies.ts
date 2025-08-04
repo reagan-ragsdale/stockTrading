@@ -72,10 +72,10 @@ export class ServerTradeStrategies {
   */
 
         this.MADropMap.set('TSLA', { EMALength: 450, BuyTrendLength: 50, SellTrendLength: 110, BuyDipAmt: 0.002, SellDipAmt: 0.002, WaitTime: 3600000, StopLossAmt: .003 })
-        this.MADropMap.set('AAPL', { EMALength: 750, BuyTrendLength: 50, SellTrendLength: 130, BuyDipAmt: 0.004, SellDipAmt: 0.002, WaitTime: 1800000, StopLossAmt: .004 })
+        this.MADropMap.set('AAPL', { EMALength: 750, BuyTrendLength: 50, SellTrendLength: 130, BuyDipAmt: 0.004, SellDipAmt: 0.008, WaitTime: 1800000, StopLossAmt: .004 })
         //this.MADropMap.set('MSFT', { EMALength: 0, BuyTrendLength: 0, SellTrendLength: 0, BuyDipAmt: 0, SellDipAmt: 0, WaitTime: 1800000, StopLossAmt: .003 })
         //this.MADropMap.set('AMD', { EMALength: 0, BuyTrendLength: 0, SellTrendLength: 0, BuyDipAmt: 0, SellDipAmt: 0, WaitTime: 1800000, StopLossAmt: .003 })
-        this.MADropMap.set('PLTR', { EMALength: 700, BuyTrendLength: 90, SellTrendLength: 180, BuyDipAmt: 0.005, SellDipAmt: 0.002, WaitTime: 1800000, StopLossAmt: .005 })
+        this.MADropMap.set('PLTR', { EMALength: 700, BuyTrendLength: 90, SellTrendLength: 180, BuyDipAmt: 0.005, SellDipAmt: 0.009, WaitTime: 1800000, StopLossAmt: .005 })
         //this.MADropMap.set('XOM', { EMALength: 0, BuyTrendLength: 0, SellTrendLength: 0, BuyDipAmt: 0, SellDipAmt: 0, WaitTime: 1800000, StopLossAmt: .003 })
         //this.MADropMap.set('NVO', { EMALength: 0, BuyTrendLength: 0, SellTrendLength: 0, BuyDipAmt: 0, SellDipAmt: 0, WaitTime: 1800000, StopLossAmt: .003 })
         //this.MADropMap.set('NEE', { EMALength: 0, BuyTrendLength: 0, SellTrendLength: 0, BuyDipAmt: 0, SellDipAmt: 0, WaitTime: 1800000, StopLossAmt: .003 })
@@ -553,6 +553,10 @@ export class ServerTradeStrategies {
 
     private static shouldExecuteMADrop(stockData: DbCurrentDayStockData, stockInfo: StockInfo, stockStrategyInfo: MADropDto, stockStrategyData: MADropData, lastOrder: DbSchwabOrders[], isBuy: boolean, balance: number): { shouldTrade: boolean, tradeType?: string, log: tradeLogDto | null } {
 
+        lastOrder = lastOrder.sort((a, b) => b.orderTime - a.orderTime)
+
+        const order = lastOrder.reduce((prev, current) => (prev.orderTime > current.orderTime) ? prev : current)
+
 
 
         stockStrategyData.priceHistoryLength += 1
@@ -567,7 +571,7 @@ export class ServerTradeStrategies {
             if (stockStrategyData.priceHistoryLength == stockStrategyInfo.EMALength) {
                 stockStrategyData.EMA = stockStrategyData.CumulativePrice / stockStrategyData.priceHistoryLength
                 stockStrategyData.BuyTrendData.push(stockStrategyData.EMA)
-                stockStrategyData.SellTrendData.push(stockStrategyData.EMA)
+                //stockStrategyData.SellTrendData.push(stockStrategyData.EMA)
             }
             return { shouldTrade: false, log: null }
         }
@@ -581,18 +585,18 @@ export class ServerTradeStrategies {
             stockStrategyData.BuyTrend = (stockStrategyData.BuyTrendData[stockStrategyData.BuyTrendData.length - 1] - stockStrategyData.BuyTrendData[0]) / stockStrategyInfo.BuyTrendLength;
         }
 
-        stockStrategyData.SellTrendData.push(stockStrategyData.EMA);
+        /* stockStrategyData.SellTrendData.push(stockStrategyData.EMA);
         if (stockStrategyData.SellTrendData.length > stockStrategyInfo.SellTrendLength) {
             stockStrategyData.SellTrendData.shift();
             stockStrategyData.SellTrend = (stockStrategyData.SellTrendData[stockStrategyData.SellTrendData.length - 1] - stockStrategyData.SellTrendData[0]) / stockStrategyInfo.SellTrendLength;
-        }
+        } */
 
 
         if (stockData.time >= (this.startTime + stockStrategyInfo.WaitTime)) {
 
             if (stockInfo.numberOfTrades > 0 && stockInfo.canTrade == false) {
-                if ((Date.now() - lastOrder[0].orderTime) > 1800000) {
-                    console.log(lastOrder[0].orderTime)
+                if ((Date.now() - order.orderTime) > 1800000) {
+                    console.log(order.orderTime)
                     stockInfo.canTrade = true
                     nonTradeLog ??= {
                         stockName: stockData.stockName,
@@ -630,9 +634,9 @@ export class ServerTradeStrategies {
                     }
                 }
             }
-            else if (!isBuy && stockInfo.canTrade && stockStrategyData.SellTrendData.length >= stockStrategyInfo.SellTrendLength) {
+            else if (!isBuy && stockInfo.canTrade) {
 
-                if ((((stockStrategyData.EMA - stockStrategyData.CumulativeSMA) / stockStrategyData.CumulativeSMA) > stockStrategyInfo.SellDipAmt) && stockStrategyData.SellTrend < 0) {
+                if (stockData.bidPrice >= (order.stockPrice * (1 + stockStrategyInfo.SellDipAmt))) {
                     stockInfo.numberOfTrades++
                     stockInfo.stopLoss = 0
                     stockInfo.tradeHigh = 0
