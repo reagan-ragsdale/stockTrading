@@ -93,7 +93,7 @@ export class ServerTradeStrategies {
 
         for (let i = 0; i < this.listOfTradableStocks.length; i++) {
             for (let j = 0; j < this.activeStrategies.length; j++) {
-                this.stockInfoMap.set(JSON.stringify({ stockName: this.listOfTradableStocks[i], tradeStrategy: this.activeStrategies[j] }), { canTrade: true, numberOfTrades: 0, stopLoss: 0, stopLossGainThreshold: 0, tradeHigh: 0, numberOfLosses: 0 })
+                this.stockInfoMap.set(JSON.stringify({ stockName: this.listOfTradableStocks[i], tradeStrategy: this.activeStrategies[j] }), { canTrade: true, numberOfTrades: 0, stopLoss: 0, sellPrice: 0, stopLossGainThreshold: 0, tradeHigh: 0, numberOfLosses: 0 })
             }
 
         }

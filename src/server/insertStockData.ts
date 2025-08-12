@@ -172,17 +172,12 @@ export const socketCall = async (): Promise<void> => {
                                         tradeStrategy: 'MA Drop',
                                         orderTime: data.time
                                     }
-                                    //await dbSchwabOrdersRepo.insert(newInsertData) 
                                     lastPrices.pauseTrade = false;
                                     if (result.tradeType! == 'BUY') {
                                         amountAvailableToTrade = amountAvailableToTrade - newSchwabOrder.orderActivityCollection[0].executionLegs[0].price
                                     }
                                     localSchwabOrders.push(newInsertData)
                                     localSchwabOrders.sort((a, b) => b.orderTime - a.orderTime)
-                                    //result.log!.tradingAmount = 0
-                                    //result.log!.orderId = newSchwabOrder.orderId
-                                    //result.log!.shares = 1
-                                    //LoggerController.addToLog(result.log!)
 
                                 }
 
@@ -193,9 +188,6 @@ export const socketCall = async (): Promise<void> => {
                         else if (result.log != null) {
                             LoggerController.addToLog(result.log)
                         }
-
-
-                        //}
 
                     }
 
