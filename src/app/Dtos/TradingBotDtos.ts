@@ -2,6 +2,7 @@ export type StockInfo = {
     canTrade: boolean;
     numberOfTrades: number;
     stopLoss: number;
+    sellPrice: number;
     stopLossGainThreshold: number;
     tradeHigh: number;
     numberOfLosses: number;

@@ -5,7 +5,7 @@ import { reusedFunctions } from "../services/reusedFunctions.js"
 
 
 export const loadDailyDataIntoHistory = async () => {
-    let currentDate = new Date()
+    /* let currentDate = new Date()
     let formattedDate = reusedFunctions.formatDate(currentDate)
     let dailyStockData = await dbCurrentDayStockDataRepo.find()
     let stockData: DbStockHistoryData[] = []
@@ -20,7 +20,7 @@ export const loadDailyDataIntoHistory = async () => {
             date: formattedDate
         })
     }
-    await StockHistoryController.insertDailyHistory(stockData)
-    await dbCurrentDayStockDataRepo.deleteMany({where: {stockName: {'!=': ''}}})
-    
+    await StockHistoryController.insertDailyHistory(stockData) */
+    await dbCurrentDayStockDataRepo.deleteMany({ where: { stockName: { '!=': '' } } })
+
 }
